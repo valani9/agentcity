@@ -31,7 +31,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 14  | Process Gain/Loss Detector             | Robbins & Judge                   | Multi-agent system performs worse than best single agent                | ⚪ planned |
 | 15  | Social Loafing Detector                | Latané et al.                     | Agents in teams that stop contributing real work                        | ⚪ planned |
 | 16  | Superflocks Detector                   | Margaret Heffernan                | Best-agent-wins routing collapses other agents → fragile system         | ⚪ planned |
-| 17  | Lencioni Five Dysfunctions Diagnostic  | Patrick Lencioni                  | Multi-agent failures classifiable as Trust / Conflict / Commitment / Accountability / Results | ⚪ planned |
+| 17  | **Lencioni Five Dysfunctions Diagnostic** | Patrick Lencioni               | Multi-agent failures classifiable as Trust / Conflict / Commitment / Accountability / Results | 🟢 shipped |
 | 18  | Frei & Morriss Trust Triangle Audit    | Frances Frei & Anne Morriss       | Agent "wobble" on Logic / Authenticity / Empathy — cross-model benchmark | ⚪ planned |
 | 19  | Cognitive vs Affective Trust Builder   | Daniel McAllister                 | Agents build only cognitive trust (competence), never affective trust (warmth) | ⚪ planned |
 | 20  | Edmondson Psychological Safety Score   | Amy Edmondson                     | Sub-agents that don't flag issues / errors to orchestrator              | ⚪ planned |
@@ -44,7 +44,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 27  | Bias-Stack Detector                    | Kahneman / Tversky                | Anchoring / Overconfidence / Confirmation / Escalation of Commitment in agent reasoning | ⚪ planned |
 | 28  | Critical Evaluator / Devil's Advocate Role Separator | Wharton / Janis     | Single agent both plans and judges its own output                       | ⚪ planned |
 | 29  | Thomas-Kilmann Conflict Style Selector | Thomas & Kilmann                  | Single-style agent fails at adversarial / moderation / brainstorming tasks | ⚪ planned |
-| 30  | **AAR Generator (Wharton 4-step)**     | Wharton@Work / US Army doctrine   | Agent "amnesia" — same mistake N runs, no lesson capture, no improvement loop | 🟡 in progress |
+| 30  | **AAR Generator (Wharton 4-step)**     | Wharton@Work / US Army doctrine   | Agent "amnesia" — same mistake N runs, no lesson capture, no improvement loop | 🟢 shipped |
 
 ## Module 3 — System / Organizational Patterns
 
@@ -59,14 +59,14 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 
 ## Shipping order (subject to revision)
 
-1. **🟡 #30 AAR Generator** — anchor pattern. The credibility primer. Defines AgentCity's OB-language brand voice. Ships first.
-2. **#17 Lencioni Five Dysfunctions Diagnostic** — multi-agent extension. Most enterprise-recognizable vocabulary.
+1. **🟢 #30 AAR Generator** — anchor pattern. The credibility primer. Defines AgentCity's OB-language brand voice. **Shipped at v0.0.2.**
+2. **🟢 #17 Lencioni Five Dysfunctions Diagnostic** — multi-agent extension. **Shipped at v0.0.3.**
 3. **#18 Frei & Morriss Trust Triangle Audit** — first paper-shaped artifact. Cross-model benchmark.
 4. **#03 Johari Window Self-Audit** — most novel individual-pattern, MCP-shaped.
 5. **#13 GRPI Working Agreement Generator** — operational primitive other patterns build on.
 
-Then the remaining 25 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
+Then the remaining 29 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
 
 ---
 
-*Last updated: 2026-05-22 — initial scaffold. AAR Generator in active development.*
+*Last updated: 2026-05-22 — Patterns #30 and #17 shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay).*

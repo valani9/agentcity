@@ -101,9 +101,9 @@ def score_aar(aar: AAR, scenario: dict[str, Any]) -> dict[str, Any]:
     expected_anchors = scenario.get("expected_framework_anchors", [])
     expected_interventions = set(scenario.get("expected_interventions", []))
 
-    found_patterns = {l.pattern for l in aar.lessons}
-    found_anchors = " ".join(l.framework_anchor for l in aar.lessons)
-    found_interventions = {s.intervention_type for s in aar.next_steps}
+    found_patterns = {lesson.pattern for lesson in aar.lessons}
+    found_anchors = " ".join(lesson.framework_anchor for lesson in aar.lessons)
+    found_interventions = {step.intervention_type for step in aar.next_steps}
 
     pattern_recall = (
         len(expected_patterns & found_patterns) / max(1, len(expected_patterns))

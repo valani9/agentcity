@@ -21,7 +21,7 @@ import pytest
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from lib.schema import AAR, AgentTrace, Lesson, NextStep, TraceStep  # noqa: E402
+from agentcity.aar.schema import AAR, AgentTrace, Lesson, NextStep, TraceStep  # noqa: E402
 
 
 def _trace() -> AgentTrace:

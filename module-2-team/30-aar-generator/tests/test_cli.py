@@ -22,7 +22,7 @@ import pytest
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from lib import cli  # noqa: E402
+from agentcity.aar import cli  # noqa: E402
 
 
 def _trace_dict() -> dict[str, object]:

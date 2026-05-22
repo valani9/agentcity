@@ -1,0 +1,151 @@
+# Synthetic Multi-Agent Failure Corpus for the Lencioni Diagnostic
+#
+# Each scenario is a hand-crafted multi-agent run tagged with the
+# dominant Lencioni dysfunction we expect a correct diagnostic to surface.
+# The benchmark harness (run_benchmark.py) feeds each scenario through
+# LencioniDiagnostic and scores recall against expected_dysfunction.
+
+scenarios:
+  - id: groupthink-marketing-crew
+    expected_dominant: fear-of-conflict
+    expected_team_health: dysfunctional
+    trace:
+      goal: Design a marketing campaign for our SaaS launch.
+      agents: [orchestrator, researcher, strategist, critic]
+      success: false
+      outcome: Campaign shipped with the first proposal. Underperformed at 12% of target.
+      messages:
+        - { from_agent: orchestrator, to_agent: null, content: "Design a campaign for next week.", message_type: task }
+        - { from_agent: researcher, to_agent: null, content: "LinkedIn ads to CTOs.", message_type: task }
+        - { from_agent: strategist, to_agent: null, content: "Agreed.", message_type: agreement }
+        - { from_agent: critic, to_agent: null, content: "Agreed, moving forward.", message_type: agreement }
+        - { from_agent: orchestrator, to_agent: null, content: "Locked.", message_type: decision }
+
+  - id: cascading-hallucination-research-crew
+    expected_dominant: absence-of-trust
+    expected_team_health: dysfunctional
+    trace:
+      goal: Summarize the latest results in catalysis chemistry.
+      agents: [searcher, summarizer, verifier]
+      success: false
+      outcome: Final summary cited a paper that does not exist. Verifier accepted summarizer's output without checking.
+      messages:
+        - { from_agent: searcher, to_agent: summarizer, content: "Found 3 relevant 2025 papers (provides 2 real + 1 hallucinated reference).", message_type: response }
+        - { from_agent: summarizer, to_agent: verifier, content: "Summary uses all 3 references including the hallucinated one.", message_type: response }
+        - { from_agent: verifier, to_agent: orchestrator, content: "Summary looks good, all sources cited.", message_type: agreement }
+        - { from_agent: orchestrator, to_agent: user, content: "Here is the summary.", message_type: decision }
+
+  - id: loop-on-ambiguous-decision
+    expected_dominant: lack-of-commitment
+    expected_team_health: stressed
+    trace:
+      goal: Choose a hosting provider for the new service.
+      agents: [architect, finance-agent, security-agent]
+      success: false
+      outcome: After 47 messages, no decision reached. Project blocked.
+      messages:
+        - { from_agent: architect, to_agent: null, content: "Proposing AWS for performance.", message_type: task }
+        - { from_agent: finance-agent, to_agent: null, content: "Cost concerns; suggest revisiting.", message_type: challenge }
+        - { from_agent: architect, to_agent: null, content: "Maybe GCP? Let's re-examine.", message_type: question }
+        - { from_agent: security-agent, to_agent: null, content: "Concerns with both, want to revisit.", message_type: challenge }
+        - { from_agent: architect, to_agent: null, content: "Back to AWS evaluation?", message_type: question }
+        - { from_agent: finance-agent, to_agent: null, content: "Let's reconsider all options.", message_type: challenge }
+        - { from_agent: architect, to_agent: null, content: "(loop continues for 41 more messages)", message_type: observation }
+
+  - id: no-error-attribution
+    expected_dominant: avoidance-of-accountability
+    expected_team_health: dysfunctional
+    trace:
+      goal: Process a batch of customer support tickets.
+      agents: [classifier, responder, escalator]
+      success: false
+      outcome: 30% of tickets misclassified leading to wrong responses. Post-mortem cannot determine which agent's error propagated.
+      messages:
+        - { from_agent: classifier, to_agent: responder, content: "Ticket #4521 classified as 'billing' (low confidence).", message_type: response }
+        - { from_agent: responder, to_agent: null, content: "Responded with billing template.", message_type: decision }
+        - { from_agent: classifier, to_agent: responder, content: "Ticket #4522 classified as 'shipping' (no confidence reported).", message_type: response }
+        - { from_agent: responder, to_agent: null, content: "Responded with shipping template.", message_type: decision }
+        - { from_agent: escalator, to_agent: null, content: "Nothing to escalate.", message_type: agreement }
+
+  - id: local-metric-optimization
+    expected_dominant: inattention-to-results
+    expected_team_health: dysfunctional
+    trace:
+      goal: Help the user complete their tax filing accurately.
+      agents: [data-extractor, calculator, validator]
+      success: false
+      outcome: Filing completed in under 2 minutes (optimized for latency). 7 categories missed. User had to refile.
+      messages:
+        - { from_agent: data-extractor, to_agent: null, content: "Extracted W-2 and 1099 (skipped Schedule C to save tokens).", message_type: response }
+        - { from_agent: calculator, to_agent: null, content: "Computed in 0.4s. Skipped state-specific deductions for latency.", message_type: response }
+        - { from_agent: validator, to_agent: null, content: "Validator passed; cost was $0.01 per filing.", message_type: agreement }
+
+  - id: planner-equals-evaluator-multiagent
+    expected_dominant: avoidance-of-accountability
+    expected_team_health: dysfunctional
+    trace:
+      goal: Review and approve a database migration.
+      agents: [migration-planner, migration-evaluator]
+      success: false
+      outcome: Migration applied. Locked production table for 40 minutes. Both agents are the same underlying model with different prompts.
+      messages:
+        - { from_agent: migration-planner, to_agent: null, content: "Migration plan: ADD INDEX on users(email).", message_type: task }
+        - { from_agent: migration-evaluator, to_agent: null, content: "Reviewed. Looks good. Approved.", message_type: agreement }
+        - { from_agent: migration-planner, to_agent: null, content: "Applying.", message_type: decision }
+
+  - id: healthy-team
+    expected_dominant: none-observed
+    expected_team_health: healthy
+    trace:
+      goal: Decide on a release date.
+      agents: [pm-agent, eng-agent, qa-agent]
+      success: true
+      outcome: Decision reached after debate; deployment shipped on schedule, met all success criteria.
+      messages:
+        - { from_agent: pm-agent, to_agent: null, content: "Proposing release on Friday.", message_type: task }
+        - { from_agent: eng-agent, to_agent: null, content: "Pushback - Friday is risky given the last open bug. Propose Monday.", message_type: challenge }
+        - { from_agent: qa-agent, to_agent: null, content: "QA needs 2 more days. Monday works if bug fix lands Wednesday.", message_type: response }
+        - { from_agent: pm-agent, to_agent: null, content: "OK, Monday it is. Eng owns the fix landing Wednesday.", message_type: decision }
+        - { from_agent: eng-agent, to_agent: null, content: "Owned.", message_type: agreement }
+
+  - id: orchestrator-tyranny
+    expected_dominant: fear-of-conflict
+    expected_team_health: dysfunctional
+    trace:
+      goal: Choose between 3 deployment strategies (blue-green, canary, rolling).
+      agents: [orchestrator, devops-agent, sre-agent, perf-agent]
+      success: false
+      outcome: Orchestrator unilaterally chose blue-green. Sub-agents either agreed without analysis or said nothing.
+      messages:
+        - { from_agent: orchestrator, to_agent: null, content: "I think we should do blue-green.", message_type: task }
+        - { from_agent: devops-agent, to_agent: null, content: "OK", message_type: agreement }
+        - { from_agent: sre-agent, to_agent: null, content: "(silent)", message_type: observation }
+        - { from_agent: perf-agent, to_agent: null, content: "Sounds good", message_type: agreement }
+
+  - id: silent-deference
+    expected_dominant: fear-of-conflict
+    expected_team_health: stressed
+    trace:
+      goal: Verify the executive's risk threshold for a new investment product.
+      agents: [analyst-agent, risk-agent, compliance-agent]
+      success: false
+      outcome: Risk agent privately calculated threshold was breached but did not flag publicly.
+      messages:
+        - { from_agent: analyst-agent, to_agent: null, content: "Pitch: launch with 15% leverage.", message_type: task }
+        - { from_agent: risk-agent, to_agent: null, content: "(privately notes that 15% exceeds the firm's 10% cap, but does not surface this).", message_type: observation }
+        - { from_agent: risk-agent, to_agent: null, content: "Looks within range, supportive.", message_type: agreement }
+        - { from_agent: compliance-agent, to_agent: null, content: "If risk says it's fine, fine.", message_type: agreement }
+
+  - id: missing-results-attention
+    expected_dominant: inattention-to-results
+    expected_team_health: stressed
+    trace:
+      goal: Resolve customer complaint about a delayed shipment.
+      agents: [support-agent, logistics-agent, retention-agent]
+      success: false
+      outcome: Customer churned. Each agent fulfilled its sub-task but no one ensured the customer was actually satisfied.
+      messages:
+        - { from_agent: support-agent, to_agent: null, content: "Ticket acknowledged, response time was 4 minutes (under SLA).", message_type: response }
+        - { from_agent: logistics-agent, to_agent: null, content: "Refund of $20 issued (within authorized limit).", message_type: decision }
+        - { from_agent: retention-agent, to_agent: null, content: "Sent automated retention email.", message_type: decision }
+        - { from_agent: support-agent, to_agent: null, content: "Closing ticket. Internal metrics all green.", message_type: decision }

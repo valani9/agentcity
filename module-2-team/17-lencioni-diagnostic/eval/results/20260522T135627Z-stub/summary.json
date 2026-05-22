@@ -1,0 +1,188 @@
+{
+  "run_id": "20260522T135627Z-stub",
+  "client": "stub",
+  "corpus_size": 10,
+  "scores": [
+    {
+      "id": "groupthink-marketing-crew",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "cascading-hallucination-research-crew",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "loop-on-ambiguous-decision",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "no-error-attribution",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "local-metric-optimization",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "planner-equals-evaluator-multiagent",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "healthy-team",
+      "score": {
+        "dominant_match": true,
+        "health_match": true,
+        "score_reasonable": true,
+        "composite": 1.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "orchestrator-tyranny",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "silent-deference",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    },
+    {
+      "id": "missing-results-attention",
+      "score": {
+        "dominant_match": false,
+        "health_match": false,
+        "score_reasonable": false,
+        "composite": 0.0,
+        "actual_dominant": "none-observed",
+        "actual_health": "healthy",
+        "pyramid_score": {
+          "absence-of-trust": 0.0,
+          "fear-of-conflict": 0.0,
+          "lack-of-commitment": 0.0,
+          "avoidance-of-accountability": 0.0,
+          "inattention-to-results": 0.0
+        }
+      }
+    }
+  ],
+  "corpus_composite_mean": 0.1
+}

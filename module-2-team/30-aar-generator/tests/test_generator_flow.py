@@ -21,9 +21,9 @@ from pathlib import Path
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from lib.clients import StubClient  # noqa: E402
-from lib.generator import AARGenerator  # noqa: E402
-from lib.schema import AgentTrace, TraceStep  # noqa: E402
+from agentcity.aar.clients import StubClient  # noqa: E402
+from agentcity.aar.generator import AARGenerator  # noqa: E402
+from agentcity.aar.schema import AgentTrace, TraceStep  # noqa: E402
 
 
 def _make_trace() -> AgentTrace:

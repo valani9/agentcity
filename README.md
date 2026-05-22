@@ -134,7 +134,7 @@ The library is built to ship:
 
 ## Status
 
-**Early.** Fourteen patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
+**Early.** Seventeen patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
 
 - `agentcity.aar` (#30) — After-Action Review generator
 - `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
@@ -150,8 +150,11 @@ The library is built to ship:
 - `agentcity.mcallister_trust` (#19) — McAllister Cognitive vs Affective Trust dimensions
 - `agentcity.social_loafing` (#15) — Latané Social Loafing detector
 - `agentcity.debate_pathology` (#26) — Groupthink / Polarization / Emotional Contagion detector
+- `agentcity.process_gain_loss` (#14) — Steiner / Robbins & Judge Process Gain/Loss detector
+- `agentcity.smart_goal` (#24) — Doran SMART Goal generator
+- `agentcity.mcgregor` (#11) — McGregor Theory X/Y Orchestrator Mode detector
 
-20 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
+17 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
 
 ## License
 

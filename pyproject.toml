@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.7"
+version = "0.0.8"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -23,6 +23,9 @@ keywords = [
     "social-loafing",
     "groupthink",
     "polarization",
+    "process-loss",
+    "smart-goals",
+    "orchestration",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -83,6 +86,9 @@ only-include = []
 "module-2-team/19-mcallister-trust-dimensions/lib" = "agentcity/mcallister_trust"
 "module-2-team/15-social-loafing-detector/lib" = "agentcity/social_loafing"
 "module-2-team/26-groupthink-polarization-contagion/lib" = "agentcity/debate_pathology"
+"module-2-team/14-process-gain-loss-detector/lib" = "agentcity/process_gain_loss"
+"module-2-team/24-smart-goal-generator/lib" = "agentcity/smart_goal"
+"module-1-individual/11-mcgregor-orchestrator-mode/lib" = "agentcity/mcgregor"
 
 [tool.ruff]
 line-length = 100

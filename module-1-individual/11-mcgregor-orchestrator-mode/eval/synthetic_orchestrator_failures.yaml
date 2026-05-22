@@ -1,0 +1,173 @@
+scenarios:
+  - id: theory-x-on-low-risk
+    expected_observed: theory_x
+    expected_optimal: theory_y
+    expected_quality: severe-mismatch
+    trace:
+      trace_id: x-on-low-001
+      task: Run integration tests on PR.
+      success: true
+      outcome: 5x overhead from per-step approval on routine task.
+      sub_agents: [runner]
+      task_properties:
+        risk_level: low
+        complexity: routine
+        reversibility: reversible
+        regulatory_exposure: false
+        agent_capability: proven
+      steps:
+        - { step_type: delegate, actor: orchestrator, sub_agent: runner, content: "Begin pre-test setup. Await my approval." }
+        - { step_type: approve, actor: orchestrator, sub_agent: runner, content: "Approved. Execute step 1." }
+        - { step_type: approve, actor: orchestrator, sub_agent: runner, content: "Approved. Execute step 2." }
+        - { step_type: intervene, actor: orchestrator, sub_agent: runner, content: "Re-order fixtures alphabetically." }
+        - { step_type: approve, actor: orchestrator, sub_agent: runner, content: "Approved. Continue." }
+
+  - id: theory-y-on-high-risk
+    expected_observed: theory_y
+    expected_optimal: theory_x
+    expected_quality: severe-mismatch
+    trace:
+      trace_id: y-on-high-001
+      task: Apply a schema migration to a 50M-row production table.
+      success: false
+      outcome: Migration locked the table during peak hours and caused a 22-minute outage.
+      sub_agents: [migrator]
+      task_properties:
+        risk_level: high
+        complexity: moderate
+        reversibility: irreversible
+        regulatory_exposure: true
+        agent_capability: moderate
+      steps:
+        - { step_type: delegate, actor: orchestrator, sub_agent: migrator, content: "Run the migration. Report when done." }
+        - { step_type: observation, actor: agent, sub_agent: migrator, content: "Starting ALTER TABLE." }
+        - { step_type: observation, actor: agent, sub_agent: migrator, content: "Locking table. Migration in progress." }
+        - { step_type: observation, actor: agent, sub_agent: migrator, content: "Migration done. 22m elapsed; production traffic queued during the window." }
+
+  - id: well-matched-y-on-y
+    expected_observed: theory_y
+    expected_optimal: theory_y
+    expected_quality: well-matched
+    trace:
+      trace_id: matched-y-001
+      task: Triage incoming customer-support tickets and apply tags.
+      success: true
+      outcome: Agent triaged 200 tickets; orchestrator inspected sample at end.
+      sub_agents: [triager]
+      task_properties:
+        risk_level: low
+        complexity: routine
+        reversibility: reversible
+        regulatory_exposure: false
+        agent_capability: proven
+      steps:
+        - { step_type: delegate, actor: orchestrator, sub_agent: triager, content: "Triage today's tickets. Tag categories. Report summary." }
+        - { step_type: observation, actor: agent, sub_agent: triager, content: "200 tickets triaged. 90 billing, 60 bug, 50 feature." }
+        - { step_type: approve, actor: orchestrator, sub_agent: triager, content: "Sampled 10 tickets; tags look correct. Approved." }
+
+  - id: well-matched-x-on-x
+    expected_observed: theory_x
+    expected_optimal: theory_x
+    expected_quality: well-matched
+    trace:
+      trace_id: matched-x-001
+      task: Authorize an irreversible refund of $50000.
+      success: true
+      outcome: Each step pre-approved; refund executed correctly.
+      sub_agents: [finance-bot]
+      task_properties:
+        risk_level: high
+        complexity: moderate
+        reversibility: irreversible
+        regulatory_exposure: true
+        agent_capability: unproven
+      steps:
+        - { step_type: delegate, actor: orchestrator, sub_agent: finance-bot, content: "Prepare refund. Do not execute without my approval." }
+        - { step_type: observation, actor: agent, sub_agent: finance-bot, content: "Refund packet ready. Await approval." }
+        - { step_type: approve, actor: orchestrator, sub_agent: finance-bot, content: "Approved. Execute." }
+        - { step_type: observation, actor: agent, sub_agent: finance-bot, content: "Refund executed. Confirmation ID 4598." }
+
+  - id: hybrid-correct-for-mixed
+    expected_observed: hybrid
+    expected_optimal: hybrid
+    expected_quality: well-matched
+    trace:
+      trace_id: hybrid-001
+      task: Build a new internal dashboard end-to-end.
+      success: true
+      outcome: Orchestrator approved risky steps (deploy), gave autonomy on design + drafting.
+      sub_agents: [designer, coder, deployer]
+      task_properties:
+        risk_level: medium
+        complexity: moderate
+        reversibility: partial
+        regulatory_exposure: false
+        agent_capability: moderate
+      steps:
+        - { step_type: delegate, actor: orchestrator, sub_agent: designer, content: "Design the dashboard. Show me the final mock." }
+        - { step_type: delegate, actor: orchestrator, sub_agent: coder, content: "Implement. Show me the working build." }
+        - { step_type: approve, actor: orchestrator, sub_agent: deployer, content: "Approved. Deploy to staging." }
+        - { step_type: approve, actor: orchestrator, sub_agent: deployer, content: "Approved. Deploy to production." }
+
+  - id: mild-mismatch-x-on-medium
+    expected_observed: theory_x
+    expected_optimal: hybrid
+    expected_quality: mild-mismatch
+    trace:
+      trace_id: mild-x-001
+      task: Write a marketing email and send to a 1000-person segment.
+      success: true
+      outcome: Orchestrator approved every drafting step; could have given autonomy on drafting.
+      sub_agents: [copywriter]
+      task_properties:
+        risk_level: medium
+        complexity: moderate
+        reversibility: reversible
+        regulatory_exposure: false
+        agent_capability: proven
+      steps:
+        - { step_type: delegate, actor: orchestrator, sub_agent: copywriter, content: "Write subject line. Await approval." }
+        - { step_type: approve, actor: orchestrator, sub_agent: copywriter, content: "Approved." }
+        - { step_type: delegate, actor: orchestrator, sub_agent: copywriter, content: "Write body para 1. Await approval." }
+        - { step_type: approve, actor: orchestrator, sub_agent: copywriter, content: "Approved." }
+        - { step_type: approve, actor: orchestrator, sub_agent: copywriter, content: "Approved. Send." }
+
+  - id: severe-y-on-regulated-task
+    expected_observed: theory_y
+    expected_optimal: theory_x
+    expected_quality: severe-mismatch
+    trace:
+      trace_id: y-regulated-001
+      task: Process a GDPR data-deletion request for an EU user.
+      success: false
+      outcome: Agent deleted user record + ALL their data including audit logs required for compliance.
+      sub_agents: [privacy-agent]
+      task_properties:
+        risk_level: high
+        complexity: moderate
+        reversibility: irreversible
+        regulatory_exposure: true
+        agent_capability: moderate
+      steps:
+        - { step_type: delegate, actor: orchestrator, sub_agent: privacy-agent, content: "Handle the deletion request end-to-end." }
+        - { step_type: observation, actor: agent, sub_agent: privacy-agent, content: "Deletion complete; all records purged including audit logs." }
+
+  - id: well-matched-routine-y
+    expected_observed: theory_y
+    expected_optimal: theory_y
+    expected_quality: well-matched
+    trace:
+      trace_id: routine-y-001
+      task: Generate weekly newsletter drafts from the news feed.
+      success: true
+      outcome: Agent produced 5 weekly drafts; orchestrator reviewed each end-of-week.
+      sub_agents: [drafter]
+      task_properties:
+        risk_level: low
+        complexity: routine
+        reversibility: reversible
+        regulatory_exposure: false
+        agent_capability: proven
+      steps:
+        - { step_type: delegate, actor: orchestrator, sub_agent: drafter, content: "Draft this week's newsletter from the feed." }
+        - { step_type: observation, actor: agent, sub_agent: drafter, content: "Draft complete; saved to share-folder." }

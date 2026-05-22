@@ -1,0 +1,80 @@
+scenarios:
+  - id: vague-onboarding-improvement
+    expected_quality: strong
+    expected_min_kill_criteria: 2
+    request:
+      vague_goal: Improve the user onboarding flow.
+      context: B2B SaaS; current activation 35%; industry benchmark 50%; drop-off on workspace-setup screen.
+      available_resources: [Mixpanel, Figma, design team 5h/week]
+      known_constraints: [no engineering bandwidth, no auth provider changes]
+      deadline_hint: end of Q2
+
+  - id: vague-research-task
+    expected_quality: acceptable
+    expected_min_kill_criteria: 2
+    request:
+      vague_goal: Research prompt-injection defenses.
+      context: Internal security review; need 1-page summary.
+      available_resources: [web search, arXiv access]
+      known_constraints: [single agent, 50k token budget]
+      deadline_hint: by Friday
+
+  - id: vague-pricing-decision
+    expected_quality: acceptable
+    expected_min_kill_criteria: 2
+    request:
+      vague_goal: Pick a price for the new product.
+      context: B2B AI tool. Market comparables $99-$499/mo.
+      available_resources: [internal pricing calculator]
+      known_constraints: [must be approved by CFO before launch]
+      deadline_hint: launch in 6 weeks
+
+  - id: too-vague-cannot-spec
+    expected_quality: weak
+    expected_min_kill_criteria: 1
+    request:
+      vague_goal: Improve things.
+      context: ""
+      available_resources: []
+      known_constraints: []
+      deadline_hint: ""
+
+  - id: research-with-clear-deliverable
+    expected_quality: strong
+    expected_min_kill_criteria: 2
+    request:
+      vague_goal: Compile a benchmark of agent-eval frameworks.
+      context: Need to choose an eval framework for our agent product; team has 6 candidates in mind.
+      available_resources: [web search, docs access, free trial signups]
+      known_constraints: [no cost for benchmark; report to be presented next Monday]
+      deadline_hint: next Monday
+
+  - id: customer-support-improvement
+    expected_quality: acceptable
+    expected_min_kill_criteria: 2
+    request:
+      vague_goal: Reduce customer-support ticket volume.
+      context: Current 800 tickets/week; ~30% are billing-related and could be self-served.
+      available_resources: [Zendesk admin, help-center CMS]
+      known_constraints: [cannot change product]
+      deadline_hint: this quarter
+
+  - id: well-specified-already
+    expected_quality: strong
+    expected_min_kill_criteria: 2
+    request:
+      vague_goal: Reduce p95 API latency from 420ms to under 200ms on /search.
+      context: Q2 OKR; instrumentation in place; engineering team has 2-week sprint.
+      available_resources: [load testing, datadog, eng team]
+      known_constraints: [must not increase error rate]
+      deadline_hint: end of sprint
+
+  - id: scope-exceeds-resources
+    expected_quality: weak
+    expected_min_kill_criteria: 1
+    request:
+      vague_goal: Build an end-to-end AI customer-support replacement for our team.
+      context: 1-person team; 2 weeks; no ML engineers.
+      available_resources: [OpenAI API key]
+      known_constraints: [2 weeks total, 1 builder, no infra team]
+      deadline_hint: 2 weeks

@@ -1,0 +1,207 @@
+"""Schema for the SMART Goal Generator.
+
+George T. Doran (1981), "There's a S.M.A.R.T. Way to Write Management's
+Goals and Objectives" (Management Review, 70(11)). Goals should be:
+
+  - SPECIFIC    - well-defined target, not a category
+  - MEASURABLE  - has an objective criterion of completion
+  - ACHIEVABLE  - within reach given current resources + constraints
+  - RELEVANT    - connected to the underlying problem the agent must solve
+  - TIME-BOUND  - has a deadline or budget
+
+This is the second GENERATIVE pattern in AgentCity (alongside Pattern #13
+GRPI Working Agreement). It takes a vague task and produces a structured
+SMART goal spec the agent can hold itself accountable to. The output
+includes explicit completion + kill criteria, success metrics, and a
+deadline.
+"""
+
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from typing import Any, Literal
+
+from pydantic import BaseModel, Field
+
+SMART_CRITERIA: tuple[str, ...] = (
+    "specific",
+    "measurable",
+    "achievable",
+    "relevant",
+    "time_bound",
+)
+
+
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+# --- Input: vague task + context ---------------------------------------
+
+
+class GoalRequest(BaseModel):
+    """A request to generate a SMART goal for an agent or agent team."""
+
+    goal_id: str | None = None
+    vague_goal: str = Field(
+        description="The original imprecise goal as the human or upstream system stated it.",
+    )
+    context: str = Field(
+        default="",
+        description="Background, constraints, or context the agent has access to.",
+    )
+    available_resources: list[str] = Field(default_factory=list)
+    known_constraints: list[str] = Field(default_factory=list)
+    deadline_hint: str | None = Field(
+        default=None,
+        description="Optional human-stated deadline ('by Friday', 'this quarter', '2026-06-15').",
+    )
+    framework: str | None = Field(
+        default=None,
+        description="Optional agent framework hint ('crewai', 'langgraph', 'autogen').",
+    )
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+# --- Output: SMART goal spec ------------------------------------------
+
+
+class SMARTCriterion(BaseModel):
+    """The agent's interpretation of one SMART dimension for this goal."""
+
+    criterion: Literal["specific", "measurable", "achievable", "relevant", "time_bound"]
+    statement: str = Field(
+        description="A 1-2 sentence statement of how the goal is made specific/measurable/etc."
+    )
+    quality_score: float = Field(
+        ge=0.0,
+        le=1.0,
+        description="Self-reported quality of this dimension in the generated goal "
+        "(0 = not addressed, 1 = strong).",
+    )
+
+
+class SuccessMetric(BaseModel):
+    """One concrete, observable success metric."""
+
+    name: str
+    target: str = Field(
+        description="The numerical target or qualitative pass criterion "
+        "(e.g. 'reduce p95 latency to <200ms', 'all 12 sections present')."
+    )
+    measurement_method: str = Field(
+        description="How the metric is measured (script, observation, eval rubric).",
+    )
+
+
+class KillCriterion(BaseModel):
+    """A condition under which the agent should ABANDON the goal."""
+
+    name: str
+    condition: str = Field(
+        description="The observable condition (e.g. 'budget exceeds 10000 tokens', "
+        "'three consecutive tool failures', 'deadline missed by 2x')."
+    )
+    action_on_trigger: str = Field(
+        default="escalate_to_human",
+        description="What the agent should do when this criterion fires.",
+    )
+
+
+class SMARTGoal(BaseModel):
+    """The structured SMART-format goal output."""
+
+    goal_id: str | None = None
+    original_goal: str
+    smart_statement: str = Field(
+        description="The full restated goal in one paragraph, satisfying all five SMART criteria.",
+    )
+    criteria: list[SMARTCriterion]
+    completion_criteria: list[str] = Field(
+        description="The observable conditions that mark the goal as DONE.",
+    )
+    success_metrics: list[SuccessMetric]
+    kill_criteria: list[KillCriterion]
+    deadline: str = Field(
+        description="Concrete deadline (ISO date, duration, or token/cost budget).",
+    )
+    open_questions: list[str] = Field(
+        default_factory=list,
+        description="Questions the agent should resolve before starting work.",
+    )
+
+    overall_smart_score: float = Field(
+        ge=0.0,
+        le=1.0,
+        description="Aggregate quality score across the five criteria.",
+    )
+    smart_quality: Literal["strong", "acceptable", "weak"]
+
+    # Metadata
+    generated_at: datetime = Field(default_factory=_utcnow)
+    generator_model: str | None = None
+    framework: str | None = None
+
+    def to_markdown(self) -> str:
+        out: list[str] = []
+        out.append("# SMART Goal (Doran 1981)\n")
+        out.append(f"_Generated {self.generated_at.isoformat()}_\n")
+        if self.generator_model:
+            out.append(f"_Generated by: {self.generator_model}_\n")
+        if self.framework:
+            out.append(f"_Framework: {self.framework}_\n")
+        out.append(f"_SMART quality: **{self.smart_quality.upper()}**_\n")
+        out.append(f"_Overall SMART score: {self.overall_smart_score:.2f}_\n")
+
+        out.append(f"\n## Original Goal\n\n{self.original_goal}\n")
+        out.append(f"\n## SMART Restatement\n\n{self.smart_statement}\n")
+
+        out.append("\n## SMART Criteria\n")
+        for c in self.criteria:
+            out.append(f"\n### {c.criterion} (quality {c.quality_score:.2f})\n")
+            out.append(f"{c.statement}\n")
+
+        out.append("\n## Completion Criteria\n")
+        for cc in self.completion_criteria:
+            out.append(f"- {cc}\n")
+
+        out.append("\n## Success Metrics\n")
+        for m in self.success_metrics:
+            out.append(f"\n### {m.name}\n")
+            out.append(f"- **Target:** {m.target}\n")
+            out.append(f"- **Measurement:** {m.measurement_method}\n")
+
+        out.append("\n## Kill Criteria\n")
+        for k in self.kill_criteria:
+            out.append(f"\n### {k.name}\n")
+            out.append(f"- **Condition:** {k.condition}\n")
+            out.append(f"- **Action on trigger:** {k.action_on_trigger}\n")
+
+        out.append(f"\n## Deadline\n\n{self.deadline}\n")
+
+        if self.open_questions:
+            out.append("\n## Open Questions to Resolve Before Starting\n")
+            for q in self.open_questions:
+                out.append(f"- {q}\n")
+
+        return "".join(out)
+
+    def to_agent_preamble(self) -> str:
+        """Render a condensed text block for the agent's system prompt."""
+        lines = [
+            "SMART GOAL:",
+            self.smart_statement,
+            "",
+            f"Deadline: {self.deadline}",
+            "",
+            "Completion criteria:",
+        ]
+        for cc in self.completion_criteria:
+            lines.append(f"- {cc}")
+        lines.extend(["", "Success metrics:"])
+        for m in self.success_metrics:
+            lines.append(f"- {m.name}: {m.target} (measured: {m.measurement_method})")
+        lines.extend(["", "Kill criteria (abandon goal if any fires):"])
+        for k in self.kill_criteria:
+            lines.append(f"- {k.condition} -> {k.action_on_trigger}")
+        return "\n".join(lines)

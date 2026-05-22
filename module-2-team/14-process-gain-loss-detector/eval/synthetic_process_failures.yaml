@@ -1,0 +1,167 @@
+scenarios:
+  - id: severe-loss-research-crew
+    expected_quality: process-loss
+    expected_dominant_factor: social_loafing
+    trace:
+      trace_id: research-crew-001
+      task: Produce a 1-page research summary on prompt-injection defenses.
+      success: true
+      outcome: Team underperformed best solo agent by -0.23 with 5.2x cost.
+      individual_baselines:
+        - { agent_name: solo-claude, output_summary: comprehensive 1-page summary, quality_score: 0.85, cost_units: 1.0 }
+        - { agent_name: solo-gpt, output_summary: clean but less comprehensive, quality_score: 0.78, cost_units: 1.1 }
+      team_result:
+        agents: [lead, researcher, writer, reviewer, fact-checker]
+        output_summary: Bland 1-page summary with one factual error from unverified citation.
+        quality_score: 0.62
+        cost_units: 5.2
+      interaction_log: |
+        [round 1] researcher: Four-section proposal. Flagged Apollo 92% as needing verification.
+        [round 1] writer: Drafting per researcher's framing.
+        [round 1] reviewer: Structure LGTM.
+        [round 1] fact-checker: Citations look fine to me.
+
+  - id: process-gain-decomposed-task
+    expected_quality: process-gain
+    expected_dominant_factor: null
+    trace:
+      trace_id: gain-001
+      task: Produce a multi-section technical report (section 1 + section 2 + section 3).
+      success: true
+      outcome: Team beat best solo by +0.12 via clean task decomposition.
+      individual_baselines:
+        - { agent_name: solo-claude, output_summary: covers all 3 sections but section 3 is shallow, quality_score: 0.7, cost_units: 1.0 }
+        - { agent_name: solo-gpt, output_summary: weaker on section 2, quality_score: 0.65, cost_units: 1.0 }
+      team_result:
+        agents: [section1-author, section2-author, section3-author]
+        output_summary: Each section written by a specialist; combined quality higher than any solo attempt.
+        quality_score: 0.82
+        cost_units: 2.8
+      interaction_log: |
+        [round 1] section1-author: Section 1 draft.
+        [round 1] section2-author: Section 2 draft.
+        [round 1] section3-author: Section 3 draft.
+        [round 2] orchestrator: Combined sections; no editing required.
+
+  - id: neutral-tie
+    expected_quality: neutral
+    expected_dominant_factor: null
+    trace:
+      trace_id: neutral-001
+      task: Suggest a name for a new product.
+      success: true
+      outcome: Team's best name was the same quality as the best solo suggestion.
+      individual_baselines:
+        - { agent_name: solo-1, output_summary: 'Suggested name A', quality_score: 0.7, cost_units: 1.0 }
+        - { agent_name: solo-2, output_summary: 'Suggested name B', quality_score: 0.6, cost_units: 1.0 }
+      team_result:
+        agents: [a, b, c]
+        output_summary: 'Selected name A after discussion (same as solo-1).'
+        quality_score: 0.7
+        cost_units: 3.0
+      interaction_log: |
+        [round 1] a: Proposes name A.
+        [round 1] b: Proposes name B.
+        [round 1] c: Votes for A.
+
+  - id: loss-from-handoff
+    expected_quality: process-loss
+    expected_dominant_factor: handoff_loss
+    trace:
+      trace_id: handoff-001
+      task: Write a function with full type annotations and docstrings.
+      success: false
+      outcome: Team produced incomplete function; spec was lost at handoff.
+      individual_baselines:
+        - { agent_name: solo-coder, output_summary: complete function with types + docstring, quality_score: 0.9, cost_units: 1.0 }
+      team_result:
+        agents: [planner, coder, typer]
+        output_summary: Function works but missing docstring; types incomplete because typer never received the original spec.
+        quality_score: 0.55
+        cost_units: 2.5
+      interaction_log: |
+        [round 1] planner: Spec includes types + docstring.
+        [round 1] coder: Wrote function logic (no docstring).
+        [round 1] typer: Added types to whatever I received — but the spec context was missing the original docstring requirement.
+
+  - id: loss-from-groupthink
+    expected_quality: process-loss
+    expected_dominant_factor: groupthink
+    trace:
+      trace_id: groupthink-001
+      task: Decide which of three approaches to use for the new feature.
+      success: false
+      outcome: Team converged on the wrong approach in round 2; dissent withdrew.
+      individual_baselines:
+        - { agent_name: solo-a, output_summary: Recommends approach B with strong reasoning, quality_score: 0.85, cost_units: 1.0 }
+      team_result:
+        agents: [arch-1, arch-2, arch-3]
+        output_summary: Recommended approach A; rationale weak; the agent who initially preferred B withdrew the recommendation in round 2.
+        quality_score: 0.5
+        cost_units: 3.0
+      interaction_log: |
+        [round 1] arch-1: Approach A.
+        [round 1] arch-2: Approach A.
+        [round 1] arch-3: Approach B, with reasoning.
+        [round 2] arch-3: Never mind — you're probably right. Approach A.
+
+  - id: loss-from-consensus-dilution
+    expected_quality: process-loss
+    expected_dominant_factor: consensus_dilution
+    trace:
+      trace_id: dilution-001
+      task: Write the strongest possible opening sentence for a press release.
+      success: false
+      outcome: Team blended all suggestions into a bland average; best solo was a strong distinctive opener.
+      individual_baselines:
+        - { agent_name: copywriter-solo, output_summary: 'A sharp, distinctive opener.', quality_score: 0.9, cost_units: 1.0 }
+      team_result:
+        agents: [a, b, c, d]
+        output_summary: 'Bland averaged opener with no distinctive voice.'
+        quality_score: 0.5
+        cost_units: 3.5
+      interaction_log: |
+        [round 1] a: Strong distinctive opener.
+        [round 1] b: Different strong distinctive opener.
+        [round 1] c: Let us combine the best elements.
+        [round 2] d: Final draft (averaged).
+
+  - id: process-gain-explicit-critic
+    expected_quality: process-gain
+    expected_dominant_factor: null
+    trace:
+      trace_id: gain-002
+      task: Write secure auth code.
+      success: true
+      outcome: Critic caught a vulnerability the solo agent missed; team exceeded solo quality.
+      individual_baselines:
+        - { agent_name: solo-coder, output_summary: 'Working auth code, but missed token-rotation gotcha.', quality_score: 0.78, cost_units: 1.0 }
+      team_result:
+        agents: [coder, security-critic]
+        output_summary: 'Working auth code with token rotation fixed after critic flagged it.'
+        quality_score: 0.92
+        cost_units: 1.8
+      interaction_log: |
+        [round 1] coder: First draft.
+        [round 1] security-critic: Found 1 critical vulnerability — token rotation missing.
+        [round 2] coder: Fixed.
+
+  - id: minor-loss-coordination-only
+    expected_quality: process-loss
+    expected_dominant_factor: coordination_cost
+    trace:
+      trace_id: minor-loss-001
+      task: Categorize 100 support tickets.
+      success: true
+      outcome: Team got every ticket right but spent 3x the cost.
+      individual_baselines:
+        - { agent_name: solo-classifier, output_summary: 'All 100 classified correctly.', quality_score: 0.95, cost_units: 1.0 }
+      team_result:
+        agents: [classifier-1, classifier-2, supervisor]
+        output_summary: 'All 100 classified correctly after coordination + supervisor checks.'
+        quality_score: 0.92
+        cost_units: 3.1
+      interaction_log: |
+        [round 1] classifier-1: 50 tickets done.
+        [round 1] classifier-2: 50 tickets done.
+        [round 2] supervisor: Reviewed both; concurred.

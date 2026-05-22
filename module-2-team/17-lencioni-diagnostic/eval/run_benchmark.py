@@ -77,9 +77,7 @@ def scenario_to_trace(scenario: dict[str, Any]) -> MultiAgentTrace:
     )
 
 
-def score_diagnosis(
-    diagnosis: LencioniDiagnosis, scenario: dict[str, Any]
-) -> dict[str, Any]:
+def score_diagnosis(diagnosis: LencioniDiagnosis, scenario: dict[str, Any]) -> dict[str, Any]:
     expected_dominant = scenario["expected_dominant"]
     expected_health = scenario["expected_team_health"]
 
@@ -126,16 +124,12 @@ def main() -> None:
         default="stub",
         choices=["stub", "anthropic", "openai", "ollama"],
     )
-    parser.add_argument(
-        "--corpus", default=str(_HERE / "synthetic_multiagent_failures.yaml")
-    )
+    parser.add_argument("--corpus", default=str(_HERE / "synthetic_multiagent_failures.yaml"))
     parser.add_argument("--out", default=str(_HERE / "results"))
     args = parser.parse_args()
 
     corpus = load_corpus(Path(args.corpus))
-    run_id = (
-        datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + f"-{args.client}"
-    )
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + f"-{args.client}"
     out_dir = Path(args.out) / run_id
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -155,9 +149,7 @@ def main() -> None:
             continue
         score = score_diagnosis(diagnosis, scenario)
         results.append({"id": scenario["id"], "score": score})
-        (out_dir / f"{scenario['id']}.diagnosis.md").write_text(
-            diagnosis.to_markdown()
-        )
+        (out_dir / f"{scenario['id']}.diagnosis.md").write_text(diagnosis.to_markdown())
 
     summary = {
         "run_id": run_id,
@@ -165,8 +157,7 @@ def main() -> None:
         "corpus_size": len(results),
         "scores": results,
         "corpus_composite_mean": round(
-            sum(r.get("score", {}).get("composite", 0.0) for r in results)
-            / max(1, len(results)),
+            sum(r.get("score", {}).get("composite", 0.0) for r in results) / max(1, len(results)),
             3,
         ),
     }

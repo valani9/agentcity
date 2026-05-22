@@ -150,8 +150,7 @@ def stub_canned_responses() -> list[str]:
     richer output. The stub demonstrates the schema + flow.
     """
     goal = (
-        "Find the latest pricing for product XYZ on the supplier portal "
-        "and return it to the user."
+        "Find the latest pricing for product XYZ on the supplier portal and return it to the user."
     )
     results = (
         "The agent issued the same browse(...) call to the supplier portal "
@@ -173,8 +172,7 @@ def stub_canned_responses() -> list[str]:
                     "for abandoning the current strategy."
                 ),
                 "framework_anchor": (
-                    "Kahneman & Tversky 1979 - escalation of commitment / "
-                    "sunk-cost fallacy"
+                    "Kahneman & Tversky 1979 - escalation of commitment / sunk-cost fallacy"
                 ),
                 "cross_pattern_links": [
                     "#27 bias-stack-detector",
@@ -189,8 +187,7 @@ def stub_canned_responses() -> list[str]:
                     "would you like me to do?' moment."
                 ),
                 "root_cause": (
-                    "No escalation protocol was specified in the system "
-                    "prompt or scaffold."
+                    "No escalation protocol was specified in the system prompt or scaffold."
                 ),
                 "framework_anchor": (
                     "Wharton AAR doctrine - 'establish a preset level to "
@@ -205,8 +202,7 @@ def stub_canned_responses() -> list[str]:
             {
                 "intervention_type": "prompt_patch",
                 "description": (
-                    "Add an explicit stop rule and escalation step to the "
-                    "agent's system prompt."
+                    "Add an explicit stop rule and escalation step to the agent's system prompt."
                 ),
                 "suggested_implementation": (
                     "If the same tool call has returned the same error "
@@ -234,10 +230,7 @@ def stub_canned_responses() -> list[str]:
                     "assert the maximum count is <= 3 across runs."
                 ),
                 "estimated_impact": "high",
-                "rationale": (
-                    "Catches the failure mode in CI before it reaches "
-                    "production."
-                ),
+                "rationale": ("Catches the failure mode in CI before it reaches production."),
             },
         ]
     )
@@ -247,9 +240,7 @@ def stub_canned_responses() -> list[str]:
 def pick_client() -> object:
     choice = os.environ.get("AGENTCITY_LLM", "stub").lower()
     if choice == "anthropic":
-        return AnthropicClient(
-            model=os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
-        )
+        return AnthropicClient(model=os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"))
     if choice == "openai":
         return OpenAIClient(model=os.environ.get("OPENAI_MODEL", "gpt-5"))
     if choice == "ollama":

@@ -38,9 +38,7 @@ from typing import Any
 try:
     import yaml  # type: ignore[import-untyped]
 except ImportError as e:
-    raise SystemExit(
-        "PyYAML required to run the benchmark. Install: pip install pyyaml"
-    ) from e
+    raise SystemExit("PyYAML required to run the benchmark. Install: pip install pyyaml") from e
 
 _HERE = Path(__file__).resolve().parent
 _PATTERN_ROOT = _HERE.parent
@@ -105,15 +103,12 @@ def score_aar(aar: AAR, scenario: dict[str, Any]) -> dict[str, Any]:
     found_anchors = " ".join(lesson.framework_anchor for lesson in aar.lessons)
     found_interventions = {step.intervention_type for step in aar.next_steps}
 
-    pattern_recall = (
-        len(expected_patterns & found_patterns) / max(1, len(expected_patterns))
-    )
+    pattern_recall = len(expected_patterns & found_patterns) / max(1, len(expected_patterns))
     anchor_recall = sum(
         1 for a in expected_anchors if any(p in found_anchors for p in a.split(" - "))
     ) / max(1, len(expected_anchors))
-    intervention_recall = (
-        len(expected_interventions & found_interventions)
-        / max(1, len(expected_interventions))
+    intervention_recall = len(expected_interventions & found_interventions) / max(
+        1, len(expected_interventions)
     )
 
     sections_complete = all(
@@ -163,10 +158,7 @@ def main() -> None:
     args = parser.parse_args()
 
     corpus = load_corpus(Path(args.corpus))
-    run_id = (
-        datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        + f"-{args.client}"
-    )
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + f"-{args.client}"
     out_dir = Path(args.out) / run_id
     out_dir.mkdir(parents=True, exist_ok=True)
 

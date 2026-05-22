@@ -40,9 +40,9 @@ jobs:
           python -m pip install -e .
           python -m pip install pytest pytest-cov pyyaml
 
-      - name: Run tests (both patterns)
+      - name: Run tests (all patterns)
         run: |
-          pytest module-2-team/ -v --tb=short
+          pytest module-1-individual/ module-2-team/ -v --tb=short
 
   lint:
     name: Lint (ruff)
@@ -60,10 +60,10 @@ jobs:
         run: python -m pip install ruff
 
       - name: Run ruff check
-        run: ruff check module-2-team/30-aar-generator/lib module-2-team/30-aar-generator/tests
+        run: ruff check module-1-individual/ module-2-team/
 
       - name: Run ruff format check
-        run: ruff format --check module-2-team/30-aar-generator/lib module-2-team/30-aar-generator/tests
+        run: ruff format --check module-1-individual/ module-2-team/
 
   typecheck:
     name: Typecheck (mypy)
@@ -80,9 +80,22 @@ jobs:
       - name: Install mypy and dependencies
         run: |
           python -m pip install mypy pydantic
+          # Install the package so cross-pattern imports
+          # (e.g. agentcity.aar._retry from agentcity.lencioni) resolve.
+          python -m pip install -e .
 
-      - name: Run mypy
-        run: mypy module-2-team/30-aar-generator/lib --strict --ignore-missing-imports
+      - name: Run mypy per-pattern
+        # Each pattern's lib is its own logical package (via pyproject's
+        # force-include mapping). Running mypy across all patterns at once
+        # produces a 'Duplicate module named "lib"' error; running each
+        # pattern's lib separately avoids that and gives clearer per-pattern
+        # output. New patterns add another line here.
+        run: |
+          set -e
+          for pattern in module-2-team/30-aar-generator module-2-team/17-lencioni-diagnostic module-2-team/18-trust-triangle-audit module-1-individual/03-johari-window; do
+            echo "=== mypy: $pattern ==="
+            mypy "$pattern/lib" --strict --ignore-missing-imports
+          done
 
   build:
     name: Build wheel + sdist

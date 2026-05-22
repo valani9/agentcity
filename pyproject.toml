@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.3"
+version = "0.0.4"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -63,6 +63,8 @@ only-include = []
 [tool.hatch.build.targets.wheel.force-include]
 "module-2-team/30-aar-generator/lib" = "agentcity/aar"
 "module-2-team/17-lencioni-diagnostic/lib" = "agentcity/lencioni"
+"module-2-team/18-trust-triangle-audit/lib" = "agentcity/trust_triangle"
+"module-1-individual/03-johari-window/lib" = "agentcity/johari"
 
 [tool.ruff]
 line-length = 100

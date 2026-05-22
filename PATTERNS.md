@@ -12,7 +12,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 |-----|----------------------------------------|-----------------------------------|-------------------------------------------------------------------------|--------|
 | 01  | Lewin's Formula (B = f(I,E))           | Kurt Lewin                        | Misplaced effort to "fix the model" instead of the environment          | ⚪ planned |
 | 02  | Goleman 4-Domain EI Audit              | Daniel Goleman                    | Agent lacks emotional self-awareness / social awareness in conversation | ⚪ planned |
-| 03  | Johari Window Self-Audit               | Luft & Ingham                     | Confabulation (Blind), silent reasoning (Hidden), latent capability (Unknown) | ⚪ planned |
+| 03  | **Johari Window Self-Audit**           | Luft & Ingham                     | Confabulation (Blind), silent reasoning (Hidden), latent capability (Unknown) | 🟢 shipped |
 | 04  | DANVA-style Emotion Reader             | Nowicki & Duke                    | Agent cannot read user emotion from text                                | ⚪ planned |
 | 05  | Cognitive Reappraisal Module           | Gross / Lazarus                   | Agent emotional suppression vs adaptive reframing under failure         | ⚪ planned |
 | 06  | Yerkes-Dodson Optimal Workload         | Yerkes & Dodson                   | Agent corner-cutting under pressure / wandering with no pressure        | ⚪ planned |
@@ -32,7 +32,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 15  | Social Loafing Detector                | Latané et al.                     | Agents in teams that stop contributing real work                        | ⚪ planned |
 | 16  | Superflocks Detector                   | Margaret Heffernan                | Best-agent-wins routing collapses other agents → fragile system         | ⚪ planned |
 | 17  | **Lencioni Five Dysfunctions Diagnostic** | Patrick Lencioni               | Multi-agent failures classifiable as Trust / Conflict / Commitment / Accountability / Results | 🟢 shipped |
-| 18  | Frei & Morriss Trust Triangle Audit    | Frances Frei & Anne Morriss       | Agent "wobble" on Logic / Authenticity / Empathy — cross-model benchmark | ⚪ planned |
+| 18  | **Frei & Morriss Trust Triangle Audit** | Frances Frei & Anne Morriss      | Agent "wobble" on Logic / Authenticity / Empathy — cross-model benchmark | 🟢 shipped |
 | 19  | Cognitive vs Affective Trust Builder   | Daniel McAllister                 | Agents build only cognitive trust (competence), never affective trust (warmth) | ⚪ planned |
 | 20  | Edmondson Psychological Safety Score   | Amy Edmondson                     | Sub-agents that don't flag issues / errors to orchestrator              | ⚪ planned |
 | 21  | Cortisol/Oxytocin Conversation Steering | Glaser & Glaser                  | User-facing agent triggers defensive (cortisol) responses               | ⚪ planned |
@@ -59,14 +59,14 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 
 ## Shipping order (subject to revision)
 
-1. **🟢 #30 AAR Generator** — anchor pattern. The credibility primer. Defines AgentCity's OB-language brand voice. **Shipped at v0.0.2.**
+1. **🟢 #30 AAR Generator** — anchor pattern. **Shipped at v0.0.2.**
 2. **🟢 #17 Lencioni Five Dysfunctions Diagnostic** — multi-agent extension. **Shipped at v0.0.3.**
-3. **#18 Frei & Morriss Trust Triangle Audit** — first paper-shaped artifact. Cross-model benchmark.
-4. **#03 Johari Window Self-Audit** — most novel individual-pattern, MCP-shaped.
+3. **🟢 #18 Frei & Morriss Trust Triangle Audit** — character / cross-model benchmark. **Shipped at v0.0.4.**
+4. **🟢 #03 Johari Window Self-Audit** — self-knowledge debugger. **Shipped at v0.0.4.**
 5. **#13 GRPI Working Agreement Generator** — operational primitive other patterns build on.
 
 Then the remaining 29 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
 
 ---
 
-*Last updated: 2026-05-22 — Patterns #30 and #17 shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay).*
+*Last updated: 2026-05-22 — Patterns #30, #17, #18, and #03 shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Four patterns across three diagnostic axes: event (#30), team (#17), character (#18), self-knowledge (#03).*

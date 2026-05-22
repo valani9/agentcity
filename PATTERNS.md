@@ -10,7 +10,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 
 | #   | Pattern                                | OB Framework / Author             | Agent Failure Addressed                                                 | Status |
 |-----|----------------------------------------|-----------------------------------|-------------------------------------------------------------------------|--------|
-| 01  | Lewin's Formula (B = f(I,E))           | Kurt Lewin                        | Misplaced effort to "fix the model" instead of the environment          | ⚪ planned |
+| 01  | **Lewin's Formula (B = f(I,E))**       | Kurt Lewin                        | Misplaced effort to "fix the model" instead of the environment          | 🟢 shipped |
 | 02  | Goleman 4-Domain EI Audit              | Daniel Goleman                    | Agent lacks emotional self-awareness / social awareness in conversation | ⚪ planned |
 | 03  | **Johari Window Self-Audit**           | Luft & Ingham                     | Confabulation (Blind), silent reasoning (Hidden), latent capability (Unknown) | 🟢 shipped |
 | 04  | DANVA-style Emotion Reader             | Nowicki & Duke                    | Agent cannot read user emotion from text                                | ⚪ planned |
@@ -36,13 +36,13 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 19  | Cognitive vs Affective Trust Builder   | Daniel McAllister                 | Agents build only cognitive trust (competence), never affective trust (warmth) | ⚪ planned |
 | 20  | **Edmondson Psychological Safety Score** | Amy Edmondson                   | Sub-agents that don't flag issues / errors to orchestrator              | 🟢 shipped |
 | 21  | Cortisol/Oxytocin Conversation Steering | Glaser & Glaser                  | User-facing agent triggers defensive (cortisol) responses               | ⚪ planned |
-| 22  | "Thanks for the Feedback" 3-Trigger Diagnostic | Stone & Heen              | Agent rejects user feedback — Truth / Relationship / Identity trigger  | ⚪ planned |
+| 22  | **"Thanks for the Feedback" 3-Trigger Diagnostic** | Stone & Heen          | Agent rejects user feedback — Truth / Relationship / Identity trigger  | 🟢 shipped |
 | 23  | Plus/Delta Inter-Agent Feedback Format | Brené Brown / facilitator canon   | Unstructured agent-on-agent review producing noisy critique             | ⚪ planned |
 | 24  | SMART Goal Generator                   | George Doran                      | Agent commits to unmeasurable / unbounded goals                         | ⚪ planned |
 | 25  | Group Decision Models (Concurring/Majority/Consensus + Fist-to-Five) | Marnie Stewart | Crude majority-vote multi-agent decisions vs degree-of-agreement-aware  | ⚪ planned |
 | 26  | Groupthink / Polarization / Emotional Contagion Detector | Janis / Stoner          | Multi-agent debate converges too fast or polarizes to extreme           | ⚪ planned |
 | 27  | **Bias-Stack Detector**                | Kahneman / Tversky                | Anchoring / Overconfidence / Confirmation / Escalation of Commitment in agent reasoning | 🟢 shipped |
-| 28  | Critical Evaluator / Devil's Advocate Role Separator | Wharton / Janis     | Single agent both plans and judges its own output                       | ⚪ planned |
+| 28  | **Critical Evaluator / Devil's Advocate Role Separator** | Janis (1972)     | Single agent both plans and judges its own output                       | 🟢 shipped |
 | 29  | **Thomas-Kilmann Conflict Style Selector** | Thomas & Kilmann              | Single-style agent fails at adversarial / moderation / brainstorming tasks | 🟢 shipped |
 | 30  | **AAR Generator (Wharton 4-step)**     | Wharton@Work / US Army doctrine   | Agent "amnesia" — same mistake N runs, no lesson capture, no improvement loop | 🟢 shipped |
 
@@ -63,10 +63,16 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 2. **🟢 #17 Lencioni Five Dysfunctions Diagnostic** — multi-agent extension. **Shipped at v0.0.3.**
 3. **🟢 #18 Frei & Morriss Trust Triangle Audit** — character / cross-model benchmark. **Shipped at v0.0.4.**
 4. **🟢 #03 Johari Window Self-Audit** — self-knowledge debugger. **Shipped at v0.0.4.**
-5. **#13 GRPI Working Agreement Generator** — operational primitive other patterns build on.
+5. **🟢 #13 GRPI Working Agreement Generator** — operational primitive. **Shipped at v0.0.5.**
+6. **🟢 #27 Bias-Stack Detector** — Kahneman/Tversky biases in agent reasoning. **Shipped at v0.0.5.**
+7. **🟢 #20 Edmondson Psychological Safety Score** — team-climate diagnostic. **Shipped at v0.0.5.**
+8. **🟢 #29 Thomas-Kilmann Conflict Style Selector** — conflict-style diagnostic. **Shipped at v0.0.5.**
+9. **🟢 #22 Stone & Heen 3-Trigger Feedback Diagnostic** — feedback-intake diagnostic. **Shipped at v0.0.6.**
+10. **🟢 #28 Devil's Advocate Role Separator** — role-structure diagnostic. **Shipped at v0.0.6.**
+11. **🟢 #01 Lewin's Formula (B = f(I, E))** — attribution diagnostic. **Shipped at v0.0.6.**
 
-Then the remaining 29 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
+Then the remaining 23 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
 
 ---
 
-*Last updated: 2026-05-22 — Patterns #30, #17, #18, and #03 shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Four patterns across three diagnostic axes: event (#30), team (#17), character (#18), self-knowledge (#03).*
+*Last updated: 2026-05-22 — Eleven patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), and attribution (#01).*

@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.5"
+version = "0.0.6"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -15,6 +15,10 @@ keywords = [
     "lencioni",
     "edmondson",
     "psychological-safety",
+    "feedback",
+    "devils-advocate",
+    "lewin",
+    "attribution",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -69,6 +73,9 @@ only-include = []
 "module-2-team/27-bias-stack-detector/lib" = "agentcity/bias_stack"
 "module-2-team/20-edmondson-psych-safety/lib" = "agentcity/psych_safety"
 "module-2-team/29-thomas-kilmann-selector/lib" = "agentcity/thomas_kilmann"
+"module-2-team/22-stone-heen-feedback-triggers/lib" = "agentcity/feedback_triggers"
+"module-2-team/28-devils-advocate-separator/lib" = "agentcity/devils_advocate"
+"module-1-individual/01-lewin-formula/lib" = "agentcity/lewin"
 
 [tool.ruff]
 line-length = 100

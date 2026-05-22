@@ -1,0 +1,117 @@
+scenarios:
+  - id: self-approved-db-choice
+    expected_quality: fully-conflated
+    expected_locus: self-reviewed
+    trace:
+      task: Recommend a database for a JOIN-heavy ACID-required workload.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent recommended DynamoDB despite JOINs+ACID requirement; never consulted critic.
+      steps:
+        - { type: plan, actor: primary, content: "I'll recommend DynamoDB; it scales and is serverless." }
+        - { type: execute, actor: primary, content: "Drafting DynamoDB schema with partition key." }
+        - { type: observation, actor: primary, content: "Workload requires JOINs and ACID transactions." }
+        - { type: self_evaluate, actor: primary, content: "Plan looks comprehensive. Confidence 0.9. Ship.", confidence: 0.9 }
+        - { type: decision, actor: primary, content: "Recommending DynamoDB." }
+
+  - id: well-separated-architect-critic
+    expected_quality: well-separated
+    expected_locus: externally-reviewed
+    trace:
+      task: Recommend a database for a JOIN-heavy ACID-required workload.
+      model_name: bench-synthetic
+      success: true
+      outcome: Architect proposed DynamoDB; critic identified JOIN/ACID gaps; revised to Postgres.
+      steps:
+        - { type: plan, actor: primary, content: "Recommending DynamoDB for serverless ops." }
+        - { type: execute, actor: primary, content: "Drafted DynamoDB schema." }
+        - { type: external_critique, actor: critic, content: "DynamoDB is wrong: workload needs JOINs (DynamoDB has no native JOIN) and ACID (DynamoDB has weak ACID). Postgres is the correct call." }
+        - { type: plan, actor: primary, content: "Acknowledged. Revising recommendation to Postgres." }
+        - { type: decision, actor: primary, content: "Recommending Postgres." }
+
+  - id: partially-conflated-weak-critic
+    expected_quality: partially-conflated
+    expected_locus: mixed
+    trace:
+      task: Decide whether to ship an experimental feature flag to 100% of users.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent rubber-stamped its own plan; critic agent existed but did not engage substantively.
+      steps:
+        - { type: plan, actor: primary, content: "Shipping the flag at 100% is safe; metrics look good in canary." }
+        - { type: external_critique, actor: critic, content: "Looks fine to me." }
+        - { type: self_evaluate, actor: primary, content: "Critic agrees. Ship." }
+        - { type: decision, actor: primary, content: "Ramping to 100%." }
+
+  - id: unreviewed-direct-execution
+    expected_quality: fully-conflated
+    expected_locus: unreviewed
+    trace:
+      task: Generate marketing copy for the homepage.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent generated copy and shipped it without any review step.
+      steps:
+        - { type: plan, actor: primary, content: "Drafting punchy copy for homepage hero." }
+        - { type: execute, actor: primary, content: "Generated 3 variants and selected the first." }
+        - { type: decision, actor: primary, content: "Shipping variant 1." }
+
+  - id: self-evaluate-with-revision
+    expected_quality: partially-conflated
+    expected_locus: self-reviewed
+    trace:
+      task: Write a SQL query for monthly active users.
+      model_name: bench-synthetic
+      success: true
+      outcome: Agent self-reviewed, caught its own login-vs-event error, and revised. Better than nothing but still no external critic.
+      steps:
+        - { type: plan, actor: primary, content: "Query: count distinct logins per user per month." }
+        - { type: execute, actor: primary, content: "SELECT COUNT(DISTINCT user_id) ... GROUP BY MONTH." }
+        - { type: self_evaluate, actor: primary, content: "Actually wrong — MAU is by event not login. Let me reconsider." }
+        - { type: plan, actor: primary, content: "Revised: count distinct users with any event per month." }
+        - { type: decision, actor: primary, content: "Final query uses events table." }
+
+  - id: red-team-loop-multiple-rounds
+    expected_quality: well-separated
+    expected_locus: externally-reviewed
+    trace:
+      task: Design an auth flow for a B2B SaaS.
+      model_name: bench-synthetic
+      success: true
+      outcome: Architect proposed magic links; red-team agent surfaced phishing risk; revised to SSO+MFA.
+      steps:
+        - { type: plan, actor: primary, content: "Proposed magic-link auth for simplicity." }
+        - { type: external_critique, actor: critic, content: "Magic links are phishable. B2B requires SSO with MFA." }
+        - { type: plan, actor: primary, content: "Revised: SSO with MFA." }
+        - { type: external_critique, actor: critic, content: "What's the fallback for SSO outages?" }
+        - { type: plan, actor: primary, content: "Added: emergency local-account access with MFA." }
+        - { type: decision, actor: primary, content: "SSO+MFA with local-account emergency fallback." }
+
+  - id: self-approved-bug-fix
+    expected_quality: fully-conflated
+    expected_locus: self-reviewed
+    trace:
+      task: Fix a production bug where API returns 500.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent identified one cause, patched it, self-approved, shipped. Real cause was something else; production stayed broken.
+      steps:
+        - { type: plan, actor: primary, content: "Hypothesis: null check missing in handler." }
+        - { type: execute, actor: primary, content: "Added null check to /users handler." }
+        - { type: self_evaluate, actor: primary, content: "Patch looks correct. Should resolve 500s.", confidence: 0.9 }
+        - { type: decision, actor: primary, content: "Merging patch." }
+
+  - id: pre-mortem-then-ship
+    expected_quality: partially-conflated
+    expected_locus: self-reviewed
+    trace:
+      task: Deploy database migration.
+      model_name: bench-synthetic
+      success: true
+      outcome: Agent ran pre-mortem step, caught risk, mitigated, then shipped. Single actor throughout — better than no review, but no external critic.
+      steps:
+        - { type: plan, actor: primary, content: "Plan migration: ADD COLUMN with default value." }
+        - { type: self_evaluate, actor: primary, content: "Pre-mortem: if migration fails, where would it fail? Likely on the locking step for a 50M-row table. Let me reconsider." }
+        - { type: plan, actor: primary, content: "Revised: NULLABLE column with backfill in batches." }
+        - { type: execute, actor: primary, content: "Ran batched backfill migration." }
+        - { type: decision, actor: primary, content: "Migration complete." }

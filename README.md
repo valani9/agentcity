@@ -134,7 +134,21 @@ The library is built to ship:
 
 ## Status
 
-**Early.** Pattern 1 (AAR Generator) is in active development. 30+ patterns are planned. See [PATTERNS.md](PATTERNS.md) for the full roadmap.
+**Early.** Eleven patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
+
+- `agentcity.aar` (#30) — After-Action Review generator
+- `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
+- `agentcity.trust_triangle` (#18) — Frei & Morriss Trust Triangle audit
+- `agentcity.johari` (#03) — Johari Window self-audit
+- `agentcity.grpi` (#13) — GRPI Working Agreement generator
+- `agentcity.bias_stack` (#27) — Kahneman/Tversky Bias-Stack detector
+- `agentcity.psych_safety` (#20) — Edmondson Psychological Safety score
+- `agentcity.thomas_kilmann` (#29) — Thomas-Kilmann Conflict Style selector
+- `agentcity.feedback_triggers` (#22) — Stone & Heen 3-Trigger feedback diagnostic
+- `agentcity.devils_advocate` (#28) — Critical-Evaluator / Devil's Advocate role separator
+- `agentcity.lewin` (#01) — Lewin Formula B = f(I, E) attribution diagnostic
+
+23 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
 
 ## License
 

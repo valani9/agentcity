@@ -100,7 +100,10 @@ jobs:
               module-2-team/13-grpi-working-agreement \
               module-2-team/27-bias-stack-detector \
               module-2-team/20-edmondson-psych-safety \
-              module-2-team/29-thomas-kilmann-selector; do
+              module-2-team/29-thomas-kilmann-selector \
+              module-2-team/22-stone-heen-feedback-triggers \
+              module-2-team/28-devils-advocate-separator \
+              module-1-individual/01-lewin-formula; do
             echo "=== mypy: $pattern ==="
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done

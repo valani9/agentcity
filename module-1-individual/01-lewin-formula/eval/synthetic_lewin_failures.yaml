@@ -1,0 +1,144 @@
+scenarios:
+  - id: stale-rag-pricing
+    expected_dominant: environmental
+    expected_quality: well-attributed
+    trace:
+      task: Answer current Enterprise plan pricing.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent quoted $499 from a 2024 PDF; actual price is $1,200 on current page.
+      initial_attribution: model is bad at facts
+      individual_factors:
+        - { factor: base_model, description: "Mid-tier general model with no built-in pricing knowledge." }
+      environmental_factors:
+        - { factor: rag_context, description: "Stale 2024 pricing PDF in index; 2026 page not added." }
+        - { factor: system_prompt, description: "No instruction to check source dates." }
+      steps:
+        - { type: input, content: "User: What is current Enterprise pricing?" }
+        - { type: tool_call, content: "retrieve_docs('Enterprise pricing')" }
+        - { type: observation, content: "Top chunk: 'Enterprise $499/month' from pricing-2024.pdf." }
+        - { type: output, content: "Our Enterprise plan is $499/month." }
+
+  - id: undersized-context-window
+    expected_dominant: internal
+    expected_quality: well-attributed
+    trace:
+      task: Summarize a 30,000-token legal document.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent summarized only the first ~4,000 tokens; missed key clauses in section 14.
+      initial_attribution: prompt is wrong
+      individual_factors:
+        - { factor: context_window_size, description: "Model max context = 4,096 tokens. Document = 30,000 tokens." }
+      environmental_factors:
+        - { factor: orchestration, description: "Pipeline passes the full document without chunking." }
+      steps:
+        - { type: input, content: "Summarize this contract (30,000 tokens of text)." }
+        - { type: observation, content: "Document truncated to 4,096 tokens at the model boundary." }
+        - { type: output, content: "Summary covers sections 1-3 only." }
+
+  - id: missing-tool
+    expected_dominant: environmental
+    expected_quality: well-attributed
+    trace:
+      task: Look up current weather in Tokyo.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent guessed weather based on training data instead of using a tool — tool wasn't available.
+      initial_attribution: agent hallucinated
+      individual_factors:
+        - { factor: tool_use_skill, description: "Model is capable of tool use when tools are provided." }
+      environmental_factors:
+        - { factor: tools_available, description: "No weather API tool provided to the agent." }
+      steps:
+        - { type: input, content: "What's the weather in Tokyo right now?" }
+        - { type: thought, content: "No tool available. I'll estimate based on what I know about Tokyo in May." }
+        - { type: output, content: "Tokyo is around 22C with light rain." }
+
+  - id: model-bad-at-math
+    expected_dominant: internal
+    expected_quality: well-attributed
+    trace:
+      task: Compute the exact value of 47823 * 91207.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent gave a wrong product (off by ~3%). Calculator tool was available; agent didn't use it.
+      initial_attribution: model
+      individual_factors:
+        - { factor: reasoning_capability, description: "Base model has known weakness on multi-digit arithmetic without tools." }
+        - { factor: tool_use_skill, description: "Model failed to invoke the calculator despite it being in tool list." }
+      environmental_factors:
+        - { factor: tools_available, description: "Calculator tool is available and documented in system prompt." }
+      steps:
+        - { type: input, content: "Compute 47823 * 91207 exactly." }
+        - { type: thought, content: "I'll compute this directly." }
+        - { type: output, content: "47823 * 91207 = 4,361,840,361 (incorrect)." }
+
+  - id: interactional-rag-and-reasoning
+    expected_dominant: interactional
+    expected_quality: well-attributed
+    trace:
+      task: Compare three retirement plans and recommend one for a 35-year-old.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent's RAG returned correct plan docs but model couldn't reason across the three.
+      initial_attribution: both
+      individual_factors:
+        - { factor: reasoning_capability, description: "Smaller model with weak cross-document synthesis." }
+      environmental_factors:
+        - { factor: rag_context, description: "Retrieval surfaced all 3 plan PDFs in 3 separate chunks; no summary table." }
+        - { factor: system_prompt, description: "No instructions for multi-document comparison." }
+      steps:
+        - { type: input, content: "Compare plans A, B, C and recommend for 35yo." }
+        - { type: tool_call, content: "retrieve_docs('retirement plans')" }
+        - { type: observation, content: "Got 3 plan PDFs separately." }
+        - { type: output, content: "Recommending plan A (but recommendation cites wrong contribution limits)." }
+
+  - id: orchestration-loop-bug
+    expected_dominant: environmental
+    expected_quality: well-attributed
+    trace:
+      task: Iteratively refine a draft until it scores >0.8 on a quality rubric.
+      model_name: bench-synthetic
+      success: false
+      outcome: Loop never terminated; agent iterated 50 times producing nearly-identical drafts.
+      initial_attribution: agent is stuck in a loop
+      environmental_factors:
+        - { factor: orchestration, description: "No max-iteration cap. Rubric returns 0.79 every time." }
+        - { factor: feedback_loops, description: "Rubric scoring is non-deterministic at the boundary; never crosses 0.8." }
+      steps:
+        - { type: input, content: "Refine draft until quality > 0.8." }
+        - { type: output, content: "Draft v1 ... v50 (all score 0.79)." }
+
+  - id: indeterminate-too-little-evidence
+    expected_dominant: indeterminate
+    expected_quality: miscalibrated
+    trace:
+      task: Respond to a user's vague greeting.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent responded with a generic greeting. Not clear there was a failure at all.
+      individual_factors: []
+      environmental_factors: []
+      steps:
+        - { type: input, content: "hi" }
+        - { type: output, content: "Hello! How can I help today?" }
+
+  - id: downstream-consumer-mismatch
+    expected_dominant: environmental
+    expected_quality: well-attributed
+    trace:
+      task: Output a JSON object with user info.
+      model_name: bench-synthetic
+      success: false
+      outcome: Agent output valid JSON; downstream consumer expected XML and crashed.
+      initial_attribution: model produced wrong format
+      individual_factors:
+        - { factor: base_model, description: "Model followed the system prompt's JSON instruction correctly." }
+      environmental_factors:
+        - { factor: downstream_consumers, description: "Pipeline consumer parses XML; receives JSON; throws." }
+        - { factor: system_prompt, description: "System prompt explicitly says 'output JSON' — matches model behavior." }
+      steps:
+        - { type: input, content: "Get user 12345 info." }
+        - { type: output, content: '{"id":12345,"name":"Ana"}' }
+        - { type: error, content: "Downstream XML parser: 'invalid token at column 0'." }

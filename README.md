@@ -18,7 +18,7 @@ You may have seen ["AgentCity: Constitutional Governance for Autonomous Agent Ec
 
 ## What's in here
 
-Three modules mirror the structure of MO221 (BU's Organizational Behavior course):
+Three modules mirror the standard organizational-behavior curriculum:
 
 - **Module 1 — Individual Agent Patterns** — Lewin's B=f(I,E), Goleman EI domains, Big Five/HEXACO personality, Vroom expectancy, 4 motivation traps, Yerkes-Dodson optimal workload, Johari Window self-audit.
 - **Module 2 — Multi-Agent Team Patterns** — Lencioni Five Dysfunctions diagnostic, Frei & Morriss Trust Triangle audit, Edmondson Psychological Safety score, AAR generator, GRPI working agreement, Thomas-Kilmann conflict-style router, social-loafing and process-loss detectors.
@@ -55,8 +55,8 @@ MIT.
 
 ## Maintainer
 
-Ilhan Valani — BU undergrad, founder, working in public.
-Background: [github.com/valani9](https://github.com/valani9). Inspired by BU's MO221 (taught by Dr. Hutch Hutchinson) and the open-source-as-credibility-engine practice of gstack.
+Ilhan Valani — builder, working in public.
+Background: [github.com/valani9](https://github.com/valani9). Inspired by the open-source-as-credibility-engine practice of gstack.
 
 ---
 

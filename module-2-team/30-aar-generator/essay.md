@@ -104,4 +104,4 @@ There are thirty-three patterns to come. The first one is here.
 
 ---
 
-*Ilhan Valani is a BU undergrad shipping AgentCity in public, alongside parallel work on AI-native college counseling. The repo lives at [github.com/valani9/AgentCity](https://github.com/valani9/AgentCity). The MO221 course at BU (taught by Dr. Hutch Hutchinson) is the structuring index for the pattern library; no course materials are redistributed, only public OB-literature concepts.*
+*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/AgentCity](https://github.com/valani9/AgentCity). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*

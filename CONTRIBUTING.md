@@ -35,7 +35,7 @@ Every pattern ships with a Substack-ready essay (`essay.md`). If you write an es
 
 - Pattern proposals that don't anchor in named OB literature. AgentCity is specifically the OB-literature-anchored layer; pure design-pattern proposals belong in projects like [Architecting Agentic Communities Using Design Patterns](https://arxiv.org/abs/2601.03624).
 - Implementations that don't ship all five layers (README + lib + demo + benchmark + essay). Half-shipped patterns dilute the library's quality bar. Better one well-shipped pattern than five half-shipped ones.
-- Contributions of MO221 course-internal materials (slides, exercises, solutions). The library uses public OB-literature concepts only.
+- Contributions of any university course's internal materials (slides, exercises, solutions). The library uses public OB-literature concepts only.
 
 ## Code style
 

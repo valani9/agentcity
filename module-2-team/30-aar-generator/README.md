@@ -4,7 +4,6 @@
 
 **Status:** 🟡 in progress (anchor pattern, ships first)
 **Module:** 2 (Team) — though it also applies to single-agent
-**Class anchor:** MO221 Class 22 (Evaluating Decision-Making)
 
 ---
 

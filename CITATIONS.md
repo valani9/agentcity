@@ -58,9 +58,9 @@ If you adapt an AgentCity pattern in your own research, please cite both the und
 - **Zak, P. J.** (2017). "The Neuroscience of Trust." *Harvard Business Review*, January 2017.
 - **Grant, A.** (2020). "Power Doesn't Corrupt, It Exposes Your Real Self." Op-ed / *Adam Grant Substack*.
 
-## Course attribution
+## Curriculum attribution
 
-The MO221 (Boston University) syllabus, taught by Dr. Hutch Hutchinson, was the structuring index for pattern selection. The repository's three-module architecture mirrors MO221's three-module course architecture. Course-internal materials (slide content, exercises, examples) are NOT redistributed in this repository; only public OB-literature concepts are.
+The repository's three-module architecture mirrors a standard organizational-behavior curriculum (Individual / Team / Organizational levels of analysis), which is canonical across most major OB textbooks (Robbins & Judge; McShane & Von Glinow). No course-internal materials are redistributed in this repository — only public OB-literature concepts are.
 
 ## Adjacent literature in AI agents
 

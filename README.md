@@ -88,6 +88,43 @@ print(aar.lesson_record_for_memory)       # inject into agent memory
 
 See [`module-2-team/30-aar-generator/demo/`](module-2-team/30-aar-generator/demo/) for a self-contained example you can run with no API key (uses a deterministic `StubClient`).
 
+## Command-line interface
+
+Installing the package also installs an `agentcity` CLI binary:
+
+```bash
+# Generate an AAR from a JSON trace, read from a file, write markdown to stdout
+agentcity aar --trace path/to/trace.json --client anthropic
+
+# Pipe a trace from stdin (useful in shell pipelines)
+cat trace.json | agentcity aar --client openai
+
+# Get JSON output instead of markdown
+agentcity aar --trace trace.json --client anthropic --format json > aar.json
+
+# Try the pipeline without an API key (deterministic stub responses)
+echo '{"goal":"x","outcome":"y","success":false,"steps":[]}' | agentcity aar --client stub
+
+# Verbose mode (-v INFO, -vv DEBUG)
+agentcity aar -vv --trace trace.json --client anthropic
+
+# Print version
+agentcity version
+```
+
+The `--client` flag accepts `stub`, `anthropic`, `openai`, or `ollama`. The `stub` client is deterministic and requires no API key, useful for trying the pipeline before committing to a provider. The Anthropic and OpenAI clients read API keys from `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` environment variables.
+
+## Production-readiness
+
+The library is built to ship:
+
+- **Retry with exponential backoff** on rate limits, transient network errors, and provider 5xx — configurable via `max_retries`.
+- **Graceful degradation** on malformed LLM JSON output — bad lessons/next-steps are dropped with a warning log, not raised; a partial AAR is more useful than no AAR.
+- **Trace truncation** for inputs larger than `max_trace_chars` (default 200K characters) — middle-truncated to keep the most informative head and tail of the agent run.
+- **Structured logging** via Python `logging` under the `agentcity.aar` namespace.
+- **Type-safe** — `mypy --strict` clean across the library.
+- **CI** — GitHub Actions runs tests, ruff lint, ruff format check, mypy strict, and a wheel-build sanity check on every push and pull request, across Python 3.11 / 3.12 / 3.13 on Linux and macOS.
+
 ## Who this is for
 
 - AI builders shipping agents in production who notice their systems failing in patterns that look like organizational problems, not just engineering ones.

@@ -24,6 +24,14 @@ See README.md for the full pattern explanation, the OB framework anchoring,
 and the comparison with adjacent agent-postmortem tooling.
 """
 
+from ._json_parsing import extract_json_array
+from ._retry import with_retry
+from .clients import (
+    AnthropicClient,
+    OllamaClient,
+    OpenAIClient,
+    StubClient,
+)
 from .generator import AARGenerator, LLMClient
 from .schema import AAR, AgentTrace, Lesson, NextStep, TraceStep
 
@@ -35,6 +43,12 @@ __all__ = [
     "Lesson",
     "NextStep",
     "TraceStep",
+    "AnthropicClient",
+    "OpenAIClient",
+    "OllamaClient",
+    "StubClient",
+    "extract_json_array",
+    "with_retry",
 ]
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"

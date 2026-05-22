@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.1"
+version = "0.0.2"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -44,6 +44,9 @@ dev = [
 Homepage = "https://github.com/valani9/AgentCity"
 Repository = "https://github.com/valani9/AgentCity"
 Issues = "https://github.com/valani9/AgentCity/issues"
+
+[project.scripts]
+agentcity = "agentcity.aar.cli:main"
 
 [build-system]
 requires = ["hatchling"]

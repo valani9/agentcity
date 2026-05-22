@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test (Python ${{ matrix.python-version }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pydantic pytest pytest-cov pyyaml
+
+      - name: Run tests
+        run: |
+          cd module-2-team/30-aar-generator
+          pytest tests/ -v --cov=lib --cov-report=term-missing
+
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install ruff
+        run: python -m pip install ruff
+
+      - name: Run ruff check
+        run: ruff check module-2-team/30-aar-generator/lib module-2-team/30-aar-generator/tests
+
+      - name: Run ruff format check
+        run: ruff format --check module-2-team/30-aar-generator/lib module-2-team/30-aar-generator/tests
+
+  typecheck:
+    name: Typecheck (mypy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install mypy and dependencies
+        run: |
+          python -m pip install mypy pydantic
+
+      - name: Run mypy
+        run: mypy module-2-team/30-aar-generator/lib --strict --ignore-missing-imports
+
+  build:
+    name: Build wheel + sdist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install build
+        run: python -m pip install build
+
+      - name: Build
+        run: python -m build
+
+      - name: Verify wheel contents
+        run: |
+          python -m pip install dist/agentcity-*-py3-none-any.whl
+          python -c "from agentcity.aar import AARGenerator, AgentTrace, TraceStep; print('OK')"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+          retention-days: 14

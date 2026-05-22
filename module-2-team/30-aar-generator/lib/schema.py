@@ -129,7 +129,7 @@ class AAR(BaseModel):
         documentation tool can consume directly.
         """
         out: list[str] = []
-        out.append(f"# After-Action Review\n")
+        out.append("# After-Action Review\n")
         out.append(f"_Generated {self.generated_at.isoformat()}_\n")
         if self.generator_model:
             out.append(f"_Model: {self.generator_model}_\n")
@@ -145,9 +145,7 @@ class AAR(BaseModel):
             out.append(f"- **Root cause:** {lesson.root_cause}\n")
             out.append(f"- **Framework anchor:** {lesson.framework_anchor}\n")
             if lesson.cross_pattern_links:
-                out.append(
-                    f"- **Cross-pattern links:** {', '.join(lesson.cross_pattern_links)}\n"
-                )
+                out.append(f"- **Cross-pattern links:** {', '.join(lesson.cross_pattern_links)}\n")
         out.append("\n## 4. Next Steps — What will we do differently?\n")
         for i, step in enumerate(self.next_steps, 1):
             out.append(f"\n### Step {i}: {step.intervention_type}\n")

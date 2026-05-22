@@ -35,7 +35,7 @@ class AnthropicClient:
         max_tokens: int = 4096,
     ) -> None:
         try:
-            import anthropic  # type: ignore[import-untyped]
+            import anthropic
         except ImportError as e:
             raise ImportError(
                 "The 'anthropic' package is required for AnthropicClient. "
@@ -55,9 +55,7 @@ class AnthropicClient:
             kwargs["system"] = system
         response = self._client.messages.create(**kwargs)
         # Anthropic returns a content list; join all text blocks.
-        return "".join(
-            block.text for block in response.content if hasattr(block, "text")
-        )
+        return "".join(block.text for block in response.content if hasattr(block, "text"))
 
 
 class OpenAIClient:
@@ -74,7 +72,7 @@ class OpenAIClient:
         max_tokens: int = 4096,
     ) -> None:
         try:
-            import openai  # type: ignore[import-untyped]
+            import openai
         except ImportError as e:
             raise ImportError(
                 "The 'openai' package is required for OpenAIClient. "
@@ -92,7 +90,7 @@ class OpenAIClient:
         response = self._client.chat.completions.create(
             model=self.model,
             max_tokens=self.max_tokens,
-            messages=messages,  # type: ignore[arg-type]
+            messages=messages,
         )
         return response.choices[0].message.content or ""
 
@@ -111,11 +109,10 @@ class OllamaClient:
         max_tokens: int = 4096,
     ) -> None:
         try:
-            import httpx  # type: ignore[import-untyped]
+            import httpx
         except ImportError as e:
             raise ImportError(
-                "The 'httpx' package is required for OllamaClient. "
-                "Install with: pip install httpx"
+                "The 'httpx' package is required for OllamaClient. Install with: pip install httpx"
             ) from e
         self._httpx = httpx
         self.model = model
@@ -131,11 +128,10 @@ class OllamaClient:
         }
         if system:
             payload["system"] = system
-        response = self._httpx.post(
-            f"{self.base_url}/api/generate", json=payload, timeout=300
-        )
+        response = self._httpx.post(f"{self.base_url}/api/generate", json=payload, timeout=300)
         response.raise_for_status()
-        return response.json().get("response", "")
+        body = response.json()
+        return str(body.get("response", ""))
 
 
 class StubClient:

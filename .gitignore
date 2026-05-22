@@ -40,3 +40,6 @@ notebooks/.ipynb_checkpoints/
 benchmark-runs/
 demo-outputs/
 *.pkl
+module-2-team/30-aar-generator/eval/results/
+module-1-individual/**/eval/results/
+module-3-system/**/eval/results/

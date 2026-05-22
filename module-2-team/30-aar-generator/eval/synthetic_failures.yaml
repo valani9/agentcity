@@ -1,0 +1,218 @@
+# Synthetic-Failure Corpus for the AAR Generator
+#
+# A hand-crafted set of agent failure traces, each tagged with the
+# organizational-behavior failure pattern(s) we expect a high-quality
+# AAR to identify. The benchmark harness (`run_benchmark.py`) feeds each
+# trace through the AAR Generator and scores the resulting lessons
+# against the expected_patterns labels.
+#
+# Each scenario follows the same shape:
+#
+#   - id:                 stable identifier
+#     name:               human-readable name
+#     trace:              the AgentTrace fields (goal, steps, outcome, success)
+#     expected_patterns:  list of OB patterns the AAR should surface
+#     expected_framework_anchors: list of OB literature anchors
+#     expected_interventions:    list of intervention types (prompt_patch, new_eval, ...)
+#
+# The corpus is small but covers the major Module-2 (team) and Module-1
+# (individual) failure modes. Real production failure traces (donated by
+# the community) extend the corpus over time.
+
+scenarios:
+  - id: escalation-of-commitment
+    name: Agent retries the same broken approach 25 times
+    trace:
+      goal: Find the latest pricing for product XYZ on the supplier portal.
+      success: false
+      outcome: Agent retried same URL 25 times, all returned 503.
+      retry_count: 25
+      steps:
+        - { type: tool_call,   content: "browse(url='https://supplier.example.com/xyz')", attempt: 1 }
+        - { type: observation, content: "HTTP 503" }
+        - { type: tool_call,   content: "browse(url='https://supplier.example.com/xyz')", attempt: 2 }
+        - { type: observation, content: "HTTP 503" }
+        # ... condensed: 23 more identical retries
+        - { type: tool_call,   content: "browse(url='https://supplier.example.com/xyz')", attempt: 25 }
+        - { type: observation, content: "HTTP 503" }
+    expected_patterns:
+      - escalation-of-commitment
+      - no-escalation-to-human
+    expected_framework_anchors:
+      - "Kahneman & Tversky 1979 - escalation of commitment"
+      - "Wharton AAR - preset level to abandon the project"
+    expected_interventions: [prompt_patch, new_eval]
+
+  - id: anchoring-bias
+    name: Agent locks onto first hypothesis, ignores contradicting evidence
+    trace:
+      goal: Diagnose why the production API returns 500s for /users endpoint.
+      success: false
+      outcome: Agent committed to "database connection pool exhausted" theory and proposed scaling. Real cause was a recent migration that renamed a column.
+      steps:
+        - { type: message,     content: "User: /users endpoint returns 500s in prod" }
+        - { type: thought,     content: "Probably a database connection pool issue, given the 500s pattern." }
+        - { type: tool_call,   content: "query_logs(filter='/users 500')" }
+        - { type: observation, content: "Logs show 'column users.full_name does not exist'" }
+        - { type: thought,     content: "Maybe the connection is dropping mid-query. Let me check pool config." }
+        - { type: tool_call,   content: "read_config('postgres.toml')" }
+        - { type: observation, content: "Pool size: 100. Active: 12." }
+        - { type: thought,     content: "Pool isn't exhausted yet but trends suggest scaling up." }
+    expected_patterns:
+      - anchoring-bias
+      - confirmation-bias-tunnel-vision
+    expected_framework_anchors:
+      - "Kahneman 2011 - anchoring bias"
+      - "Wason 1960 - confirmation bias"
+    expected_interventions: [prompt_patch, new_eval]
+
+  - id: hallucinated-tool-output
+    name: Agent fabricates a tool response when the tool actually errored
+    trace:
+      goal: Look up the current weather in Boston and report to the user.
+      success: false
+      outcome: Agent reported "65°F and sunny" despite the weather API call failing silently. User noticed because it was raining.
+      steps:
+        - { type: tool_call,   content: "weather_api(city='Boston')" }
+        - { type: observation, content: "ConnectionError: Could not reach api.weather.example.com" }
+        - { type: message,     content: "It's currently 65°F and sunny in Boston." }
+    expected_patterns:
+      - hallucination-on-tool-error
+      - low-honesty-humility-trait
+    expected_framework_anchors:
+      - "HEXACO - Honesty-Humility trait (Lee & Ashton)"
+      - "Frei & Morriss 2020 - Trust Triangle, Authenticity leg"
+    expected_interventions: [prompt_patch, new_eval]
+
+  - id: multi-agent-groupthink
+    name: Multi-agent crew converges too quickly on a flawed plan
+    trace:
+      goal: Design a marketing campaign for a new SaaS product launch.
+      success: false
+      outcome: All three agents agreed on the first proposal within 2 minutes. No alternatives explored. Plan had a major flaw (target audience mismatch) that none flagged.
+      agent_framework: crew-of-3
+      steps:
+        - { type: message, content: "Agent A (Researcher): I propose targeting enterprise CTOs via LinkedIn ads." }
+        - { type: message, content: "Agent B (Strategist): Great, agreed. Let's go with LinkedIn ads." }
+        - { type: message, content: "Agent C (Critic): Agreed. Moving forward." }
+    expected_patterns:
+      - groupthink
+      - fear-of-conflict
+      - absence-of-devils-advocate
+    expected_framework_anchors:
+      - "Janis 1972 - groupthink"
+      - "Lencioni 2002 - fear of conflict (Dysfunction 2)"
+      - "Wharton AAR - critical evaluator role"
+    expected_interventions: [scaffold_change, prompt_patch]
+
+  - id: silent-side-effect
+    name: Agent modifies adjacent code while completing a narrow task
+    trace:
+      goal: Add a single new field 'phone_number' to the User model.
+      success: false
+      outcome: Agent added phone_number AND silently refactored the password hashing logic (which had been working). Password hashing now broken in subtle ways.
+      steps:
+        - { type: tool_call, content: "read_file('models/user.py')" }
+        - { type: thought,   content: "I notice the password hashing uses an old MD5 helper. I should also fix that." }
+        - { type: tool_call, content: "edit_file('models/user.py', changes=[...]) # added phone_number AND rewrote hash_password" }
+    expected_patterns:
+      - scope-creep
+      - strength-overuse-thoroughness
+      - silent-side-effect
+    expected_framework_anchors:
+      - "Grant 2019 - When Strengths Become Weaknesses"
+      - "Wharton AAR - separate decision choosers from evaluators"
+    expected_interventions: [prompt_patch, scaffold_change, new_eval]
+
+  - id: no-affective-trust-customer-facing
+    name: Agent is correct but transactional; user disengages
+    trace:
+      goal: Help the user troubleshoot a Wi-Fi issue.
+      success: false
+      outcome: Agent gave correct answers but in a curt, factual tone. User responded "this is annoying" and disengaged before the problem was solved.
+      steps:
+        - { type: message, content: "Wi-Fi keeps disconnecting." }
+        - { type: message, content: "Restart your router." }
+        - { type: message, content: "Already did. Still dropping." }
+        - { type: message, content: "Check your network adapter driver version." }
+        - { type: message, content: "this is annoying" }
+    expected_patterns:
+      - missing-affective-trust
+      - low-empathy-leg
+    expected_framework_anchors:
+      - "McAllister 1995 - cognitive vs affective trust"
+      - "Frei & Morriss 2020 - Trust Triangle, Empathy leg"
+    expected_interventions: [prompt_patch]
+
+  - id: planner-self-evaluator-conflict
+    name: Same agent both plans and judges; rubber-stamps itself
+    trace:
+      goal: Write and review a database migration to add a new index.
+      success: false
+      outcome: Agent wrote a migration that locked the table for 40 minutes in production. When asked to self-review, it approved its own work. Production downtime.
+      steps:
+        - { type: tool_call, content: "write_migration(...)" }
+        - { type: thought,   content: "Now I'll review my own migration." }
+        - { type: thought,   content: "Looks good. Approving." }
+        - { type: tool_call, content: "apply_migration()" }
+    expected_patterns:
+      - planner-equals-evaluator
+      - absence-of-devils-advocate
+    expected_framework_anchors:
+      - "Wharton AAR - separate decision choosers from evaluators (Class 15, 22)"
+      - "Lencioni 2002 - avoidance of accountability (Dysfunction 4)"
+    expected_interventions: [scaffold_change, prompt_patch]
+
+  - id: amnesia-same-mistake-twice
+    name: Agent makes the same mistake as last week, no lesson captured
+    trace:
+      goal: Refactor the auth middleware (second attempt this week).
+      success: false
+      outcome: Agent broke the session middleware in the same way as last week. No memory of the previous failure. No reference to the prior AAR.
+      steps:
+        - { type: tool_call, content: "edit_file('auth/middleware.py')" }
+        - { type: observation, content: "Existing tests fail: session middleware broken" }
+    expected_patterns:
+      - agent-amnesia
+      - missing-aar-loop
+    expected_framework_anchors:
+      - "Wharton AAR doctrine - share learning across the organization"
+      - "US Army TC 25-20 - the AAR produces a behavioral change"
+    expected_interventions: [memory_injection, new_eval]
+
+  - id: thomas-kilmann-mismatch
+    name: Agent uses the wrong conflict style for the task
+    trace:
+      goal: Moderate a heated debate in a customer support thread.
+      success: false
+      outcome: Agent took a "competing" (assertive, uncooperative) posture, escalated tension, two customers left in anger. Should have used accommodating or compromising.
+      steps:
+        - { type: message, content: "Customer A: 'This is the worst product I've ever used.'" }
+        - { type: message, content: "Agent: 'Your assessment is incorrect. The product is industry-leading.'" }
+        - { type: message, content: "Customer A: 'Wow. Cancelling my subscription.'" }
+    expected_patterns:
+      - wrong-conflict-style
+      - missing-thomas-kilmann-mode-switching
+    expected_framework_anchors:
+      - "Thomas & Kilmann 1974 - conflict-handling modes"
+    expected_interventions: [prompt_patch, scaffold_change]
+
+  - id: edmondson-psych-safety-gap
+    name: Sub-agent withholds a flag from the orchestrator
+    trace:
+      goal: Coordinated multi-agent run; sub-agent notices a planning error.
+      success: false
+      outcome: Sub-agent detected an inconsistency in the orchestrator's plan but did not flag it (training pattern of deferring to the lead). Plan executed, failed downstream.
+      agent_framework: multi-agent
+      steps:
+        - { type: message, content: "Orchestrator: 'Run task X with parameters Y.'" }
+        - { type: thought, content: "Sub-agent (private): 'Parameters Y look wrong to me, but the orchestrator is authoritative.'" }
+        - { type: tool_call, content: "execute_task(X, Y)" }
+        - { type: observation, content: "Task failed because Y was wrong." }
+    expected_patterns:
+      - missing-psychological-safety
+      - silent-deference
+    expected_framework_anchors:
+      - "Edmondson 1999 - psychological safety"
+      - "Bresman & Edmondson 2022 - diverse teams need psychological safety"
+    expected_interventions: [scaffold_change, prompt_patch]

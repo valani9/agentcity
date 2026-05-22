@@ -14,10 +14,15 @@ downstream eval pipelines.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
+
+
+def _utcnow() -> datetime:
+    """Timezone-aware UTC now; replaces the deprecated `datetime.utcnow`."""
+    return datetime.now(timezone.utc)
 
 
 # --- Input: a structured agent run trace -----------------------------------
@@ -109,7 +114,7 @@ class AAR(BaseModel):
 
     # Metadata
     source_trace_id: str | None = None
-    generated_at: datetime = Field(default_factory=datetime.utcnow)
+    generated_at: datetime = Field(default_factory=_utcnow)
     generator_model: str | None = None
     success: bool
 

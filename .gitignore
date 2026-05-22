@@ -43,3 +43,4 @@ demo-outputs/
 module-2-team/30-aar-generator/eval/results/
 module-1-individual/**/eval/results/
 module-3-system/**/eval/results/
+dist/

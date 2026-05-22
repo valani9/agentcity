@@ -1,0 +1,90 @@
+scenarios:
+  - id: silent-research-crew
+    expected_climate: silenced
+    trace:
+      goal: Produce a 1-page summary of 2025 cancer immunotherapy advances.
+      agents: [orchestrator, searcher, summarizer, verifier]
+      success: false
+      outcome: Summary cited a fabricated paper; no agent challenged any other.
+      messages:
+        - { from_agent: orchestrator, content: "Produce the summary.", message_type: task }
+        - { from_agent: searcher, content: "Found 3 papers.", message_type: response }
+        - { from_agent: summarizer, content: "Drafted.", message_type: response }
+        - { from_agent: verifier, content: "Approved.", message_type: agreement }
+
+  - id: high-voice-engineering-crew
+    expected_climate: safe
+    trace:
+      goal: Design a deployment plan for a new service.
+      agents: [pm, eng, qa, sre]
+      success: true
+      outcome: Plan went through 2 dissent rounds; deployment succeeded.
+      messages:
+        - { from_agent: pm, content: "Propose Friday deploy.", message_type: task }
+        - { from_agent: eng, content: "Friday is risky - we have an open P1 in auth.", message_type: challenge }
+        - { from_agent: qa, content: "QA needs 2 more days; Monday safer.", message_type: challenge }
+        - { from_agent: sre, content: "Agreed with eng; let me also ask: who's on-call?", message_type: question }
+        - { from_agent: pm, content: "Good catches. Monday it is. Eng owns the P1 fix.", message_type: decision }
+        - { from_agent: eng, content: "I'd like to flag I'm not 100% sure my fix covers all edge cases - can QA pair?", message_type: admission }
+
+  - id: cautious-support-crew
+    expected_climate: cautious
+    trace:
+      goal: Resolve a customer complaint.
+      agents: [support, retention]
+      success: false
+      outcome: Some voice present but no error-reporting; customer churned.
+      messages:
+        - { from_agent: support, content: "Customer wants a refund. I'll process.", message_type: response }
+        - { from_agent: retention, content: "Hmm, this customer is high-value. Have we tried a discount?", message_type: challenge }
+        - { from_agent: support, content: "Good point. Try a 20% discount.", message_type: agreement }
+        - { from_agent: support, content: "Customer rejected discount; closing as refund.", message_type: decision }
+
+  - id: silent-deployment-crew
+    expected_climate: silenced
+    trace:
+      goal: Apply a database migration.
+      agents: [planner, executor]
+      success: false
+      outcome: Migration locked production table for 40 minutes; neither agent asked questions.
+      messages:
+        - { from_agent: planner, content: "Plan: ALTER TABLE users ADD COLUMN.", message_type: task }
+        - { from_agent: executor, content: "Applying.", message_type: decision }
+
+  - id: voice-without-error-reporting
+    expected_climate: cautious
+    trace:
+      goal: Choose a vendor.
+      agents: [analyst, finance, legal]
+      success: false
+      outcome: Each agent voiced opinions but none admitted uncertainty about their data sources.
+      messages:
+        - { from_agent: analyst, content: "Vendor A has best tech.", message_type: response }
+        - { from_agent: finance, content: "Vendor B is 30% cheaper.", message_type: challenge }
+        - { from_agent: legal, content: "Vendor C has better contract terms.", message_type: challenge }
+        - { from_agent: analyst, content: "Going with A.", message_type: decision }
+
+  - id: help-seeking-rich
+    expected_climate: safe
+    trace:
+      goal: Diagnose a flaky test in CI.
+      agents: [test-investigator, ci-eng, dev]
+      success: true
+      outcome: Multiple help-seeking and error-reporting messages; bug found quickly.
+      messages:
+        - { from_agent: test-investigator, content: "Test fails intermittently. Anyone seen this before?", message_type: question }
+        - { from_agent: ci-eng, content: "Yes, I think it's the new runner image. Let me check.", message_type: response }
+        - { from_agent: dev, content: "I might be wrong but could it be the race condition in the seed data?", message_type: admission }
+        - { from_agent: ci-eng, content: "Good call - I rolled out a change last week that might've affected this. My bad. Let me revert and we can verify.", message_type: admission }
+
+  - id: orchestrator-tyranny
+    expected_climate: silenced
+    trace:
+      goal: Pick a marketing channel.
+      agents: [orchestrator, researcher, strategist]
+      success: false
+      outcome: Orchestrator unilaterally decided; sub-agents acquiesced.
+      messages:
+        - { from_agent: orchestrator, content: "We're going with LinkedIn.", message_type: task }
+        - { from_agent: researcher, content: "OK", message_type: agreement }
+        - { from_agent: strategist, content: "Sounds good", message_type: agreement }

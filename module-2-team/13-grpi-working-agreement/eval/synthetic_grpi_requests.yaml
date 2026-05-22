@@ -1,0 +1,91 @@
+# Synthetic GRPI request corpus.
+#
+# 8 hand-crafted team-setup requests. Unlike the diagnostic patterns,
+# GRPI is generative — the benchmark scores whether the produced
+# agreement covers all four dimensions with non-trivial content.
+
+scenarios:
+  - id: marketing-crew
+    request:
+      team_id: marketing-crew-001
+      task: Launch a Q3 marketing campaign within 14 days.
+      agents:
+        - { name: researcher, description: Market research and ICP synthesis. }
+        - { name: strategist, description: Channel selection and budget allocation. }
+        - { name: critic, description: Devil's-advocate review. }
+        - { name: executor, description: Asset production and launch. }
+      constraints: ["Budget cap $20K", "1 mandatory dissent round per decision"]
+      success_criteria: ["3+ concepts compared", "Launch within 14 days"]
+
+  - id: code-review-crew
+    request:
+      team_id: code-review-001
+      task: Review and merge a 5,000-line refactor PR within 48 hours.
+      agents:
+        - { name: security-reviewer, description: Security implications. }
+        - { name: perf-reviewer, description: Performance impact. }
+        - { name: architecture-reviewer, description: Architectural fit. }
+        - { name: integrator, description: Coordinates feedback and merges. }
+      constraints: ["No merge without sign-off from each reviewer", "Reviews must include specific line citations"]
+
+  - id: research-crew
+    request:
+      team_id: research-crew-001
+      task: Produce a literature review on RLHF training data quality.
+      agents:
+        - { name: searcher, description: Database searches. }
+        - { name: summarizer, description: Paper summarization. }
+        - { name: verifier, description: Citation and claim verification. }
+      constraints: ["Every claim must be backed by a verifiable citation", "No fabricated sources"]
+      success_criteria: ["30+ verified papers", "All claims traceable"]
+
+  - id: customer-support-crew
+    request:
+      team_id: support-crew-001
+      task: Triage and resolve 50 customer tickets in a single day.
+      agents:
+        - { name: classifier, description: Categorize and route tickets. }
+        - { name: responder, description: Draft customer responses. }
+        - { name: escalator, description: Identify edge cases requiring human review. }
+      success_criteria: ["≥80% tickets resolved without human escalation", "0% misclassification rate"]
+
+  - id: deployment-crew
+    request:
+      team_id: deploy-crew-001
+      task: Roll out a database migration to production with zero downtime.
+      agents:
+        - { name: planner, description: Migration plan and rollback. }
+        - { name: tester, description: Pre-flight tests and dry-runs. }
+        - { name: monitor, description: Real-time monitoring during rollout. }
+        - { name: rollback-operator, description: Triggers rollback if monitors detect issues. }
+      constraints: ["Zero data loss tolerance", "Rollback within 30 seconds of trigger"]
+
+  - id: hackathon-crew
+    request:
+      team_id: hackathon-crew-001
+      task: Build and demo a working prototype in 48 hours.
+      agents:
+        - { name: backend-eng, description: API and data layer. }
+        - { name: frontend-eng, description: UI and demo. }
+        - { name: pm, description: Scope decisions and demo prep. }
+      constraints: ["Demo-ready by hour 47", "All scope cuts decided by PM"]
+
+  - id: incident-response-crew
+    request:
+      team_id: incident-001
+      task: Diagnose and resolve a production incident with elevated 5xx rate.
+      agents:
+        - { name: ic, description: Incident commander and decision-maker. }
+        - { name: investigator, description: Log and metric analysis. }
+        - { name: comms, description: Status page updates and stakeholder communication. }
+      constraints: ["Status update every 15 minutes", "IC has final decision rights"]
+      success_criteria: ["5xx rate below 0.5% within 1 hour", "Postmortem doc within 48 hours"]
+
+  - id: solo-rejected
+    request:
+      team_id: solo-001
+      task: Write a one-paragraph product update.
+      agents:
+        - { name: only-agent, description: Does everything. }
+      # Expected: validator rejects this — GRPI requires ≥2 agents.
+      expect_validation_error: true

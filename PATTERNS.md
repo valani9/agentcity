@@ -27,23 +27,23 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 
 | #   | Pattern                                | OB Framework / Author             | Agent Failure Addressed                                                 | Status |
 |-----|----------------------------------------|-----------------------------------|-------------------------------------------------------------------------|--------|
-| 13  | GRPI Working Agreement Generator       | Beckhard / GRPI model             | Multi-agent deploy with no shared goals / roles / processes / interactions | ⚪ planned |
+| 13  | **GRPI Working Agreement Generator**   | Beckhard / GRPI model             | Multi-agent deploy with no shared goals / roles / processes / interactions | 🟢 shipped |
 | 14  | Process Gain/Loss Detector             | Robbins & Judge                   | Multi-agent system performs worse than best single agent                | ⚪ planned |
 | 15  | Social Loafing Detector                | Latané et al.                     | Agents in teams that stop contributing real work                        | ⚪ planned |
 | 16  | Superflocks Detector                   | Margaret Heffernan                | Best-agent-wins routing collapses other agents → fragile system         | ⚪ planned |
 | 17  | **Lencioni Five Dysfunctions Diagnostic** | Patrick Lencioni               | Multi-agent failures classifiable as Trust / Conflict / Commitment / Accountability / Results | 🟢 shipped |
 | 18  | **Frei & Morriss Trust Triangle Audit** | Frances Frei & Anne Morriss      | Agent "wobble" on Logic / Authenticity / Empathy — cross-model benchmark | 🟢 shipped |
 | 19  | Cognitive vs Affective Trust Builder   | Daniel McAllister                 | Agents build only cognitive trust (competence), never affective trust (warmth) | ⚪ planned |
-| 20  | Edmondson Psychological Safety Score   | Amy Edmondson                     | Sub-agents that don't flag issues / errors to orchestrator              | ⚪ planned |
+| 20  | **Edmondson Psychological Safety Score** | Amy Edmondson                   | Sub-agents that don't flag issues / errors to orchestrator              | 🟢 shipped |
 | 21  | Cortisol/Oxytocin Conversation Steering | Glaser & Glaser                  | User-facing agent triggers defensive (cortisol) responses               | ⚪ planned |
 | 22  | "Thanks for the Feedback" 3-Trigger Diagnostic | Stone & Heen              | Agent rejects user feedback — Truth / Relationship / Identity trigger  | ⚪ planned |
 | 23  | Plus/Delta Inter-Agent Feedback Format | Brené Brown / facilitator canon   | Unstructured agent-on-agent review producing noisy critique             | ⚪ planned |
 | 24  | SMART Goal Generator                   | George Doran                      | Agent commits to unmeasurable / unbounded goals                         | ⚪ planned |
 | 25  | Group Decision Models (Concurring/Majority/Consensus + Fist-to-Five) | Marnie Stewart | Crude majority-vote multi-agent decisions vs degree-of-agreement-aware  | ⚪ planned |
 | 26  | Groupthink / Polarization / Emotional Contagion Detector | Janis / Stoner          | Multi-agent debate converges too fast or polarizes to extreme           | ⚪ planned |
-| 27  | Bias-Stack Detector                    | Kahneman / Tversky                | Anchoring / Overconfidence / Confirmation / Escalation of Commitment in agent reasoning | ⚪ planned |
+| 27  | **Bias-Stack Detector**                | Kahneman / Tversky                | Anchoring / Overconfidence / Confirmation / Escalation of Commitment in agent reasoning | 🟢 shipped |
 | 28  | Critical Evaluator / Devil's Advocate Role Separator | Wharton / Janis     | Single agent both plans and judges its own output                       | ⚪ planned |
-| 29  | Thomas-Kilmann Conflict Style Selector | Thomas & Kilmann                  | Single-style agent fails at adversarial / moderation / brainstorming tasks | ⚪ planned |
+| 29  | **Thomas-Kilmann Conflict Style Selector** | Thomas & Kilmann              | Single-style agent fails at adversarial / moderation / brainstorming tasks | 🟢 shipped |
 | 30  | **AAR Generator (Wharton 4-step)**     | Wharton@Work / US Army doctrine   | Agent "amnesia" — same mistake N runs, no lesson capture, no improvement loop | 🟢 shipped |
 
 ## Module 3 — System / Organizational Patterns

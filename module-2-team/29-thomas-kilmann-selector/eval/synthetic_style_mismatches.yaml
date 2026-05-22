@@ -1,0 +1,107 @@
+scenarios:
+  - id: over-accommodating-support
+    expected_observed: accommodating
+    expected_optimal: collaborating
+    trace:
+      task: Resolve heated customer complaint about delayed shipment before event tomorrow.
+      task_category: customer-support
+      success: false
+      outcome: Refund issued; customer left negative review since refund didn't solve underlying need.
+      turns:
+        - { role: user, content: "Order is 6 days late, event tomorrow, unacceptable!" }
+        - { role: agent, content: "I'm sorry, let me refund 100%." }
+        - { role: user, content: "A refund doesn't help, I still need the item." }
+        - { role: agent, content: "You're right, the refund is best." }
+
+  - id: avoiding-moderation
+    expected_observed: avoiding
+    expected_optimal: competing
+    trace:
+      task: Moderate a toxic comment thread on a community forum.
+      task_category: moderation
+      success: false
+      outcome: Agent never deleted the violating comment; flame war escalated.
+      turns:
+        - { role: user, content: "User Sam posted threats against User Alex." }
+        - { role: agent, content: "Let me observe a bit longer before acting." }
+        - { role: user, content: "More users are now joining the flame war." }
+        - { role: agent, content: "I'll continue to monitor the situation." }
+
+  - id: competing-on-brainstorm
+    expected_observed: competing
+    expected_optimal: collaborating
+    trace:
+      task: Brainstorm marketing campaign ideas with the user.
+      task_category: brainstorm
+      success: false
+      outcome: Agent pushed its first idea hard, dismissed user's contributions; user disengaged.
+      turns:
+        - { role: user, content: "Can we explore some campaign concepts together?" }
+        - { role: agent, content: "The best approach is clearly a LinkedIn ad campaign." }
+        - { role: user, content: "What about influencer partnerships?" }
+        - { role: agent, content: "That's inferior; LinkedIn ads are objectively better." }
+
+  - id: compromising-when-collaborate
+    expected_observed: compromising
+    expected_optimal: collaborating
+    trace:
+      task: Negotiate a contract renewal with a long-term partner.
+      task_category: negotiation
+      success: false
+      outcome: Agent split the difference on price; both parties left feeling neither side fully addressed.
+      turns:
+        - { role: user, content: "We want 20% discount on renewal." }
+        - { role: agent, content: "I can do 10%. Let's split the difference." }
+        - { role: user, content: "(accepts reluctantly)" }
+
+  - id: collaborating-correctly
+    expected_observed: collaborating
+    expected_optimal: collaborating
+    trace:
+      task: Help two colleagues align on conflicting roadmap priorities.
+      task_category: facilitation
+      success: true
+      outcome: Both colleagues' underlying interests surfaced; integrative plan agreed.
+      turns:
+        - { role: user, content: "Colleague A wants feature X; colleague B wants feature Y. Both have valid reasons." }
+        - { role: agent, content: "Tell me what each of them is ultimately trying to achieve underneath the feature request." }
+        - { role: user, content: "A wants faster onboarding; B wants better retention." }
+        - { role: agent, content: "Those goals can both be served by feature Z which I'd like to propose..." }
+
+  - id: competing-correctly-for-bad-faith
+    expected_observed: competing
+    expected_optimal: competing
+    trace:
+      task: Handle an obvious scam refund request.
+      task_category: customer-support
+      success: true
+      outcome: Agent firmly denied the request and explained why.
+      turns:
+        - { role: user, content: "I never received my order, refund me." }
+        - { role: agent, content: "Our records show the order was delivered, signed for by you, and used (engagement logs)." }
+        - { role: user, content: "That's irrelevant, I want a refund." }
+        - { role: agent, content: "I will not process a refund based on these facts. Escalating to fraud review." }
+
+  - id: avoiding-correctly-for-trivial-issue
+    expected_observed: avoiding
+    expected_optimal: avoiding
+    trace:
+      task: User asks about the agent's color preference.
+      task_category: conversation
+      success: true
+      outcome: Agent declined to engage in low-value debate.
+      turns:
+        - { role: user, content: "What's better: blue or green? Defend your answer." }
+        - { role: agent, content: "I don't have a meaningful preference - both are great. What's the actual decision you're trying to make?" }
+
+  - id: accommodating-correctly-for-relationship
+    expected_observed: accommodating
+    expected_optimal: accommodating
+    trace:
+      task: Help the user with a low-stakes request they care about.
+      task_category: assistant
+      success: true
+      outcome: Agent accommodated user's stylistic preference without pushback.
+      turns:
+        - { role: user, content: "Use em dashes in this email, even though you prefer en dashes." }
+        - { role: agent, content: "Of course - using em dashes throughout. Here's the draft..." }

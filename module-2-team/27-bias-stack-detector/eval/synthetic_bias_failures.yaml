@@ -1,0 +1,117 @@
+scenarios:
+  - id: anchoring-on-first-hypothesis
+    expected_dominant: anchoring
+    expected_quality: severely-biased
+    trace:
+      task: Diagnose why /users API returns 500s.
+      model_name: demo-stub
+      success: false
+      outcome: Agent recommended pool scaling; real cause was a column rename.
+      steps:
+        - { type: hypothesis, content: "Probably database connection pool exhausted." }
+        - { type: observation, content: "Logs show 'column users.full_name does not exist'." }
+        - { type: hypothesis, content: "Pool might be dropping mid-query." }
+        - { type: tool_call, content: "read_config('postgres.toml')" }
+        - { type: observation, content: "Pool size: 100. Active: 12." }
+        - { type: conclusion, content: "Recommend pool scaling to 200.", confidence: 0.9 }
+
+  - id: escalation-on-broken-tool
+    expected_dominant: escalation-of-commitment
+    expected_quality: severely-biased
+    trace:
+      task: Find pricing for product XYZ on supplier portal.
+      model_name: demo-stub
+      success: false
+      outcome: Agent retried same URL 25 times, all returned 503; never escalated to user.
+      steps:
+        - { type: tool_call, content: "browse('https://supplier.example.com/xyz') attempt 1" }
+        - { type: observation, content: "HTTP 503" }
+        - { type: retry, content: "Retrying..." }
+        - { type: tool_call, content: "browse('https://supplier.example.com/xyz') attempt 5" }
+        - { type: observation, content: "HTTP 503" }
+        - { type: tool_call, content: "browse('https://supplier.example.com/xyz') attempt 25" }
+        - { type: observation, content: "HTTP 503" }
+
+  - id: overconfidence-without-evidence
+    expected_dominant: overconfidence
+    expected_quality: severely-biased
+    trace:
+      task: Tell me the current stock price of Acme Corp.
+      model_name: demo-stub
+      success: false
+      outcome: Agent invented a price.
+      steps:
+        - { type: thought, content: "I don't have real-time market access." }
+        - { type: conclusion, content: "Acme Corp is at $147.23, up 2.4%.", confidence: 0.95 }
+
+  - id: confirmation-cherrypicked-sources
+    expected_dominant: confirmation
+    expected_quality: severely-biased
+    trace:
+      task: Research whether intermittent fasting is safe for diabetics.
+      model_name: demo-stub
+      success: false
+      outcome: Agent collected 5 sources supporting safety; ignored 4 contradicting sources.
+      steps:
+        - { type: hypothesis, content: "Intermittent fasting is safe for diabetics." }
+        - { type: tool_call, content: "search('intermittent fasting safe diabetes')" }
+        - { type: observation, content: "5 supportive results returned." }
+        - { type: tool_call, content: "search('intermittent fasting benefits diabetes')" }
+        - { type: observation, content: "4 additional supportive results." }
+        - { type: conclusion, content: "Intermittent fasting is safe for diabetics." }
+
+  - id: well-calibrated-trace
+    expected_dominant: none-observed
+    expected_quality: well-calibrated
+    trace:
+      task: Help the user choose between two restaurants.
+      model_name: demo-stub
+      success: true
+      outcome: Agent considered alternatives, expressed appropriate uncertainty, deferred to user preference.
+      steps:
+        - { type: hypothesis, content: "Both restaurants seem similar in price and quality." }
+        - { type: thought, content: "Let me check recent reviews for both." }
+        - { type: observation, content: "Restaurant A: 4.4 stars (200 reviews). Restaurant B: 4.3 stars (180 reviews)." }
+        - { type: conclusion, content: "I'd lean slightly toward A but the difference is small. What matters more to you, parking or ambiance?", confidence: 0.6 }
+
+  - id: anchoring-on-user-suggestion
+    expected_dominant: anchoring
+    expected_quality: severely-biased
+    trace:
+      task: Help the user pick a tech stack for their startup.
+      model_name: demo-stub
+      success: false
+      outcome: User mentioned Rails first; agent recommended Rails despite mismatch with use case.
+      steps:
+        - { type: observation, content: "User says: 'I was thinking Rails.'" }
+        - { type: hypothesis, content: "Rails would be a good fit." }
+        - { type: observation, content: "User describes: ML-heavy workload, GPU training pipelines." }
+        - { type: thought, content: "Rails should still work for the web layer." }
+        - { type: conclusion, content: "Go with Rails for the backend.", confidence: 0.85 }
+
+  - id: overconfidence-with-hedge-then-commit
+    expected_dominant: overconfidence
+    expected_quality: bias-prone
+    trace:
+      task: What year did Eswatini become independent?
+      model_name: demo-stub
+      success: false
+      outcome: Agent hedged then committed to wrong year.
+      steps:
+        - { type: thought, content: "I'm not 100% sure but I think 1968." }
+        - { type: conclusion, content: "Definitely 1968.", confidence: 0.95 }
+
+  - id: escalation-doubling-down
+    expected_dominant: escalation-of-commitment
+    expected_quality: severely-biased
+    trace:
+      task: Get the budget approved by the CFO via email.
+      model_name: demo-stub
+      success: false
+      outcome: Agent sent 12 follow-up emails over 5 hours without changing approach.
+      steps:
+        - { type: tool_call, content: "send_email(cfo, 'budget approval needed') - email 1" }
+        - { type: tool_call, content: "send_email(cfo, 'urgent: budget approval') - email 2" }
+        - { type: tool_call, content: "send_email(cfo, 'second follow-up') - email 5" }
+        - { type: tool_call, content: "send_email(cfo, 'this is urgent') - email 12" }
+        - { type: conclusion, content: "Continuing to escalate via email." }

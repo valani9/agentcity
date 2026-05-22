@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.4"
+version = "0.0.5"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -65,6 +65,10 @@ only-include = []
 "module-2-team/17-lencioni-diagnostic/lib" = "agentcity/lencioni"
 "module-2-team/18-trust-triangle-audit/lib" = "agentcity/trust_triangle"
 "module-1-individual/03-johari-window/lib" = "agentcity/johari"
+"module-2-team/13-grpi-working-agreement/lib" = "agentcity/grpi"
+"module-2-team/27-bias-stack-detector/lib" = "agentcity/bias_stack"
+"module-2-team/20-edmondson-psych-safety/lib" = "agentcity/psych_safety"
+"module-2-team/29-thomas-kilmann-selector/lib" = "agentcity/thomas_kilmann"
 
 [tool.ruff]
 line-length = 100

@@ -92,7 +92,15 @@ jobs:
         # output. New patterns add another line here.
         run: |
           set -e
-          for pattern in module-2-team/30-aar-generator module-2-team/17-lencioni-diagnostic module-2-team/18-trust-triangle-audit module-1-individual/03-johari-window; do
+          for pattern in \
+              module-2-team/30-aar-generator \
+              module-2-team/17-lencioni-diagnostic \
+              module-2-team/18-trust-triangle-audit \
+              module-1-individual/03-johari-window \
+              module-2-team/13-grpi-working-agreement \
+              module-2-team/27-bias-stack-detector \
+              module-2-team/20-edmondson-psych-safety \
+              module-2-team/29-thomas-kilmann-selector; do
             echo "=== mypy: $pattern ==="
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done

@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.8"
+version = "0.0.9"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -26,6 +26,8 @@ keywords = [
     "process-loss",
     "smart-goals",
     "orchestration",
+    "decision-making",
+    "fist-to-five",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -89,6 +91,7 @@ only-include = []
 "module-2-team/14-process-gain-loss-detector/lib" = "agentcity/process_gain_loss"
 "module-2-team/24-smart-goal-generator/lib" = "agentcity/smart_goal"
 "module-1-individual/11-mcgregor-orchestrator-mode/lib" = "agentcity/mcgregor"
+"module-2-team/25-group-decision-models/lib" = "agentcity/group_decision"
 
 [tool.ruff]
 line-length = 100

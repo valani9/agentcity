@@ -39,7 +39,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 22  | **"Thanks for the Feedback" 3-Trigger Diagnostic** | Stone & Heen          | Agent rejects user feedback — Truth / Relationship / Identity trigger  | 🟢 shipped |
 | 23  | Plus/Delta Inter-Agent Feedback Format | Brené Brown / facilitator canon   | Unstructured agent-on-agent review producing noisy critique             | ⚪ planned |
 | 24  | **SMART Goal Generator**               | George Doran (1981)               | Agent commits to unmeasurable / unbounded goals                         | 🟢 shipped |
-| 25  | Group Decision Models (Concurring/Majority/Consensus + Fist-to-Five) | Marnie Stewart | Crude majority-vote multi-agent decisions vs degree-of-agreement-aware  | ⚪ planned |
+| 25  | **Group Decision Models (Concurring/Majority/Consensus/Fist-to-Five/Unanimous)** | Stewart / Kaner (2014) | Crude majority-vote multi-agent decisions vs degree-of-agreement-aware  | 🟢 shipped |
 | 26  | **Groupthink / Polarization / Emotional Contagion Detector** | Janis / Stoner / Hatfield | Multi-agent debate converges too fast or polarizes to extreme      | 🟢 shipped |
 | 27  | **Bias-Stack Detector**                | Kahneman / Tversky                | Anchoring / Overconfidence / Confirmation / Escalation of Commitment in agent reasoning | 🟢 shipped |
 | 28  | **Critical Evaluator / Devil's Advocate Role Separator** | Janis (1972)     | Single agent both plans and judges its own output                       | 🟢 shipped |
@@ -76,9 +76,10 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 15. **🟢 #14 Process Gain/Loss Detector** — outcome-level multi-agent metric. **Shipped at v0.0.8.**
 16. **🟢 #24 SMART Goal Generator** — individual-goal generative pattern. **Shipped at v0.0.8.**
 17. **🟢 #11 McGregor Theory X/Y Orchestrator Mode** — orchestration-design diagnostic. **Shipped at v0.0.8.**
+18. **🟢 #25 Group Decision Models** — decision-aggregation generative pattern. **Shipped at v0.0.9.**
 
-Then the remaining 17 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
+Then the remaining 16 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
 
 ---
 
-*Last updated: 2026-05-22 — Seventeen patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13, #24), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), attribution (#01), trust-balance (#19), per-agent contribution (#15), debate-dynamics (#26), process-gain/loss (#14), and orchestration-design (#11).*
+*Last updated: 2026-05-22 — Eighteen patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13, #24, #25), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), attribution (#01), trust-balance (#19), per-agent contribution (#15), debate-dynamics (#26), process-gain/loss (#14), and orchestration-design (#11).*

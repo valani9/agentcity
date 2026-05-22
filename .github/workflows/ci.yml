@@ -109,7 +109,8 @@ jobs:
               module-2-team/26-groupthink-polarization-contagion \
               module-2-team/14-process-gain-loss-detector \
               module-2-team/24-smart-goal-generator \
-              module-1-individual/11-mcgregor-orchestrator-mode; do
+              module-1-individual/11-mcgregor-orchestrator-mode \
+              module-2-team/25-group-decision-models; do
             echo "=== mypy: $pattern ==="
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done

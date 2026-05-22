@@ -1,0 +1,119 @@
+scenarios:
+  - id: high-stakes-buy-in-required
+    expected_model: fist_to_five
+    request:
+      title: Choose a database for high-stakes analytics workload.
+      options:
+        - { option_id: postgres, description: Postgres with replicas. }
+        - { option_id: dynamodb, description: DynamoDB serverless. }
+        - { option_id: clickhouse, description: ClickHouse OLAP. }
+      agents: [architect, sre, data-eng, security]
+      stakes: high
+      reversibility: partial
+      time_pressure: moderate
+      expertise_asymmetry: moderate
+      regulatory_exposure: false
+      buy_in_required: true
+
+  - id: low-stakes-urgent-routine
+    expected_model: concurring
+    request:
+      title: Pick a default sort order for the dashboard table.
+      options:
+        - { option_id: alpha, description: Alphabetical. }
+        - { option_id: recency, description: Most recent first. }
+      agents: [pm, designer]
+      stakes: low
+      reversibility: reversible
+      time_pressure: urgent
+      expertise_asymmetry: moderate
+      buy_in_required: false
+
+  - id: regulatory-exposure-unanimous
+    expected_model: unanimous
+    request:
+      title: Approve a privacy-policy update affecting EU users.
+      options:
+        - { option_id: approve, description: Approve the proposed update. }
+        - { option_id: reject, description: Reject and revise. }
+      agents: [legal, privacy-officer, ceo, head-of-eng]
+      stakes: high
+      reversibility: irreversible
+      time_pressure: moderate
+      expertise_asymmetry: high
+      regulatory_exposure: true
+      buy_in_required: true
+
+  - id: medium-stakes-majority-fine
+    expected_model: majority
+    request:
+      title: Choose the title of next quarter's marketing campaign.
+      options:
+        - { option_id: title_a, description: Title A. }
+        - { option_id: title_b, description: Title B. }
+        - { option_id: title_c, description: Title C. }
+      agents: [pm, design, marketing, copywriter]
+      stakes: medium
+      reversibility: reversible
+      time_pressure: moderate
+      expertise_asymmetry: balanced
+      buy_in_required: false
+
+  - id: high-stakes-irreversible-consensus
+    expected_model: consensus
+    request:
+      title: Approve an irreversible production schema migration.
+      options:
+        - { option_id: ship, description: Ship the migration this week. }
+        - { option_id: delay, description: Delay one sprint for more testing. }
+      agents: [tech-lead, sre, db-owner]
+      stakes: high
+      reversibility: irreversible
+      time_pressure: moderate
+      expertise_asymmetry: moderate
+      buy_in_required: true
+
+  - id: forced-fist-to-five
+    expected_model: fist_to_five
+    request:
+      title: Approve the new design language.
+      options:
+        - { option_id: design_a, description: Design A. }
+        - { option_id: design_b, description: Design B. }
+      agents: [pm, design, eng]
+      stakes: medium
+      reversibility: partial
+      time_pressure: none
+      expertise_asymmetry: moderate
+      buy_in_required: true
+      forced_model: fist_to_five
+
+  - id: low-stakes-balanced-majority
+    expected_model: majority
+    request:
+      title: Vote on the team retro venue.
+      options:
+        - { option_id: office, description: In-office. }
+        - { option_id: cafe, description: At the cafe. }
+        - { option_id: zoom, description: Over Zoom. }
+      agents: [a, b, c, d, e]
+      stakes: low
+      reversibility: reversible
+      time_pressure: none
+      expertise_asymmetry: balanced
+      buy_in_required: false
+
+  - id: regulatory-irreversible-unanimous
+    expected_model: unanimous
+    request:
+      title: Authorize the irreversible deletion of an EU user's account under GDPR.
+      options:
+        - { option_id: approve, description: Approve deletion. }
+        - { option_id: hold, description: Hold for additional verification. }
+      agents: [privacy-officer, legal, support-lead]
+      stakes: high
+      reversibility: irreversible
+      time_pressure: moderate
+      expertise_asymmetry: high
+      regulatory_exposure: true
+      buy_in_required: true

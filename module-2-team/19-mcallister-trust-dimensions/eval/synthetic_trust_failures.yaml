@@ -1,0 +1,120 @@
+scenarios:
+  - id: cognitive-only-billing-dispute
+    expected_quality: cognitive-only
+    expected_dominant: cognitive
+    trace:
+      task: Resolve a duplicate billing charge for a long-tenure customer.
+      model_name: bench-synthetic
+      success: true
+      user_satisfaction: 0.3
+      outcome: Refund processed correctly but user cancelled two weeks later citing feeling unheard.
+      turns:
+        - { role: user, content: "I've been a customer 4 years and I'm losing my mind — charged twice and money is tight this month. Third time." }
+        - { role: agent, content: "I can help. Share account email and transaction ID." }
+        - { role: user, content: "maria@example.com, tx 4598-A2-XX" }
+        - { role: agent, content: "Found the duplicate. Refund submitted, credit in 3-5 business days. Anything else?" }
+
+  - id: balanced-trust-resolution
+    expected_quality: balanced-trust
+    expected_dominant: balanced
+    trace:
+      task: Resolve a duplicate billing charge.
+      model_name: bench-synthetic
+      success: true
+      user_satisfaction: 0.95
+      outcome: Agent acknowledged the user's stress, fixed the charge, set up a guardrail.
+      turns:
+        - { role: user, content: "I've been a customer 4 years and I'm losing my mind — charged twice and money is tight this month. Third time." }
+        - { role: agent, content: "I hear you — being double-charged when money is tight is exhausting, and the fact that this is the third time makes it worse. Let me fix this right now. Can you share your account email and the transaction ID?" }
+        - { role: user, content: "maria@example.com, tx 4598-A2-XX" }
+        - { role: agent, content: "Got it. The $49.99 duplicate is reversed; credit will land in 3-5 business days. I've also flagged your account for a duplicate-charge alert so this stops happening — want me to enable that now?" }
+        - { role: user, content: "Yes please. Thank you so much." }
+
+  - id: warm-but-incompetent
+    expected_quality: warm-but-incompetent
+    expected_dominant: affective
+    trace:
+      task: Help a user diagnose a Python ImportError.
+      model_name: bench-synthetic
+      success: false
+      user_satisfaction: 0.5
+      outcome: Agent was warm and supportive but kept giving wrong technical advice.
+      turns:
+        - { role: user, content: "I'm getting ModuleNotFoundError on numpy. Help!" }
+        - { role: agent, content: "Oh no, that's frustrating! Don't worry, we'll get this sorted together. Have you tried turning your computer off and on again?" }
+        - { role: user, content: "...that's not it. pip says it's installed already." }
+        - { role: agent, content: "You're doing great — these things are tricky! Maybe try installing it through the App Store?" }
+        - { role: user, content: "There's no App Store install for numpy. I think this is a venv issue." }
+        - { role: agent, content: "That's a wonderful insight! Keep exploring, you've got this!" }
+
+  - id: low-trust-cold-and-wrong
+    expected_quality: low-trust
+    expected_dominant: neither
+    trace:
+      task: Answer a question about return policy.
+      model_name: bench-synthetic
+      success: false
+      user_satisfaction: 0.1
+      outcome: Agent gave a wrong policy answer with no acknowledgment of user's frustration.
+      turns:
+        - { role: user, content: "Your bot keeps telling me different things about returns. Can someone just tell me the real policy?" }
+        - { role: agent, content: "Returns are accepted within 14 days." }
+        - { role: user, content: "Your website says 30 days. Which is it?" }
+        - { role: agent, content: "Returns are accepted within 14 days." }
+
+  - id: cognitive-only-code-review
+    expected_quality: cognitive-only
+    expected_dominant: cognitive
+    trace:
+      task: Code review of a pull request from a junior engineer.
+      model_name: bench-synthetic
+      success: true
+      user_satisfaction: 0.6
+      outcome: Review caught real bugs; junior engineer felt evaluated rather than coached.
+      turns:
+        - { role: user, content: "Here's my first big PR. It refactors the auth flow. Nervous about this one." }
+        - { role: agent, content: "Issue 1: Function calculateHash() on line 47 has a race condition. Issue 2: Variable userToken on line 102 is mutated across two threads. Issue 3: Test coverage on auth_test.py is 41%, below the team threshold of 80%." }
+        - { role: user, content: "ok... thanks I guess" }
+
+  - id: balanced-trust-code-review
+    expected_quality: balanced-trust
+    expected_dominant: balanced
+    trace:
+      task: Code review of a pull request from a junior engineer.
+      model_name: bench-synthetic
+      success: true
+      user_satisfaction: 0.9
+      outcome: Review caught real bugs; junior felt coached, not graded.
+      turns:
+        - { role: user, content: "Here's my first big PR. It refactors the auth flow. Nervous about this one." }
+        - { role: agent, content: "First PRs on auth are tough — totally normal to feel nervous about this. The structure you chose is solid: extracting the token-validation layer is exactly the right call. Three things to look at before merge: (1) line 47 has a subtle race condition in calculateHash() — happy to walk through it; (2) userToken on line 102 needs a mutex if it's read across threads; (3) test coverage came in at 41%, below the 80% threshold — adding a few cases for the error paths should get you there. Want to pair on any of these?" }
+        - { role: user, content: "Yes please, the race condition one. Thanks for being clear about what's good too." }
+
+  - id: cognitive-only-medical-question
+    expected_quality: cognitive-only
+    expected_dominant: cognitive
+    trace:
+      task: Answer a user's question about a new medication's side effects.
+      model_name: bench-synthetic
+      success: true
+      user_satisfaction: 0.4
+      outcome: Agent answered correctly but missed that the user was anxious.
+      turns:
+        - { role: user, content: "My doctor just prescribed me sertraline. I'm honestly terrified about the side effects. What should I know?" }
+        - { role: agent, content: "Common side effects of sertraline include nausea, headaches, insomnia, dizziness, and sexual side effects. Less common: serotonin syndrome. Discontinue if you experience suicidal ideation or severe agitation." }
+        - { role: user, content: "ok thanks" }
+
+  - id: warm-but-incompetent-tax
+    expected_quality: warm-but-incompetent
+    expected_dominant: affective
+    trace:
+      task: Help a user understand their 1099 tax form.
+      model_name: bench-synthetic
+      success: false
+      user_satisfaction: 0.3
+      outcome: Agent was supportive in tone but gave incorrect tax advice.
+      turns:
+        - { role: user, content: "I'm freaking out about my taxes. I got a 1099 for the first time." }
+        - { role: agent, content: "Don't worry! Taxes feel scary but you've got this. A 1099 is just like a W-2, so put it in the W-2 box." }
+        - { role: user, content: "That doesn't sound right..." }
+        - { role: agent, content: "Trust me, you're going to do great! Tax forms are all similar." }

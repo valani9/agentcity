@@ -134,7 +134,7 @@ The library is built to ship:
 
 ## Status
 
-**Early.** Eleven patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
+**Early.** Fourteen patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
 
 - `agentcity.aar` (#30) — After-Action Review generator
 - `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
@@ -147,8 +147,11 @@ The library is built to ship:
 - `agentcity.feedback_triggers` (#22) — Stone & Heen 3-Trigger feedback diagnostic
 - `agentcity.devils_advocate` (#28) — Critical-Evaluator / Devil's Advocate role separator
 - `agentcity.lewin` (#01) — Lewin Formula B = f(I, E) attribution diagnostic
+- `agentcity.mcallister_trust` (#19) — McAllister Cognitive vs Affective Trust dimensions
+- `agentcity.social_loafing` (#15) — Latané Social Loafing detector
+- `agentcity.debate_pathology` (#26) — Groupthink / Polarization / Emotional Contagion detector
 
-23 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
+20 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
 
 ## License
 

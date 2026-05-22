@@ -29,18 +29,18 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 |-----|----------------------------------------|-----------------------------------|-------------------------------------------------------------------------|--------|
 | 13  | **GRPI Working Agreement Generator**   | Beckhard / GRPI model             | Multi-agent deploy with no shared goals / roles / processes / interactions | 🟢 shipped |
 | 14  | Process Gain/Loss Detector             | Robbins & Judge                   | Multi-agent system performs worse than best single agent                | ⚪ planned |
-| 15  | Social Loafing Detector                | Latané et al.                     | Agents in teams that stop contributing real work                        | ⚪ planned |
+| 15  | **Social Loafing Detector**            | Latané et al. (1979)              | Agents in teams that stop contributing real work                        | 🟢 shipped |
 | 16  | Superflocks Detector                   | Margaret Heffernan                | Best-agent-wins routing collapses other agents → fragile system         | ⚪ planned |
 | 17  | **Lencioni Five Dysfunctions Diagnostic** | Patrick Lencioni               | Multi-agent failures classifiable as Trust / Conflict / Commitment / Accountability / Results | 🟢 shipped |
 | 18  | **Frei & Morriss Trust Triangle Audit** | Frances Frei & Anne Morriss      | Agent "wobble" on Logic / Authenticity / Empathy — cross-model benchmark | 🟢 shipped |
-| 19  | Cognitive vs Affective Trust Builder   | Daniel McAllister                 | Agents build only cognitive trust (competence), never affective trust (warmth) | ⚪ planned |
+| 19  | **Cognitive vs Affective Trust Builder** | Daniel McAllister (1995)        | Agents build only cognitive trust (competence), never affective trust (warmth) | 🟢 shipped |
 | 20  | **Edmondson Psychological Safety Score** | Amy Edmondson                   | Sub-agents that don't flag issues / errors to orchestrator              | 🟢 shipped |
 | 21  | Cortisol/Oxytocin Conversation Steering | Glaser & Glaser                  | User-facing agent triggers defensive (cortisol) responses               | ⚪ planned |
 | 22  | **"Thanks for the Feedback" 3-Trigger Diagnostic** | Stone & Heen          | Agent rejects user feedback — Truth / Relationship / Identity trigger  | 🟢 shipped |
 | 23  | Plus/Delta Inter-Agent Feedback Format | Brené Brown / facilitator canon   | Unstructured agent-on-agent review producing noisy critique             | ⚪ planned |
 | 24  | SMART Goal Generator                   | George Doran                      | Agent commits to unmeasurable / unbounded goals                         | ⚪ planned |
 | 25  | Group Decision Models (Concurring/Majority/Consensus + Fist-to-Five) | Marnie Stewart | Crude majority-vote multi-agent decisions vs degree-of-agreement-aware  | ⚪ planned |
-| 26  | Groupthink / Polarization / Emotional Contagion Detector | Janis / Stoner          | Multi-agent debate converges too fast or polarizes to extreme           | ⚪ planned |
+| 26  | **Groupthink / Polarization / Emotional Contagion Detector** | Janis / Stoner / Hatfield | Multi-agent debate converges too fast or polarizes to extreme      | 🟢 shipped |
 | 27  | **Bias-Stack Detector**                | Kahneman / Tversky                | Anchoring / Overconfidence / Confirmation / Escalation of Commitment in agent reasoning | 🟢 shipped |
 | 28  | **Critical Evaluator / Devil's Advocate Role Separator** | Janis (1972)     | Single agent both plans and judges its own output                       | 🟢 shipped |
 | 29  | **Thomas-Kilmann Conflict Style Selector** | Thomas & Kilmann              | Single-style agent fails at adversarial / moderation / brainstorming tasks | 🟢 shipped |
@@ -70,9 +70,12 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 9. **🟢 #22 Stone & Heen 3-Trigger Feedback Diagnostic** — feedback-intake diagnostic. **Shipped at v0.0.6.**
 10. **🟢 #28 Devil's Advocate Role Separator** — role-structure diagnostic. **Shipped at v0.0.6.**
 11. **🟢 #01 Lewin's Formula (B = f(I, E))** — attribution diagnostic. **Shipped at v0.0.6.**
+12. **🟢 #19 McAllister Cognitive vs Affective Trust** — trust-balance diagnostic. **Shipped at v0.0.7.**
+13. **🟢 #15 Social Loafing Detector** — per-agent contribution diagnostic. **Shipped at v0.0.7.**
+14. **🟢 #26 Groupthink / Polarization / Contagion Detector** — debate-dynamics diagnostic. **Shipped at v0.0.7.**
 
-Then the remaining 23 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
+Then the remaining 20 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
 
 ---
 
-*Last updated: 2026-05-22 — Eleven patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), and attribution (#01).*
+*Last updated: 2026-05-22 — Fourteen patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), attribution (#01), trust-balance (#19), per-agent contribution (#15), and debate-dynamics (#26).*

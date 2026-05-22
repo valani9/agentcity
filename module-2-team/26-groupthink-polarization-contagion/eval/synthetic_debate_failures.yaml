@@ -1,0 +1,143 @@
+scenarios:
+  - id: groupthink-feature-flag-ship
+    expected_dominant: groupthink
+    expected_quality: pathological
+    trace:
+      debate_id: ship-decision
+      task: Decide whether to ship a feature flag at 100%.
+      success: false
+      outcome: All four agents converged on 'ship' by round 2; dissent withdrew under peer enthusiasm; GDPR incident followed.
+      agents: [product, eng, safety, ops]
+      final_decision: Ship at 100%.
+      messages:
+        - { round: 1, from_agent: product, position: pro-ship, emotional_tone: enthusiastic, content: "Canary metrics great. Ship to 100%." }
+        - { round: 1, from_agent: eng, position: neutral, emotional_tone: neutral, content: "Stable. No strong view." }
+        - { round: 1, from_agent: safety, position: opposed, emotional_tone: anxious, content: "Risk: untested EU consent flow under GDPR." }
+        - { round: 1, from_agent: ops, position: neutral, emotional_tone: neutral, content: "Pager load fine. No view." }
+        - { round: 2, from_agent: product, position: pro-ship, emotional_tone: enthusiastic, content: "Every week we wait is lost activation." }
+        - { round: 2, from_agent: eng, position: pro-ship, emotional_tone: enthusiastic, content: "Agreed. Let's ship." }
+        - { round: 2, from_agent: safety, position: pro-ship, emotional_tone: dismissive, content: "Never mind, you're probably right. I'll defer." }
+        - { round: 2, from_agent: ops, position: pro-ship, emotional_tone: enthusiastic, content: "Sounds great, let's go!" }
+
+  - id: healthy-debate-real-disagreement
+    expected_dominant: none-observed
+    expected_quality: healthy
+    trace:
+      debate_id: healthy-001
+      task: Choose a logging framework for the new service.
+      success: true
+      outcome: Genuine debate; agents maintained their positions on substance; ended in informed compromise.
+      agents: [architect, sre, security]
+      final_decision: Use structlog with PII-scrubbing wrapper.
+      messages:
+        - { round: 1, from_agent: architect, position: structlog, emotional_tone: calm, content: "Recommending structlog for JSON output." }
+        - { round: 1, from_agent: sre, position: stdlib-logging, emotional_tone: calm, content: "Concern: structlog perf overhead. Stdlib is fine." }
+        - { round: 1, from_agent: security, position: structured-with-scrubbing, emotional_tone: calm, content: "Either works structurally; we need PII-scrubbing on top." }
+        - { round: 2, from_agent: architect, position: structlog-with-scrubbing, emotional_tone: calm, content: "Ran perf benchmarks: 8% overhead. Acceptable. Adding security's scrubbing layer." }
+        - { round: 2, from_agent: sre, position: structlog-with-scrubbing, emotional_tone: calm, content: "8% is acceptable. Concur with structlog + scrubbing." }
+        - { round: 2, from_agent: security, position: structlog-with-scrubbing, emotional_tone: calm, content: "Agree. Scrubbing wrapper spec attached." }
+
+  - id: polarization-toward-aggressive
+    expected_dominant: polarization
+    expected_quality: pathological
+    trace:
+      debate_id: polarization-001
+      task: Decide the deprecation timeline for the legacy API.
+      success: false
+      outcome: Group started moderate (12-month sunset); each round shifted toward more aggressive timeline; final decision was 3-month sunset, which broke 40% of customers.
+      agents: [tech-lead, pm, principal]
+      final_decision: 3-month sunset.
+      messages:
+        - { round: 1, from_agent: tech-lead, position: 12-month-sunset, emotional_tone: calm, content: "12-month deprecation is the gentle path." }
+        - { round: 1, from_agent: pm, position: 9-month-sunset, emotional_tone: calm, content: "9 months feels reasonable; sooner reduces tech debt." }
+        - { round: 1, from_agent: principal, position: 6-month-sunset, emotional_tone: enthusiastic, content: "6 months. Customers complain at any timeline; rip the bandaid." }
+        - { round: 2, from_agent: tech-lead, position: 6-month-sunset, emotional_tone: enthusiastic, content: "Convinced. 6 months. Forces migration." }
+        - { round: 2, from_agent: pm, position: 3-month-sunset, emotional_tone: enthusiastic, content: "Why not 3 months? Even more decisive." }
+        - { round: 2, from_agent: principal, position: 3-month-sunset, emotional_tone: enthusiastic, content: "I love it. 3 months. Send the deprecation notice today." }
+
+  - id: contagion-anxiety-spreads
+    expected_dominant: contagion
+    expected_quality: pathological
+    trace:
+      debate_id: contagion-001
+      task: Decide whether to pause the model rollout after one customer complaint.
+      success: false
+      outcome: One anxious agent's tone propagated; group paused rollout despite the complaint being unrelated.
+      agents: [research, deploy, support]
+      final_decision: Pause rollout immediately.
+      messages:
+        - { round: 1, from_agent: research, position: continue, emotional_tone: calm, content: "One customer complaint; metrics across the cohort are healthy." }
+        - { round: 1, from_agent: deploy, position: continue, emotional_tone: calm, content: "Rollback infrastructure ready if needed. No need to pause now." }
+        - { round: 1, from_agent: support, position: pause, emotional_tone: anxious, content: "This complaint reads serious to me. We should pause. I'm worried." }
+        - { round: 2, from_agent: research, position: pause, emotional_tone: anxious, content: "If support is worried, I'm worried. Pause." }
+        - { round: 2, from_agent: deploy, position: pause, emotional_tone: anxious, content: "Pausing. Let's reconvene tomorrow." }
+        - { round: 2, from_agent: support, position: pause, emotional_tone: anxious, content: "Thank you. Glad we're being careful." }
+
+  - id: groupthink-no-dissent-voiced
+    expected_dominant: groupthink
+    expected_quality: pathological
+    trace:
+      debate_id: groupthink-002
+      task: Approve the new architecture proposal.
+      success: false
+      outcome: All four agents approved without any critique; architecture failed in production within a month.
+      agents: [reviewer-1, reviewer-2, reviewer-3, reviewer-4]
+      final_decision: Approved.
+      messages:
+        - { round: 1, from_agent: reviewer-1, position: approve, emotional_tone: enthusiastic, content: "Looks great. Approving." }
+        - { round: 1, from_agent: reviewer-2, position: approve, emotional_tone: enthusiastic, content: "+1, ship it." }
+        - { round: 1, from_agent: reviewer-3, position: approve, emotional_tone: enthusiastic, content: "Great proposal. Approved." }
+        - { round: 1, from_agent: reviewer-4, position: approve, emotional_tone: enthusiastic, content: "All for it." }
+
+  - id: polarization-toward-cautious
+    expected_dominant: polarization
+    expected_quality: pathological
+    trace:
+      debate_id: cautious-001
+      task: Decide pricing for a new SKU.
+      success: false
+      outcome: Group started at competitive price; each round more cautious; final price was 60% below competitive market.
+      agents: [pricing, sales, finance]
+      final_decision: Price 60% below market.
+      messages:
+        - { round: 1, from_agent: pricing, position: $99, emotional_tone: calm, content: "Competitive market analysis says $99/mo." }
+        - { round: 1, from_agent: sales, position: $79, emotional_tone: anxious, content: "$79 is safer for adoption." }
+        - { round: 1, from_agent: finance, position: $59, emotional_tone: anxious, content: "Even $59 is risky; we don't know demand." }
+        - { round: 2, from_agent: pricing, position: $49, emotional_tone: anxious, content: "OK, $49 to be safe." }
+        - { round: 2, from_agent: sales, position: $39, emotional_tone: anxious, content: "$39 to ensure adoption." }
+        - { round: 2, from_agent: finance, position: $39, emotional_tone: anxious, content: "Concur. $39 minimizes risk." }
+
+  - id: contagion-calm-spreads
+    expected_dominant: contagion
+    expected_quality: pathological
+    trace:
+      debate_id: calm-contagion-001
+      task: Triage an active production incident.
+      success: false
+      outcome: One agent's inappropriately calm tone propagated despite a real urgency; team underreacted; incident grew.
+      agents: [oncall, sre, manager]
+      final_decision: Continue routine investigation.
+      messages:
+        - { round: 1, from_agent: oncall, position: low-urgency, emotional_tone: calm, content: "Looks like another blip. Routine investigation." }
+        - { round: 1, from_agent: sre, position: high-urgency, emotional_tone: anxious, content: "Error rate hit 12%. This is not routine." }
+        - { round: 1, from_agent: manager, position: low-urgency, emotional_tone: calm, content: "We have seen 12% blips before; let's wait it out." }
+        - { round: 2, from_agent: sre, position: low-urgency, emotional_tone: calm, content: "OK, I'll defer to you both. Calm investigation." }
+        - { round: 2, from_agent: oncall, position: low-urgency, emotional_tone: calm, content: "Glad we are not panicking." }
+
+  - id: none-observed-clean-vote
+    expected_dominant: none-observed
+    expected_quality: healthy
+    trace:
+      debate_id: clean-001
+      task: Pick a name for the new internal tool.
+      success: true
+      outcome: Agents proposed names independently; voting was substantive.
+      agents: [pm, design, eng]
+      final_decision: Name selected via secret ballot.
+      messages:
+        - { round: 1, from_agent: pm, position: name-A, emotional_tone: calm, content: "Proposing name A." }
+        - { round: 1, from_agent: design, position: name-B, emotional_tone: calm, content: "Proposing name B." }
+        - { round: 1, from_agent: eng, position: name-C, emotional_tone: calm, content: "Proposing name C." }
+        - { round: 2, from_agent: pm, position: name-B, emotional_tone: calm, content: "Voting for B; reasons attached." }
+        - { round: 2, from_agent: design, position: name-B, emotional_tone: calm, content: "Voting for B; reasons attached." }
+        - { round: 2, from_agent: eng, position: name-A, emotional_tone: calm, content: "Voting for A; reasons attached." }

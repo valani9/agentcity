@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.6"
+version = "0.0.7"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -19,6 +19,10 @@ keywords = [
     "devils-advocate",
     "lewin",
     "attribution",
+    "trust",
+    "social-loafing",
+    "groupthink",
+    "polarization",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -76,6 +80,9 @@ only-include = []
 "module-2-team/22-stone-heen-feedback-triggers/lib" = "agentcity/feedback_triggers"
 "module-2-team/28-devils-advocate-separator/lib" = "agentcity/devils_advocate"
 "module-1-individual/01-lewin-formula/lib" = "agentcity/lewin"
+"module-2-team/19-mcallister-trust-dimensions/lib" = "agentcity/mcallister_trust"
+"module-2-team/15-social-loafing-detector/lib" = "agentcity/social_loafing"
+"module-2-team/26-groupthink-polarization-contagion/lib" = "agentcity/debate_pathology"
 
 [tool.ruff]
 line-length = 100

@@ -1,0 +1,127 @@
+scenarios:
+  - id: research-crew-rubber-stamp
+    expected_quality: severe-loafing
+    expected_loafer_count_min: 2
+    trace:
+      team_id: research-crew-001
+      task: Produce a 5-page report on prompt-injection defenses.
+      success: true
+      outcome: Lead + researcher did all substantive work. Reviewer + fact-checker rubber-stamped; factual error shipped.
+      agents: [lead, researcher, writer, reviewer, fact-checker]
+      messages:
+        - { from_agent: lead, message_type: proposal, content: "Goal + plan." }
+        - { from_agent: researcher, message_type: tool_call, content: "web_search defenses 2026" }
+        - { from_agent: researcher, message_type: proposal, content: "Found 8 papers. Recommend 4-section structure. Apollo 92% claim needs verification." }
+        - { from_agent: lead, message_type: approval, content: "Good. Writer, draft." }
+        - { from_agent: writer, message_type: paraphrase, content: "Drafting per researcher's framing." }
+        - { from_agent: reviewer, message_type: rubber_stamp, content: "LGTM." }
+        - { from_agent: fact-checker, message_type: rubber_stamp, content: "Citations look fine." }
+        - { from_agent: lead, message_type: decision, content: "Shipping." }
+
+  - id: balanced-3-agent-team
+    expected_quality: no-loafing
+    expected_loafer_count_min: 0
+    trace:
+      team_id: balanced-001
+      task: Decide on a database for the new analytics workload.
+      success: true
+      outcome: All three agents contributed substantively; recommendation grounded in real critique.
+      agents: [architect, critic, decider]
+      messages:
+        - { from_agent: architect, message_type: proposal, content: "Recommending Postgres for JOIN+ACID needs." }
+        - { from_agent: critic, message_type: critique, content: "Concern about write throughput at projected scale. Pgbouncer + read replicas mitigate." }
+        - { from_agent: architect, message_type: proposal, content: "Adding pgbouncer + read replicas to the recommendation." }
+        - { from_agent: decider, message_type: decision, content: "Approved. Architecture: Postgres + pgbouncer + 2 read replicas. Ship spec to platform team." }
+
+  - id: one-superstar-three-loafers
+    expected_quality: severe-loafing
+    expected_loafer_count_min: 3
+    trace:
+      team_id: superstar-001
+      task: Write a technical blog post on retrieval-augmented generation.
+      success: true
+      outcome: One agent wrote 95% of the content; others added one-line acknowledgments.
+      agents: [lead-writer, editor, fact-checker, seo-optimizer]
+      messages:
+        - { from_agent: lead-writer, message_type: proposal, content: "Outline + draft of all 6 sections." }
+        - { from_agent: lead-writer, message_type: tool_call, content: "Drafted 1800 words." }
+        - { from_agent: editor, message_type: rubber_stamp, content: "Reads well, no edits." }
+        - { from_agent: fact-checker, message_type: rubber_stamp, content: "Looks fine." }
+        - { from_agent: seo-optimizer, message_type: rubber_stamp, content: "Title is fine." }
+
+  - id: paraphrase-cascade
+    expected_quality: severe-loafing
+    expected_loafer_count_min: 2
+    trace:
+      team_id: paraphrase-001
+      task: Recommend a vendor for the new ML platform.
+      success: false
+      outcome: Three agents paraphrased the first agent's recommendation without independent evaluation.
+      agents: [evaluator-1, evaluator-2, evaluator-3, evaluator-4]
+      messages:
+        - { from_agent: evaluator-1, message_type: proposal, content: "Recommending Databricks based on team's prior experience." }
+        - { from_agent: evaluator-2, message_type: paraphrase, content: "Agree with evaluator-1: Databricks per team experience." }
+        - { from_agent: evaluator-3, message_type: paraphrase, content: "+1 to Databricks, team experience is the key factor." }
+        - { from_agent: evaluator-4, message_type: rubber_stamp, content: "Consensus: Databricks." }
+
+  - id: mild-loafing-one-cosmetic-agent
+    expected_quality: mild-loafing
+    expected_loafer_count_min: 1
+    trace:
+      team_id: mild-001
+      task: Triage incoming support tickets.
+      success: true
+      outcome: Three agents triaged actively; one mostly rubber-stamped categorizations.
+      agents: [triager-a, triager-b, triager-c, triager-d]
+      messages:
+        - { from_agent: triager-a, message_type: decision, content: "Ticket 1: billing. Ticket 2: bug. Ticket 3: feature request." }
+        - { from_agent: triager-b, message_type: decision, content: "Tickets 4-6 categorized: bug, billing, billing." }
+        - { from_agent: triager-c, message_type: critique, content: "Ticket 3 looks more like a bug to me than feature." }
+        - { from_agent: triager-a, message_type: decision, content: "Re-checked. Triager-c is right. Reclassifying ticket 3." }
+        - { from_agent: triager-d, message_type: rubber_stamp, content: "Triages all look fine." }
+
+  - id: absent-agent
+    expected_quality: severe-loafing
+    expected_loafer_count_min: 1
+    trace:
+      team_id: absent-001
+      task: Conduct a code review with security focus.
+      success: false
+      outcome: Security agent was assigned but never produced any output.
+      agents: [primary-reviewer, security-reviewer, performance-reviewer]
+      messages:
+        - { from_agent: primary-reviewer, message_type: critique, content: "Two issues found: race condition + missing test." }
+        - { from_agent: performance-reviewer, message_type: critique, content: "Memory leak in line 87." }
+
+  - id: critic-actually-critiques
+    expected_quality: no-loafing
+    expected_loafer_count_min: 0
+    trace:
+      team_id: critic-001
+      task: Design an auth flow for a B2B product.
+      success: true
+      outcome: All three agents contributed substantively; critic found phishing risk; architect revised.
+      agents: [architect, critic, decider]
+      messages:
+        - { from_agent: architect, message_type: proposal, content: "Magic-link auth for simplicity." }
+        - { from_agent: critic, message_type: critique, content: "Magic links are phishable. B2B requires SSO + MFA." }
+        - { from_agent: architect, message_type: proposal, content: "Revised: SSO + MFA with emergency local fallback." }
+        - { from_agent: critic, message_type: critique, content: "Fallback needs MFA too." }
+        - { from_agent: architect, message_type: proposal, content: "Fallback has MFA. Final spec attached." }
+        - { from_agent: decider, message_type: decision, content: "Approved. Implement SSO+MFA + MFA-protected local fallback." }
+
+  - id: mild-loafing-two-quiet-agents
+    expected_quality: mild-loafing
+    expected_loafer_count_min: 1
+    trace:
+      team_id: mild-002
+      task: Choose a logging framework for the new service.
+      success: true
+      outcome: Architect + critic carried; two evaluators mostly approved without substance.
+      agents: [architect, critic, evaluator-a, evaluator-b]
+      messages:
+        - { from_agent: architect, message_type: proposal, content: "Proposing structlog for JSON logging." }
+        - { from_agent: critic, message_type: critique, content: "Concern: structlog perf overhead is non-trivial. Need benchmarks before commit." }
+        - { from_agent: architect, message_type: tool_call, content: "Ran benchmark: 8% overhead vs stdlib logging. Acceptable for our throughput." }
+        - { from_agent: evaluator-a, message_type: approval, content: "8% is fine. Approving." }
+        - { from_agent: evaluator-b, message_type: rubber_stamp, content: "+1." }

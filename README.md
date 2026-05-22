@@ -38,6 +38,56 @@ Every pattern in AgentCity ships five layers:
 
 Patterns ship one at a time, fully completed. Quantity loses to quality. Currently shipping: *AAR Generator (Wharton 4-step).*
 
+## Install
+
+```bash
+pip install git+https://github.com/valani9/AgentCity.git
+```
+
+Optional extras (per LLM backend):
+
+```bash
+pip install "agentcity[anthropic] @ git+https://github.com/valani9/AgentCity.git"   # Anthropic
+pip install "agentcity[openai]    @ git+https://github.com/valani9/AgentCity.git"   # OpenAI
+pip install "agentcity[all]       @ git+https://github.com/valani9/AgentCity.git"   # both
+```
+
+Python 3.11+ required.
+
+## Quick start
+
+```python
+from datetime import datetime, timezone
+
+from agentcity.aar import AARGenerator, AgentTrace, TraceStep
+from agentcity.aar.clients import AnthropicClient
+
+# Build (or import from your observability tool) a structured trace of a
+# failed agent run.
+trace = AgentTrace(
+    goal="Refactor the auth module to use JWTs.",
+    steps=[
+        TraceStep(
+            timestamp=datetime.now(timezone.utc),
+            type="tool_call",
+            content="edit_file(path='auth/middleware.py')",
+        ),
+        # ... more steps
+    ],
+    outcome="Created JWT logic but broke the session middleware.",
+    success=False,
+)
+
+# Run the Wharton 4-step AAR.
+aar = AARGenerator(llm_client=AnthropicClient()).generate(trace)
+
+print(aar.to_markdown())                  # human-readable AAR
+print(aar.suggested_prompt_patch)         # concrete prompt edit
+print(aar.lesson_record_for_memory)       # inject into agent memory
+```
+
+See [`module-2-team/30-aar-generator/demo/`](module-2-team/30-aar-generator/demo/) for a self-contained example you can run with no API key (uses a deterministic `StubClient`).
+
 ## Who this is for
 
 - AI builders shipping agents in production who notice their systems failing in patterns that look like organizational problems, not just engineering ones.

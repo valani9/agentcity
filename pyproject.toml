@@ -135,6 +135,7 @@ agentcity-bias-stack = "agentcity.bias_stack.cli:main"
 agentcity-devils-advocate = "agentcity.devils_advocate.cli:main"
 agentcity-thomas-kilmann = "agentcity.thomas_kilmann.cli:main"
 agentcity-schein-culture = "agentcity.schein_culture.cli:main"
+agentcity-robbins-culture = "agentcity.robbins_culture.cli:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -101,7 +101,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: template responses that ignore user specifics.",
             "Add `context_window_expansion` (load user history/profile).",
-            "Compose with `agentcity.glaser` for tone steering.",
+            "Compose with `agentcity.glaser_conversation` for tone steering.",
         ],
         "1d",
         "Frei & Morriss 2020",

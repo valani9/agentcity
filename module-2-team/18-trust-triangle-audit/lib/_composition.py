@@ -26,7 +26,7 @@ _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
         "agentcity.devils_advocate",
     ),
     "empathy_wobble_dominant": (
-        "agentcity.glaser",
+        "agentcity.glaser_conversation",
         "agentcity.mcallister_trust",
     ),
     "full_triangle_collapse": (
@@ -39,7 +39,7 @@ _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
         "agentcity.bias_stack",
         "agentcity.psych_safety",
     ),
-    "empathy_isolated_wobble": ("agentcity.glaser",),
+    "empathy_isolated_wobble": ("agentcity.glaser_conversation",),
     "indeterminate": (),
 }
 

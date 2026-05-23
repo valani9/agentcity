@@ -1,38 +1,44 @@
-"""Cross-pattern composition manifest for McAllister Trust Dimensions."""
+"""Cross-pattern composition manifest for the Glaser Conversation Steering diagnostic."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .schema import TrustBalanceDetection, TrustConversationTrace
+    from .schema import ConversationSteeringDetection, ConversationTrace
 
 
 _UPSTREAM: tuple[str, ...] = (
     "agentcity.lewin",
     "agentcity.aar",
-    "agentcity.trust_triangle",
-    "agentcity.lencioni",
+    "agentcity.danva_emotion",
+    "agentcity.goleman_ei",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "balanced_high_trust": ("agentcity.aar",),
-    "cognitive_only": (
-        "agentcity.glaser_conversation",
-        "agentcity.danva_emotion",
-        "agentcity.goleman_ei",
-    ),
-    "warm_but_incompetent": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
-    ),
-    "low_trust": (
-        "agentcity.lencioni",
+    "trust_building_oxytocin": ("agentcity.aar",),
+    "neutral_transactional": ("agentcity.mcallister_trust",),
+    "cortisol_cascade": (
+        "agentcity.psych_safety",
         "agentcity.aar",
     ),
-    "cognitive_partial": ("agentcity.devils_advocate",),
-    "affective_partial": ("agentcity.glaser_conversation",),
-    "asymmetric_cognitive_strong": ("agentcity.glaser_conversation",),
+    "advocate_only_no_inquire": (
+        "agentcity.mcallister_trust",
+        "agentcity.devils_advocate",
+    ),
+    "blame_loaded_language": (
+        "agentcity.psych_safety",
+        "agentcity.lencioni",
+    ),
+    "agency_stripped": (
+        "agentcity.sdt_reward",
+        "agentcity.mcgregor",
+    ),
+    "level_i_stuck": (
+        "agentcity.mcallister_trust",
+        "agentcity.glaser_conversation",
+    ),
+    "level_iii_collaborative": ("agentcity.aar",),
     "indeterminate": (),
 }
 
@@ -48,8 +54,8 @@ def recommended_upstream() -> list[str]:
 
 
 def recommended_downstream(
-    detection: "TrustBalanceDetection",
-    trace: "TrustConversationTrace | None" = None,
+    detection: "ConversationSteeringDetection",
+    trace: "ConversationTrace | None" = None,
 ) -> tuple[list[str], str]:
     recommendations: list[str] = []
     reasons: list[str] = []
@@ -72,7 +78,7 @@ def recommended_downstream(
     return recommendations, rationale
 
 
-MCALLISTER_COMPOSITION: dict[str, object] = {
+GLASER_COMPOSITION: dict[str, object] = {
     "upstream": _UPSTREAM,
     "downstream_by_profile_pattern": _DOWNSTREAM_BY_PROFILE_PATTERN,
     "framework_overlays": _FRAMEWORK_OVERLAYS,
@@ -80,7 +86,7 @@ MCALLISTER_COMPOSITION: dict[str, object] = {
 
 
 __all__ = [
-    "MCALLISTER_COMPOSITION",
+    "GLASER_COMPOSITION",
     "recommended_downstream",
     "recommended_upstream",
 ]

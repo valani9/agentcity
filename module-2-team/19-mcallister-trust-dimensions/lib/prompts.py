@@ -116,7 +116,7 @@ FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked intervent
 with composition targets.
 
 Composition targets: agentcity.trust_triangle, agentcity.goleman_ei,
-agentcity.glaser, agentcity.danva_emotion, agentcity.aar
+agentcity.glaser_conversation, agentcity.danva_emotion, agentcity.aar
 
 Under-built dimension: {target_dimension}
 Trust quality: {trust_quality}

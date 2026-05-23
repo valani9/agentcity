@@ -266,7 +266,7 @@ class TestComposition:
         stub = StubClient([_scores_payload(), _interventions_payload()])
         audit = TrustTriangleAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(audit)
-        assert "agentcity.glaser" in recs
+        assert "agentcity.glaser_conversation" in recs
 
     def test_upstream_includes_lencioni(self) -> None:
         up = recommended_upstream()

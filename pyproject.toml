@@ -126,6 +126,7 @@ agentcity-trust-triangle = "agentcity.trust_triangle.cli:main"
 agentcity-mcallister = "agentcity.mcallister_trust.cli:main"
 agentcity-psych-safety = "agentcity.psych_safety.cli:main"
 agentcity-glaser = "agentcity.glaser_conversation.cli:main"
+agentcity-feedback-triggers = "agentcity.feedback_triggers.cli:main"
 
 [build-system]
 requires = ["hatchling"]

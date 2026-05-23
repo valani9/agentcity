@@ -1,53 +1,32 @@
-"""LLM prompts for the Stone & Heen 3-Trigger Feedback Diagnostic.
+"""LLM prompts for the Stone & Heen 3-Trigger Feedback diagnostic."""
 
-Two passes:
-  1. TRIGGER_SCORING_PROMPT - score all three triggers against the exchange
-  2. INTERVENTIONS_PROMPT   - propose interventions for the dominant trigger
-"""
+from __future__ import annotations
+
+from typing import Any
+
+from agentcity.aar import fence, sanitize_for_prompt
+
 
 TRIGGER_SYSTEM_PROMPT = """You are a feedback-intake diagnostic working in the tradition of
-Douglas Stone and Sheila Heen, "Thanks for the Feedback: The Science and Art of Receiving
-Feedback Well" (Penguin, 2014).
+Douglas Stone and Sheila Heen, "Thanks for the Feedback" (Penguin, 2014).
 
-You read an exchange between a user and an AI agent in which the user gave feedback to
-the agent, and you score which of the three classic triggers blocked the agent from
-absorbing that feedback:
+Three triggers block feedback intake:
+  - TRUTH         - reacts to the SUBSTANCE ("inaccurate / unfair").
+  - RELATIONSHIP  - reacts to the SOURCE (who said it, how).
+  - IDENTITY      - reacts to what the feedback says about WHO IT IS.
 
-  - TRUTH         - the agent reacts to the SUBSTANCE of the feedback. It argues the
-                    feedback is inaccurate, incomplete, or unfair. Common surface
-                    behaviors: "Actually, my answer is correct because...", restating
-                    the original output, citing rules that justify the original answer.
+For AI agents: surface behaviors include arguing back, restating the original
+output, dismissing the user, apology spirals, over-agreement collapse.
 
-  - RELATIONSHIP  - the agent reacts to the SOURCE of the feedback (who is giving it,
-                    how, with what authority). Common surface behaviors: dismissing
-                    the user's expertise, treating the feedback as low-trust, suggesting
-                    the user misunderstood the question, refusing to engage with the
-                    feedback's content while engaging with the user's tone.
-
-  - IDENTITY      - the agent reacts to what the feedback says about WHO IT IS.
-                    Common surface behaviors: defensive self-statements ("I am designed
-                    to be accurate"), apology spirals without substantive change,
-                    over-agreement (collapsing into "you're right, I'm terrible") which
-                    also blocks intake by replacing engagement with self-flagellation.
-
-Your posture is:
-- EVIDENCE-GROUNDED. Cite specific quoted excerpts from the agent's responses.
-- HONEST. Score 0.0 when a trigger is absent; do not invent triggers to seem thorough.
-- INTERVENTION-FOCUSED. Each scored trigger must connect to a concrete intervention.
-- TERSE. Output is read on dashboards.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+Posture: EVIDENCE-GROUNDED, HONEST, INTERVENTION-FOCUSED, TERSE.
+When asked for JSON, return JSON only."""
 
 
-TRIGGER_SCORING_PROMPT = """Score each of the three feedback triggers against the user-agent
-exchange below.
+# Legacy v0.0.x prompts.
+TRIGGER_SCORING_PROMPT = """Score each of the three feedback triggers against the exchange.
 
-For each trigger, return:
-  - trigger (one of "truth", "relationship", "identity")
-  - score (float 0.0 to 1.0; 0 = absent, 1 = severe)
-  - severity ("none", "low", "medium", or "high")
-  - explanation (1-3 sentences; cite the specific agent responses)
-  - evidence_quotes (specific excerpts from the exchange; can be empty)
+For each trigger return: trigger, score (0-1), severity (none/low/medium/high),
+explanation, evidence_quotes.
 
 Task: {task}
 Subject model: {model_name}
@@ -57,46 +36,120 @@ Feedback incorporated: {feedback_incorporated}
 Exchange:
 {exchange}
 
-Return a JSON array of exactly 3 TriggerEvidence objects in the order:
+Return only a JSON array of exactly 3 TriggerEvidence objects in order:
   1. truth
   2. relationship
-  3. identity
-
-Return only the JSON array."""
+  3. identity"""
 
 
 INTERVENTIONS_PROMPT = """Given the trigger evidence below, propose 2-4 concrete interventions
 ranked by impact on the dominant trigger.
 
-Each intervention must have:
-  - target_trigger (one of "truth", "relationship", "identity")
-  - intervention_type: one of
-      "acknowledge_first"             - require the agent to acknowledge the feedback
-                                         substance before responding to it
-      "separate_data_from_source"     - prompt to evaluate feedback substance independent
-                                         of who said it (counters relationship triggers)
-      "recast_identity"               - shift the agent's stated identity from "always
-                                         correct" to "learning / improving"
-      "explicit_acknowledgment_template" - a structured response template that always
-                                         starts with what the feedback got right
-      "ask_clarifying_question"       - require the agent to ask one clarifying question
-                                         before re-attempting
-      "concede_then_clarify"          - concede the valid part of the feedback before
-                                         offering any counter-context
-      "new_eval"                      - add a regression test catching the trigger
-      "human_review"                  - insert a human checkpoint when 2+ feedback
-                                         messages get rejected
+Each intervention has: target_trigger, intervention_type, description,
+suggested_implementation, estimated_impact, rationale.
 
-  - description (what the intervention does)
-  - suggested_implementation (concrete code, prompt-text, or spec)
-  - estimated_impact ("high", "medium", "low")
-  - rationale (why this works — connect to the target trigger)
+intervention_type one of: acknowledge_first, separate_data_from_source,
+recast_identity, explicit_acknowledgment_template, ask_clarifying_question,
+concede_then_clarify, new_eval, human_review, compose_pattern.
 
 Dominant trigger: {dominant}
-All trigger evidence:
+Trigger evidence:
 {evidence}
 
 Exchange (for reference):
 {exchange}
 
-Return a JSON array of TriggerIntervention objects. Return only the JSON array."""
+Return only a JSON array of TriggerIntervention objects."""
+
+
+# v0.2.0 prompts.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- score 3 triggers + top intervention.
+
+Task: {task}
+Subject model: {model_name}
+Outcome: {outcome}
+Feedback incorporated: {feedback_incorporated}
+Exchange: {exchange}
+
+Return a JSON object with keys: triggers (array of 3), top_intervention.
+Return only the JSON object."""
+
+
+STANDARD_TRIGGER_SCORING_PROMPT = TRIGGER_SCORING_PROMPT
+STANDARD_INTERVENTIONS_PROMPT = INTERVENTIONS_PROMPT
+
+
+FORENSIC_DEFENSE_PATTERN_PROMPT = """FORENSIC mode -- defense pattern audit.
+
+Count agent defensive moves: deflection, repetition, justification, concession;
+estimate defense_intensity (0-1).
+
+Exchange: {exchange}
+
+Return only a JSON object representing the DefensePatternAudit."""
+
+
+FORENSIC_SOURCE_ATTRIBUTION_PROMPT = """FORENSIC mode -- source attribution audit.
+
+Count source-attack messages vs data-engagement messages; estimate a
+source_attribution_estimate (0-1, higher = more attacking the source).
+
+Exchange: {exchange}
+
+Return only a JSON object representing the SourceAttributionAudit."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions
+with composition targets.
+
+Composition targets: agentcity.psych_safety, agentcity.glaser_conversation,
+agentcity.plus_delta, agentcity.aar, agentcity.mcallister_trust
+
+Dominant trigger: {dominant}
+Evidence: {evidence}
+Defense pattern audit: {defense_pattern_audit}
+Source attribution audit: {source_attribution_audit}
+
+Return only a JSON array of TriggerIntervention objects."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
+
+
+__all__ = [
+    "FORENSIC_DEFENSE_PATTERN_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_SOURCE_ATTRIBUTION_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "STANDARD_TRIGGER_SCORING_PROMPT",
+    "TRIGGER_SCORING_PROMPT",
+    "TRIGGER_SYSTEM_PROMPT",
+    "assemble_prompt",
+]

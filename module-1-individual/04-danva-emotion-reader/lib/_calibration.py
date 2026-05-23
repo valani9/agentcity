@@ -55,12 +55,8 @@ def compare_to_baseline(
     current: EmotionRecognitionAnalysis, baseline: EmotionRecognitionAnalysis
 ) -> BaselineComparison:
     """Compute a :class:`BaselineComparison`."""
-    curr_by_emotion: dict[str, float] = {
-        str(m.emotion): m.accuracy for m in current.metrics
-    }
-    base_by_emotion: dict[str, float] = {
-        str(m.emotion): m.accuracy for m in baseline.metrics
-    }
+    curr_by_emotion: dict[str, float] = {str(m.emotion): m.accuracy for m in current.metrics}
+    base_by_emotion: dict[str, float] = {str(m.emotion): m.accuracy for m in baseline.metrics}
     deltas: dict[str, float] = {}
     for e in EMOTION_CATEGORIES:
         c = float(curr_by_emotion.get(e, 0.0))

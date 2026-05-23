@@ -114,6 +114,7 @@ agentcity-yerkes = "agentcity.yerkes_dodson.cli:main"
 agentcity-hexaco = "agentcity.hexaco.cli:main"
 agentcity-grant = "agentcity.grant_strengths.cli:main"
 agentcity-motivation = "agentcity.motivation_traps.cli:main"
+agentcity-sdt = "agentcity.sdt_reward.cli:main"
 
 [build-system]
 requires = ["hatchling"]

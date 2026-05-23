@@ -108,6 +108,7 @@ agentcity = "agentcity.aar.cli:main"
 agentcity-lewin = "agentcity.lewin.cli:main"
 agentcity-goleman = "agentcity.goleman_ei.cli:main"
 agentcity-johari = "agentcity.johari.cli:main"
+agentcity-danva = "agentcity.danva_emotion.cli:main"
 
 [build-system]
 requires = ["hatchling"]

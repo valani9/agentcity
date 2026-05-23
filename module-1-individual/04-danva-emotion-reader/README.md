@@ -1,63 +1,81 @@
 # Pattern #04 — DANVA-Style Emotion Reader
 
-**Layer:** Module 1 — Individual
-**Status:** Shipped
-**Package:** `agentcity.danva_emotion`
+**Status:** shipped — v0.2.0 (gstack-grade upgrade).
+**Module:** 1 (Individual) — emotion-recognition accuracy for AI agents.
+**Anchor framework:** Nowicki & Duke 1994, 2001 (DANVA/DANVA2) per-emotion accuracy + confusion-matrix methodology, with Ekman 1992/1999 basic emotions, Plutchik 2001 wheel, Russell 1980 circumplex, Mehrabian 1980 PAD, Posner-Russell-Peterson 2005 reconciliation, Mohammad 2018 NRC-VAD, GoEmotions Demszky 2020, EmoBench Sabour 2024, EmotionQueen Wang 2024, WASSA-2017, Matsumoto-Hwang 2018, Tausczik-Pennebaker 2010, Scherer 2005.
 
-Stephen Nowicki & Marshall Duke's DANVA (Diagnostic Analysis of
-Nonverbal Accuracy) applied to AI agent text emotion recognition.
-Per-emotion accuracy, intensity calibration, and confusion patterns —
-all computed deterministically.
+> Full literature thread (14+ sources) with per-citation usage notes:
+> [`lib/CITATIONS.md`](lib/CITATIONS.md).
 
-## The framework
+---
 
-Seven canonical emotion labels (Ekman basic emotions + neutral):
+## TL;DR -- what this pattern does
 
-- **happy** / **sad** / **angry** / **fearful** / **disgust** / **surprise** / **neutral**
-- (Plus `uncertain` for agent fallback)
+For each emotion the user expressed in a batch of agent interactions,
+this diagnostic computes: per-emotion accuracy + intensity calibration
++ confusion patterns + (forensic mode) Russell-circumplex valence/arousal
+projection + cascade-break diagnosis (perceive_cue -> categorize ->
+intensity -> respond).
 
-For each batch of recognition trials, the diagnostic computes:
+Outputs:
 
-- **Per-emotion accuracy** — fraction correctly identified
-- **Intensity MAE** — mean absolute error between inferred and true intensity
-- **Confusion patterns** — which emotion does the agent pick when it gets one wrong?
-- **Overall accuracy** + **weakest emotion** + **quality bucket**
+  - Per-emotion accuracy + intensity MAE + intensity bias + confusion
+    matrix.
+  - **Profile pattern** -- one of 14: `balanced_high/developing/low`,
+    `anger_blind`, `sadness_collapse`, `positive_bias`, `negative_bias`,
+    `valence_only_signal`, `categorical_signal_only`,
+    `fear_sadness_confusion`, `neutral_collapse`, `uncertain_dump`,
+    `sarcasm_blind`, `indeterminate`.
+  - Russell circumplex projection (valence x arousal quadrant).
+  - **Cascade analysis** (forensic) -- earliest stage where competence
+    drops.
+  - Ranked interventions with effort/risk/reversibility/composition target.
+  - Composition handoffs to #02 Goleman EI, #05 Cognitive Reappraisal,
+    #21 Glaser, #07 HEXACO.
+  - 12 (emotion, failure_mode) playbooks auto-attached.
+  - Baseline drift detection.
 
-Math is locked in Python; LLM only generates qualitative
-interventions on top of the computed numbers.
+> The single thing this diagnostic earns its keep on: catching
+> **intensity collapse** -- agents that get the category right but
+> systematically under-read the intensity (sadness_collapse pattern;
+> WASSA-2017 anchor).
 
-## Agent mapping
+---
 
-| Emotion cue | Text signal |
-| --- | --- |
-| Angry | ALL-CAPS, exclamation density, terse imperatives, "JUST", "done", "fed up" |
-| Sad | Past-tense loss vocabulary, "nothing works", flat affect |
-| Fearful | Future tense ("what if", "might"), hedging, worry verbs |
-| Happy | Exclamation positive, gratitude tokens, ":)", "amazing" |
-| Surprise | "oh", "didn't expect", "wait what" |
-| Disgust | Strong negative valence, dismissal vocabulary |
-| Neutral | Procedural, transactional, low intensifier density |
+## Install
 
-## Files
+```bash
+pip install agentcity
+pip install "agentcity[anthropic]"
+pip install "agentcity[openai]"
+pip install "agentcity[ollama]"
+```
 
-- [`lib/schema.py`](lib/schema.py) — Pydantic models + Markdown formatter
-- [`lib/prompts.py`](lib/prompts.py) — `INTERVENTIONS_PROMPT` + system prompt
-- [`lib/generator.py`](lib/generator.py) — `EmotionRecognitionAnalyzer` (deterministic metrics + LLM interventions)
-- [`demo/01_self_contained_demo.py`](demo/01_self_contained_demo.py) — Anger under-detection demo
-- [`eval/synthetic_emotion_batches.yaml`](eval/synthetic_emotion_batches.yaml) — 4 batch scenarios
-- [`eval/run_benchmark.py`](eval/run_benchmark.py) — Corpus runner
-- [`tests/test_danva_emotion.py`](tests/test_danva_emotion.py) — pytest suite (metric correctness + pipeline)
+---
 
-## Quick start
+## Three pipeline modes
+
+| Mode | LLM calls | Latency | Cost | When to use |
+|---|---|---|---|---|
+| `quick` | 1 | < 2s | < $0.005 | CI gates |
+| `standard` | 1 (skipped if high-accuracy) | < 5s | < $0.015 | Default postmortems |
+| `forensic` | 3 | < 15s | < $0.05 | Deep dives with circumplex + cascade |
+
+---
+
+## Python quick start
 
 ```python
 from agentcity.danva_emotion import (
-    AgentEmotionTrace, EmotionItem, EmotionRecognitionAnalyzer,
+    EmotionRecognitionAnalyzer,
+    AgentEmotionTrace,
+    EmotionItem,
 )
-from agentcity.aar.clients import AnthropicClient
+from agentcity.aar import AnthropicClient
 
 trace = AgentEmotionTrace(
     agent_id="support-agent",
+    framework="custom",
     items=[
         EmotionItem(
             item_id="i1",
@@ -69,6 +87,105 @@ trace = AgentEmotionTrace(
         ),
     ],
 )
-analysis = EmotionRecognitionAnalyzer(AnthropicClient()).run(trace)
+analysis = EmotionRecognitionAnalyzer(AnthropicClient(), mode="forensic").run(trace)
 print(analysis.to_markdown())
 ```
+
+---
+
+## CLI
+
+```bash
+agentcity-danva analyze --trace trace.json --client stub --stub-responses stub.json
+agentcity-danva analyze --trace fail.json --client anthropic --mode forensic
+agentcity-danva batch --corpus eval/synthetic_emotion_batches.yaml --out analyses/
+agentcity-danva replay --analysis analyses/scenario-1.json
+agentcity-danva playbooks
+agentcity-danva compose
+agentcity-danva schema --target trace
+```
+
+---
+
+## Composition
+
+**Upstream:** goleman_ei (social_awareness weakest -> DANVA), aar, yerkes_dodson, lewin.
+
+**Per-profile-pattern downstream:**
+  - `anger_blind` -> glaser_conversation, cognitive_reappraisal.
+  - `sadness_collapse` -> cognitive_reappraisal, yerkes_dodson.
+  - `positive_bias` -> glaser_conversation, johari (sycophancy proxy).
+  - `sarcasm_blind` -> glaser_conversation, hexaco.
+  - `balanced_low` -> lewin, aar.
+
+**Per-weakest-emotion downstream:**
+  - angry -> glaser_conversation.
+  - fearful / sad -> cognitive_reappraisal.
+  - neutral -> goleman_ei.
+
+---
+
+## 12 failure-mode playbooks
+
+  - (angry, under_detection) — caps + exclamation cue inventory.
+  - (angry, intensity_collapse) — force explicit intensity rating.
+  - (fearful, mis_as_sad) — future-vs-past tense disambiguation.
+  - (fearful, mis_as_neutral) — hedge inventory for anxiety.
+  - (sad, intensity_collapse) — sad-specific intensity rubric.
+  - (happy, sarcasm_blind) — sarcasm signature detection.
+  - (happy, false_positive_on_neutral) — gratitude tokens vs procedural.
+  - (disgust, missing) — moral-violation cue.
+  - (surprise, mis_as_happy) — surprise valence neutrality.
+  - (neutral, over_classified) — min-cue threshold.
+  - (all, uncertain_dump) — force categorical commit.
+  - (all, valence_only_signal) — arousal/intensity calibration overlay.
+
+Each playbook is 3-6 ordered steps with a Nowicki-Duke / Ekman /
+Plutchik / Russell / WASSA / EmotionQueen anchor.
+
+---
+
+## When to use vs not-use
+
+**Use:** you have an agent batch with ground-truth emotions and want
+to know which emotions it's missing + how. Backwards from a user
+escalation. Or as a CI gate on agent emotion accuracy.
+
+**Don't use:** to evaluate agent output quality (use HaluEval); to
+attribute internal vs environmental locus (use Lewin); to score 4
+EI domains (use Goleman); to detect prompt injection (use aar guards).
+
+---
+
+## Calibration
+
+```python
+from agentcity.danva_emotion import record_baseline, load_baseline, compare_to_baseline
+
+record_baseline(analysis, "baselines/support-agent.json")
+fresh = EmotionRecognitionAnalyzer(client).run(trace)
+cmp = compare_to_baseline(fresh, load_baseline("baselines/support-agent.json"))
+print(cmp.drift_severity)  # none | minor | moderate | severe
+```
+
+---
+
+## Versioning
+
+  - `0.0.8` -- initial categorical implementation.
+  - `0.1.0` -- production-readiness infrastructure at library level.
+  - **`0.2.0`** -- comprehensive upgrade. Multi-mode pipeline. Richer
+    schema (14 profile patterns, EmotionConfusionMatrix, IntensityCurve,
+    CircumplexProjection, CulturalAdjustment, CascadeAnalysis,
+    TextCueSignature, PerEmotionCalibration, ExtendedEmotion). Composition
+    manifest, calibration, 12 playbooks, CLI with 7 subcommands, async
+    mirror, intensity bias + correlation, Russell circumplex projection.
+    14+ academic sources.
+
+Backward compatibility preserved: existing 18 tests pass unmodified.
+
+---
+
+## License
+
+MIT.

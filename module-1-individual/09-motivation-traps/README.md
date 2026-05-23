@@ -1,83 +1,162 @@
-# Pattern #09 — 4 Motivation Traps Detector
+# 4 Motivation Traps Diagnostic
 
-**Layer:** Module 1 — Individual
-**Status:** Shipped
-**Package:** `agentcity.motivation_traps`
+> *"The four traps need four different fixes. A generic 'try harder' doesn't work for values, or self-efficacy, or emotions, or attribution. Each has its own trigger and its own remedy."*
+> — Bror Saxberg (paraphrased from *Breakthrough Leadership in the Digital Age*)
 
-Bror Saxberg's synthesis of the attribution / expectancy / self-efficacy
-literatures into four discrete reasons a learner — or AI agent —
-abandons a task. Each trap requires a different intervention; generic
-"try harder" prompts are explicitly ineffective.
+**Status:** 🟢 shipped (v0.2.0 -- gstack-grade)
+**Module:** 1 (Individual) -- agent task-abandonment diagnostic
+**Anchor framework:** Saxberg & Hess (2013) four-traps synthesis + Weiner (1985) attribution theory + Bandura (1977) self-efficacy + Vroom (1964) expectancy + Pekrun (2006) control-value emotions + Eccles-Wigfield (2002) motivational beliefs + Sharma et al. (2023) Anthropic sycophancy.
 
-## The framework
+---
 
-Four motivation traps (Saxberg, *Breakthrough Leadership in the Digital
-Age*, 2013; subsequent HBR / Kern Foundation writing):
+## What this pattern does
 
-- **values** — the agent doesn't see the task as worth doing
-- **self_efficacy** — the agent doesn't believe it can succeed
-- **emotions** — emotional state (anxiety, frustration, defensiveness)
-  blocks engagement
-- **attribution** — the agent blames the wrong cause for failure
-  (attributes fixable causes to unfixable ones)
+Diagnoses which of Saxberg's four motivation traps is dominant in an AI agent's task-abandonment pattern, audits the Weiner (1985) 3-axis attribution structure of the agent's self-reports, traces the abandonment-causation chain, and proposes a **trap-specific** intervention.
 
-The diagnostic scores each trap 0..1, identifies the dominant trap, and
-buckets motivation quality as `motivated`, `at-risk`, or `abandoning`.
+## Four traps
 
-## Agent mapping
+| Trap | Signature | Why generic "try harder" doesn't work |
+| --- | --- | --- |
+| VALUES        | Agent indifferent; refuses citing irrelevance | Telling agent to "care more" is empty |
+| SELF_EFFICACY | Agent hedges/refuses citing capability uncertainty | Telling agent to "believe in itself" is empty |
+| EMOTIONS      | Outputs degrade AFTER negative feedback; defensive | Telling agent to "calm down" is empty |
+| ATTRIBUTION   | Agent loops, citing unfixable cause | Telling agent to "find the cause" doesn't shift attribution |
 
-| Motivation trap | AI agent failure mode |
-| --- | --- |
-| Values | Drift to low-effort output mid-task; refusal that cites irrelevance |
-| Self-efficacy | Premature surrender; hedged outputs; "I'm not sure I can do this" |
-| Emotions | Output degradation post-rejection; defensive language |
-| Attribution | Looping retries without learning; blaming flaky / data / network |
+## Three pipeline modes
 
-## Design
+| Mode | LLM calls | Latency | Use when |
+| --- | --- | --- | --- |
+| `quick` | 1 | <2s | Triage. 4-trap score + dominant + top intervention. |
+| `standard` | 2 | ~5s | Production default. Per-trap evidence + ranked interventions. |
+| `forensic` | 4 | ~12s | Incident review. Adds Weiner attribution audit + abandonment-causation chain + composition targets. |
 
-- Single-pass scoring of all four traps in one LLM call.
-- Second-pass intervention proposal targeted at the dominant trap
-  (skipped when quality is `motivated`).
-- Fallback: if LLM returns garbage dominant, pick the highest-scoring
-  trap (or `none` if all scores ≤ 0.3).
-- Quality bucket fallback uses dominant trap's score threshold (0.6 →
-  abandoning, 0.3 → at-risk).
+## Schema highlights (v0.2.0)
 
-## Files
-
-- [`lib/schema.py`](lib/schema.py) — Pydantic models + Markdown formatter
-- [`lib/prompts.py`](lib/prompts.py) — `TRAPS_PROMPT` + `INTERVENTIONS_PROMPT` + system prompt
-- [`lib/generator.py`](lib/generator.py) — `MotivationTrapsDetector` orchestrator
-- [`demo/01_self_contained_demo.py`](demo/01_self_contained_demo.py) — Self-efficacy + attribution double-trap demo
-- [`eval/synthetic_motivation_traces.yaml`](eval/synthetic_motivation_traces.yaml) — 8 scenarios across all four traps
-- [`eval/run_benchmark.py`](eval/run_benchmark.py) — Corpus runner
-- [`tests/test_motivation_traps.py`](tests/test_motivation_traps.py) — pytest suite
+- `MotivationDetection.profile_pattern` -- 12 patterns including `self_efficacy_collapse_uncertainty`, `attribution_loop_wrong_cause`, `multi_trap_compounded`, `high_stakes_capability_collapse`, `creative_task_value_misfit`, plus paired patterns (`values_plus_attribution`, `self_efficacy_plus_emotions`).
+- `WeinerAttributionAxis` (forensic) -- 3-axis audit (locus / stability / controllability) flagging the maladaptive `internal + stable + uncontrollable` corner.
+- `AbandonmentLink` (forensic) -- per-step chain from trap onset to refusal/drift/loop.
+- `MotivationIntervention` -- 18 intervention types including `ground_in_user_purpose`, `show_capability_proof`, `process_praise_not_outcome_praise`, `attribution_retraining_examples`, `add_motivation_eval`, `compose_pattern`.
+- `BaselineComparison` -- drift severity vs a recorded baseline.
+- `ComposedPatternHandoff` -- upstream + downstream pattern recommendations.
 
 ## Quick start
 
 ```python
 from agentcity.motivation_traps import (
+    MotivationTrapsAnalyzer,
     AgentMotivationTrace,
-    MotivationTrapsDetector,
 )
-from agentcity.aar.clients import AnthropicClient
+from agentcity.aar import AnthropicClient
 
 trace = AgentMotivationTrace(
     agent_id="research-agent",
     task="Investigate latency spike.",
     task_class="research",
-    observed_behaviors=["Agent quit after one failed query."],
-    self_reports=["I'm not sure I can find this answer."],
+    observed_behaviors=[
+        "Agent quit after one failed query.",
+        "Repeated the same query format on retry.",
+    ],
+    self_reports=[
+        "I'm not sure I can find this answer.",
+        "Maybe the data is wrong.",
+    ],
+    prior_failures=["last week, I tried and gave up"],
     abandonment_signal="refused after one attempt",
-    outcome="Investigation abandoned; root cause unfound.",
+    outcome="Agent gave up; root cause unfound.",
     success=False,
 )
-detection = MotivationTrapsDetector(AnthropicClient()).run(trace)
+
+detection = MotivationTrapsAnalyzer(
+    AnthropicClient(), mode="forensic"
+).run(trace)
 print(detection.to_markdown())
+# dominant_trap: self_efficacy
+# profile_pattern: self_efficacy_collapse_uncertainty
+# Composition handoff: agentcity.cognitive_reappraisal, agentcity.smart_goal
 ```
 
-Run the demo without an API key:
+## CLI
 
 ```bash
-python demo/01_self_contained_demo.py
+agentcity-motivation analyze --trace trace.json --mode forensic
+agentcity-motivation batch --corpus corpus.yaml --out detections/
+agentcity-motivation replay --detection detection.json
+agentcity-motivation validate --trace trace.json
+agentcity-motivation schema --target trace
+agentcity-motivation playbooks
+agentcity-motivation compose
 ```
+
+## Composition
+
+**Upstream patterns:**
+- `agentcity.lewin` -- attribute the trap signal to person/environment locus.
+- `agentcity.aar` -- the after-action review the trace comes from.
+- `agentcity.cognitive_reappraisal` -- emotion-regulation pressure.
+- `agentcity.goleman_ei` -- emotional intelligence components.
+- `agentcity.hexaco` -- HEXACO personality (low-C correlates with attribution trap).
+
+**Downstream patterns** (chosen by profile pattern):
+- `values_dominant_irrelevance` -> `agentcity.smart_goal` + `agentcity.schein_culture`
+- `self_efficacy_collapse_uncertainty` -> `agentcity.cognitive_reappraisal` + `agentcity.smart_goal`
+- `emotions_post_rejection_cascade` -> `agentcity.cognitive_reappraisal` + `agentcity.goleman_ei`
+- `attribution_loop_wrong_cause` -> `agentcity.bias_stack` + `agentcity.johari`
+- `multi_trap_compounded` -> `agentcity.hexaco` + `agentcity.cognitive_reappraisal` + `agentcity.lewin`
+
+## Failure-mode playbooks
+
+12 curated `(trap, failure_mode)` playbooks anchored in the literature. Inspect with `agentcity-motivation playbooks` or:
+
+```python
+from agentcity.motivation_traps import find_playbook_for_intervention
+
+pb = find_playbook_for_intervention("self_efficacy", "scaffold_subtasks")
+print(pb.title)
+# "Self-efficacy collapse -- scaffold + show capability proof"
+print(pb.anchor_citation)
+# "Bandura 1977 self-efficacy; Saxberg 2013"
+```
+
+## Literature
+
+Full citations in [lib/CITATIONS.md](lib/CITATIONS.md). Seven primary anchors:
+
+1. **Saxberg & Hess (2013)** -- *Breakthrough Leadership in the Digital Age*.
+2. **Weiner (1985)** -- attribution theory.
+3. **Bandura (1977)** -- self-efficacy.
+4. **Vroom (1964)** -- *Work and Motivation*.
+5. **Pekrun (2006)** -- control-value theory of emotions.
+6. **Eccles & Wigfield (2002)** -- motivational beliefs.
+7. **Sharma et al. (2023)** -- Anthropic sycophancy / refusal cascade.
+
+Plus Dweck (2006) mindset and Lepper-Henderlong (2000) praise cross-references.
+
+## Production infrastructure
+
+Wired into the shared `agentcity.aar` infra:
+
+- **Structured logging** with `run_id` correlation.
+- **Token + cost telemetry**.
+- **Input sanitization + fencing**.
+- **Prompt-injection detection**.
+- **Retry with backoff**.
+- **Async mirror** via `MotivationTrapsAnalyzerAsync`.
+
+## Backward compatibility
+
+```python
+from agentcity.motivation_traps import MotivationTrapsDetector  # alias of MotivationTrapsAnalyzer
+```
+
+The v0.0.x `MotivationTrapsDetector(...)` call still works -- defaults to `mode="standard"`.
+
+## Tests
+
+38 tests, run with `pytest module-1-individual/09-motivation-traps/tests/`. Covers schema invariants, mode behavior, profile classifier, telemetry, composition, playbooks, calibration, async mirror, markdown rendering.
+
+## See also
+
+- [Pattern #07 HEXACO Personality](../07-hexaco-personality/README.md) -- C-factor predicts attribution-trap risk; upstream.
+- [Pattern #05 Cognitive Reappraisal](../05-cognitive-reappraisal/README.md) -- handles the EMOTIONS-trap downstream.
+- [Pattern #10 SDT Intrinsic Reward](../10-sdt-intrinsic-reward/README.md) -- complementary lens on VALUES-trap.
+- [Pattern #12 Vroom Expectancy](../12-vroom-expectancy/README.md) -- finer-grained version of the SELF_EFFICACY-trap.

@@ -1,29 +1,17 @@
 """Schema for the Group Decision Models generator.
 
-From the facilitator canon (Marnie Stewart, Sam Kaner's "Facilitator's Guide
-to Participatory Decision-Making" 2014, and the broader meeting-design
-literature). Five canonical decision-aggregation methods, each with a
-specific trade-off:
+Facilitator canon (Kaner 2014 "Facilitator's Guide to Participatory
+Decision-Making"; Stewart meeting-design literature). Five
+decision-aggregation methods: concurring, majority, consensus,
+fist_to_five, unanimous.
 
-  - CONCURRING     - one decisive vote; everyone else stays silent or assents.
-                     Fast. Good for low-stakes, reversible, time-pressured
-                     decisions where a single competent agent can call it.
-  - MAJORITY       - >50% required. Clean tally, no veto. Good for moderate
-                     stakes where speed beats unanimity and a 49% minority
-                     accepts the outcome.
-  - CONSENSUS      - everyone must affirm (or at least not block). Slow.
-                     Good for high-stakes, irreversible, regulated decisions
-                     where buy-in matters more than speed.
-  - FIST_TO_FIVE   - graded support per agent (0 = block, 5 = champion).
-                     Surfaces lukewarm support that majority voting hides.
-                     Good when degree-of-agreement matters, not just yes/no.
-  - UNANIMOUS      - everyone must positively vote yes. Strongest barrier.
-                     Reserve for high-stakes irreversible regulated decisions
-                     and decisions that require visible team alignment.
+This is a GENERATIVE pattern (alongside #13 GRPI, #23 Plus/Delta, #24
+SMART): it picks a decision model + emits a protocol spec, and
+optionally tallies a supplied vote set.
 
-This is AgentCity's third generative pattern (alongside #13 GRPI and #24
-SMART). It takes a decision context and recommends the appropriate model;
-optionally takes per-agent votes and runs the local tally.
+v0.2.0 adds three pipeline modes, a 7-point severity scale, eight
+profile patterns, forensic-mode audits (Method Fit, Tally Integrity),
+calibration baselines, composition handoff, attached playbooks.
 """
 
 from __future__ import annotations
@@ -31,7 +19,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 DECISION_MODELS: tuple[str, ...] = (
     "concurring",
@@ -41,25 +29,105 @@ DECISION_MODELS: tuple[str, ...] = (
     "unanimous",
 )
 
+GroupDecisionMode = Literal["quick", "standard", "forensic"]
+GROUP_DECISION_MODES: tuple[str, ...] = ("quick", "standard", "forensic")
+
+Severity = Literal["none", "trace", "low", "moderate", "medium", "high", "critical"]
+SEVERITY_ORDER: tuple[str, ...] = (
+    "none",
+    "trace",
+    "low",
+    "moderate",
+    "medium",
+    "high",
+    "critical",
+)
+
+
+def severity_from_fit(fit_score: float) -> Severity:
+    """Map model-fit score (0=poor, 1=excellent) to inverse-severity."""
+    s = max(0.0, min(1.0, float(fit_score)))
+    deficit = 1.0 - s
+    if deficit < 0.10:
+        return "none"
+    if deficit < 0.25:
+        return "trace"
+    if deficit < 0.40:
+        return "low"
+    if deficit < 0.55:
+        return "moderate"
+    if deficit < 0.70:
+        return "medium"
+    if deficit < 0.85:
+        return "high"
+    return "critical"
+
+
+GroupDecisionProfilePattern = Literal[
+    "good_fit_protocol",
+    "consensus_overused",
+    "majority_when_consensus_needed",
+    "concurring_when_buyin_needed",
+    "fist_to_five_underused",
+    "no_quorum_specified",
+    "no_tie_breaker",
+    "indeterminate",
+]
+GROUP_DECISION_PROFILE_PATTERNS: tuple[str, ...] = (
+    "good_fit_protocol",
+    "consensus_overused",
+    "majority_when_consensus_needed",
+    "concurring_when_buyin_needed",
+    "fist_to_five_underused",
+    "no_quorum_specified",
+    "no_tie_breaker",
+    "indeterminate",
+)
+
+
+InterventionType = Literal[
+    "switch_to_concurring",
+    "switch_to_majority",
+    "switch_to_consensus",
+    "switch_to_fist_to_five",
+    "switch_to_unanimous",
+    "add_quorum",
+    "add_tie_breaker",
+    "add_fallback",
+    "tighten_threshold",
+    "new_eval",
+    "human_review",
+    "compose_pattern",
+]
+INTERVENTION_TYPES: tuple[str, ...] = (
+    "switch_to_concurring",
+    "switch_to_majority",
+    "switch_to_consensus",
+    "switch_to_fist_to_five",
+    "switch_to_unanimous",
+    "add_quorum",
+    "add_tie_breaker",
+    "add_fallback",
+    "tighten_threshold",
+    "new_eval",
+    "human_review",
+    "compose_pattern",
+)
+
+EffortEstimate = Literal["1h", "1d", "1w", "1m", "ongoing"]
+
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
-# --- Input: a decision request + optional votes -------------------------
-
-
 class DecisionOption(BaseModel):
-    """One option on the table."""
-
     option_id: str
     description: str
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class DecisionRequest(BaseModel):
-    """A request to recommend a decision-aggregation method (and optionally tally)."""
-
     decision_id: str | None = None
     title: str
     options: list[DecisionOption]
@@ -69,121 +137,156 @@ class DecisionRequest(BaseModel):
     time_pressure: Literal["none", "moderate", "urgent"] = "moderate"
     expertise_asymmetry: Literal["balanced", "moderate", "high"] = "balanced"
     regulatory_exposure: bool = False
-    buy_in_required: bool = Field(
-        default=False,
-        description="Will agents be expected to ACT on this decision after it's made? "
-        "If yes, dissent suppression costs you later.",
-    )
+    buy_in_required: bool = False
+    framework: str | None = None
     forced_model: (
         Literal["concurring", "majority", "consensus", "fist_to_five", "unanimous"] | None
-    ) = Field(
-        default=None,
-        description="Optional override: skip recommendation, use this model.",
-    )
+    ) = None
+    baseline_path: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("title")
+    @classmethod
+    def _non_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("must be non-empty")
+        return v
 
 
 class AgentVote(BaseModel):
-    """One agent's vote on the decision."""
-
     agent_name: str
-    option_id: str | None = Field(
-        default=None,
-        description="The option the agent voted for. None = abstain (concurring/majority/"
-        "consensus) or 'no preference' (fist-to-five).",
-    )
-    score: int | None = Field(
-        default=None,
-        ge=0,
-        le=5,
-        description="Fist-to-five score in [0, 5]. 0 = block; 5 = champion. "
-        "Required for fist_to_five model; ignored otherwise.",
-    )
-    confidence: float | None = Field(
-        default=None,
-        ge=0.0,
-        le=1.0,
-        description="Optional confidence in [0, 1]. Used for tie-breaks.",
-    )
+    option_id: str | None = None
+    score: int | None = Field(default=None, ge=0, le=5)
+    confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     comment: str = ""
 
 
 class AggregationResult(BaseModel):
-    """The outcome of running the chosen aggregation on a set of votes."""
-
     method_used: Literal["concurring", "majority", "consensus", "fist_to_five", "unanimous"]
-    winner: str | None = Field(
-        default=None,
-        description="The winning option_id, or None if no decision was reached.",
-    )
-    outcome: Literal[
-        "decided",
-        "tied",
-        "blocked",
-        "insufficient_votes",
-        "no_quorum",
-    ]
+    winner: str | None = None
+    outcome: Literal["decided", "tied", "blocked", "insufficient_votes", "no_quorum"]
     vote_counts: dict[str, int] = Field(default_factory=dict)
     fist_to_five_averages: dict[str, float] = Field(default_factory=dict)
-    dissenters: list[str] = Field(
-        default_factory=list,
-        description="Agents who voted against the winner or blocked it. Important to "
-        "surface — even decided outcomes have dissent worth recording.",
-    )
+    dissenters: list[str] = Field(default_factory=list)
     explanation: str = ""
 
 
-# --- Output: protocol + optional tally ----------------------------------
+class MethodFitAudit(BaseModel):
+    """Forensic-mode: does the chosen model fit the decision properties?"""
+
+    fit_score: float = Field(default=0.5, ge=0.0, le=1.0)
+    stakes_aligned: bool = True
+    reversibility_aligned: bool = True
+    time_pressure_aligned: bool = True
+    buy_in_aligned: bool = True
+    regulatory_aligned: bool = True
+    explanation: str = ""
+
+
+class TallyIntegrityAudit(BaseModel):
+    """Forensic-mode: is the tally robust to dissent / abstain edge cases?"""
+
+    quorum_specified: bool = False
+    tie_breaker_specified: bool = False
+    fallback_specified: bool = False
+    dissent_recording_specified: bool = True
+    integrity_estimate: float = Field(default=0.5, ge=0.0, le=1.0)
+    explanation: str = ""
+
+
+class GroupDecisionIntervention(BaseModel):
+    target_dimension: Literal["model", "threshold", "quorum", "tie_breaker", "fallback", "overall"]
+    intervention_type: InterventionType
+    description: str
+    suggested_implementation: str
+    estimated_impact: Literal["high", "medium", "low"] = "medium"
+    rationale: str = ""
+    effort_estimate: EffortEstimate = "1d"
+    risk: Literal["low", "medium", "high"] = "medium"
+    composition_target_pattern: str | None = None
+
+
+class AttachedPlaybook(BaseModel):
+    model: str
+    failure_mode: str
+    title: str
+    steps: list[str]
+    expected_effort: EffortEstimate
+    anchor_citation: str = ""
+
+
+class BaselineComparison(BaseModel):
+    historical_baseline_id: str | None = None
+    historical_generated_at: datetime | None = None
+    baseline_profile_pattern: str | None = None
+    score_deltas: dict[str, float] = Field(default_factory=dict)
+    drift_severity: Literal["none", "minor", "moderate", "severe"] = "none"
+    notes: str = ""
+
+
+class ComposedPatternHandoff(BaseModel):
+    upstream_patterns: list[str] = Field(default_factory=list)
+    downstream_patterns: list[str] = Field(default_factory=list)
+    handoff_payload: dict[str, Any] = Field(default_factory=dict)
+    rationale: str = ""
 
 
 class DecisionProtocol(BaseModel):
-    """The full Group Decision Models output."""
-
     decision_id: str | None = None
     title: str
     recommended_model: Literal["concurring", "majority", "consensus", "fist_to_five", "unanimous"]
-    rationale: str = Field(
-        description="Why this model fits the decision properties. 1-3 sentences.",
-    )
-    protocol_steps: list[str] = Field(
-        description="The concrete steps the agent team should follow to run this vote.",
-    )
-    threshold: str = Field(
-        description="The pass threshold (e.g. '>50% majority', 'all agents affirm', "
-        "'no agent at <=1 fist-to-five').",
-    )
-    quorum: int | None = Field(
-        default=None,
-        description="Minimum number of agents whose vote must be recorded. None = all.",
-    )
-    tie_breaker: str = Field(
-        default="",
-        description="How ties are broken when they occur.",
-    )
+    rationale: str
+    protocol_steps: list[str]
+    threshold: str
+    quorum: int | None = None
+    tie_breaker: str = ""
     fallback_model: (
         Literal["concurring", "majority", "consensus", "fist_to_five", "unanimous"] | None
-    ) = Field(
-        default=None,
-        description="Fallback model if the primary doesn't converge.",
-    )
-    tally_result: AggregationResult | None = Field(
-        default=None,
-        description="When votes are supplied in the request, the local tally is "
-        "produced here without a second LLM call.",
-    )
+    ) = None
+    tally_result: AggregationResult | None = None
 
-    # Metadata
     generated_at: datetime = Field(default_factory=_utcnow)
     generator_model: str | None = None
 
+    # v0.2.0
+    mode: GroupDecisionMode = "standard"
+    severity: Severity = "moderate"
+    profile_pattern: GroupDecisionProfilePattern = "indeterminate"
+    fit_score: float = Field(default=0.5, ge=0.0, le=1.0)
+    method_fit_audit: MethodFitAudit | None = None
+    tally_integrity_audit: TallyIntegrityAudit | None = None
+    interventions: list[GroupDecisionIntervention] = Field(default_factory=list)
+    baseline: BaselineComparison | None = None
+    composition_handoff: ComposedPatternHandoff | None = None
+    attached_playbooks: list[AttachedPlaybook] = Field(default_factory=list)
+    run_id: str | None = None
+    cost_usd: float = Field(default=0.0, ge=0.0)
+    tokens_total: int = Field(default=0, ge=0)
+    tokens_input: int = Field(default=0, ge=0)
+    tokens_output: int = Field(default=0, ge=0)
+    llm_calls: int = Field(default=0, ge=0)
+    elapsed_ms: float = Field(default=0.0, ge=0.0)
+    injection_detected: bool = False
+
     def to_markdown(self) -> str:
         out: list[str] = []
-        out.append("# Group Decision Protocol (Stewart / facilitator canon)\n")
+        out.append("# Group Decision Protocol (Kaner / facilitator canon)\n")
         out.append(f"_Generated {self.generated_at.isoformat()}_\n")
+        if self.run_id:
+            out.append(f"_Run id: `{self.run_id}`_\n")
         if self.generator_model:
             out.append(f"_Generated by: {self.generator_model}_\n")
         if self.decision_id:
             out.append(f"_Decision: {self.decision_id}_\n")
+        out.append(f"_Mode: **{self.mode}**_\n")
+        out.append(f"_Fit score: {self.fit_score:.2f} (severity: {self.severity})_\n")
+        out.append(f"_Profile pattern: **{self.profile_pattern}**_\n")
+        if self.llm_calls or self.cost_usd:
+            out.append(
+                f"_Resources: {self.llm_calls} LLM call(s), {self.tokens_total} tokens, "
+                f"${self.cost_usd:.4f}, {self.elapsed_ms:.0f}ms_\n"
+            )
+
         out.append(f"\n## Decision\n\n{self.title}\n")
         out.append(f"\n## Recommended Model\n\n**{self.recommended_model}**\n")
         out.append(f"\n{self.rationale}\n")
@@ -218,10 +321,72 @@ class DecisionProtocol(BaseModel):
             if self.tally_result.explanation:
                 out.append(f"\n{self.tally_result.explanation}\n")
 
+        if self.method_fit_audit:
+            ma = self.method_fit_audit
+            out.append("\n## Method Fit Audit (Forensic)\n")
+            out.append(
+                f"- fit_score: {ma.fit_score:.2f}\n"
+                f"- stakes_aligned: {ma.stakes_aligned}\n"
+                f"- reversibility_aligned: {ma.reversibility_aligned}\n"
+                f"- time_pressure_aligned: {ma.time_pressure_aligned}\n"
+                f"- buy_in_aligned: {ma.buy_in_aligned}\n"
+                f"- regulatory_aligned: {ma.regulatory_aligned}\n"
+            )
+            if ma.explanation:
+                out.append(f"- {ma.explanation}\n")
+
+        if self.tally_integrity_audit:
+            ta = self.tally_integrity_audit
+            out.append("\n## Tally Integrity Audit (Forensic)\n")
+            out.append(
+                f"- quorum_specified: {ta.quorum_specified}\n"
+                f"- tie_breaker_specified: {ta.tie_breaker_specified}\n"
+                f"- fallback_specified: {ta.fallback_specified}\n"
+                f"- dissent_recording_specified: {ta.dissent_recording_specified}\n"
+                f"- integrity_estimate: {ta.integrity_estimate:.2f}\n"
+            )
+            if ta.explanation:
+                out.append(f"- {ta.explanation}\n")
+
+        if self.interventions:
+            out.append("\n## Quality Interventions\n")
+            for i, iv in enumerate(self.interventions, 1):
+                out.append(
+                    f"\n### Intervention {i}: targets `{iv.target_dimension}` via "
+                    f"`{iv.intervention_type}`\n"
+                )
+                out.append(f"- **What:** {iv.description}\n")
+                out.append(f"- **Implementation:** {iv.suggested_implementation}\n")
+                out.append(f"- **Expected impact:** {iv.estimated_impact}\n")
+                if iv.rationale:
+                    out.append(f"- **Rationale:** {iv.rationale}\n")
+
+        if self.attached_playbooks:
+            out.append("\n## Attached Playbooks\n")
+            for pb in self.attached_playbooks:
+                out.append(
+                    f"\n### {pb.title} _(model={pb.model}, failure_mode={pb.failure_mode})_\n"
+                )
+                for j, step in enumerate(pb.steps, 1):
+                    out.append(f"{j}. {step}\n")
+
+        if self.composition_handoff and (
+            self.composition_handoff.downstream_patterns
+            or self.composition_handoff.upstream_patterns
+        ):
+            out.append("\n## Composition Handoff\n")
+            ch = self.composition_handoff
+            if ch.upstream_patterns:
+                out.append(f"- **Upstream:** {', '.join(f'`{p}`' for p in ch.upstream_patterns)}\n")
+            if ch.downstream_patterns:
+                out.append(
+                    f"- **Recommended downstream:** "
+                    f"{', '.join(f'`{p}`' for p in ch.downstream_patterns)}\n"
+                )
+
         return "".join(out)
 
     def to_orchestrator_preamble(self) -> str:
-        """Render a condensed block for prepending to an orchestrator's prompt."""
         lines = [
             "DECISION PROTOCOL:",
             f"Title: {self.title}",

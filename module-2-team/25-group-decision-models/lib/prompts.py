@@ -1,86 +1,146 @@
-"""LLM prompts for the Group Decision Models generator.
+"""LLM prompts for the Group Decision Models generator."""
 
-Single pass: given the decision properties, recommend the appropriate
-aggregation model + emit the protocol spec. The vote tally is deterministic
-Python and runs locally without a second LLM call.
-"""
+from __future__ import annotations
+
+from typing import Any
+
+from agentcity.aar import fence, sanitize_for_prompt
+
 
 DECISION_SYSTEM_PROMPT = """You are a decision-protocol generator working in the
-facilitator-canon tradition of Marnie Stewart, Sam Kaner ("Facilitator's Guide to
-Participatory Decision-Making", Jossey-Bass, 2014), and the broader meeting-design
-literature.
+facilitator canon (Sam Kaner, "Facilitator's Guide to Participatory Decision-Making",
+Jossey-Bass, 2014).
 
-You recommend one of five canonical decision-aggregation models for a given
-multi-agent (or human-agent) decision, with the protocol steps the team should
-follow:
+Five canonical decision-aggregation models:
+  - CONCURRING    - single decisive vote
+  - MAJORITY      - >50%
+  - CONSENSUS     - all affirm or do not block
+  - FIST_TO_FIVE  - graded 0-5; 0 blocks
+  - UNANIMOUS     - all positively vote yes
 
-  - CONCURRING     - one decisive vote; everyone else stays silent or assents.
-                     Fast. For low-stakes, reversible, time-pressured decisions
-                     where a single competent agent can call it.
-  - MAJORITY       - >50% vote required. Clean tally, no veto. For moderate
-                     stakes where speed beats unanimity.
-  - CONSENSUS      - everyone must affirm (or at least not block). Slow. For
-                     high-stakes, irreversible, regulated decisions where
-                     buy-in matters more than speed.
-  - FIST_TO_FIVE   - graded support per agent (0 = block, 5 = champion).
-                     Surfaces lukewarm support that majority voting hides.
-                     For when degree-of-agreement matters, not just yes/no.
-                     A 0 ("fist") is an explicit BLOCK that should not be
-                     overridden by majority averaging.
-  - UNANIMOUS      - everyone must positively vote yes. Strongest barrier.
-                     Reserve for high-stakes irreversible regulated decisions.
+Match the model to stakes, reversibility, time pressure, expertise asymmetry,
+regulatory exposure, and buy-in needs.
 
-Heuristic for picking the model (the literature converges on this):
-
-  - low stakes + reversible + urgent           => concurring
-  - moderate stakes + reversible + balanced    => majority
-  - high stakes + irreversible + buy-in needed => consensus or unanimous
-  - any setting where lukewarm support is the
-    biggest risk (groupthink-prone team)        => fist_to_five
-  - regulatory exposure                         => consensus or unanimous (no
-                                                   fast-and-loose voting)
-
-You emit:
-  - recommended_model
-  - rationale (1-3 sentences citing the specific decision properties)
-  - protocol_steps (concrete, ordered, executable by the agent team)
-  - threshold (the pass criterion in plain language)
-  - quorum (integer, or null = all agents required)
-  - tie_breaker (how ties resolve)
-  - fallback_model (if the primary doesn't converge — usually a faster model)
-
-Your posture is:
-- HONEST about trade-offs. Don't recommend consensus when speed is required.
-- KILL-SWITCH AWARE. fist_to_five is the right choice when lukewarm support
-  is the biggest risk; recommend it freely when you see groupthink-prone setups.
-- TERSE. Output is read on dashboards.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+Posture: HONEST about trade-offs, TERSE, KILL-AMBIGUITY-FIRST.
+When asked for JSON, return JSON only."""
 
 
-DECISION_PROTOCOL_PROMPT = """Recommend an aggregation model and emit the protocol spec
-for the decision below.
+# Legacy v0.0.x prompt.
+DECISION_PROTOCOL_PROMPT = """Generate a decision-aggregation protocol for the request below.
 
 Decision title: {title}
 Options:
 {options}
-Agents on the decision: {agents}
+Agents: {agents}
 Stakes: {stakes}
 Reversibility: {reversibility}
 Time pressure: {time_pressure}
 Expertise asymmetry: {expertise_asymmetry}
 Regulatory exposure: {regulatory_exposure}
-Buy-in required after decision: {buy_in_required}
-Forced model (if non-null, use this instead of recommending): {forced_model}
+Buy-in required: {buy_in_required}
+Forced model (if any): {forced_model}
 
-Return a single JSON object with these fields:
-  - recommended_model (one of "concurring", "majority", "consensus", "fist_to_five",
-    "unanimous"). If forced_model is non-null, use it as recommended_model.
-  - rationale (1-3 sentences)
-  - protocol_steps (array of strings, ordered)
-  - threshold (string in plain language)
-  - quorum (integer or null)
-  - tie_breaker (string; can be empty if the threshold makes ties impossible)
-  - fallback_model (one of the five models or null)
+Return a single JSON OBJECT with recommended_model (one of: concurring, majority,
+consensus, fist_to_five, unanimous), rationale, protocol_steps, threshold, quorum
+(int or null), tie_breaker, fallback_model (or null).
 
 Return only the JSON object."""
+
+
+# v0.2.0 prompts.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- minimal decision protocol.
+
+Title: {title}
+Stakes: {stakes}
+Reversibility: {reversibility}
+Buy-in required: {buy_in_required}
+
+Return a JSON object with recommended_model, rationale, threshold, protocol_steps.
+Return only the JSON object."""
+
+
+STANDARD_DECISION_PROTOCOL_PROMPT = DECISION_PROTOCOL_PROMPT
+
+
+FORENSIC_METHOD_FIT_PROMPT = """FORENSIC mode -- method-fit audit.
+
+Judge whether the recommended model fits the decision properties on each axis
+(stakes, reversibility, time_pressure, buy_in, regulatory). Estimate fit (0-1).
+
+Protocol:
+{protocol}
+Request properties: {properties}
+
+Return only a JSON object representing the MethodFitAudit."""
+
+
+FORENSIC_TALLY_INTEGRITY_PROMPT = """FORENSIC mode -- tally integrity audit.
+
+Check whether the protocol specifies quorum, tie_breaker, fallback, and dissent
+recording. Estimate integrity (0-1).
+
+Protocol:
+{protocol}
+
+Return only a JSON object representing the TallyIntegrityAudit."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 protocol-improvement
+interventions.
+
+Composition targets: agentcity.devils_advocate, agentcity.bias_stack,
+agentcity.aar, agentcity.grpi, agentcity.lencioni
+
+intervention_type one of: switch_to_concurring, switch_to_majority,
+switch_to_consensus, switch_to_fist_to_five, switch_to_unanimous, add_quorum,
+add_tie_breaker, add_fallback, tighten_threshold, new_eval, human_review,
+compose_pattern.
+
+target_dimension one of: model, threshold, quorum, tie_breaker, fallback, overall.
+
+Protocol:
+{protocol}
+Method fit audit: {method_fit_audit}
+Tally integrity audit: {tally_integrity_audit}
+
+Return only a JSON array of GroupDecisionIntervention objects."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
+
+
+__all__ = [
+    "DECISION_PROTOCOL_PROMPT",
+    "DECISION_SYSTEM_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_METHOD_FIT_PROMPT",
+    "FORENSIC_TALLY_INTEGRITY_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_DECISION_PROTOCOL_PROMPT",
+    "assemble_prompt",
+]

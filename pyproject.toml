@@ -129,6 +129,7 @@ agentcity-glaser = "agentcity.glaser_conversation.cli:main"
 agentcity-feedback-triggers = "agentcity.feedback_triggers.cli:main"
 agentcity-plus-delta = "agentcity.plus_delta.cli:main"
 agentcity-smart-goal = "agentcity.smart_goal.cli:main"
+agentcity-group-decision = "agentcity.group_decision.cli:main"
 
 [build-system]
 requires = ["hatchling"]

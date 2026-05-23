@@ -134,7 +134,7 @@ The library is built to ship:
 
 ## Status
 
-**Early.** Eighteen patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
+**Early.** Twenty-one patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
 
 - `agentcity.aar` (#30) — After-Action Review generator
 - `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
@@ -154,8 +154,11 @@ The library is built to ship:
 - `agentcity.smart_goal` (#24) — Doran SMART Goal generator
 - `agentcity.mcgregor` (#11) — McGregor Theory X/Y Orchestrator Mode detector
 - `agentcity.group_decision` (#25) — Stewart / Kaner Group Decision Models generator (fist-to-five + 4 others)
+- `agentcity.schein_culture` (#31) — Schein Iceberg Culture Audit (first Module 3 pattern)
+- `agentcity.grant_strengths` (#08) — Adam Grant Strengths-as-Weaknesses detector
+- `agentcity.plus_delta` (#23) — Brené Brown Plus/Delta inter-agent feedback format generator
 
-16 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
+13 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
 
 ## License
 

@@ -1,0 +1,112 @@
+scenarios:
+  - id: auth-refactor-junior
+    expected_overall: iterate
+    expected_min_plus: 1
+    expected_min_delta: 2
+    request:
+      reviewer_agent: senior-eng
+      subject_agent: junior-eng
+      task_context: Refactor auth middleware for clarity.
+      contribution_summary: Split middleware into 3 modules.
+      contribution_artifact: |
+        def validate_token(token): try: decode_jwt(token); return True; except: return False
+      success_criteria: [readable in <10min, no new deps, errors surface root cause]
+      style: balanced
+
+  - id: marketing-copy-rework
+    expected_overall: rework
+    expected_min_plus: 1
+    expected_min_delta: 1
+    request:
+      reviewer_agent: copy-lead
+      subject_agent: copywriter
+      task_context: Write opening sentence for product launch press release.
+      contribution_summary: 4 candidate openers, all generic.
+      contribution_artifact: |
+        "We're excited to announce our new product." [x4 variants of same template]
+      success_criteria: [distinctive voice, specific value prop, < 20 words]
+      style: delta-leaning
+
+  - id: data-analysis-keep-going
+    expected_overall: keep-going
+    expected_min_plus: 2
+    expected_min_delta: 0
+    request:
+      reviewer_agent: lead-analyst
+      subject_agent: junior-analyst
+      task_context: Quarterly revenue analysis.
+      contribution_summary: Clean dashboard with 3 key insights.
+      contribution_artifact: |
+        Q3 revenue +18%; ARR growth concentrated in enterprise tier; churn down 2pp.
+      success_criteria: [insights are decision-grade, numbers are sourced]
+      style: plus-leaning
+
+  - id: code-review-mixed
+    expected_overall: iterate
+    expected_min_plus: 1
+    expected_min_delta: 2
+    request:
+      reviewer_agent: critic
+      subject_agent: coder
+      task_context: Implement a rate limiter.
+      contribution_summary: Token-bucket rate limiter implementation.
+      contribution_artifact: |
+        class RateLimiter: ... (token-bucket impl with no test coverage)
+      success_criteria: [tests pass, p95 < 10ms, no race conditions]
+      style: balanced
+
+  - id: design-spec-critical
+    expected_overall: rework
+    expected_min_plus: 0
+    expected_min_delta: 1
+    request:
+      reviewer_agent: architect
+      subject_agent: designer
+      task_context: Design data model for new feature.
+      contribution_summary: ER diagram with significant denormalization issues.
+      contribution_artifact: |
+        users table contains: orders, payments, addresses, all inlined as JSON columns.
+      success_criteria: [supports JOIN queries, scales to 10M rows, queryable by analyst tools]
+      style: delta-leaning
+
+  - id: writing-style-coaching
+    expected_overall: iterate
+    expected_min_plus: 1
+    expected_min_delta: 1
+    request:
+      reviewer_agent: editor
+      subject_agent: writer
+      task_context: Blog post on AI agent observability.
+      contribution_summary: 1500-word draft with strong opener.
+      contribution_artifact: |
+        Title: "Why Your AI Agent Is Lying to You". Strong opener; middle drifts into list-form.
+      success_criteria: [hook holds attention, narrative threading, < 1500 words]
+      style: balanced
+
+  - id: pr-description-quick-keep
+    expected_overall: keep-going
+    expected_min_plus: 2
+    expected_min_delta: 0
+    request:
+      reviewer_agent: tech-lead
+      subject_agent: contributor
+      task_context: Write PR description for a small bugfix.
+      contribution_summary: One-paragraph summary with repro steps and test plan.
+      contribution_artifact: |
+        Fixes #1234. Repro: ...; Fix: ...; Tests: added regression test.
+      success_criteria: [clear what's fixed, repro included, test plan stated]
+      style: plus-leaning
+
+  - id: agent-prompt-critical-rework
+    expected_overall: rework
+    expected_min_plus: 0
+    expected_min_delta: 1
+    request:
+      reviewer_agent: prompt-engineer
+      subject_agent: junior-prompt-engineer
+      task_context: Write system prompt for a customer-support agent.
+      contribution_summary: Prompt is contradictory and lacks kill criteria.
+      contribution_artifact: |
+        System prompt: "Be helpful. Always say yes. Push back when needed."
+      success_criteria: [internally consistent, has kill criteria, names tone explicitly]
+      style: delta-leaning

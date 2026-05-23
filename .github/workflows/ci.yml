@@ -42,7 +42,7 @@ jobs:
 
       - name: Run tests (all patterns)
         run: |
-          pytest module-1-individual/ module-2-team/ -v --tb=short
+          pytest module-1-individual/ module-2-team/ module-3-organization/ -v --tb=short
 
   lint:
     name: Lint (ruff)
@@ -60,10 +60,10 @@ jobs:
         run: python -m pip install ruff
 
       - name: Run ruff check
-        run: ruff check module-1-individual/ module-2-team/
+        run: ruff check module-1-individual/ module-2-team/ module-3-organization/
 
       - name: Run ruff format check
-        run: ruff format --check module-1-individual/ module-2-team/
+        run: ruff format --check module-1-individual/ module-2-team/ module-3-organization/
 
   typecheck:
     name: Typecheck (mypy)
@@ -110,7 +110,10 @@ jobs:
               module-2-team/14-process-gain-loss-detector \
               module-2-team/24-smart-goal-generator \
               module-1-individual/11-mcgregor-orchestrator-mode \
-              module-2-team/25-group-decision-models; do
+              module-2-team/25-group-decision-models \
+              module-3-organization/31-schein-iceberg-culture \
+              module-1-individual/08-grant-strengths-as-weaknesses \
+              module-2-team/23-plus-delta-feedback-format; do
             echo "=== mypy: $pattern ==="
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done

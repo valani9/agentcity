@@ -122,6 +122,7 @@ agentcity-process = "agentcity.process_gain_loss.cli:main"
 agentcity-loafing = "agentcity.social_loafing.cli:main"
 agentcity-superflocks = "agentcity.superflocks.cli:main"
 agentcity-lencioni = "agentcity.lencioni.cli:main"
+agentcity-trust-triangle = "agentcity.trust_triangle.cli:main"
 
 [build-system]
 requires = ["hatchling"]

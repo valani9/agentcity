@@ -87,12 +87,8 @@ def _is_profile_flip(prev: str, curr: str) -> bool:
 def compare_to_baseline(current: EIDetection, baseline: EIDetection) -> EIBaselineComparison:
     """Compute a :class:`EIBaselineComparison`."""
     deltas: dict[str, float] = {}
-    curr_by_domain: dict[str, float] = {
-        str(d.domain): d.score for d in current.domains
-    }
-    base_by_domain: dict[str, float] = {
-        str(d.domain): d.score for d in baseline.domains
-    }
+    curr_by_domain: dict[str, float] = {str(d.domain): d.score for d in current.domains}
+    base_by_domain: dict[str, float] = {str(d.domain): d.score for d in baseline.domains}
     for domain in EI_DOMAINS:
         c = float(curr_by_domain.get(domain, 0.0))
         b = float(base_by_domain.get(domain, 0.0))

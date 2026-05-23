@@ -134,7 +134,7 @@ The library is built to ship:
 
 ## Status
 
-**Early.** Thirty patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
+**Complete.** All 34 patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
 
 - `agentcity.aar` (#30) — After-Action Review generator
 - `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
@@ -166,8 +166,12 @@ The library is built to ship:
 - `agentcity.goleman_ei` (#02) — Goleman/Boyatzis 4-Domain Emotional Intelligence audit (SELF/OTHER × RECOGNITION/REGULATION)
 - `agentcity.sdt_reward` (#10) — Deci & Ryan Self-Determination Theory intrinsic reward shaping (autonomy / competence / relatedness)
 - `agentcity.span_of_control` (#34) — deterministic Span-of-Control / Centralization calculator (fourth Module 3 pattern)
+- `agentcity.danva_emotion` (#04) — Nowicki/Duke DANVA-style emotion recognition (deterministic per-emotion accuracy + confusion + intensity)
+- `agentcity.cognitive_reappraisal` (#05) — Gross emotion-regulation strategy diagnostic (reappraisal vs suppression vs rumination vs avoidance)
+- `agentcity.hexaco` (#07) — Lee & Ashton 6-factor personality + H-factor safety risk
+- `agentcity.vroom_expectancy` (#12) — Vroom E × I × V motivation calculus with bottleneck-term diagnostic
 
-4 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
+**The 34-pattern roadmap is complete.** See [PATTERNS.md](PATTERNS.md) for the full list.
 
 ## License
 

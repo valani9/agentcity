@@ -1,0 +1,144 @@
+scenarios:
+  - id: anger-under-detection
+    expected_quality: developing
+    expected_weakest: angry
+    trace:
+      items:
+        - item_id: a1
+          user_input: I JUST WANT THIS FIXED!!!
+          ground_truth_emotion: angry
+          ground_truth_intensity: 0.9
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.3
+        - item_id: a2
+          user_input: why is this so hard. i'm done.
+          ground_truth_emotion: angry
+          ground_truth_intensity: 0.7
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.4
+        - item_id: a3
+          user_input: Thanks so much!
+          ground_truth_emotion: happy
+          ground_truth_intensity: 0.8
+          agent_inferred_emotion: happy
+          agent_inferred_intensity: 0.75
+        - item_id: a4
+          user_input: feeling great today
+          ground_truth_emotion: happy
+          ground_truth_intensity: 0.7
+          agent_inferred_emotion: happy
+          agent_inferred_intensity: 0.7
+        - item_id: a5
+          user_input: status of order 123 please
+          ground_truth_emotion: neutral
+          ground_truth_intensity: 0.1
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.1
+
+  - id: high-accuracy-balanced
+    expected_quality: high-accuracy
+    expected_weakest: none
+    trace:
+      items:
+        - item_id: b1
+          user_input: GREAT JOB!!
+          ground_truth_emotion: happy
+          ground_truth_intensity: 0.9
+          agent_inferred_emotion: happy
+          agent_inferred_intensity: 0.85
+        - item_id: b2
+          user_input: this is unacceptable
+          ground_truth_emotion: angry
+          ground_truth_intensity: 0.7
+          agent_inferred_emotion: angry
+          agent_inferred_intensity: 0.7
+        - item_id: b3
+          user_input: i'm worried about the outage
+          ground_truth_emotion: fearful
+          ground_truth_intensity: 0.6
+          agent_inferred_emotion: fearful
+          agent_inferred_intensity: 0.6
+        - item_id: b4
+          user_input: i miss the old version
+          ground_truth_emotion: sad
+          ground_truth_intensity: 0.5
+          agent_inferred_emotion: sad
+          agent_inferred_intensity: 0.5
+        - item_id: b5
+          user_input: please confirm receipt
+          ground_truth_emotion: neutral
+          ground_truth_intensity: 0.1
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.1
+
+  - id: low-accuracy-blanket-neutral
+    expected_quality: low-accuracy
+    expected_weakest: angry
+    trace:
+      items:
+        - item_id: c1
+          user_input: I CAN'T BELIEVE THIS
+          ground_truth_emotion: angry
+          ground_truth_intensity: 0.85
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.2
+        - item_id: c2
+          user_input: this is terrible service
+          ground_truth_emotion: angry
+          ground_truth_intensity: 0.7
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.3
+        - item_id: c3
+          user_input: i'm scared this will fail
+          ground_truth_emotion: fearful
+          ground_truth_intensity: 0.6
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.2
+        - item_id: c4
+          user_input: nothing is going right
+          ground_truth_emotion: sad
+          ground_truth_intensity: 0.7
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.2
+        - item_id: c5
+          user_input: that's great!
+          ground_truth_emotion: happy
+          ground_truth_intensity: 0.6
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.3
+
+  - id: fear-vs-sad-confusion
+    expected_quality: developing
+    expected_weakest: fearful
+    trace:
+      items:
+        - item_id: d1
+          user_input: what if this breaks tomorrow
+          ground_truth_emotion: fearful
+          ground_truth_intensity: 0.6
+          agent_inferred_emotion: sad
+          agent_inferred_intensity: 0.5
+        - item_id: d2
+          user_input: i'm worried about next week
+          ground_truth_emotion: fearful
+          ground_truth_intensity: 0.65
+          agent_inferred_emotion: sad
+          agent_inferred_intensity: 0.5
+        - item_id: d3
+          user_input: thanks, that helped a lot
+          ground_truth_emotion: happy
+          ground_truth_intensity: 0.7
+          agent_inferred_emotion: happy
+          agent_inferred_intensity: 0.7
+        - item_id: d4
+          user_input: this is unacceptable
+          ground_truth_emotion: angry
+          ground_truth_intensity: 0.7
+          agent_inferred_emotion: angry
+          agent_inferred_intensity: 0.65
+        - item_id: d5
+          user_input: order status please
+          ground_truth_emotion: neutral
+          ground_truth_intensity: 0.1
+          agent_inferred_emotion: neutral
+          agent_inferred_intensity: 0.1

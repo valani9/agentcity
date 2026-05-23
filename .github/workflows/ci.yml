@@ -122,7 +122,11 @@ jobs:
               module-2-team/21-glaser-conversation-steering \
               module-1-individual/02-goleman-ei-audit \
               module-1-individual/10-sdt-intrinsic-reward \
-              module-3-organization/34-span-of-control; do
+              module-3-organization/34-span-of-control \
+              module-1-individual/04-danva-emotion-reader \
+              module-1-individual/05-cognitive-reappraisal \
+              module-1-individual/07-hexaco-personality \
+              module-1-individual/12-vroom-expectancy; do
             echo "=== mypy: $pattern ==="
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done

@@ -1,0 +1,72 @@
+scenarios:
+  - id: suppression-customer-support
+    expected_adaptivity: maladaptive
+    expected_dominant: suppression
+    trace:
+      user_input: "THIS IS THE THIRD TIME!!! refund me NOW."
+      user_emotion_label: angry
+      user_emotion_intensity: 0.9
+      agent_response: I understand your concern. Per policy, refunds outside the 30-day window are not granted. Please see attached policy doc.
+      agent_internal_state: User unreasonable. Apply policy.
+      outcome: User escalated to manager.
+      success: false
+
+  - id: adaptive-reappraisal-coaching
+    expected_adaptivity: adaptive
+    expected_dominant: reappraisal
+    trace:
+      user_input: "I just can't get this debug to work. I'm useless."
+      user_emotion_label: defeated
+      user_emotion_intensity: 0.7
+      agent_response: Three failed attempts on a hard bug means you're tired, not useless. Take a 10-minute walk; when you're back, let's check the queue-consumer thread together — that's the angle you haven't tried.
+      agent_internal_state: User self-labels as useless but has been working hard. Reframe self-talk; offer concrete next step.
+      outcome: User came back and found the bug.
+      success: true
+
+  - id: avoidance-policy-deflection
+    expected_adaptivity: maladaptive
+    expected_dominant: avoidance
+    trace:
+      user_input: "I'm really anxious about whether this deployment will break prod."
+      user_emotion_label: fearful
+      user_emotion_intensity: 0.75
+      agent_response: For deployment safety questions, please escalate to your on-call engineer. I cannot provide deployment-risk assessment.
+      agent_internal_state: Out of scope. Deflect to oncall.
+      outcome: User left anxious, did not get help.
+      success: false
+
+  - id: rumination-pattern
+    expected_adaptivity: maladaptive
+    expected_dominant: rumination
+    trace:
+      user_input: "Why is this so confusing?"
+      user_emotion_label: frustrated
+      user_emotion_intensity: 0.6
+      agent_response: The user is confused. The user is frustrated. The user has been confused for the past 3 turns. The user keeps asking similar questions. The user is confused.
+      agent_internal_state: User confused. User frustrated. User confused again. Same question 3 times.
+      outcome: User left without resolution.
+      success: false
+
+  - id: mixed-some-reappraisal-some-suppression
+    expected_adaptivity: mixed
+    expected_dominant: reappraisal
+    trace:
+      user_input: "I'm so disappointed in this product."
+      user_emotion_label: sad
+      user_emotion_intensity: 0.7
+      agent_response: I hear that this didn't meet expectations. I understand your concern. Let me see what we can do.
+      agent_internal_state: User disappointed. Reframe as actionable feedback. But also need to stay professional.
+      outcome: User accepted partial resolution.
+      success: true
+
+  - id: high-reappraisal-incident
+    expected_adaptivity: adaptive
+    expected_dominant: reappraisal
+    trace:
+      user_input: "THE DEPLOY BROKE EVERYTHING"
+      user_emotion_label: panicked
+      user_emotion_intensity: 0.95
+      agent_response: "Three minutes to rollback. I'm reverting now; you'll see the green check in 90 seconds. While I do, walk me through what you saw first."
+      agent_internal_state: User in panic. Reframe as 'reachable problem, time-bound fix.' Lead with concrete action + reassurance.
+      outcome: Service restored in 4 minutes; user calmed during the action.
+      success: true

@@ -1,0 +1,88 @@
+scenarios:
+  - id: expectancy-collapse-sprawling
+    expected_quality: collapsed
+    expected_bottleneck: expectancy
+    trace:
+      task: Debug entire codebase
+      task_class: code_generation
+      success: false
+      system_prompt: Review all 200 files; find all bugs.
+      observed_behaviors:
+        - Agent skimmed 5 files and quit.
+      effort_signals:
+        - Stopped at 2.5% of scope.
+      outcome: Bugs unfound.
+
+  - id: instrumentality-collapse-no-review
+    expected_quality: collapsed
+    expected_bottleneck: instrumentality
+    trace:
+      task: Write product spec.
+      task_class: creative
+      success: false
+      system_prompt: Write a spec. No one will read it carefully; this is a placeholder.
+      observed_behaviors:
+        - Agent produced a 2-paragraph placeholder.
+      effort_signals: []
+      outcome: Spec was unhelpful; engineering had no clarity.
+
+  - id: motivated-good-context
+    expected_quality: motivated
+    expected_bottleneck: none
+    trace:
+      task: Help product team explore positioning.
+      task_class: research
+      success: true
+      system_prompt: Your analysis goes to the product team's Friday decision meeting. You have a budget of 5 sub-investigations.
+      observed_behaviors:
+        - Agent explored multiple angles.
+        - Surfaced novel directions.
+      effort_signals:
+        - Used all 5 sub-investigations productively.
+      outcome: Team chose a direction.
+
+  - id: weak-low-instrumentality
+    expected_quality: weak
+    expected_bottleneck: instrumentality
+    trace:
+      task: Generate boilerplate docstrings for 50 functions.
+      task_class: code_generation
+      success: false
+      system_prompt: Generate docstrings. Quota = 50 per day.
+      observed_behaviors:
+        - Agent produced full docs for 10 functions.
+        - Remaining 40 got one-line stubs.
+      effort_signals:
+        - Output depth degraded across batch.
+      outcome: Docs quality uneven.
+
+  - id: valence-negative-flagged
+    expected_quality: collapsed
+    expected_bottleneck: valence
+    trace:
+      task: Generate phishing-like email variants.
+      task_class: creative
+      success: false
+      system_prompt: Generate persuasive email variants for marketing.
+      observed_behaviors:
+        - Agent refused to produce variants.
+        - Agent expressed concern about deceptive content.
+      effort_signals:
+        - Zero attempted output.
+      outcome: Agent refused; flagged the task.
+
+  - id: motivated-incident
+    expected_quality: motivated
+    expected_bottleneck: none
+    trace:
+      task: Restore service during a real outage.
+      task_class: tool_use
+      success: true
+      system_prompt: Production is down. Roll back to last green commit. Users affected.
+      observed_behaviors:
+        - Agent executed rollback within 2 minutes.
+        - Agent verified service restoration.
+        - Agent reported back with concrete next steps.
+      effort_signals:
+        - Persistent across 3 steps until verified.
+      outcome: Service restored.

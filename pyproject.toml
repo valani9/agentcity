@@ -137,6 +137,7 @@ agentcity-thomas-kilmann = "agentcity.thomas_kilmann.cli:main"
 agentcity-schein-culture = "agentcity.schein_culture.cli:main"
 agentcity-robbins-culture = "agentcity.robbins_culture.cli:main"
 agentcity-org-structure = "agentcity.org_structure.cli:main"
+agentcity-span-of-control = "agentcity.span_of_control.cli:main"
 
 [build-system]
 requires = ["hatchling"]

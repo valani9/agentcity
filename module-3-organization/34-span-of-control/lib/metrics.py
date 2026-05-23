@@ -281,6 +281,78 @@ def compute_all_metrics_payload(
     return metrics, bottleneck_ids
 
 
+def detect_structural_anomalies(agents: list[AgentNode]) -> dict[str, object]:
+    """Detect cycles, orphans, multi-parents, dangling references in the DAG."""
+    id_to_agent = {a.agent_id: a for a in agents}
+    referenced_supervisors: set[str] = set()
+    multi_parent: list[str] = []
+    dangling: list[str] = []
+    for a in agents:
+        for sup in a.reports_to:
+            referenced_supervisors.add(sup)
+            if sup not in id_to_agent:
+                if sup not in dangling:
+                    dangling.append(sup)
+        if len(a.reports_to) > 1:
+            multi_parent.append(a.agent_id)
+
+    has_subordinates: set[str] = referenced_supervisors & set(id_to_agent.keys())
+    orphans = [
+        a.agent_id for a in agents if not a.reports_to and a.agent_id not in has_subordinates
+    ]
+
+    cycle_paths: list[list[str]] = []
+    visited: set[str] = set()
+    for start in id_to_agent:
+        if start in visited:
+            continue
+        path: list[str] = [start]
+        seen = {start}
+        current = start
+        while True:
+            ag = id_to_agent.get(current)
+            if ag is None or not ag.reports_to:
+                break
+            nxt = ag.reports_to[0]
+            if nxt in seen:
+                idx = path.index(nxt)
+                cycle_paths.append(path[idx:] + [nxt])
+                break
+            if nxt not in id_to_agent:
+                break
+            seen.add(nxt)
+            path.append(nxt)
+            current = nxt
+            if len(path) > len(id_to_agent):
+                break
+        visited.update(seen)
+
+    return {
+        "cycles_detected": bool(cycle_paths),
+        "cycle_paths": cycle_paths,
+        "orphans": orphans,
+        "multi_parent_agents": multi_parent,
+        "dangling_reports_to": dangling,
+    }
+
+
+def estimate_breaking_rate(
+    agents: list[AgentNode], current_rate: float, current_score: float
+) -> float | None:
+    """Estimate the incoming-rate at which the bottleneck score saturates (>= 0.95).
+
+    Linear extrapolation from current rate + score. Returns None if no signal.
+    """
+    if current_score <= 0.05 or current_rate <= 0.0:
+        return None
+    if current_score >= 0.95:
+        return current_rate
+    # Linear: score grows proportionally with rate beyond baseline.
+    target = 0.95
+    ratio = target / max(current_score, 0.05)
+    return round(min(10000.0, current_rate * ratio), 1)
+
+
 def composite_load_score(metrics: dict[str, tuple[float, float, str]]) -> float:
     """Weighted composite of normalized metric scores.
 

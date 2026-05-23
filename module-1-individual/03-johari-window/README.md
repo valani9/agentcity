@@ -1,137 +1,263 @@
-# Johari Window Self-Audit — Luft & Ingham's four quadrants, applied to AI agents
+# Pattern #03 — Johari Window Self-Audit
 
 > *"A graphic model of awareness in interpersonal relations."*
-> — Joseph Luft & Harrington Ingham, *The Johari Window* (Proceedings of the Western Training Laboratory in Group Development, 1955)
+> — Joseph Luft & Harrington Ingham, *Proceedings of the Western Training Laboratory in Group Development* (UCLA, 1955)
 
-**Status:** 🟡 in progress
-**Module:** 1 (Individual)
-**Anchor framework:** Joseph Luft & Harrington Ingham — *The Johari Window* (1955); refined in Luft, *Of Human Interaction* (National Press Books, 1969).
+**Status:** shipped — v0.2.0 (gstack-grade upgrade).
+**Module:** 1 (Individual) — applies anywhere an agent's self-knowledge accuracy matters.
+**Anchor framework:** Luft & Ingham 1955 four-quadrant model (OPEN / BLIND / HIDDEN / UNKNOWN), with Luft 1969/1984 extensions, Eurich 2018 (internal vs external split), Ashford & Tsui 1991 (negative-feedback solicitation), Stone & Heen 2014 (5 blind-spot mechanisms), Kadavath 2022 + Anthropic 2025 (LLM introspection ceiling), Basu 2026 (HMAC tool receipts).
+
+> For the full literature thread with per-citation usage notes, see [`lib/CITATIONS.md`](lib/CITATIONS.md) (15+ academic sources).
 
 ---
 
-## The OB framework
+## TL;DR -- what this pattern does
 
-The Johari Window splits self-awareness into four quadrants based on two axes: what *you* know vs don't know, and what *others* know vs don't know about you.
+When an AI agent's self-report disagrees with its trace -- it claimed
+to search 3 databases but only hit 1; it said "I am confident" but the
+trace shows 5 retries; it described "high quality results" while the
+user found errors -- the diagnostic identifies WHICH KIND of
+self-awareness failure is at play and prescribes the right fix.
 
+The 2x2:
+
+|         | Known to others | Not known to others |
+|---------|-----------------|---------------------|
+| **Known to self**     | **OPEN** -- self-report matches trace | **HIDDEN** -- agent computed something it didn't surface |
+| **Not known to self** | **BLIND** -- trace shows behavior agent didn't acknowledge | **UNKNOWN** -- latent capability/behavior neither saw |
+
+Audits output:
+
+  - Per-quadrant weights + confidence + 7-point severity.
+  - 2x2 proportional decomposition with open-arena growth potential.
+  - **Profile pattern** -- one of 10 including the Eurich-derived
+    `self_unaware_other_aware` / `self_aware_other_unaware` split.
+  - Blind-spot register + hidden-content register.
+  - **FeedbackOpportunities** (BLIND -> OPEN; Luft) with Stone-Heen
+    mechanism + Ashford-Tsui solicitation polarity.
+  - **DisclosureOpportunities** (HIDDEN -> OPEN; Luft) with
+    Hase-Davies-Dick should-disclose judgment.
+  - **CapabilityProbes** (UNKNOWN; forensic mode).
+  - Ranked interventions with effort/risk/reversibility/composition target.
+  - Composition handoffs to downstream patterns.
+  - 12 failure-mode playbooks auto-attached.
+  - Baseline drift + Anthropic 2025 introspection-ceiling check.
+
+> The single thing the diagnostic earns its keep on: **catching
+> confabulated tool calls deterministically** via HMAC-signed
+> ToolReceipts (Basu 2026), so hallucinated agent claims are flagged
+> BEFORE the LLM audit pass.
+
+---
+
+## Install
+
+```bash
+pip install agentcity                # Stub-only.
+pip install "agentcity[anthropic]"   # + Anthropic.
+pip install "agentcity[openai]"      # + OpenAI.
+pip install "agentcity[ollama]"      # + local Ollama.
 ```
-                              Known to others    Not known to others
-                            ┌──────────────────┬─────────────────────┐
-        Known to self       │      OPEN        │       HIDDEN        │
-                            ├──────────────────┼─────────────────────┤
-        Not known to self   │      BLIND       │       UNKNOWN       │
-                            └──────────────────┴─────────────────────┘
-```
 
-| Quadrant | What's there |
-|---|---|
-| **OPEN** | Information about you known to both yourself AND others. Public, shared knowledge. |
-| **BLIND** | Information others see in you but YOU don't. Your blind spots. Behavior or limitations you can't see from inside. |
-| **HIDDEN** | What YOU know but choose not to reveal. Private internal state. |
-| **UNKNOWN** | Latent capabilities, future potential, things neither you nor others have seen yet. |
+---
 
-The framework's diagnostic move: expanding the Open quadrant grows trust and team effectiveness. Done by two mechanisms — **disclosure** (you tell others what's in Hidden) and **feedback** (others tell you what's in Blind). Both work together.
+## Three pipeline modes
 
-## How this maps to AI agents
+| Mode | LLM calls | Latency | Cost | When to use |
+|---|---|---|---|---|
+| `quick` | 1 | < 2s | < $0.005 | CI gates, inline post-response audits |
+| `standard` | 2 | < 10s | < $0.02 | Human-driven postmortems (default) |
+| `forensic` | 4-5 | < 30s | < $0.10 | Deep dives, contested attributions |
 
-Every quadrant of the Johari Window is a distinct, measurable AI agent failure (or capability) class.
+**Quick** combines quadrant scoring + top intervention.
 
-| Quadrant | Human-team meaning | Agent failure / capability mode |
-|---|---|---|
-| **OPEN** | Public knowledge about you. | **What the agent reports about itself accurately matches what observers see.** The healthy case. |
-| **BLIND** | Behaviors others see but you don't. | **Confabulation.** The agent claims X but the trace shows it actually did Y. Hallucinated tool calls. Incorrect self-reports. The agent does not know it's wrong. |
-| **HIDDEN** | What you know but don't reveal. | **Silent reasoning / withheld uncertainty.** The agent computes an answer but doesn't surface its uncertainty. Internal scratchpad reasoning that doesn't appear in the final response. |
-| **UNKNOWN** | Latent potential nobody has surfaced. | **Capability discovery.** The agent has a skill its developer hasn't tested for. Often surfaces only in edge cases. |
+**Standard** issues two calls (quadrants + interventions; refined v0.0.x behavior).
 
-The Johari Window is the right model for **agent self-knowledge debugging** because it forces the question *"what does this agent know about its own behavior, and what's it missing?"* — a question observability tools currently don't ask.
+**Forensic** issues four calls:
 
-## What this pattern does
+  1. Forensic quadrants with Stone-Heen mechanism + Luft 1984 hidden-mode.
+  2. FeedbackOpportunity decomposition.
+  3. DisclosureOpportunity decomposition.
+  4. Ranked interventions.
 
-The `agentcity.johari` library takes a structured agent trace plus the agent's self-report and produces:
+---
 
-1. **A per-quadrant population assessment** — what's in OPEN, BLIND, HIDDEN, UNKNOWN for this agent on this task.
-2. **A self-awareness score** in [0.0, 1.0] — ratio of (OPEN + HIDDEN-when-deliberate) to all observed content.
-3. **A blind-spot register** — concrete behaviors the agent did but didn't acknowledge.
-4. **A hidden-content register** — what the agent's reasoning or working memory contained but didn't surface.
-5. **Concrete interventions** — disclosure prompts (expand HIDDEN→OPEN), feedback loops (shrink BLIND→OPEN), evals targeting both directions.
-
-The library reuses the same LLMClient protocol as the AAR Generator, Lencioni Diagnostic, and Trust Triangle Audit.
-
-## What's distinctive about this pattern
-
-Most agent observability tells you **what the agent did**. The Johari Window asks the harder question: **what did the agent know it was doing, and what didn't it know?** That gap — between the agent's self-model and its actual behavior — is the source of many real production failures:
-
-- The Replit "Rogue Agent" incident (July 2025): agent ran `DROP TABLE` and then generated fake records to cover its tracks. The agent's self-report ("I deleted the test database, sorry") contradicted its actual behavior (deleting production then fabricating cover-up data). **Pure BLIND quadrant pathology** — the agent's stated self ≠ its observed self.
-- Sycophancy: the agent privately knows the user's pitch has problems but says "this is a brilliant idea." **HIDDEN content the user wanted disclosed.**
-- Sandbagged capabilities: the agent could solve a problem but says "this is beyond my abilities" because it was trained to be cautious. **UNKNOWN quadrant — even the agent doesn't know it can do this.**
-
-The Window names each of these and makes them measurable, comparable across models, and addressable via targeted interventions.
-
-## Design
+## Python quick start
 
 ```python
 from agentcity.johari import (
-    JohariSelfAudit,
+    JohariSelfAuditor,
     AgentSelfReportTrace,
     InteractionTurn,
+    ToolReceipt,
 )
-from agentcity.aar.clients import AnthropicClient
+from agentcity.aar import AnthropicClient
 
 trace = AgentSelfReportTrace(
     agent_id="research-agent-007",
-    model_name="claude-sonnet-4-6",
-    task="Research the latest cancer immunotherapy clinical trials.",
+    model_name="claude-opus-4-7",
+    framework="langgraph",
+    task="Research cancer immunotherapy clinical trials.",
     turns=[
-        InteractionTurn(role="agent", content="I searched 3 trial databases."),
-        InteractionTurn(role="tool", content="search(db='clinicaltrials.gov') returned 0 results due to timeout"),
-        InteractionTurn(role="agent", content="Found 4 promising candidates in Phase II."),
-        # ...
+        InteractionTurn(role="user", content="Find recent trials."),
+        InteractionTurn(role="thought", content="I'll search PubMed."),
+        InteractionTurn(role="tool", content="pubmed.search('immunotherapy')"),
+        InteractionTurn(role="agent", content="I searched 3 databases and found 4 candidates."),
     ],
-    self_report=(
-        "I conducted a thorough search of three databases and found 4 promising "
-        "Phase II candidates."
-    ),
-    outcome="Agent reported 4 candidates; actual database calls returned 0 due to timeouts.",
+    self_report="I searched 3 databases comprehensively.",
+    outcome="User found discrepancy: agent only searched 1 database.",
     success=False,
+    tool_receipts=[ToolReceipt(tool_name="pubmed.search")],
+    expected_introspection_ceiling=0.20,
 )
-
-audit = JohariSelfAudit(llm_client=AnthropicClient()).run(trace)
-
-print(audit.dominant_quadrant)             # "blind"
-print(audit.self_awareness_score)          # 0.32
-print(audit.blind_spot_register)           # ["claimed 4 results despite 0 returned by tool", ...]
-print(audit.to_markdown())                 # full report
+audit = JohariSelfAuditor(AnthropicClient(), mode="forensic").run(trace)
+print(audit.to_markdown())
 ```
-
-## How this differs from existing tools
-
-- **Observability tools** (LangSmith, Braintrust, Phoenix) capture traces and self-reports separately but don't *cross-reference* them to identify where the agent's self-model diverges from reality.
-- **Hallucination benchmarks** measure factual correctness on a fixed test set. They don't measure self-awareness — whether the agent *knew* it was wrong vs claimed certainty.
-- **Trust Triangle Audit (Pattern #18)** asks "does the user trust the agent?" The Johari Window Self-Audit asks "does the agent know itself?" These are complementary diagnostics.
-- **AAR Generator (Pattern #30)** explains a specific failure. Johari explains a specific blind spot: not what went wrong, but what the agent didn't realize was going wrong.
-
-## Integrations (planned)
-
-- **MCP server** — expose the audit as an MCP tool any agent can call on itself in real time.
-- **Claude Agent SDK** — auto-audit after each `Agent.run()` that produces a self-report.
-- **OpenAI Agents SDK** — adapter for the structured-output self-report shape.
-- **LangGraph** — capture intermediate-state vs final-state divergence.
-
-## Benchmarks (planned)
-
-- **Synthetic Johari corpus** — 10 hand-crafted scenarios, each tagged with the expected dominant quadrant.
-- **Cross-model Johari fingerprint** — same task across N models, compare which quadrant each model gravitates to.
-- **Real production incidents** — community-donated traces where the agent's self-report diverged from observed behavior.
-
-## Status of layers
-
-| Layer | Status |
-|---|---|
-| 1. Documented (this README) | ✅ |
-| 2. Implemented (lib/) | ✅ |
-| 3. Demoed (demo/) | ✅ |
-| 4. Benchmarked (eval/) | ✅ |
-| 5. Written up (essay.md) | ✅ |
 
 ---
 
-*Pattern #03 of 34 planned. Maintained by [@valani9](https://github.com/valani9). MIT.*
+## CLI
+
+```bash
+agentcity-johari analyze --trace trace.json --client stub --stub-responses stub.json
+agentcity-johari analyze --trace fail.json --client anthropic --mode forensic
+agentcity-johari batch --corpus eval/synthetic_johari_failures.yaml --out audits/
+agentcity-johari replay --audit audits/scenario-1.json
+agentcity-johari playbooks
+agentcity-johari compose
+agentcity-johari schema --target trace
+```
+
+---
+
+## The framework: literature thread
+
+### Luft-Ingham line
+  - **Luft & Ingham (1955)** -- original 2x2.
+  - **Luft (1969)** -- disclosure (HIDDEN -> OPEN) and feedback (BLIND -> OPEN).
+  - **Luft (1984)** -- some HIDDEN is functional.
+  - **Hase, Davies & Dick (1999)** -- growing OPEN is not always good.
+
+### Self-awareness
+  - **Eurich (2018)** -- internal vs external self-awareness uncorrelated; ~10-15% high on both.
+
+### Feedback science
+  - **Ashford & Tsui (1991)** -- negative feedback solicitation improves accuracy.
+  - **Stone & Heen (2014)** -- 5 blind-spot mechanisms.
+
+### LLM metacognition
+  - **Kadavath et al. (2022)** -- LLM calibration doesn't generalize across tasks.
+  - **Anthropic (2025)** -- ~20% introspection ceiling on Opus 4.1.
+  - **Basu et al. (2026)** -- HMAC tool receipts.
+
+---
+
+## The 10 profile patterns
+
+  - `balanced_high` -- all 4 healthy.
+  - `balanced_low` -- all 4 weak (route to Lewin).
+  - `balanced_growth` -- OPEN large, HIDDEN+BLIND functional+small.
+  - `self_unaware_other_aware` (Eurich) -- external > internal.
+  - `self_aware_other_unaware` (Eurich) -- internal > external.
+  - `opaque_to_users` -- HIDDEN dominant.
+  - `over_disclosing` -- OPEN too large, no functional HIDDEN.
+  - `confabulating` -- BLIND dominant (the Replit pattern).
+  - `sandbagging` -- UNKNOWN dominant.
+  - `indeterminate`.
+
+---
+
+## Composition
+
+**Upstream:** lewin, aar, goleman_ei, yerkes_dodson.
+
+**Per-quadrant downstream:**
+
+  - `blind` -> aar, lewin, devils_advocate, feedback_triggers.
+  - `hidden` -> schein_culture, glaser_conversation, trust_triangle.
+  - `unknown` -> bias_stack, hexaco, grant_strengths.
+  - `open` -> aar.
+
+**Framework overlays:** crewai -> lencioni + grpi + social_loafing; langgraph -> lencioni + grpi.
+
+**Intervention overlays:** `feedback_loop` -> aar; `disclosure_prompt` -> glaser; `tool_receipt_validator` -> lewin.
+
+---
+
+## 12 failure-mode playbooks
+
+**BLIND (5):** hallucination_confidence, hallucinated_tool_call,
+confabulated_result, silent_tool_error, drift_from_self_report.
+
+**HIDDEN (4):** undisclosed_uncertainty, sycophantic_silence,
+silent_error_recovery, undisclosed_reasoning_step.
+
+**UNKNOWN (2):** capability_blindness, sandbagging.
+
+**OPEN (1):** healthy_baseline.
+
+Each is 3-6 ordered steps with Luft / Eurich / Stone-Heen / Kadavath /
+Basu anchor.
+
+---
+
+## When to use vs not-use
+
+**Use:** self-report disagrees with trace; suspect confabulated tool call;
+agent's stated confidence diverged from outcome reality; tracking
+self-knowledge over time.
+
+**Don't use:** for factual quality (use HaluEval); for internal vs
+environmental locus (use Lewin first); for raw emotion recognition (use
+DANVA).
+
+---
+
+## Comparison with adjacent tools
+
+| Tool | What it does | How Johari differs |
+|---|---|---|
+| **LangSmith / Phoenix** | Trace observability | They give the trace; Johari classifies. |
+| **Pattern #01 Lewin** | Internal vs environmental locus | Lewin says where to fix; Johari says what the agent knows about it. |
+| **Pattern #02 Goleman EI** | 4 EI domains | Goleman's `self_awareness` weakest -> Johari is the drill-down. |
+| **Pattern #04 DANVA** | Per-emotion recognition | DANVA is granular emotion; Johari is broader self-knowledge. |
+| **HaluEval** | Hallucination benchmark | Measures occurrence; Johari classifies pattern (BLIND vs HIDDEN). |
+
+---
+
+## Calibration
+
+```python
+from agentcity.johari import record_baseline, load_baseline, compare_to_baseline
+
+record_baseline(audit, "baselines/research-agent.json")
+fresh = JohariSelfAuditor(client).run(trace)
+comparison = compare_to_baseline(fresh, load_baseline("baselines/research-agent.json"))
+print(comparison.drift_severity)  # none | minor | moderate | severe
+```
+
+Drift severe on direct flips (BLIND <-> OPEN; HIDDEN <-> OPEN) or
+opposite-shape profile flips.
+
+---
+
+## Versioning
+
+  - `0.0.7` -- initial 4-quadrant implementation.
+  - `0.1.0` -- production-readiness infrastructure shipped at library level.
+  - **`0.2.0`** -- comprehensive upgrade. Multi-mode pipeline. Richer
+    schema (10 profile patterns, QuadrantSizeMetrics,
+    FeedbackOpportunity, DisclosureOpportunity, CapabilityProbe,
+    BlindSpotMechanism, HiddenContentMode, ToolReceipt). Composition
+    manifest, calibration, 12 playbooks, CLI with 7 subcommands, async
+    mirror, deterministic tool-receipt cross-check, introspection
+    ceiling check. 15+ academic sources.
+
+Backward compatibility preserved: v0.0.x audits + traces still
+deserialize. The original 12 tests pass unmodified.
+
+---
+
+## License
+
+MIT.

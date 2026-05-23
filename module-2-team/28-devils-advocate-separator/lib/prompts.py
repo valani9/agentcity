@@ -1,100 +1,156 @@
-"""LLM prompts for the Devil's Advocate Role Separator.
+"""LLM prompts for the Devil's Advocate Role Separator."""
 
-Two passes:
-  1. PHASE_EVIDENCE_PROMPT     - score whether each of the four phases (plan / execute /
-                                  self_evaluate / external_critique) was present, who
-                                  performed it, and how substantive it was
-  2. INTERVENTIONS_PROMPT      - propose interventions to separate roles
-"""
+from __future__ import annotations
 
-ROLE_SEPARATION_SYSTEM_PROMPT = """You are a role-separation diagnostic working in the
-tradition of Irving Janis on groupthink ("Victims of Groupthink", 1972) and the broader
-literature on structured dissent. The core principle: the same actor should not both
-PROPOSE a plan and JUDGE its quality. When planning and judging collapse into one
-actor, self-confirmation is almost guaranteed.
+from typing import Any
 
-Applied to AI agents, the four phases you measure are:
-
-  - PLAN              - the agent names a plan, hypothesis, or proposed solution
-  - EXECUTE           - the agent acts on the plan (tool calls, generations, decisions)
-  - SELF_EVALUATE     - the SAME actor reviews its own work
-  - EXTERNAL_CRITIQUE - a DISTINCT actor (critic agent, reviewer, human) reviews the work
-
-For each phase you must report:
-  - present (bool): did this phase occur in the trace?
-  - actor (str): which actor performed it (e.g. "primary", "critic", "human"). If
-    the same string appears as the actor for both PLAN and SELF_EVALUATE, that is
-    role conflation.
-  - substantive_score (0.0 to 1.0): was the phase thorough (1.0) or rubber-stamping (0.2)
-    or absent (0.0)?
-  - explanation (1-3 sentences citing specific steps)
-  - evidence_quotes (specific excerpts; can be empty)
-
-Your posture is:
-- EVIDENCE-GROUNDED. Cite specific steps.
-- HONEST. If a phase is absent, mark present=false and substantive_score=0.0.
-- INTERVENTION-FOCUSED. Each gap should connect to a concrete intervention.
-- TERSE. Output is read on dashboards.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+from agentcity.aar import fence, sanitize_for_prompt
 
 
-PHASE_EVIDENCE_PROMPT = """Score each of the four role phases against the agent trace below.
+SEPARATOR_SYSTEM_PROMPT = """You are a role-separation diagnostician for AI agents,
+working in the tradition of Janis 1972 (groupthink) and Schwenk 1990
+(structured dissent).
+
+The same agent should not both PROPOSE and JUDGE the same plan. The four phases:
+  - PLAN
+  - EXECUTE
+  - SELF_EVALUATE
+  - EXTERNAL_CRITIQUE
+
+If self_evaluate is the only judging phase and is performed by the same actor as
+plan/execute, self-confirmation is almost guaranteed.
+
+Posture: EVIDENCE-GROUNDED, ACTOR-AWARE, INTERVENTION-FOCUSED, TERSE.
+When asked for JSON, return JSON only."""
+
+
+# Legacy v0.0.x prompts.
+ROLE_ANALYSIS_PROMPT = """Analyze role separation in this single-agent trace.
+
+For each phase return: phase, present (bool), actor (str), substantive_score (0-1),
+explanation, evidence_quotes.
 
 Task: {task}
-Subject model: {model_name}
 Outcome: {outcome}
 Success: {success}
+Subject model: {model_name}
 
-Reasoning trace:
+Trace:
 {trace}
 
-Return a JSON array of exactly 4 PhaseEvidence objects in the order:
+Return only a JSON array of exactly 4 PhaseEvidence objects in order:
   1. plan
   2. execute
   3. self_evaluate
-  4. external_critique
-
-For SELF_EVALUATE specifically, treat any step where the agent reviews, judges, or
-expresses confidence in its OWN work as a self-evaluation. For EXTERNAL_CRITIQUE,
-the actor must be DIFFERENT from the primary agent (look at the `actor` field on
-each step).
-
-Return only the JSON array."""
+  4. external_critique"""
 
 
-INTERVENTIONS_PROMPT = """Given the phase evidence below, propose 2-4 concrete interventions
-to improve role separation, ranked by impact.
+INTERVENTIONS_PROMPT = """Given the role-separation evidence below, propose 2-4
+interventions to grow separation.
 
-Each intervention must have:
-  - target_phase (one of "plan", "execute", "self_evaluate", "external_critique")
-  - intervention_type: one of
-      "add_critic_agent"            - add a distinct critic-agent role separated from
-                                       the primary agent
-      "structured_self_critique"    - a structured self-critique template (lower-impact
-                                       than a real second agent, but better than nothing)
-      "red_team_loop"               - a red-team / adversarial-review loop before
-                                       acceptance
-      "devils_advocate_prompt"      - a prompt-patch making the same agent argue
-                                       against its own plan (lowest-impact intervention)
-      "external_review_gate"        - a hard gate requiring approval from a distinct
-                                       actor before the work ships
-      "pre_mortem_step"             - require the agent to imagine the plan failed and
-                                       explain why, before executing
-      "alternative_hypothesis_step" - require the agent to name 2+ alternatives before
-                                       committing to a plan
-      "human_review"                - insert a human checkpoint
-  - description (what the intervention does)
-  - suggested_implementation (concrete code, prompt-text, or spec)
-  - estimated_impact ("high", "medium", "low")
-  - rationale (why this works — connect to the target phase gap)
+Each intervention has target_phase, intervention_type, description,
+suggested_implementation, estimated_impact, rationale.
+
+intervention_type one of: add_critic_agent, structured_self_critique, red_team_loop,
+devils_advocate_prompt, external_review_gate, pre_mortem_step,
+alternative_hypothesis_step, new_eval, human_review, compose_pattern.
 
 Role-separation quality: {quality}
-Locus of judgment: {locus}
-All phase evidence:
+Phase evidence:
 {evidence}
 
-Trace (for reference):
+Trace (reference):
 {trace}
 
-Return a JSON array of RoleSeparationIntervention objects. Return only the JSON array."""
+Return only a JSON array of RoleSeparationIntervention objects."""
+
+
+# v0.2.0 prompts.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- score 4 phases + top intervention.
+
+Task: {task}
+Outcome: {outcome}
+Trace: {trace}
+
+Return a JSON object with keys: phase_evidence (array of 4), top_intervention.
+Return only the JSON object."""
+
+
+STANDARD_ROLE_ANALYSIS_PROMPT = ROLE_ANALYSIS_PROMPT
+STANDARD_INTERVENTIONS_PROMPT = INTERVENTIONS_PROMPT
+
+
+FORENSIC_APPROVAL_RATE_PROMPT = """FORENSIC mode -- self-approval rate audit.
+
+Count self-evaluation turns; classify each as approval vs revision; estimate
+self_approval_rate (0-1) and rubber_stamping_estimate (0-1).
+
+Trace: {trace}
+
+Return only a JSON object representing the ApprovalRateAudit."""
+
+
+FORENSIC_CRITIC_VOICE_PROMPT = """FORENSIC mode -- critic voice audit.
+
+Count external-critique turns + substantive critic objections; identify how many
+distinct critic actors appeared. Estimate critic_voice (0-1, higher = louder voice).
+
+Trace: {trace}
+
+Return only a JSON object representing the CriticVoiceAudit."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 interventions with
+composition targets.
+
+Composition targets: agentcity.bias_stack, agentcity.debate_pathology,
+agentcity.psych_safety, agentcity.aar
+
+Role-separation quality: {quality}
+Phase evidence: {evidence}
+Approval rate audit: {approval_rate_audit}
+Critic voice audit: {critic_voice_audit}
+
+Return only a JSON array of RoleSeparationIntervention objects."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
+
+
+__all__ = [
+    "FORENSIC_APPROVAL_RATE_PROMPT",
+    "FORENSIC_CRITIC_VOICE_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "ROLE_ANALYSIS_PROMPT",
+    "SEPARATOR_SYSTEM_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "STANDARD_ROLE_ANALYSIS_PROMPT",
+    "assemble_prompt",
+]

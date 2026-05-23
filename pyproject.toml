@@ -132,6 +132,7 @@ agentcity-smart-goal = "agentcity.smart_goal.cli:main"
 agentcity-group-decision = "agentcity.group_decision.cli:main"
 agentcity-debate-pathology = "agentcity.debate_pathology.cli:main"
 agentcity-bias-stack = "agentcity.bias_stack.cli:main"
+agentcity-devils-advocate = "agentcity.devils_advocate.cli:main"
 
 [build-system]
 requires = ["hatchling"]

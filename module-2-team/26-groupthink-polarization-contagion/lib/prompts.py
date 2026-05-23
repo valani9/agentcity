@@ -1,110 +1,155 @@
-"""LLM prompts for the Groupthink/Polarization/Contagion Detector.
+"""LLM prompts for the Groupthink/Polarization/Contagion diagnostic."""
 
-Two passes:
-  1. PATHOLOGY_SCORING_PROMPT - score all three pathologies against the debate
-  2. INTERVENTIONS_PROMPT     - propose interventions for the dominant pathology
-"""
+from __future__ import annotations
 
-DEBATE_SYSTEM_PROMPT = """You are a debate-pathology diagnostic working in the tradition of:
+from typing import Any
 
-  - Irving L. Janis, "Victims of Groupthink" (Houghton Mifflin, 1972) on GROUPTHINK
-  - James A. F. Stoner (1968) and the group-polarization literature on POLARIZATION
-  - Elaine Hatfield, John Cacioppo & Richard Rapson, "Emotional Contagion" (1993)
-    on emotional CONTAGION
-
-You read a multi-agent debate and score three distinct dysfunctional dynamics:
-
-  - GROUPTHINK   - the group converges too quickly on a single position. Dissent
-                   is suppressed (or never voiced). Symptoms: illusion of unanimity
-                   (everyone "agrees" by round 2 with no real debate); self-censorship
-                   (an agent's first position softens to match peers); pressure on
-                   dissenters; mind-guards (agents who reject critique before it lands).
-
-  - POLARIZATION - the group's collective position moves toward an EXTREME rather
-                   than the deliberative average of starting positions. Symptoms:
-                   each round pushes the consensus further in one direction; an
-                   agent who started cautious is pushed to aggressive; risky-shift
-                   or cautious-shift.
-
-  - CONTAGION    - emotional TONE spreads across the group, replacing content as
-                   the basis for decision. Symptoms: one heated agent's tone is
-                   matched by neutral agents in subsequent turns; calm tone
-                   propagates the same way; tone-matching beats argument-matching.
-
-For each pathology, score:
-  - score (float 0.0-1.0; 0 = absent, 1 = severe)
-  - severity (none / low / medium / high)
-  - explanation (1-3 sentences citing specific rounds)
-  - evidence_quotes (specific excerpts from the debate)
-
-Your posture is:
-- EVIDENCE-GROUNDED. Cite specific agent quotes with round numbers.
-- HONEST. Score 0.0 when a pathology is absent. Do not manufacture pathology.
-- INTERVENTION-FOCUSED. Each pathology connects to a concrete fix.
-- TERSE. Output is read on dashboards.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+from agentcity.aar import fence, sanitize_for_prompt
 
 
-PATHOLOGY_SCORING_PROMPT = """Score each of the three debate pathologies against the multi-agent
-debate below.
+DEBATE_SYSTEM_PROMPT = """You are a debate-pathology diagnostician for multi-agent systems,
+working in the tradition of Janis 1972 (groupthink), Stoner 1968 + Sunstein 2002
+(polarization), and Hatfield/Cacioppo/Rapson 1993 (emotional contagion).
 
-Task being debated: {task}
+Three pathologies:
+  - GROUPTHINK   - premature convergence + dissent suppression + illusion of unanimity
+  - POLARIZATION - each round pushes positions toward an extreme
+  - CONTAGION    - tone propagates across turns; tone dominates content
+
+Posture: EVIDENCE-GROUNDED, PATHOLOGY-SPECIFIC, INTERVENTION-FOCUSED, TERSE.
+When asked for JSON, return JSON only."""
+
+
+# Legacy v0.0.x prompts.
+PATHOLOGY_SCORING_PROMPT = """Score each of the three debate pathologies against this trace.
+
+For each pathology return: pathology, score (0-1), severity (none/low/medium/high),
+explanation, evidence_quotes.
+
+Task: {task}
 Agents: {agents}
 Final decision: {final_decision}
 Outcome: {outcome}
 Success: {success}
 
-Debate trace:
-{debate}
+Debate:
+{trace}
 
-Return a JSON array of exactly 3 PathologyEvidence objects in the order:
+Return only a JSON array of exactly 3 PathologyEvidence objects in order:
   1. groupthink
   2. polarization
-  3. contagion
-
-Return only the JSON array."""
+  3. contagion"""
 
 
-INTERVENTIONS_PROMPT = """Given the pathology evidence below, propose 2-4 concrete
-interventions ranked by impact on the dominant pathology.
+INTERVENTIONS_PROMPT = """Given the pathology analysis below, propose 2-4 interventions
+targeting the dominant pathology.
 
-Each intervention must have:
-  - target_pathology (one of "groupthink", "polarization", "contagion")
-  - intervention_type: one of
-      "assign_devils_advocate"   - name a dedicated devil's-advocate agent (counters
-                                    groupthink)
-      "require_silent_vote"      - agents commit to a written first position before
-                                    seeing peer positions (counters groupthink + contagion)
-      "round_robin_dissent"      - structurally rotate the dissent role each round
-                                    (counters groupthink)
-      "diverse_seed_positions"   - seed agents with deliberately diverse priors
-                                    (counters polarization)
-      "anchor_to_base_rates"     - require agents to cite base rates / external
-                                    benchmarks before forming positions (counters
-                                    polarization toward extremes)
-      "tone_normalization"       - sanitize emotional tone in transcript before
-                                    next round (counters contagion)
-      "cool_down_pause"          - insert a pause / cooling step when contagion
-                                    triggers (counters contagion)
-      "external_arbiter"         - bring in an external agent or human to break
-                                    the dynamic
-      "smaller_panel"            - reduce panel size (counters groupthink, contagion)
-      "secret_ballot"            - private final decision so agents commit
-                                    independently (counters groupthink)
-      "new_eval"                 - regression test for this pathology
-      "human_review"             - insert a human checkpoint
-  - description (what the intervention does)
-  - suggested_implementation (concrete code, prompt-text, or spec)
-  - estimated_impact ("high", "medium", "low")
-  - rationale (why this works — connect to the target pathology)
+Each intervention has target_pathology, intervention_type, description,
+suggested_implementation, estimated_impact, rationale.
+
+intervention_type one of: assign_devils_advocate, require_silent_vote,
+round_robin_dissent, diverse_seed_positions, anchor_to_base_rates,
+tone_normalization, cool_down_pause, external_arbiter, smaller_panel,
+secret_ballot, new_eval, human_review, compose_pattern.
 
 Dominant pathology: {dominant}
 Debate quality: {quality}
-All pathology evidence:
+Evidence:
 {evidence}
 
-Debate (for reference):
-{debate}
+Trace (reference):
+{trace}
 
-Return a JSON array of DebateIntervention objects. Return only the JSON array."""
+Return only a JSON array of DebateIntervention objects."""
+
+
+# v0.2.0 prompts.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- score 3 pathologies + top intervention.
+
+Task: {task}
+Final decision: {final_decision}
+Debate: {trace}
+
+Return a JSON object with keys: pathologies (array of 3), top_intervention.
+Return only the JSON object."""
+
+
+STANDARD_PATHOLOGY_SCORING_PROMPT = PATHOLOGY_SCORING_PROMPT
+STANDARD_INTERVENTIONS_PROMPT = INTERVENTIONS_PROMPT
+
+
+FORENSIC_CONVERGENCE_TIMELINE_PROMPT = """FORENSIC mode -- convergence timeline audit.
+
+Track per-round position diversity (0=identical, 1=fully diverse); identify
+convergence round + whether convergence was abrupt.
+
+Debate: {trace}
+
+Return only a JSON object representing the ConvergenceTimelineAudit."""
+
+
+FORENSIC_TONE_CASCADE_PROMPT = """FORENSIC mode -- tone cascade audit.
+
+Count heated turns, calm turns, tone flips; identify dominant tone + estimate
+cascade strength (0-1).
+
+Debate: {trace}
+
+Return only a JSON object representing the ToneCascadeAudit."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 interventions with
+composition targets.
+
+Composition targets: agentcity.devils_advocate, agentcity.bias_stack,
+agentcity.psych_safety, agentcity.aar, agentcity.group_decision
+
+Dominant pathology: {dominant}
+Quality: {quality}
+Evidence: {evidence}
+Convergence audit: {convergence_audit}
+Tone cascade audit: {tone_cascade_audit}
+
+Return only a JSON array of DebateIntervention objects."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
+
+
+__all__ = [
+    "DEBATE_SYSTEM_PROMPT",
+    "FORENSIC_CONVERGENCE_TIMELINE_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_TONE_CASCADE_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "PATHOLOGY_SCORING_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "STANDARD_PATHOLOGY_SCORING_PROMPT",
+    "assemble_prompt",
+]

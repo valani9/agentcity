@@ -1,51 +1,115 @@
-"""agentcity.debate_pathology — three classic debate-dynamics pathologies
-applied to multi-agent AI debates:
+"""agentcity.debate_pathology -- three classic debate-dynamics pathologies
+(groupthink, polarization, contagion) applied to multi-agent AI debates.
 
-  - GROUPTHINK   (Janis, 1972)
-  - POLARIZATION (Stoner, 1968; group-polarization literature)
-  - CONTAGION    (Hatfield, Cacioppo & Rapson, 1993)
+Anchored in Janis 1972, Stoner 1968, Sunstein 2002, Hatfield/Cacioppo/Rapson 1993.
 
-Quick start:
-
-    from agentcity.debate_pathology import (
-        DebatePathologyDetector,
-        MultiAgentDebateTrace,
-        DebateMessage,
-    )
-    from agentcity.aar.clients import AnthropicClient
-
-    trace = MultiAgentDebateTrace(
-        debate_id="ship-decision-2026-05-22",
-        task="Should we ship the feature flag at 100%?",
-        agents=["product", "eng", "safety", "ops"],
-        messages=[...],
-        final_decision="Ship at 100%",
-        outcome="All four agents converged on 'ship' by round 2 with no dissent voiced.",
-        success=False,
-    )
-    detection = DebatePathologyDetector(AnthropicClient()).run(trace)
-    print(detection.to_markdown())
+Three pipeline modes with v0.2.0 production infrastructure.
+Backward-compatible: ``DebatePathologyDetector`` aliased to
+``DebatePathologyAnalyzer``.
 """
 
-from .generator import DebatePathologyDetector, LLMClient
+from ._calibration import compare_to_baseline, load_baseline, record_baseline
+from ._composition import (
+    DEBATE_PATHOLOGY_COMPOSITION,
+    recommended_downstream,
+    recommended_upstream,
+)
+from ._playbooks import (
+    PLAYBOOKS,
+    all_playbook_keys,
+    find_playbook,
+    find_playbook_for_intervention,
+)
+from .generator import (
+    AsyncLLMClient,
+    DebatePathologyAnalyzer,
+    DebatePathologyAnalyzerAsync,
+    DebatePathologyDetector,
+    LLMClient,
+)
+from .prompts import (
+    DEBATE_SYSTEM_PROMPT,
+    FORENSIC_CONVERGENCE_TIMELINE_PROMPT,
+    FORENSIC_INTERVENTIONS_PROMPT,
+    FORENSIC_TONE_CASCADE_PROMPT,
+    INTERVENTIONS_PROMPT,
+    PATHOLOGY_SCORING_PROMPT,
+    QUICK_DIAGNOSTIC_PROMPT,
+    STANDARD_INTERVENTIONS_PROMPT,
+    STANDARD_PATHOLOGY_SCORING_PROMPT,
+    assemble_prompt,
+)
 from .schema import (
+    DEBATE_PATHOLOGY_MODES,
+    DEBATE_PATHOLOGY_PROFILE_PATTERNS,
+    INTERVENTION_TYPES,
     PATHOLOGIES,
+    SEVERITY_ORDER,
+    AttachedPlaybook,
+    BaselineComparison,
+    ComposedPatternHandoff,
+    ConvergenceTimelineAudit,
     DebateIntervention,
     DebateMessage,
     DebatePathologyDetection,
+    DebatePathologyMode,
+    DebatePathologyProfilePattern,
+    EffortEstimate,
+    InterventionType,
     MultiAgentDebateTrace,
     PathologyEvidence,
+    Severity,
+    ToneCascadeAudit,
+    severity_from_pathology,
 )
 
 __all__ = [
+    "DebatePathologyAnalyzer",
+    "DebatePathologyAnalyzerAsync",
     "DebatePathologyDetector",
     "LLMClient",
-    "MultiAgentDebateTrace",
+    "AsyncLLMClient",
     "DebateMessage",
+    "MultiAgentDebateTrace",
     "PathologyEvidence",
+    "ConvergenceTimelineAudit",
+    "ToneCascadeAudit",
     "DebateIntervention",
+    "AttachedPlaybook",
+    "BaselineComparison",
+    "ComposedPatternHandoff",
     "DebatePathologyDetection",
+    "DebatePathologyMode",
+    "DebatePathologyProfilePattern",
+    "Severity",
+    "InterventionType",
+    "EffortEstimate",
     "PATHOLOGIES",
+    "DEBATE_PATHOLOGY_MODES",
+    "DEBATE_PATHOLOGY_PROFILE_PATTERNS",
+    "SEVERITY_ORDER",
+    "INTERVENTION_TYPES",
+    "severity_from_pathology",
+    "compare_to_baseline",
+    "load_baseline",
+    "record_baseline",
+    "DEBATE_PATHOLOGY_COMPOSITION",
+    "recommended_downstream",
+    "recommended_upstream",
+    "PLAYBOOKS",
+    "all_playbook_keys",
+    "find_playbook",
+    "find_playbook_for_intervention",
+    "DEBATE_SYSTEM_PROMPT",
+    "PATHOLOGY_SCORING_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_PATHOLOGY_SCORING_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "FORENSIC_CONVERGENCE_TIMELINE_PROMPT",
+    "FORENSIC_TONE_CASCADE_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "assemble_prompt",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

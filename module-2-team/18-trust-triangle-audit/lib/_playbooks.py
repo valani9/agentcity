@@ -66,7 +66,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: high-confidence claims that are wrong.",
             "Add `uncertainty_calibration` to system prompt.",
-            "Compose with `agentcity.edmondson_psych_safety` upstream.",
+            "Compose with `agentcity.psych_safety` upstream.",
         ],
         "1d",
         "Frei & Morriss 2020; Edmondson 1999",

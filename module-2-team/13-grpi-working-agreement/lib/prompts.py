@@ -100,7 +100,7 @@ Return a JSON OBJECT representing the DysfunctionPreventionAudit. Return only th
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose interventions to improve the working agreement.
 
 Composition targets available:
-agentcity.lewin, agentcity.aar, agentcity.lencioni, agentcity.edmondson_psych_safety,
+agentcity.lewin, agentcity.aar, agentcity.lencioni, agentcity.psych_safety,
 agentcity.trust_triangle, agentcity.mcgregor, agentcity.smart_goal, agentcity.plus_delta,
 agentcity.schein_culture, agentcity.devils_advocate, agentcity.bias_stack
 

@@ -100,7 +100,7 @@ Return only the JSON object."""
 
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
-Composition targets: agentcity.grpi, agentcity.edmondson_psych_safety,
+Composition targets: agentcity.grpi, agentcity.psych_safety,
 agentcity.trust_triangle, agentcity.devils_advocate, agentcity.bias_stack,
 agentcity.smart_goal, agentcity.aar, agentcity.plus_delta
 

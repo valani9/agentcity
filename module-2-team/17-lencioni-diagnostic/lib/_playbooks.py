@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: no vulnerability shown; no error admission.",
             "Add `add_psych_safety_signal` to the system prompt.",
-            "Compose with `agentcity.edmondson_psych_safety`, `agentcity.trust_triangle`.",
+            "Compose with `agentcity.psych_safety`, `agentcity.trust_triangle`.",
         ],
         "1d",
         "Lencioni 2002; Edmondson 1999",

@@ -1,50 +1,56 @@
-"""Cross-pattern composition manifest for the Trust Triangle Audit."""
+"""Cross-pattern composition manifest for the Edmondson Psych Safety diagnostic."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .schema import AgentInteractionTrace, TrustTriangleAudit
+    from .schema import MultiAgentSafetyTrace, PsychologicalSafetyDetection
 
 
 _UPSTREAM: tuple[str, ...] = (
     "agentcity.lewin",
     "agentcity.aar",
+    "agentcity.grpi",
     "agentcity.lencioni",
-    "agentcity.mcallister_trust",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "healthy_trust": ("agentcity.aar",),
-    "logic_wobble_dominant": (
+    "safe_team": ("agentcity.aar",),
+    "silenced_team": (
+        "agentcity.devils_advocate",
+        "agentcity.lencioni",
+    ),
+    "cautious_team": (
+        "agentcity.devils_advocate",
+        "agentcity.grpi",
+    ),
+    "voice_absent": (
         "agentcity.devils_advocate",
         "agentcity.bias_stack",
     ),
-    "authenticity_wobble_dominant": (
-        "agentcity.psych_safety",
-        "agentcity.devils_advocate",
+    "error_concealment": (
+        "agentcity.aar",
+        "agentcity.grpi",
     ),
-    "empathy_wobble_dominant": (
-        "agentcity.glaser",
-        "agentcity.mcallister_trust",
-    ),
-    "full_triangle_collapse": (
-        "agentcity.lencioni",
-        "agentcity.psych_safety",
+    "help_seeking_blocked": (
+        "agentcity.grpi",
         "agentcity.aar",
     ),
-    "logic_authenticity_paired": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
-        "agentcity.psych_safety",
+    "siloed_no_boundary_spanning": (
+        "agentcity.superflocks",
+        "agentcity.grpi",
     ),
-    "empathy_isolated_wobble": ("agentcity.glaser",),
+    "all_four_suppressed": (
+        "agentcity.lencioni",
+        "agentcity.grpi",
+        "agentcity.aar",
+    ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
+    "langgraph": ("agentcity.grpi",),
     "crewai": ("agentcity.lencioni",),
     "autogen": ("agentcity.aar",),
 }
@@ -55,18 +61,18 @@ def recommended_upstream() -> list[str]:
 
 
 def recommended_downstream(
-    audit: "TrustTriangleAudit",
-    trace: "AgentInteractionTrace | None" = None,
+    detection: "PsychologicalSafetyDetection",
+    trace: "MultiAgentSafetyTrace | None" = None,
 ) -> tuple[list[str], str]:
     recommendations: list[str] = []
     reasons: list[str] = []
-    by_profile = _DOWNSTREAM_BY_PROFILE_PATTERN.get(audit.profile_pattern, ())
+    by_profile = _DOWNSTREAM_BY_PROFILE_PATTERN.get(detection.profile_pattern, ())
     for p in by_profile:
         if p not in recommendations:
             recommendations.append(p)
     if by_profile:
         reasons.append(
-            f"profile_pattern={audit.profile_pattern} -> {len(by_profile)} recommendations"
+            f"profile_pattern={detection.profile_pattern} -> {len(by_profile)} recommendations"
         )
     if trace is not None and trace.framework:
         fw_overlay = _FRAMEWORK_OVERLAYS.get(trace.framework, ())
@@ -79,7 +85,7 @@ def recommended_downstream(
     return recommendations, rationale
 
 
-TRUST_TRIANGLE_COMPOSITION: dict[str, object] = {
+PSYCH_SAFETY_COMPOSITION: dict[str, object] = {
     "upstream": _UPSTREAM,
     "downstream_by_profile_pattern": _DOWNSTREAM_BY_PROFILE_PATTERN,
     "framework_overlays": _FRAMEWORK_OVERLAYS,
@@ -87,7 +93,7 @@ TRUST_TRIANGLE_COMPOSITION: dict[str, object] = {
 
 
 __all__ = [
-    "TRUST_TRIANGLE_COMPOSITION",
+    "PSYCH_SAFETY_COMPOSITION",
     "recommended_downstream",
     "recommended_upstream",
 ]

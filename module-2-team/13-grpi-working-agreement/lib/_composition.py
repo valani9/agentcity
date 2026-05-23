@@ -21,7 +21,7 @@ _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
     "weak_roles": ("agentcity.mcgregor",),
     "weak_processes": ("agentcity.aar", "agentcity.plus_delta"),
     "weak_interactions": (
-        "agentcity.edmondson_psych_safety",
+        "agentcity.psych_safety",
         "agentcity.lencioni",
         "agentcity.devils_advocate",
     ),

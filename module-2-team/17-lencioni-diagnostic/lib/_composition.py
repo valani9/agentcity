@@ -18,7 +18,7 @@ _UPSTREAM: tuple[str, ...] = (
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
     "healthy_team": ("agentcity.aar",),
     "foundational_trust_collapse": (
-        "agentcity.edmondson_psych_safety",
+        "agentcity.psych_safety",
         "agentcity.trust_triangle",
     ),
     "conflict_avoidance": ("agentcity.devils_advocate", "agentcity.bias_stack"),
@@ -27,7 +27,7 @@ _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
     "results_inattention": ("agentcity.aar", "agentcity.smart_goal"),
     "full_pyramid_dysfunction": (
         "agentcity.grpi",
-        "agentcity.edmondson_psych_safety",
+        "agentcity.psych_safety",
         "agentcity.lewin",
     ),
     "foundation_unstable_top_strong": ("agentcity.trust_triangle",),

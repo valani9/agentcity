@@ -124,7 +124,7 @@ Return only a JSON object representing the ContextSensitivityAudit."""
 
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
-Composition targets: agentcity.mcallister_trust_dimensions, agentcity.edmondson_psych_safety,
+Composition targets: agentcity.mcallister_trust, agentcity.psych_safety,
 agentcity.glaser, agentcity.bias_stack, agentcity.devils_advocate, agentcity.aar
 
 Dominant: {dominant}

@@ -113,7 +113,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Add Edmondson-style safety commitments.",
             "Define feedback format (plus/delta / SBI).",
-            "Compose with `agentcity.edmondson_psych_safety`.",
+            "Compose with `agentcity.psych_safety`.",
         ],
         "1d",
         "Edmondson 1999",

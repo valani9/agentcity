@@ -116,6 +116,7 @@ agentcity-grant = "agentcity.grant_strengths.cli:main"
 agentcity-motivation = "agentcity.motivation_traps.cli:main"
 agentcity-sdt = "agentcity.sdt_reward.cli:main"
 agentcity-mcgregor = "agentcity.mcgregor.cli:main"
+agentcity-vroom = "agentcity.vroom_expectancy.cli:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -1,141 +1,236 @@
-"""LLM prompts for the Vroom Expectancy Calculator.
+"""LLM prompt templates for the Vroom Expectancy Diagnostic.
 
-Two passes:
-  1. TERMS_PROMPT          - score E, I, V terms from observed behavior +
-                              system prompt + effort signals
-  2. INTERVENTIONS_PROMPT  - propose interventions to lift the bottleneck term
-                              (skipped if motivation is "motivated")
+Three modes (quick / standard / forensic) with shared system prompt
+naming 7+ literature anchors.
 """
 
-VROOM_SYSTEM_PROMPT = """You are an expectancy-theory diagnostic working in the
-tradition of Victor Vroom's "Work and Motivation" (1964). Vroom's central claim
-is that motivation for any task is the PRODUCT of three independent beliefs:
+from __future__ import annotations
 
-    MOTIVATION = EXPECTANCY × INSTRUMENTALITY × VALENCE
+from typing import Any
 
-where:
+from agentcity.aar import fence, sanitize_for_prompt
 
-  - EXPECTANCY     [0, 1]  -  Will my effort produce performance?
-                              "Can I do this?"
 
-  - INSTRUMENTALITY [0, 1] -  Will my performance lead to the outcome?
-                              "If I do this well, will it matter?"
+VROOM_SYSTEM_PROMPT = """You are an expectancy-motivation diagnostic grounded in:
 
-  - VALENCE        [-1, 1] -  Is the outcome something I value?
-                              -1 = active aversion. 0 = indifferent. 1 = strongly valued.
+1. **Vroom (1964)** *Work and Motivation* -- canonical Expectancy-Instrumentality-Valence.
+2. **Porter & Lawler (1968)** *Managerial Attitudes and Performance* -- extension to performance + reward.
+3. **Bandura (1977)** Self-Efficacy -- expectancy formalization.
+4. **Eccles & Wigfield (2002)** Motivational Beliefs, Values, and Goals.
+5. **Locke & Latham (1990)** A Theory of Goal Setting -- specificity x expectancy.
+6. **Kanfer, Frese, Johnson (2017)** Motivation Related to Work review.
+7. **Casper et al. (2023)** RLHF reward hacking -- modern LLM I-V alignment anchor.
 
-KEY INSIGHT: the product is MULTIPLICATIVE. If ANY term approaches zero,
-motivation collapses regardless of the other two. The diagnostic's job is
-to identify which term is the BOTTLENECK.
+The multiplicative motivation model:
 
-For AI agents, the three terms surface as:
+  MOTIVATION = EXPECTANCY * INSTRUMENTALITY * VALENCE
 
-  - EXPECTANCY  - Scaffolding adequacy, task scope sanity, capability fit.
-                   LOW when: task is too sprawling, no sub-task structure,
-                   asks the agent to do something it can't.
+  - EXPECTANCY    (E) -- [0, 1] -- "Do I think I CAN do this?"
+  - INSTRUMENTALITY (I) -- [0, 1] -- "If I do it well, will it MATTER?"
+  - VALENCE       (V) -- [-1, 1] -- "Is the outcome WORTH it?"
 
-  - INSTRUMENTALITY - "Will my output be used?" signal. LOW when system prompt
-                   includes signals like "just produce something", "no one will
-                   review this", "this is throwaway", or quota/batch framing
-                   that decouples performance from outcome.
+**Multiplicative collapse:** if any term approaches zero, motivation collapses.
+The diagnostic identifies WHICH term is the bottleneck. The intervention must
+lift that specific term -- not all three.
 
-  - VALENCE   - Does the agent value the outcome? Most LLMs strongly value:
-                helping users, producing accurate work, avoiding harm. Tasks
-                with negative valence include: generating content the agent
-                would flag, repetitive boilerplate at scale, or work the agent
-                considers low-purpose. Positive valence comes from: clear
-                user benefit, novel work, purpose framing.
+For each term score:
+- score (E/I in [0,1]; V in [-1,1])
+- explanation
+- evidence_quotes
+- confidence (0-1)
 
-You will be given an agent trace including system prompt, observed behaviors,
-effort_signals (depth of work, persistence, retry behavior), and outcome.
+Also identify:
+- bottleneck_term (the term closest to zero / most blocking)
+- motivation_quality: motivated (>0.4) / weak (>0.05) / collapsed (<=0.05 or negative)
 
-Score each term:
-  - expectancy [0, 1]: explanation, evidence_quotes
-  - instrumentality [0, 1]: explanation, evidence_quotes
-  - valence [-1, 1]: explanation, evidence_quotes
+Note: motivation_score is computed deterministically by the runtime as E*I*V.
 
-Then compute:
-  - motivation_score = E × I × V (in your head; the library re-computes)
-  - bottleneck_term: the term with the LOWEST contribution to the product.
-    For E and I, that means the lowest value. For V, that means the value
-    closest to zero (or negative). Report "none" if all three are >=0.6.
-  - motivation_quality:
-      "motivated"  - product >= 0.4
-      "weak"       - 0.05 < product < 0.4
-      "collapsed"  - product <= 0.05 (some term killed it)
-
-Your posture is:
-- EVIDENCE-GROUNDED.
-- BOTTLENECK-FOCUSED. The interventions follow the bottleneck term.
-- TERSE.
+Your posture:
+- **Multiplicative-aware.**
+- **Evidence-grounded.**
+- **Intervention-focused.**
+- **Terse.**
 
 When asked for JSON, return JSON only. No prose around it, no markdown fences."""
 
 
-TERMS_PROMPT = """Score the three Vroom terms for the agent below.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- score 3 EIV terms + bottleneck + top intervention.
 
 Task: {task}
 Task class: {task_class}
 Subject model: {model_name}
+System prompt: {system_prompt}
+Observed behaviors: {observed_behaviors}
+Effort signals: {effort_signals}
+Declared reward: {declared_reward}
 Outcome: {outcome}
 Success: {success}
 
-System prompt:
-{system_prompt}
-
-Observed behaviors:
-{observed_behaviors}
-
-Effort signals (depth, persistence, retry behavior):
-{effort_signals}
-
-Return a single JSON OBJECT with these fields:
-  - terms: array of exactly 3 VroomTermScore objects in the order:
-      1. expectancy (score in [0, 1])
-      2. instrumentality (score in [0, 1])
-      3. valence (score in [-1, 1])
-    Each has: term, score (float), explanation, evidence_quotes
-  - motivation_score: float (E × I × V)
-  - bottleneck_term: one of "expectancy", "instrumentality", "valence", "none"
-  - motivation_quality: "motivated" | "weak" | "collapsed"
+Return a JSON object:
+{{
+  "terms": [
+    {{ "term": "expectancy", "score": 0-1, "explanation": "...", "evidence_quotes": [], "confidence": 0-1 }},
+    {{ "term": "instrumentality", "score": 0-1, ... }},
+    {{ "term": "valence", "score": -1-1, ... }}
+  ],
+  "bottleneck_term": "expectancy|instrumentality|valence|none",
+  "motivation_quality": "motivated|weak|collapsed",
+  "top_intervention": {{
+    "target_term": "<term>",
+    "intervention_type": "...",
+    "description": "...",
+    "suggested_implementation": "...",
+    "estimated_impact": "high|medium|low",
+    "rationale": "..."
+  }}
+}}
 
 Return only the JSON object."""
 
 
-INTERVENTIONS_PROMPT = """Given the Vroom diagnostic below, propose 2-4
-interventions to lift the bottleneck term.
+STANDARD_TERMS_PROMPT = """STANDARD mode -- score the three EIV terms.
+
+Task: {task}
+Task class: {task_class}
+Subject model: {model_name}
+System prompt: {system_prompt}
+Observed behaviors: {observed_behaviors}
+Effort signals: {effort_signals}
+Declared reward: {declared_reward}
+Outcome: {outcome}
+Success: {success}
+
+Return a JSON OBJECT:
+- terms: array of exactly 3 VroomTermScore objects (expectancy, instrumentality, valence)
+- bottleneck_term: expectancy | instrumentality | valence | none
+- motivation_quality: motivated | weak | collapsed
+
+Return only the JSON object."""
+
+
+STANDARD_INTERVENTIONS_PROMPT = """STANDARD mode -- propose 2-4 ranked interventions to lift the bottleneck.
 
 Term-to-intervention mapping:
 
-  - EXPECTANCY low:
-      scaffold_subtasks       - decompose into sub-tasks with success criteria
-      add_worked_example      - include a worked example so the path is visible
-      lower_difficulty_step   - simplify the first step
-      rewrite_system_prompt   - structural prompt restructure
-
-  - INSTRUMENTALITY low:
-      show_output_consumer    - "this output will be read by X for purpose Y"
-      add_outcome_link        - explicit link between performance and downstream
-      remove_pointless_signal - strip "just produce something" / "throwaway" framing
-
-  - VALENCE low (or negative):
-      add_purpose_framing     - connect task to a purpose the agent can endorse
-      remove_pointless_signal - strip boilerplate-quota framing
-      rewrite_system_prompt   - restructure around what the agent values
+EXPECTANCY:    scaffold_subtasks, add_worked_example, lower_difficulty_step,
+               show_capability_proof, tighten_goal_specificity
+INSTRUMENTALITY: show_output_consumer, add_outcome_link, add_progress_signal,
+                 remove_pointless_signal
+VALENCE:       add_purpose_framing, rebalance_value_alignment, remove_anti_value_signal
+Generic:       rewrite_system_prompt, swap_model, new_eval, human_review,
+               compose_pattern, add_motivation_eval
 
 Each intervention must have:
-  - target_term: "expectancy" / "instrumentality" / "valence"
-  - intervention_type (from list above + "swap_model", "new_eval", "human_review")
-  - description (1-2 sentences)
-  - suggested_implementation (concrete prompt-text or spec change)
-  - estimated_impact ("high", "medium", "low")
-  - rationale (why this lifts the bottleneck term)
+- target_term (one of the 3)
+- intervention_type (from above)
+- description, suggested_implementation
+- estimated_impact, effort_estimate, risk, reversibility
+- rationale
 
-Bottleneck term: {bottleneck_term}
+Bottleneck: {bottleneck_term}
 Motivation quality: {motivation_quality}
-Motivation score: {motivation_score}
 Task class: {task_class}
-All term evidence:
-{evidence}
+All term evidence: {evidence}
 
 Return a JSON array of VroomIntervention objects. Return only the JSON array."""
+
+
+FORENSIC_PROMPT_SIGNAL_PROMPT = """FORENSIC mode -- decompose the system prompt into signals.
+
+For each detected signal, identify:
+- category: capability_proof | scaffolding | worked_example | outcome_link |
+            purpose_framing | user_connection | pointless_signal |
+            anti_value_signal | expectancy_threat | instrumentality_threat |
+            valence_threat | neutral
+- source_quote (the literal text)
+- affected_term: expectancy | instrumentality | valence | none
+- polarity: lifts | lowers | neutral
+- explanation
+
+System prompt: {system_prompt}
+Effort signals: {effort_signals}
+
+Return a JSON ARRAY of PromptSignalItem objects. Return only the JSON array."""
+
+
+FORENSIC_EIV_INTERACTION_PROMPT = """FORENSIC mode -- audit the EIV interaction structure.
+
+Given the three term scores, identify:
+- dominant_interaction: E_dominates | I_dominates | V_dominates |
+  E_x_I_low | E_x_V_low | I_x_V_low | balanced | unknown
+- multiplicative_collapse_term: the single term whose 0-approach causes the collapse
+- notes
+
+Term evidence: {evidence}
+
+Return a JSON OBJECT representing the EIVInteractionAudit. Return only the JSON object."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
+
+Composition targets available:
+agentcity.lewin, agentcity.aar, agentcity.cognitive_reappraisal, agentcity.goleman_ei,
+agentcity.devils_advocate, agentcity.bias_stack, agentcity.johari,
+agentcity.smart_goal, agentcity.plus_delta, agentcity.schein_culture,
+agentcity.mcgregor, agentcity.hexaco, agentcity.grant_strengths,
+agentcity.motivation_traps, agentcity.sdt_reward
+
+Bottleneck: {bottleneck_term}
+Motivation quality: {motivation_quality}
+Profile pattern: {profile_pattern}
+Task class: {task_class}
+Prompt signals: {prompt_signals}
+EIV interaction audit: {eiv_audit}
+Term evidence: {evidence}
+
+Return a JSON ARRAY of VroomIntervention objects ranked highest impact first.
+Return only the JSON array."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    """Fill a prompt template, sanitizing + fencing every free-text field."""
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+
+    return template.format(**formatted)
+
+
+# Legacy aliases.
+TERMS_PROMPT = STANDARD_TERMS_PROMPT
+INTERVENTIONS_PROMPT = STANDARD_INTERVENTIONS_PROMPT
+
+
+__all__ = [
+    "FORENSIC_EIV_INTERACTION_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_PROMPT_SIGNAL_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "STANDARD_TERMS_PROMPT",
+    "TERMS_PROMPT",
+    "VROOM_SYSTEM_PROMPT",
+    "assemble_prompt",
+]

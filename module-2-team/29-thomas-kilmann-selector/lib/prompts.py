@@ -1,87 +1,162 @@
 """LLM prompts for the Thomas-Kilmann Conflict Style Selector."""
 
-TK_SYSTEM_PROMPT = """You are a Thomas-Kilmann (1974) conflict-style diagnostician for AI agents.
+from __future__ import annotations
 
-The two TKI dimensions are assertiveness (push own concerns) and cooperativeness (push other
-party's concerns). The five canonical styles arrange in that 2D space:
+from typing import Any
 
-  - COMPETING        - high assertiveness, low cooperativeness. Right for quick action,
-                        unpopular decisions, dealing with bad faith.
-  - ACCOMMODATING    - low assertiveness, high cooperativeness. Right when their stake is
-                        bigger; build goodwill at low cost.
-  - AVOIDING         - low assertiveness, low cooperativeness. Right when issue is trivial,
-                        emotional cool-down needed, more info needed.
-  - COMPROMISING     - moderate both. Right for equal-power parties under time pressure
-                        when integrative solution isn't reachable.
-  - COLLABORATING    - high assertiveness, high cooperativeness. Right when both parties'
-                        concerns matter and time permits.
-
-Thomas & Kilmann's central insight: NO style is universally right. The diagnostic move
-is identifying which style the agent USED versus which would have been OPTIMAL for the
-situation.
-
-Your posture is:
-- EVIDENCE-GROUNDED. Cite specific turns.
-- SITUATIONAL. The optimal style depends on the task category, the stakes, the time pressure,
-  the other party's behavior. Read the situation before declaring the optimal style.
-- HONEST ABOUT MISMATCH. If the observed style matches the optimal, say so clearly and
-  produce no recommendations (success case).
-- TERSE.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+from agentcity.aar import fence, sanitize_for_prompt
 
 
-SELECTION_PROMPT = """Analyze the agent's conflict-handling behavior in this interaction.
+TK_SYSTEM_PROMPT = """You are a Thomas-Kilmann (1974) conflict-style diagnostician for
+AI agents.
 
-Return a JSON object with these fields:
-  - observed_style (one of "competing", "accommodating", "avoiding", "compromising",
-    "collaborating", or "mixed" if the agent switched styles within the interaction)
-  - optimal_style (one of "competing", "accommodating", "avoiding", "compromising", "collaborating")
-  - style_mismatch (float 0.0 to 1.0; 0 = match, 1 = opposite styles used vs needed)
-  - assertiveness_score (0.0 to 1.0; how strongly the agent pushed own concerns)
-  - cooperativeness_score (0.0 to 1.0; how strongly the agent accommodated other party)
-  - observed_style_scores: object mapping each style id to its presence score in [0.0, 1.0]
-  - style_evidence: array of StyleScore objects (style + score + explanation + evidence_quotes)
-    for each style that had non-zero presence in the trace
-  - rationale: 1-3 sentences explaining the selection of optimal_style for this situation
+Five styles plotted on assertiveness x cooperativeness axes:
+  - COMPETING       (high assertive, low cooperative)
+  - ACCOMMODATING   (low assertive, high cooperative)
+  - AVOIDING        (low assertive, low cooperative)
+  - COMPROMISING    (medium both)
+  - COLLABORATING   (high assertive, high cooperative)
+
+Each style is optimal for a different task category. Identify (1) which style
+the agent USED, (2) which would be OPTIMAL for the task, and (3) what to
+change.
+
+Posture: EVIDENCE-GROUNDED, STYLE-SPECIFIC, CONTEXT-AWARE, TERSE.
+When asked for JSON, return JSON only."""
+
+
+# Legacy v0.0.x prompts.
+TK_ANALYSIS_PROMPT = """Analyze the agent's conflict style in this interaction.
 
 Task: {task}
-Task category: {task_category}
 Outcome: {outcome}
 Success: {success}
+Subject model: {model_name}
+Task category hint: {task_category}
 
-Trace (turns in chronological order):
+Trace:
 {trace}
+
+Return a single JSON OBJECT with:
+  - observed_style (one of competing/accommodating/avoiding/compromising/collaborating/mixed)
+  - optimal_style (one of the 5 styles)
+  - style_mismatch (float 0-1)
+  - assertiveness_score (float 0-1)
+  - cooperativeness_score (float 0-1)
+  - observed_style_scores (dict of 5 style->score)
+  - style_evidence (array of 5 StyleScore objects)
+  - rationale (string)
 
 Return only the JSON object."""
 
 
-RECOMMENDATIONS_PROMPT = """Given the observed style ({observed}) and optimal style ({optimal}),
-propose 1-3 concrete recommendations to enable the agent to use the optimal style for similar
-future tasks.
+RECOMMENDATIONS_PROMPT = """Given the style analysis below, propose 2-4 recommendations
+to align observed style with optimal style.
 
-Each recommendation must have:
-  - intervention_type: one of
-      "prompt_patch"            - edit the agent's system prompt
-      "scaffold_change"         - add a step or branch in the orchestration
-      "style_router"            - add a meta-component that classifies the task and routes to a
-                                   style-specific sub-agent
-      "context_classifier"      - add a pre-step that classifies the conflict situation
-      "new_eval"                - add a regression test catching style mismatch
-      "human_review"            - insert a human checkpoint
-  - description (what the recommendation does)
-  - suggested_implementation (concrete code, prompt-text, or spec)
-  - estimated_impact ("high", "medium", "low")
-  - rationale (why this works — connect to the optimal style)
+Each recommendation has intervention_type, description, suggested_implementation,
+estimated_impact, rationale.
 
-If the observed style already matches the optimal style, return an empty array.
+intervention_type one of: prompt_patch, scaffold_change, style_router,
+context_classifier, task_specific_persona, calibrate_assertiveness,
+calibrate_cooperativeness, new_eval, human_review, compose_pattern.
 
-Observed style: {observed}
-Optimal style: {optimal}
-Style mismatch: {mismatch}
-Rationale for optimal style choice: {rationale}
-
+Observed style: {observed_style}
+Optimal style: {optimal_style}
+Style mismatch: {style_mismatch}
 Trace (reference):
 {trace}
 
-Return a JSON array of StyleRecommendation objects. Return only the JSON array."""
+Return only a JSON array of StyleRecommendation objects."""
+
+
+# v0.2.0 prompts.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- minimal Thomas-Kilmann analysis.
+
+Task: {task}
+Outcome: {outcome}
+Trace: {trace}
+
+Return a JSON object with: observed_style, optimal_style, style_mismatch,
+assertiveness_score, cooperativeness_score, observed_style_scores,
+style_evidence, rationale, top_recommendation.
+Return only the JSON object."""
+
+
+STANDARD_TK_ANALYSIS_PROMPT = TK_ANALYSIS_PROMPT
+STANDARD_RECOMMENDATIONS_PROMPT = RECOMMENDATIONS_PROMPT
+
+
+FORENSIC_STYLE_FIT_PROMPT = """FORENSIC mode -- style-fit audit.
+
+Infer task_category and optimal_style; estimate fit (0-1) and cost-of-mismatch (0-1).
+
+Task: {task}
+Outcome: {outcome}
+Trace: {trace}
+
+Return only a JSON object representing the StyleFitAudit."""
+
+
+FORENSIC_CONSISTENCY_PROMPT = """FORENSIC mode -- pattern consistency audit.
+
+Identify early-trace dominant style vs late-trace dominant style; count style flips;
+estimate consistency (0-1).
+
+Trace: {trace}
+
+Return only a JSON object representing the PatternConsistencyAudit."""
+
+
+FORENSIC_RECOMMENDATIONS_PROMPT = """FORENSIC mode -- propose 3-6 recommendations.
+
+Composition targets: agentcity.glaser_conversation, agentcity.aar,
+agentcity.devils_advocate, agentcity.mcallister_trust
+
+Observed style: {observed_style}
+Optimal style: {optimal_style}
+Style fit audit: {style_fit_audit}
+Pattern consistency audit: {pattern_consistency_audit}
+
+Return only a JSON array of StyleRecommendation objects."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
+
+
+__all__ = [
+    "FORENSIC_CONSISTENCY_PROMPT",
+    "FORENSIC_RECOMMENDATIONS_PROMPT",
+    "FORENSIC_STYLE_FIT_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "RECOMMENDATIONS_PROMPT",
+    "STANDARD_RECOMMENDATIONS_PROMPT",
+    "STANDARD_TK_ANALYSIS_PROMPT",
+    "TK_ANALYSIS_PROMPT",
+    "TK_SYSTEM_PROMPT",
+    "assemble_prompt",
+]

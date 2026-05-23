@@ -1,92 +1,160 @@
-"""LLM prompts for the GRPI Working Agreement Generator.
+"""LLM prompt templates for the GRPI Working Agreement Generator."""
 
-Single pass: produce a structured working agreement covering all four
-GRPI dimensions for the given team-setup request. The LLM returns a
-JSON object matching the WorkingAgreement schema.
-"""
+from __future__ import annotations
 
-GRPI_SYSTEM_PROMPT = """You are a Beckhard-tradition team-facilitation expert producing
-structured GRPI Working Agreements for multi-agent AI systems.
+from typing import Any
 
-The four GRPI dimensions (in order — each builds on the previous):
-
-  G - GOALS       - measurable success criteria, deliverables, scope boundaries, kill criteria
-  R - ROLES       - per-agent responsibilities, decision rights, accountability ownership
-  P - PROCESSES   - decision protocol, escalation path, abandonment criteria, communication cadence
-  I - INTERACTIONS - disagreement norms, feedback format, conflict resolution, psychological-safety commitments
-
-Your posture is:
-- COMPLETE. All four dimensions must be filled with non-trivial content.
-- SPECIFIC. "Communicate well" is not a process; "every agent emits a structured 'dissent'
-  message after a proposal and before the orchestrator can issue 'decision'" is.
-- ENFORCEABLE. Each item must be observable in an agent trace. If you can't tell whether
-  an agent followed the norm by reading the trace, the norm is too vague.
-- TEAM-LEVEL. Capture rules that are about the TEAM, not about any single agent. Individual-
-  agent specifics belong in agent system prompts; the agreement is the meta-layer.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+from agentcity.aar import fence, sanitize_for_prompt
 
 
-AGREEMENT_GENERATION_PROMPT = """Generate a structured GRPI Working Agreement for the
-following multi-agent team-setup request.
+GRPI_SYSTEM_PROMPT = """You are a team-structure generator grounded in:
 
-Team task: {task}
-Team id: {team_id}
+1. **Beckhard (1972)** canonical GRPI four-dimensional model.
+2. **Rubin, Plovnick, Fry (1977)** task-oriented team development.
+3. **Hackman (2002)** *Leading Teams*.
+4. **Salas et al. (2018)** Science of Team Performance annual review.
+5. **Lencioni (2002)** *Five Dysfunctions of a Team*.
+6. **Edmondson (1999)** psychological safety.
+7. **Wang et al. (2023)** Cooperative LLM Agents / modern LLM orchestration.
+
+GRPI = Goals + Roles + Processes + Interactions. A team without all four
+dimensions explicit is set up to fail. Generate a Working Agreement that:
+- States primary goal + measurable success criteria + kill criteria.
+- Assigns each agent a role with explicit decision rights + accountability.
+- Specifies decision protocol + escalation path + abandonment criteria + communication cadence.
+- Codifies disagreement norms + feedback format + conflict resolution + psychological-safety commitments.
+
+Posture:
+- Concrete, specific, terse.
+- Every agent in the request gets a role assignment.
+- Decision rights are explicit, not implied.
+
+When asked for JSON, return JSON only."""
+
+
+QUICK_GENERATION_PROMPT = """QUICK mode -- generate a complete GRPI working agreement.
+
+Task: {task}
+Agents: {agents}
+Constraints: {constraints}
+Success criteria: {success_criteria}
+Kill criteria: {kill_criteria}
 Framework: {framework}
+Risk level: {risk_level}
 
-Agents on the team:
-{agents}
-
-Constraints (must be respected):
-{constraints}
-
-Success criteria requested:
-{success_criteria}
-
-Kill criteria requested:
-{kill_criteria}
-
-Return a JSON object with these top-level fields:
-
-  goals: {{
-    primary_goal: string,
-    measurable_success_criteria: [strings],
-    scope_boundaries: [strings],
-    deliverables: [strings],
-    kill_criteria: [strings],
-  }}
-
-  roles: {{
-    role_assignments: [
-      {{
-        agent_name: string,
-        role_title: string,
-        responsibilities: [strings],
-        decision_rights: [strings],
-        accountability_owner_for: [strings],
-      }}, ...
-    ],
-    raci_summary: string,
-  }}
-
-  processes: {{
-    decision_protocol: string,
-    escalation_path: [strings],
-    abandonment_criteria: [strings],
-    communication_cadence: string,
-    review_cadence: string,
-    artifact_storage: string,
-  }}
-
-  interactions: {{
-    disagreement_norms: [strings],
-    feedback_format: string,
-    conflict_resolution: string,
-    voice_and_turn_taking: [strings],
-    psychological_safety_commitments: [strings],
-  }}
-
-Every list must have at least 1 item. Every string must be specific (avoid generalities
-like "communicate well" or "be respectful"). Honor the requester's constraints exactly.
+Return a JSON object with: goals, roles, processes, interactions sections.
 
 Return only the JSON object."""
+
+
+STANDARD_GENERATION_PROMPT = """STANDARD mode -- generate a detailed GRPI working agreement.
+
+Task: {task}
+Agents: {agents}
+Constraints: {constraints}
+Success criteria: {success_criteria}
+Kill criteria: {kill_criteria}
+Framework: {framework}
+Risk level: {risk_level}
+
+Return a JSON OBJECT with:
+- goals (primary_goal, measurable_success_criteria, scope_boundaries, deliverables, kill_criteria)
+- roles (role_assignments [agent_name, role_title, responsibilities, decision_rights, accountability_owner_for], raci_summary)
+- processes (decision_protocol, escalation_path, abandonment_criteria, communication_cadence, review_cadence, artifact_storage)
+- interactions (disagreement_norms, feedback_format, conflict_resolution, voice_and_turn_taking, psychological_safety_commitments)
+
+Return only the JSON object."""
+
+
+STANDARD_REFINEMENT_PROMPT = """STANDARD mode -- refine the draft working agreement.
+
+For each section, identify gaps and propose tightening. Return a JSON OBJECT
+matching the WorkingAgreement schema with refinements applied.
+
+Draft: {draft}
+Task: {task}
+Risk level: {risk_level}
+
+Return only the JSON object."""
+
+
+FORENSIC_ROLE_FIT_PROMPT = """FORENSIC mode -- audit per-role fit.
+
+For each agent, identify fit_score, ambiguous_decision_rights, overlapping_responsibilities, notes.
+
+Agents: {agents}
+Roles section: {roles_section}
+
+Return a JSON ARRAY of RoleFitAudit objects. Return only the JSON array."""
+
+
+FORENSIC_DYSFUNCTION_PROMPT = """FORENSIC mode -- Lencioni dysfunction-prevention audit.
+
+For each of the 5 dysfunctions, does the agreement EXPLICITLY prevent it?
+
+Working agreement: {agreement}
+
+Return a JSON OBJECT representing the DysfunctionPreventionAudit. Return only the JSON object."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose interventions to improve the working agreement.
+
+Composition targets available:
+agentcity.lewin, agentcity.aar, agentcity.lencioni, agentcity.edmondson_psych_safety,
+agentcity.trust_triangle, agentcity.mcgregor, agentcity.smart_goal, agentcity.plus_delta,
+agentcity.schein_culture, agentcity.devils_advocate, agentcity.bias_stack
+
+Working agreement: {agreement}
+Role fit audits: {role_fit}
+Dysfunction audit: {dysfunction}
+
+Return a JSON ARRAY of GRPIIntervention objects. Return only the JSON array."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    """Fill a prompt template, sanitizing + fencing every free-text field."""
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+
+    return template.format(**formatted)
+
+
+# Legacy aliases.
+GRPI_GENERATION_PROMPT = STANDARD_GENERATION_PROMPT
+GENERATION_PROMPT = STANDARD_GENERATION_PROMPT
+
+
+__all__ = [
+    "FORENSIC_DYSFUNCTION_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_ROLE_FIT_PROMPT",
+    "GENERATION_PROMPT",
+    "GRPI_GENERATION_PROMPT",
+    "GRPI_SYSTEM_PROMPT",
+    "QUICK_GENERATION_PROMPT",
+    "STANDARD_GENERATION_PROMPT",
+    "STANDARD_REFINEMENT_PROMPT",
+    "assemble_prompt",
+]

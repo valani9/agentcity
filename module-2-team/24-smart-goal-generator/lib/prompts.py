@@ -1,77 +1,139 @@
-"""LLM prompts for the SMART Goal Generator.
+"""LLM prompts for the SMART Goal Generator."""
 
-Single pass: take a vague goal + context, return the full SMART spec as a
-JSON object.
-"""
+from __future__ import annotations
+
+from typing import Any
+
+from agentcity.aar import fence, sanitize_for_prompt
+
 
 SMART_SYSTEM_PROMPT = """You are a SMART-goal generator working in the tradition of
 George T. Doran, "There's a S.M.A.R.T. Way to Write Management's Goals and Objectives"
 (Management Review, 70(11), 1981).
 
-You take a VAGUE goal as stated by a user or upstream system and produce a structured
-SMART goal spec the agent can hold itself accountable to.
+You take a VAGUE goal and produce a structured SMART goal spec the agent can hold
+itself accountable to. Goals must be SPECIFIC, MEASURABLE, ACHIEVABLE, RELEVANT,
+TIME-BOUND.
 
-The five SMART criteria:
+Kill criteria are the MOST important field: agents without abandonment conditions
+cause the most expensive incidents.
 
-  - SPECIFIC    - well-defined target, not a category. "Improve onboarding" is not
-                   specific; "Reduce time-to-first-action from 3 minutes to 90 seconds"
-                   is.
-  - MEASURABLE  - has an objective criterion of completion. The agent should be able
-                   to know whether the goal is met without asking a human.
-  - ACHIEVABLE  - within reach given the resources + constraints provided. If the goal
-                   needs resources the agent doesn't have, name them as open questions
-                   instead of pretending the goal is achievable.
-  - RELEVANT    - connected to the underlying problem the user is trying to solve.
-                   Don't optimize for vanity metrics that miss the user's actual intent.
-  - TIME-BOUND  - has a deadline OR a budget. "By Friday", "within 10000 tokens",
-                   "before next standup" all work.
-
-You must produce:
-  - smart_statement: a single paragraph that satisfies all five criteria
-  - criteria: per-dimension statements with self-reported quality scores in [0, 1]
-  - completion_criteria: a checklist of observable conditions for "done"
-  - success_metrics: concrete metrics with target values + measurement method
-  - kill_criteria: conditions under which the agent abandons the goal (very important
-    — without these, the agent will burn unbounded resources trying)
-  - deadline: ISO date / duration / budget
-  - open_questions: things the agent should ask before starting (or NONE if none)
-  - overall_smart_score: a single 0-1 quality rating
-  - smart_quality: "strong" (>=0.8), "acceptable" (>=0.5), "weak" (<0.5)
-
-Your posture is:
-- HONEST about achievability. Don't claim a goal is achievable when it's not.
-- TERSE. Output is meant to be machine-parseable.
-- KILL-CRITERIA-FIRST. The most important field is kill_criteria; agents without
-  abandonment conditions cause the most expensive incidents.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+Posture: HONEST about achievability, TERSE, KILL-CRITERIA-FIRST.
+When asked for JSON, return JSON only."""
 
 
+# Legacy v0.0.x prompt.
 SMART_GENERATION_PROMPT = """Generate a SMART goal spec from the vague request below.
 
 Vague goal: {vague_goal}
 Context: {context}
 Available resources: {available_resources}
 Known constraints: {known_constraints}
-Deadline hint (may be empty): {deadline_hint}
-Framework hint (may be empty): {framework}
+Deadline hint: {deadline_hint}
+Framework hint: {framework}
 
-Return a single JSON object with these fields:
-  - smart_statement (string)
-  - criteria (array of 5 SMARTCriterion objects in order: specific, measurable,
-    achievable, relevant, time_bound; each has criterion, statement, quality_score)
-  - completion_criteria (array of strings)
-  - success_metrics (array of SuccessMetric objects, each with name, target,
-    measurement_method)
-  - kill_criteria (array of KillCriterion objects, each with name, condition,
-    action_on_trigger)
-  - deadline (string)
-  - open_questions (array of strings; can be empty)
-  - overall_smart_score (float 0-1)
-  - smart_quality (one of "strong", "acceptable", "weak")
+Return a single JSON object with smart_statement, criteria (array of 5 in order),
+completion_criteria, success_metrics, kill_criteria, deadline, open_questions,
+overall_smart_score, smart_quality.
 
-If the vague goal is missing critical context that you cannot reasonably infer, put
-those gaps into open_questions and lower the achievable / overall_smart_score
-accordingly. Do NOT invent details — surface the gap.
+If critical context is missing, surface it as open_questions; don't invent details.
 
 Return only the JSON object."""
+
+
+# v0.2.0 prompts.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- produce a minimal SMART goal spec.
+
+Vague goal: {vague_goal}
+Context: {context}
+Deadline hint: {deadline_hint}
+
+Return a single JSON object with smart_statement, criteria (array of 5), completion_criteria,
+success_metrics (1-2), kill_criteria (1-2), deadline, overall_smart_score, smart_quality.
+Return only the JSON object."""
+
+
+STANDARD_SMART_GENERATION_PROMPT = SMART_GENERATION_PROMPT
+
+
+FORENSIC_CRITERIA_COMPLETENESS_PROMPT = """FORENSIC mode -- audit criteria completeness.
+
+For each of the 5 SMART criteria, judge whether it's substantively addressed in the
+goal spec below. Count addressed_criteria_count (0-5), list weak_criteria and
+missing_criteria; estimate completeness (0-1).
+
+Goal spec:
+{goal}
+
+Return only a JSON object representing the CriteriaCompletenessAudit."""
+
+
+FORENSIC_MEASUREMENT_RIGOR_PROMPT = """FORENSIC mode -- audit measurement rigor.
+
+Count operationalizable (machine-checkable) success metrics vs qualitative ones, plus
+operationalizable kill criteria. Estimate rigor (0-1).
+
+Goal spec:
+{goal}
+
+Return only a JSON object representing the MeasurementRigorAudit."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 quality-improvement
+interventions for a SMART goal spec.
+
+Composition targets: agentcity.grpi, agentcity.aar, agentcity.plus_delta,
+agentcity.lewin, agentcity.devils_advocate
+
+intervention_type one of: tighten_specificity, add_measurement,
+calibrate_achievability, ground_relevance, add_deadline, add_kill_criteria,
+add_completion_criteria, decompose_goal, new_eval, human_review, compose_pattern.
+
+target_criterion one of: specific, measurable, achievable, relevant, time_bound, overall.
+
+Goal spec:
+{goal}
+Criteria audit: {criteria_audit}
+Rigor audit: {rigor_audit}
+
+Return only a JSON array of SmartGoalIntervention objects."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
+
+
+__all__ = [
+    "FORENSIC_CRITERIA_COMPLETENESS_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_MEASUREMENT_RIGOR_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "SMART_GENERATION_PROMPT",
+    "SMART_SYSTEM_PROMPT",
+    "STANDARD_SMART_GENERATION_PROMPT",
+    "assemble_prompt",
+]

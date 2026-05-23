@@ -1,47 +1,114 @@
-"""agentcity.smart_goal — Doran's SMART criteria (Specific, Measurable,
+"""agentcity.smart_goal -- Doran SMART criteria (Specific, Measurable,
 Achievable, Relevant, Time-bound) applied to AI agent goal-setting.
 
-The second generative pattern in AgentCity (alongside #13 GRPI Working
-Agreement). Takes a vague task and produces a structured SMART spec the
-agent can hold itself accountable to — with explicit completion criteria,
-success metrics, kill criteria, and deadline.
+Anchored in Doran 1981. Generative pattern: takes a vague goal and
+produces a structured SMART spec the agent holds itself accountable to.
 
-Quick start:
-
-    from agentcity.smart_goal import SMARTGoalGenerator, GoalRequest
-    from agentcity.aar.clients import AnthropicClient
-
-    request = GoalRequest(
-        vague_goal="Improve the user onboarding flow.",
-        context="B2B SaaS onboarding; currently activation rate ~35%.",
-        available_resources=["Mixpanel access", "design team"],
-        known_constraints=["no engineering bandwidth this sprint"],
-        deadline_hint="end of Q2",
-    )
-    goal = SMARTGoalGenerator(AnthropicClient()).run(request)
-    print(goal.to_markdown())
-    # Use goal.to_agent_preamble() to prepend to an agent's system prompt.
+Three pipeline modes with v0.2.0 production infrastructure.
+Backward-compatible: ``SMARTGoalGenerator`` aliased to
+``SMARTGoalAnalyzer``.
 """
 
-from .generator import LLMClient, SMARTGoalGenerator
+from ._calibration import compare_to_baseline, load_baseline, record_baseline
+from ._composition import (
+    SMART_GOAL_COMPOSITION,
+    recommended_downstream,
+    recommended_upstream,
+)
+from ._playbooks import (
+    PLAYBOOKS,
+    all_playbook_keys,
+    find_playbook,
+    find_playbook_for_intervention,
+)
+from .generator import (
+    AsyncLLMClient,
+    LLMClient,
+    SMARTGoalAnalyzer,
+    SMARTGoalAnalyzerAsync,
+    SMARTGoalGenerator,
+)
+from .prompts import (
+    FORENSIC_CRITERIA_COMPLETENESS_PROMPT,
+    FORENSIC_INTERVENTIONS_PROMPT,
+    FORENSIC_MEASUREMENT_RIGOR_PROMPT,
+    QUICK_DIAGNOSTIC_PROMPT,
+    SMART_GENERATION_PROMPT,
+    SMART_SYSTEM_PROMPT,
+    STANDARD_SMART_GENERATION_PROMPT,
+    assemble_prompt,
+)
 from .schema import (
+    INTERVENTION_TYPES,
+    SEVERITY_ORDER,
     SMART_CRITERIA,
+    SMART_GOAL_MODES,
+    SMART_GOAL_PROFILE_PATTERNS,
+    AttachedPlaybook,
+    BaselineComparison,
+    ComposedPatternHandoff,
+    CriteriaCompletenessAudit,
+    EffortEstimate,
     GoalRequest,
+    InterventionType,
     KillCriterion,
+    MeasurementRigorAudit,
+    Severity,
     SMARTCriterion,
     SMARTGoal,
+    SmartGoalIntervention,
+    SmartGoalMode,
+    SmartGoalProfilePattern,
     SuccessMetric,
+    severity_from_smart_score,
 )
 
 __all__ = [
+    "SMARTGoalAnalyzer",
+    "SMARTGoalAnalyzerAsync",
     "SMARTGoalGenerator",
     "LLMClient",
+    "AsyncLLMClient",
     "GoalRequest",
     "SMARTCriterion",
     "SuccessMetric",
     "KillCriterion",
+    "CriteriaCompletenessAudit",
+    "MeasurementRigorAudit",
+    "SmartGoalIntervention",
+    "AttachedPlaybook",
+    "BaselineComparison",
+    "ComposedPatternHandoff",
     "SMARTGoal",
+    "SmartGoalMode",
+    "SmartGoalProfilePattern",
+    "Severity",
+    "InterventionType",
+    "EffortEstimate",
     "SMART_CRITERIA",
+    "SMART_GOAL_MODES",
+    "SMART_GOAL_PROFILE_PATTERNS",
+    "SEVERITY_ORDER",
+    "INTERVENTION_TYPES",
+    "severity_from_smart_score",
+    "compare_to_baseline",
+    "load_baseline",
+    "record_baseline",
+    "SMART_GOAL_COMPOSITION",
+    "recommended_downstream",
+    "recommended_upstream",
+    "PLAYBOOKS",
+    "all_playbook_keys",
+    "find_playbook",
+    "find_playbook_for_intervention",
+    "SMART_SYSTEM_PROMPT",
+    "SMART_GENERATION_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_SMART_GENERATION_PROMPT",
+    "FORENSIC_CRITERIA_COMPLETENESS_PROMPT",
+    "FORENSIC_MEASUREMENT_RIGOR_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "assemble_prompt",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

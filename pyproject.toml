@@ -105,6 +105,7 @@ Changelog = "https://github.com/valani9/AgentCity/blob/main/CHANGELOG.md"
 
 [project.scripts]
 agentcity = "agentcity.aar.cli:main"
+agentcity-lewin = "agentcity.lewin.cli:main"
 
 [build-system]
 requires = ["hatchling"]

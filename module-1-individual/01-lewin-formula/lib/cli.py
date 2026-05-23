@@ -1,0 +1,358 @@
+"""Command-line entry point for the Lewin diagnostic.
+
+Subcommands:
+
+  analyze   — run the diagnostic on a single trace file.
+  batch     — run the diagnostic over a YAML corpus of traces.
+  replay    — render an existing detection JSON to markdown.
+  validate  — schema-validate a trace JSON without running the diagnostic.
+  schema    — dump the JSON schema of AgentFailureTrace / LewinDetection.
+  playbooks — list available (locus, factor) playbook keys.
+  compose   — show the composition graph (upstream / downstream / overlays).
+
+The CLI mirrors the shape of ``agentcity aar`` (pattern #30's CLI) so
+the user experience is consistent across patterns.
+
+Examples
+--------
+
+    # Stub-backed analyze, markdown output.
+    agentcity-lewin analyze --trace fixtures/stale_rag.json --client stub
+
+    # Anthropic-backed forensic analyze, JSON output piped into jq.
+    agentcity-lewin analyze --trace fail.json --client anthropic \\
+        --mode forensic --format json | jq '.dominant_locus'
+
+    # Batch a corpus and write detections to a dir.
+    agentcity-lewin batch --corpus eval/synthetic_lewin_failures.yaml \\
+        --out detections/ --mode standard --client stub
+
+    # Compare a fresh detection to a stored baseline.
+    agentcity-lewin analyze --trace fail.json --baseline detections/baseline.json
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+from typing import IO, Any
+
+from ._composition import LEWIN_COMPOSITION
+from ._playbooks import PLAYBOOKS
+from .generator import LewinAttributionDetector
+from .schema import AgentFailureTrace, LewinDetection
+
+
+# ---------------------------------------------------------------------------
+# Client construction
+# ---------------------------------------------------------------------------
+
+
+def _make_stub_client(stub_path: str | None) -> object:
+    """Build a StubClient. If ``stub_path`` is provided, load canned
+    responses from that JSON file (a list of strings). Otherwise build a
+    minimal stub with empty responses (only valid for ``schema``/``validate``).
+    """
+    from agentcity.aar import StubClient
+
+    responses: list[str] = []
+    if stub_path:
+        p = Path(stub_path)
+        raw = json.loads(p.read_text())
+        if not isinstance(raw, list):
+            raise SystemExit(
+                f"stub responses file {stub_path} must contain a JSON array of strings"
+            )
+        responses = [r if isinstance(r, str) else json.dumps(r) for r in raw]
+    return StubClient(responses)
+
+
+def _make_client(name: str, model: str | None, stub_path: str | None) -> object:
+    """Construct an LLM client by name."""
+    name = (name or "stub").lower()
+    if name == "stub":
+        return _make_stub_client(stub_path)
+    if name == "anthropic":
+        from agentcity.aar import AnthropicClient
+
+        return AnthropicClient(
+            model=model or os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+        )
+    if name == "openai":
+        from agentcity.aar import OpenAIClient
+
+        return OpenAIClient(model=model or os.environ.get("OPENAI_MODEL", "gpt-5"))
+    if name == "ollama":
+        from agentcity.aar import OllamaClient
+
+        return OllamaClient(model=model or os.environ.get("OLLAMA_MODEL", "llama3.1:8b"))
+    raise SystemExit(f"unknown client: {name!r}. Choose stub|anthropic|openai|ollama.")
+
+
+# ---------------------------------------------------------------------------
+# I/O helpers
+# ---------------------------------------------------------------------------
+
+
+def _read_trace(path: str) -> AgentFailureTrace:
+    """Read an AgentFailureTrace from a file or stdin (``--trace -``)."""
+    if path == "-":
+        raw = sys.stdin.read()
+    else:
+        raw = Path(path).read_text()
+    return AgentFailureTrace.model_validate_json(raw)
+
+
+def _write_detection(detection: LewinDetection, out: IO[str], fmt: str) -> None:
+    if fmt == "json":
+        out.write(detection.model_dump_json(indent=2))
+        out.write("\n")
+    elif fmt == "markdown":
+        out.write(detection.to_markdown())
+    else:
+        raise SystemExit(f"unknown --format {fmt!r}; choose markdown|json")
+
+
+# ---------------------------------------------------------------------------
+# Subcommands
+# ---------------------------------------------------------------------------
+
+
+def _cmd_analyze(args: argparse.Namespace) -> int:
+    trace = _read_trace(args.trace)
+    client = _make_client(args.client, args.model, args.stub_responses)
+    detector = LewinAttributionDetector(
+        llm_client=client,  # type: ignore[arg-type]
+        model=getattr(client, "model", "stub"),
+        mode=args.mode,
+        max_retries=args.max_retries,
+    )
+    detection = detector.run(trace, baseline_path=args.baseline)
+    out: IO[str]
+    if args.out:
+        out = open(args.out, "w")
+    else:
+        out = sys.stdout
+    try:
+        _write_detection(detection, out, args.format)
+    finally:
+        if args.out:
+            out.close()
+    return 0
+
+
+def _cmd_batch(args: argparse.Namespace) -> int:
+    try:
+        import yaml
+    except ImportError:
+        raise SystemExit("`batch` requires pyyaml. Install: pip install pyyaml")
+    raw = yaml.safe_load(Path(args.corpus).read_text())
+    if not isinstance(raw, list):
+        raise SystemExit(f"corpus {args.corpus} must be a YAML list at the top level")
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    client = _make_client(args.client, args.model, args.stub_responses)
+    detector = LewinAttributionDetector(
+        llm_client=client,  # type: ignore[arg-type]
+        model=getattr(client, "model", "stub"),
+        mode=args.mode,
+        max_retries=args.max_retries,
+    )
+
+    n = 0
+    for entry in raw:
+        n += 1
+        trace_data = entry.get("trace") if isinstance(entry, dict) else None
+        if trace_data is None:
+            continue
+        trace = AgentFailureTrace.model_validate(trace_data)
+        try:
+            detection = detector.run(trace)
+        except Exception as exc:
+            print(
+                f"[{entry.get('id', f'trace-{n}')}] error: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+            continue
+        scenario_id = entry.get("id", f"trace-{n}")
+        out_path = out_dir / f"{scenario_id}.{args.format}"
+        with open(out_path, "w") as out:
+            _write_detection(detection, out, args.format)
+        print(
+            f"[{scenario_id}] dominant={detection.dominant_locus} quality={detection.attribution_quality}",
+            file=sys.stderr,
+        )
+    print(f"wrote {n} detections to {out_dir}/", file=sys.stderr)
+    return 0
+
+
+def _cmd_replay(args: argparse.Namespace) -> int:
+    raw = Path(args.detection).read_text()
+    obj = json.loads(raw)
+    # Accept either a baseline file (with `.detection` wrapper) or a raw detection.
+    if "detection" in obj and "schema_version" in obj:
+        detection = LewinDetection.model_validate(obj["detection"])
+    else:
+        detection = LewinDetection.model_validate(obj)
+    sys.stdout.write(detection.to_markdown())
+    return 0
+
+
+def _cmd_validate(args: argparse.Namespace) -> int:
+    _ = _read_trace(args.trace)
+    print(f"OK — {args.trace} parses as AgentFailureTrace")
+    return 0
+
+
+def _cmd_schema(args: argparse.Namespace) -> int:
+    target = args.target
+    if target == "trace":
+        schema = AgentFailureTrace.model_json_schema()
+    elif target == "detection":
+        schema = LewinDetection.model_json_schema()
+    else:
+        raise SystemExit(f"unknown --target {target!r}; choose trace|detection")
+    out_text = json.dumps(schema, indent=2)
+    if args.out:
+        Path(args.out).write_text(out_text + "\n")
+        print(f"wrote schema to {args.out}", file=sys.stderr)
+    else:
+        sys.stdout.write(out_text)
+        sys.stdout.write("\n")
+    return 0
+
+
+def _cmd_playbooks(args: argparse.Namespace) -> int:
+    if args.format == "json":
+        payload: list[dict[str, Any]] = []
+        for (locus, factor), pb in sorted(PLAYBOOKS.items()):
+            payload.append(
+                {
+                    "locus": locus,
+                    "factor": factor,
+                    "title": pb.title,
+                    "expected_effort": pb.expected_effort,
+                    "anchor_citation": pb.anchor_citation,
+                    "steps": pb.steps,
+                }
+            )
+        sys.stdout.write(json.dumps(payload, indent=2))
+        sys.stdout.write("\n")
+        return 0
+    # Markdown view.
+    print("# Lewin Failure-Mode Playbooks\n")
+    for (locus, factor), pb in sorted(PLAYBOOKS.items()):
+        print(f"## ({locus}, {factor}) — {pb.title}")
+        print(f"_Effort: {pb.expected_effort}_")
+        if pb.anchor_citation:
+            print(f"_Anchor: {pb.anchor_citation}_\n")
+        for i, step in enumerate(pb.steps, 1):
+            print(f"{i}. {step}")
+        print()
+    return 0
+
+
+def _cmd_compose(args: argparse.Namespace) -> int:
+    sys.stdout.write(json.dumps(LEWIN_COMPOSITION, indent=2, default=list))
+    sys.stdout.write("\n")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Argparse wiring
+# ---------------------------------------------------------------------------
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="agentcity-lewin",
+        description="Lewin B = f(P, E) failure-attribution diagnostic.",
+    )
+    sub = p.add_subparsers(dest="cmd", required=True)
+
+    # analyze
+    a = sub.add_parser("analyze", help="Run the diagnostic on a single trace.")
+    a.add_argument("--trace", required=True, help="Path to AgentFailureTrace JSON (- for stdin).")
+    a.add_argument(
+        "--mode",
+        choices=("quick", "standard", "forensic"),
+        default="standard",
+        help="Pipeline mode.",
+    )
+    a.add_argument(
+        "--client",
+        default="stub",
+        help="LLM client: stub|anthropic|openai|ollama (default stub).",
+    )
+    a.add_argument("--model", default=None, help="LLM model name (provider-specific).")
+    a.add_argument(
+        "--stub-responses",
+        default=None,
+        help="Path to a JSON array of canned LLM responses (used with --client stub).",
+    )
+    a.add_argument(
+        "--format", choices=("markdown", "json"), default="markdown", help="Output format."
+    )
+    a.add_argument("--baseline", default=None, help="Optional baseline detection JSON.")
+    a.add_argument("--out", default=None, help="Output file (default: stdout).")
+    a.add_argument("--max-retries", type=int, default=3, help="LLM retry count.")
+    a.set_defaults(func=_cmd_analyze)
+
+    # batch
+    b = sub.add_parser("batch", help="Run the diagnostic over a YAML corpus.")
+    b.add_argument("--corpus", required=True, help="Path to YAML corpus (list of {id, trace}).")
+    b.add_argument("--out", required=True, help="Output directory.")
+    b.add_argument(
+        "--mode",
+        choices=("quick", "standard", "forensic"),
+        default="standard",
+    )
+    b.add_argument("--client", default="stub")
+    b.add_argument("--model", default=None)
+    b.add_argument("--stub-responses", default=None)
+    b.add_argument("--format", choices=("markdown", "json"), default="json")
+    b.add_argument("--max-retries", type=int, default=3)
+    b.set_defaults(func=_cmd_batch)
+
+    # replay
+    r = sub.add_parser("replay", help="Render an existing detection JSON to markdown.")
+    r.add_argument(
+        "--detection", required=True, help="Path to LewinDetection JSON (or baseline wrapper)."
+    )
+    r.set_defaults(func=_cmd_replay)
+
+    # validate
+    v = sub.add_parser("validate", help="Schema-validate a trace JSON.")
+    v.add_argument("--trace", required=True)
+    v.set_defaults(func=_cmd_validate)
+
+    # schema
+    s = sub.add_parser("schema", help="Dump JSON schema for a model.")
+    s.add_argument("--target", choices=("trace", "detection"), default="trace")
+    s.add_argument("--out", default=None)
+    s.set_defaults(func=_cmd_schema)
+
+    # playbooks
+    pb = sub.add_parser("playbooks", help="List available playbooks.")
+    pb.add_argument("--format", choices=("markdown", "json"), default="markdown")
+    pb.set_defaults(func=_cmd_playbooks)
+
+    # compose
+    c = sub.add_parser("compose", help="Show the composition graph.")
+    c.set_defaults(func=_cmd_compose)
+
+    return p
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = _build_parser()
+    args = parser.parse_args(argv)
+    return int(args.func(args))
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

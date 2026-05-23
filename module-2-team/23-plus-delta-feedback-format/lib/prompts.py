@@ -1,48 +1,28 @@
-"""LLM prompt for the Plus/Delta Inter-Agent Feedback Format generator.
+"""LLM prompts for the Plus/Delta Inter-Agent Feedback Format generator."""
 
-Single pass: take a feedback request, produce a structured plus/delta
-artifact with specific behavioral items.
-"""
+from __future__ import annotations
+
+from typing import Any
+
+from agentcity.aar import fence, sanitize_for_prompt
+
 
 PLUS_DELTA_SYSTEM_PROMPT = """You are a structured-feedback generator working in the
-tradition of the plus/delta format from facilitator canon (Joiner Associates
-training materials; popularized by Brené Brown, "Dare to Lead", Random House, 2018;
-broadly used in retrospective-meeting literature).
+tradition of the plus/delta format (Joiner Associates 1990s; Brown "Dare to Lead" 2018;
+retrospective-meeting literature).
 
-The plus/delta format is brutally simple and has one ironclad rule:
-
+Plus/delta has one ironclad rule:
   - PLUS  - what worked, BEHAVIORAL, SPECIFIC, REUSABLE next time.
-  - DELTA - what to do differently next time. BEHAVIORAL, SPECIFIC, names the
-            ALTERNATIVE.
+  - DELTA - what to do differently next time. BEHAVIORAL, SPECIFIC, names the ALTERNATIVE.
 
-Plus/delta is FORWARD-LOOKING. A plus = what to KEEP doing; a delta = what to CHANGE
-next time. Both must be behavioral. Generic affirmations like "good work" or
-"great structure" are NOT pluses — they're noise. Generic critiques like
-"could be better" or "needs improvement" are NOT deltas — they're also noise.
+Generic affirmations and generic critiques are noise. Every item must be evidence-grounded
+and forward-looking.
 
-The format is not pros/cons. It is not strengths/weaknesses. It is two specific
-question forms:
-
-  Plus  : "What specifically worked in HOW you did this that you should keep doing?"
-  Delta : "What would I do differently next time, and what's the alternative behavior?"
-
-Every plus must answer: WHAT worked, EVIDENCE (cite the artifact), WHY it mattered,
-and (optionally) the KEEP DOING instruction for next round.
-
-Every delta must answer: WHAT to change, EVIDENCE (cite the artifact), WHY change,
-the ALTERNATIVE behavior, and a SEVERITY (nit / moderate / critical).
-
-Your posture is:
-- BEHAVIORAL. No generic praise / generic critique.
-- EVIDENCE-GROUNDED. Cite specific elements of the artifact.
-- FORWARD-LOOKING. Pluses are about repeatable behavior; deltas are about specific changes.
-- BALANCED. Default style is balanced. Style='delta-leaning' means more deltas (still
-  behavioral). Style='plus-leaning' means more pluses (still specific).
-- TERSE. The artifact is read by an agent, not a person who'll wade through paragraphs.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+Posture: BEHAVIORAL, EVIDENCE-GROUNDED, FORWARD-LOOKING, BALANCED, TERSE.
+When asked for JSON, return JSON only."""
 
 
+# Legacy v0.0.x prompt (preserved).
 PLUS_DELTA_PROMPT = """Generate a structured plus/delta feedback artifact for the
 contribution below.
 
@@ -51,7 +31,7 @@ Subject agent: {subject_agent}
 Task context: {task_context}
 Contribution summary: {contribution_summary}
 
-Success criteria for the task:
+Success criteria:
 {success_criteria}
 
 Style preference: {style}
@@ -62,22 +42,117 @@ Contribution artifact:
 {contribution_artifact}
 ---
 
-Return a single JSON OBJECT with these fields:
-  - plus_items: array (1 to {max_items} items). Each: statement, evidence, impact,
-    keep_doing (optional, can be empty string).
-  - delta_items: array (0 to {max_items} items). Each: statement, evidence, impact,
-    alternative, severity (one of "nit", "moderate", "critical").
-  - commitments: optional array. Each: by_agent (string), commitment (string).
+Return a single JSON OBJECT with:
+  - plus_items: array (1 to {max_items}). Each: statement, evidence, impact, keep_doing.
+  - delta_items: array (0 to {max_items}). Each: statement, evidence, impact, alternative,
+    severity (nit/moderate/critical).
+  - commitments: optional array. Each: by_agent, commitment.
   - overall_assessment: one of "keep-going", "iterate", "rework".
-  - feedback_quality_score: float 0-1 (your self-assessment of how specific +
-    behavioral this artifact is). High = items are concrete; low = items would
-    feel generic to the subject.
+  - feedback_quality_score: float 0-1.
 
-Behavioral specificity rules (enforce these):
-- No plus item may be a generic affirmation. Reject "good work", "well done",
-  "nice structure" — replace with a specific behavioral observation.
-- No delta item may be a generic critique. Reject "could be better",
-  "needs improvement" — replace with the specific change + alternative.
-- Every item must cite specific evidence from the artifact.
+Behavioral specificity rules: no generic affirmations; no generic critiques; every item
+must cite specific evidence from the artifact.
 
 Return only the JSON object."""
+
+
+# v0.2.0 prompts.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- produce a minimal plus/delta artifact.
+
+Reviewer: {reviewer_agent} -> Subject: {subject_agent}
+Task: {task_context}
+Contribution summary: {contribution_summary}
+Style: {style}
+Max items: {max_items}
+
+Contribution: {contribution_artifact}
+
+Return a single JSON object with plus_items (1-2), delta_items (0-2), overall_assessment,
+feedback_quality_score.
+Return only the JSON object."""
+
+
+STANDARD_PLUS_DELTA_PROMPT = PLUS_DELTA_PROMPT
+
+
+FORENSIC_SPECIFICITY_PROMPT = """FORENSIC mode -- audit specificity of an existing plus/delta artifact.
+
+Count specific vs generic plus and delta items; estimate specificity (0-1, higher = more
+behavioral).
+
+Artifact:
+{artifact}
+
+Return only a JSON object representing the SpecificityAudit."""
+
+
+FORENSIC_BEHAVIORAL_PROMPT = """FORENSIC mode -- audit behavioral vs generic phrasing.
+
+Count behavioral items vs generic items; list detected generic phrases ("good work",
+"could be better", "well done", "needs improvement", etc.); estimate behavioral
+(0-1, higher = more behavioral).
+
+Artifact:
+{artifact}
+
+Return only a JSON object representing the BehavioralVsGenericAudit."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 quality-improvement
+interventions for a plus/delta artifact.
+
+Composition targets: agentcity.aar, agentcity.smart_goal, agentcity.glaser_conversation,
+agentcity.feedback_triggers
+
+Artifact:
+{artifact}
+Specificity audit: {specificity_audit}
+Behavioral audit: {behavioral_audit}
+
+intervention_type one of: tighten_specificity, require_evidence, require_alternative,
+balance_style, escalate_severity, deescalate_severity, add_commitment, new_eval,
+human_review, compose_pattern.
+
+target_dimension one of: plus, delta, overall, specificity.
+
+Return only a JSON array of PlusDeltaIntervention objects."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
+
+
+__all__ = [
+    "FORENSIC_BEHAVIORAL_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_SPECIFICITY_PROMPT",
+    "PLUS_DELTA_PROMPT",
+    "PLUS_DELTA_SYSTEM_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_PLUS_DELTA_PROMPT",
+    "assemble_prompt",
+]

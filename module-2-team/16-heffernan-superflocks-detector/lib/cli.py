@@ -68,8 +68,8 @@ def _cmd_analyze(args: argparse.Namespace) -> int:
     trace = _read_trace(args.trace)
     client = _make_client(args.client, args.model, args.stub_responses)
     analyzer = SuperflocksAnalyzer(
-        llm_client=client,
-        model=getattr(client, "model", "stub"),  # type: ignore[arg-type]
+        llm_client=client,  # type: ignore[arg-type]
+        model=getattr(client, "model", "stub"),
         mode=args.mode,
         max_retries=args.max_retries,
     )
@@ -95,8 +95,8 @@ def _cmd_batch(args: argparse.Namespace) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     client = _make_client(args.client, args.model, args.stub_responses)
     analyzer = SuperflocksAnalyzer(
-        llm_client=client,
-        model=getattr(client, "model", "stub"),  # type: ignore[arg-type]
+        llm_client=client,  # type: ignore[arg-type]
+        model=getattr(client, "model", "stub"),
         mode=args.mode,
         max_retries=args.max_retries,
     )

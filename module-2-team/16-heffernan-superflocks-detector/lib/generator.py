@@ -391,7 +391,7 @@ class SuperflocksAnalyzer:
             "fallback_coverage",
             "failure_clustering",
         )
-        by_name = {m.name: m for m in metrics}
+        by_name: dict[str, SuperflocksMetric] = {str(m.name): m for m in metrics}
         local_values: dict[str, float] = trace_metrics or {
             "top_agent_share": top_agent_share,
             "routing_gini": routing_gini,

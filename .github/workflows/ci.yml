@@ -116,7 +116,10 @@ jobs:
               module-2-team/23-plus-delta-feedback-format \
               module-3-organization/32-robbins-judge-7-culture \
               module-2-team/16-heffernan-superflocks-detector \
-              module-1-individual/06-yerkes-dodson-workload; do
+              module-1-individual/06-yerkes-dodson-workload \
+              module-3-organization/33-org-structure-matrix \
+              module-1-individual/09-motivation-traps \
+              module-2-team/21-glaser-conversation-steering; do
             echo "=== mypy: $pattern ==="
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done

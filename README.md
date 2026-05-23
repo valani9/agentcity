@@ -134,7 +134,7 @@ The library is built to ship:
 
 ## Status
 
-**Early.** Twenty-four patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
+**Early.** Twenty-seven patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
 
 - `agentcity.aar` (#30) — After-Action Review generator
 - `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
@@ -160,8 +160,11 @@ The library is built to ship:
 - `agentcity.robbins_culture` (#32) — Robbins & Judge 7-Characteristics Culture profile diagnostic
 - `agentcity.superflocks` (#16) — Heffernan/Muir Superflocks routing-fragility detector
 - `agentcity.yerkes_dodson` (#06) — Yerkes-Dodson Optimal Workload pressure-curve diagnostic
+- `agentcity.org_structure` (#33) — Galbraith/Mintzberg Org-Structure Matrix analyzer (third Module 3 pattern)
+- `agentcity.motivation_traps` (#09) — Saxberg 4 Motivation Traps diagnostic (Values / Self-Efficacy / Emotions / Attribution)
+- `agentcity.glaser_conversation` (#21) — Glaser Cortisol/Oxytocin Conversation Steering diagnostic
 
-10 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
+7 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
 
 ## License
 

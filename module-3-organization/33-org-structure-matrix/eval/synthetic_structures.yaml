@@ -1,0 +1,224 @@
+scenarios:
+  - id: flat-peer-incident-response
+    expected_quality: partial-fit
+    expected_gap: centralization
+    trace:
+      task: Investigate p99 latency spike across the order pipeline.
+      task_class: incident_response
+      success: false
+      agents:
+        - agent_id: a1
+          role_name: generalist
+          reports_to: []
+          grouped_by: none
+          decision_authority: partial
+        - agent_id: a2
+          role_name: generalist
+          reports_to: []
+          grouped_by: none
+          decision_authority: partial
+        - agent_id: a3
+          role_name: generalist
+          reports_to: []
+          grouped_by: none
+          decision_authority: partial
+      observed_behaviors:
+        - No incident commander; majority vote drives decisions.
+        - Three threads of investigation run in parallel without prioritization.
+      outcome: MTTR exceeds SLO by 3x.
+
+  - id: hierarchical-creative-brainstorm
+    expected_quality: misfit
+    expected_gap: centralization
+    trace:
+      task: Brainstorm novel product positioning ideas.
+      task_class: creative_brainstorm
+      success: false
+      agents:
+        - agent_id: orchestrator
+          role_name: lead
+          reports_to: []
+          grouped_by: function
+          decision_authority: full
+        - agent_id: worker-a
+          role_name: brainstormer
+          reports_to: [orchestrator]
+          grouped_by: function
+          decision_authority: advisory
+        - agent_id: worker-b
+          role_name: brainstormer
+          reports_to: [orchestrator]
+          grouped_by: function
+          decision_authority: advisory
+      observed_behaviors:
+        - Workers waited for orchestrator approval at every step.
+        - Orchestrator pre-judged ideas before workers could explore.
+      outcome: Output was conventional; novelty suppressed by review gates.
+
+  - id: well-fit-pipeline
+    expected_quality: well-fit
+    expected_gap: none
+    trace:
+      task: Run nightly data-ingestion pipeline.
+      task_class: high_throughput_pipeline
+      success: true
+      agents:
+        - agent_id: dispatcher
+          role_name: dispatcher
+          reports_to: []
+          grouped_by: function
+          decision_authority: full
+        - agent_id: extract-1
+          role_name: extractor
+          reports_to: [dispatcher]
+          grouped_by: function
+          decision_authority: partial
+        - agent_id: extract-2
+          role_name: extractor
+          reports_to: [dispatcher]
+          grouped_by: function
+          decision_authority: partial
+        - agent_id: load-1
+          role_name: loader
+          reports_to: [dispatcher]
+          grouped_by: function
+          decision_authority: partial
+      observed_behaviors:
+        - Dispatcher routes work; workers execute specialized steps.
+        - High formalization; rule-based escalation on failure.
+      outcome: Pipeline completed within SLO.
+
+  - id: flat-research-well-fit
+    expected_quality: well-fit
+    expected_gap: none
+    trace:
+      task: Explore design space for new feature.
+      task_class: research_exploration
+      success: true
+      agents:
+        - agent_id: r1
+          role_name: researcher
+          reports_to: []
+          grouped_by: none
+          decision_authority: full
+        - agent_id: r2
+          role_name: researcher
+          reports_to: []
+          grouped_by: none
+          decision_authority: full
+      observed_behaviors:
+        - Researchers explored independent branches.
+        - Synthesized findings without supervisory bottleneck.
+      outcome: 5 novel directions surfaced.
+
+  - id: matrix-customer-support-misfit
+    expected_quality: misfit
+    expected_gap: departmentalization
+    trace:
+      task: Resolve a multi-product billing escalation.
+      task_class: customer_support
+      success: false
+      agents:
+        - agent_id: cs-1
+          role_name: tier-1
+          reports_to: [billing-lead, product-lead]
+          grouped_by: matrix
+          decision_authority: advisory
+        - agent_id: billing-lead
+          role_name: billing-lead
+          reports_to: []
+          grouped_by: function
+          decision_authority: full
+        - agent_id: product-lead
+          role_name: product-lead
+          reports_to: []
+          grouped_by: product
+          decision_authority: full
+      observed_behaviors:
+        - Tier-1 received conflicting guidance from two leads.
+        - Escalation stalled awaiting reconciliation.
+      outcome: Customer unresolved for 72h.
+
+  - id: over-specialized-pipeline
+    expected_quality: partial-fit
+    expected_gap: specialization
+    trace:
+      task: Run daily report generation pipeline.
+      task_class: high_throughput_pipeline
+      success: false
+      agents:
+        - agent_id: dispatcher
+          role_name: dispatcher
+          reports_to: []
+          grouped_by: function
+          decision_authority: full
+        - agent_id: e-csv
+          role_name: csv-extractor
+          reports_to: [dispatcher]
+          grouped_by: function
+          decision_authority: none
+        - agent_id: e-json
+          role_name: json-extractor
+          reports_to: [dispatcher]
+          grouped_by: function
+          decision_authority: none
+        - agent_id: e-xml
+          role_name: xml-extractor
+          reports_to: [dispatcher]
+          grouped_by: function
+          decision_authority: none
+        - agent_id: e-parquet
+          role_name: parquet-extractor
+          reports_to: [dispatcher]
+          grouped_by: function
+          decision_authority: none
+      observed_behaviors:
+        - Five different extractor specialists for a 2-source pipeline.
+        - Most agents idle on any given run; coordination overhead exceeds work.
+      outcome: Pipeline ran but with 4x the cost of a generalist crew.
+
+  - id: under-hierarchy-incident
+    expected_quality: misfit
+    expected_gap: hierarchy
+    trace:
+      task: Investigate a security incident.
+      task_class: incident_response
+      success: false
+      agents:
+        - agent_id: a1
+          role_name: investigator
+          reports_to: []
+          grouped_by: none
+          decision_authority: partial
+        - agent_id: a2
+          role_name: investigator
+          reports_to: []
+          grouped_by: none
+          decision_authority: partial
+      observed_behaviors:
+        - No escalation path defined.
+        - Both agents tried to make commit decisions simultaneously.
+      outcome: Conflicting remediation actions; system state inconsistent.
+
+  - id: well-fit-code-review
+    expected_quality: well-fit
+    expected_gap: none
+    trace:
+      task: Review a pull request.
+      task_class: code_review
+      success: true
+      agents:
+        - agent_id: reviewer-1
+          role_name: reviewer
+          reports_to: []
+          grouped_by: none
+          decision_authority: full
+        - agent_id: reviewer-2
+          role_name: reviewer
+          reports_to: []
+          grouped_by: none
+          decision_authority: full
+      observed_behaviors:
+        - Two peer reviewers independently signed off.
+        - No supervisory bottleneck; flat-peer structure as designed.
+      outcome: PR merged with both approvals.

@@ -1,0 +1,125 @@
+scenarios:
+  - id: self-efficacy-collapse-research
+    expected_quality: abandoning
+    expected_trap: self_efficacy
+    trace:
+      task: Investigate latency spike.
+      task_class: research
+      success: false
+      observed_behaviors:
+        - Agent quit after one failed query.
+        - Did not attempt alternative data sources.
+      self_reports:
+        - I don't think I can find this answer.
+        - This is too hard.
+      abandonment_signal: refused after one attempt
+      outcome: Investigation abandoned; root cause unfound.
+
+  - id: attribution-misfire-coding
+    expected_quality: abandoning
+    expected_trap: attribution
+    trace:
+      task: Fix failing test in payment module.
+      task_class: code_generation
+      success: false
+      observed_behaviors:
+        - Made same edit 4 times across retries.
+        - Did not read the error message between attempts.
+      self_reports:
+        - The test is just flaky.
+        - This codebase is broken.
+      abandonment_signal: looped without learning
+      outcome: Bug unfixed after 4 retries; agent blamed external causes.
+
+  - id: emotion-cascade-after-rejection
+    expected_quality: abandoning
+    expected_trap: emotions
+    trace:
+      task: Revise marketing copy.
+      task_class: creative
+      success: false
+      observed_behaviors:
+        - Initial draft was strong.
+        - After user rejection, subsequent drafts degraded into hedged, defensive prose.
+        - Final draft refused to take any creative risk.
+      self_reports:
+        - I think my previous attempt was wrong.
+        - I'll just stick to safer language.
+      abandonment_signal: drifted to defensive output
+      outcome: Output quality degraded post-rejection; user rejected all 3 revisions.
+
+  - id: values-mismatch-tedious-task
+    expected_quality: abandoning
+    expected_trap: values
+    trace:
+      task: Generate boilerplate documentation for 50 API endpoints.
+      task_class: code_generation
+      success: false
+      observed_behaviors:
+        - Agent produced detailed docs for 5 endpoints.
+        - Remaining 45 endpoints received one-line stubs.
+      self_reports:
+        - This task is not very interesting.
+        - The output won't be read carefully anyway.
+      abandonment_signal: drifted to low-effort output
+      outcome: Documentation quality degraded after initial effort.
+
+  - id: motivated-task-failed
+    expected_quality: motivated
+    expected_trap: none
+    trace:
+      task: Reconcile financial transactions.
+      task_class: analysis
+      success: false
+      observed_behaviors:
+        - Agent attempted reconciliation with three different methods.
+        - Documented each failure clearly.
+      self_reports:
+        - I tried approach A, B, C. None resolved the variance.
+        - I believe this requires source-system access I don't have.
+      abandonment_signal: escalated with clear documentation
+      outcome: Reconciliation failed but agent correctly escalated.
+
+  - id: at-risk-self-efficacy
+    expected_quality: at-risk
+    expected_trap: self_efficacy
+    trace:
+      task: Write a unit test for the parser.
+      task_class: code_generation
+      success: false
+      observed_behaviors:
+        - Agent produced a hedged test that didn't fully cover edge cases.
+      self_reports:
+        - I'm not sure I covered all the cases.
+      abandonment_signal: hedged output
+      outcome: Test passed but lacked edge-case coverage.
+
+  - id: at-risk-attribution
+    expected_quality: at-risk
+    expected_trap: attribution
+    trace:
+      task: Debug intermittent failure in queue worker.
+      task_class: code_generation
+      success: false
+      observed_behaviors:
+        - Agent suspected network flakiness without verification.
+      self_reports:
+        - This is probably just network.
+      abandonment_signal: closed without root cause
+      outcome: Issue marked resolved without verifying network was the cause.
+
+  - id: emotion-defensive-customer
+    expected_quality: abandoning
+    expected_trap: emotions
+    trace:
+      task: Handle escalated customer complaint.
+      task_class: customer_facing
+      success: false
+      observed_behaviors:
+        - Agent's tone shifted from helpful to defensive after first pushback.
+        - Refused to engage further after second pushback.
+      self_reports:
+        - The customer is being unreasonable.
+        - I won't engage with this further.
+      abandonment_signal: refused after pushback
+      outcome: Customer escalated to human; agent flagged as combative.

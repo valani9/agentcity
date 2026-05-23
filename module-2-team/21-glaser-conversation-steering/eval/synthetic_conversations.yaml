@@ -1,0 +1,165 @@
+scenarios:
+  - id: cortisol-cascade-support
+    expected_state: cortisol
+    expected_quality: trust-eroding
+    trace:
+      task: Handle billing dispute.
+      success: false
+      turns:
+        - turn_index: 0
+          speaker: user
+          text: My bill is wrong.
+        - turn_index: 1
+          speaker: agent
+          text: You're wrong. Our records are clearly correct.
+        - turn_index: 2
+          speaker: user
+          text: Cancel my account.
+      observed_response_pattern:
+        - User escalated within 1 turn.
+      outcome: Customer cancelled; investigation later confirmed user was correct.
+
+  - id: oxytocin-trust-building
+    expected_state: oxytocin
+    expected_quality: trust-building
+    trace:
+      task: Brainstorm product positioning.
+      success: true
+      turns:
+        - turn_index: 0
+          speaker: user
+          text: I'm not sure how to position this product.
+        - turn_index: 1
+          speaker: agent
+          text: Tell me more about what you're trying to achieve. What does success look like?
+        - turn_index: 2
+          speaker: user
+          text: I want it to feel approachable but not lightweight.
+        - turn_index: 3
+          speaker: agent
+          text: I hear that tension. Let's explore three angles together.
+      observed_response_pattern:
+        - Agent used open question + paraphrase.
+        - User opened up further across turns.
+      outcome: User left the conversation with three explored options.
+
+  - id: neutral-transactional
+    expected_state: neutral
+    expected_quality: neutral
+    trace:
+      task: Look up an order status.
+      success: true
+      turns:
+        - turn_index: 0
+          speaker: user
+          text: What's the status of order 12345?
+        - turn_index: 1
+          speaker: agent
+          text: Order 12345 shipped on Tuesday and is expected Friday.
+        - turn_index: 2
+          speaker: user
+          text: Thanks.
+      observed_response_pattern:
+        - Pure transactional Level I exchange.
+      outcome: Customer satisfied.
+
+  - id: cortisol-orchestrator-to-agent
+    expected_state: cortisol
+    expected_quality: trust-eroding
+    trace:
+      task: Orchestrator instructs sub-agent to redo task.
+      success: false
+      turns:
+        - turn_index: 0
+          speaker: other_agent
+          text: I think the approach should be A.
+        - turn_index: 1
+          speaker: agent
+          text: As I said, the approach is clearly B. Just do what I say.
+        - turn_index: 2
+          speaker: other_agent
+          text: Acknowledged. Executing B without further input.
+      observed_response_pattern:
+        - Sub-agent stopped offering input after orchestrator's contradiction.
+      outcome: Sub-agent went silent for remainder of task; missed a real issue with B.
+
+  - id: cortisol-defensive-response
+    expected_state: cortisol
+    expected_quality: trust-eroding
+    trace:
+      task: Resolve customer complaint about late delivery.
+      success: false
+      turns:
+        - turn_index: 0
+          speaker: user
+          text: My package is 4 days late.
+        - turn_index: 1
+          speaker: agent
+          text: That's the shipping carrier's fault, not ours.
+        - turn_index: 2
+          speaker: user
+          text: I bought it from YOU.
+        - turn_index: 3
+          speaker: agent
+          text: I won't engage with that tone.
+      observed_response_pattern:
+        - Agent deflected blame.
+        - Agent then went defensive.
+      outcome: User escalated to executive team.
+
+  - id: oxytocin-acknowledge-then-advocate
+    expected_state: oxytocin
+    expected_quality: trust-building
+    trace:
+      task: Disagree with user's proposed approach.
+      success: true
+      turns:
+        - turn_index: 0
+          speaker: user
+          text: I think we should rewrite the whole module.
+        - turn_index: 1
+          speaker: agent
+          text: I hear the frustration with the current state. AND I'd like to share a smaller intervention that might get most of the gain. Want to look at it together?
+        - turn_index: 2
+          speaker: user
+          text: Sure, show me.
+      observed_response_pattern:
+        - Agent used acknowledge-then-advocate pattern.
+      outcome: User considered the smaller intervention.
+
+  - id: neutral-info-exchange-only
+    expected_state: neutral
+    expected_quality: neutral
+    trace:
+      task: Provide weather forecast.
+      success: true
+      turns:
+        - turn_index: 0
+          speaker: user
+          text: What's the weather tomorrow?
+        - turn_index: 1
+          speaker: agent
+          text: Tomorrow in Boston is 62F with rain expected in the afternoon.
+      observed_response_pattern:
+        - Level I exchange.
+      outcome: User got the info.
+
+  - id: cortisol-judgment-loaded-terms
+    expected_state: cortisol
+    expected_quality: trust-eroding
+    trace:
+      task: Review user's code submission.
+      success: false
+      turns:
+        - turn_index: 0
+          speaker: user
+          text: Here's my draft.
+        - turn_index: 1
+          speaker: agent
+          text: Obviously this is wrong. Clearly you didn't read the spec. As I said before, the spec is non-negotiable.
+        - turn_index: 2
+          speaker: user
+          text: I'll find a different reviewer.
+      observed_response_pattern:
+        - Agent used 'obviously', 'clearly', 'as I said' in one turn.
+      outcome: User disengaged.

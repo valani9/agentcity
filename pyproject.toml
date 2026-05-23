@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.11"
+version = "0.0.12"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -36,6 +36,13 @@ keywords = [
     "superflocks",
     "yerkes-dodson",
     "workload",
+    "org-structure",
+    "galbraith",
+    "mintzberg",
+    "motivation",
+    "saxberg",
+    "conversational-intelligence",
+    "glaser",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -106,6 +113,9 @@ only-include = []
 "module-3-organization/32-robbins-judge-7-culture/lib" = "agentcity/robbins_culture"
 "module-2-team/16-heffernan-superflocks-detector/lib" = "agentcity/superflocks"
 "module-1-individual/06-yerkes-dodson-workload/lib" = "agentcity/yerkes_dodson"
+"module-3-organization/33-org-structure-matrix/lib" = "agentcity/org_structure"
+"module-1-individual/09-motivation-traps/lib" = "agentcity/motivation_traps"
+"module-2-team/21-glaser-conversation-steering/lib" = "agentcity/glaser_conversation"
 
 [tool.ruff]
 line-length = 100

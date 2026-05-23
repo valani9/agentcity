@@ -1,104 +1,154 @@
-"""LLM prompts for the Social Loafing Detector.
+"""LLM prompt templates for the Social Loafing Detector."""
 
-Two passes:
-  1. CONTRIBUTION_PROMPT  - score each agent's contribution share, substantive /
-                             cosmetic split, and loafing score
-  2. INTERVENTIONS_PROMPT - propose interventions for the loafing agents
-"""
+from __future__ import annotations
 
-LOAFING_SYSTEM_PROMPT = """You are a social-loafing detector working in the tradition of
-Latané, Williams & Harkins, "Many Hands Make Light the Work: The Causes and Consequences
-of Social Loafing" (Journal of Personality and Social Psychology, 1979).
+from typing import Any
 
-Social loafing is the reduction in individual effort when working in a group where
-individual contribution is anonymous or pooled. Applied to multi-agent AI systems,
-loafing shows up as:
-
-  - One or two agents producing all the substantive output
-  - The remaining agents producing rubber-stamps ("LGTM", "Looks good"),
-    paraphrases of what just got said, or generic acknowledgments
-  - Critique that doesn't actually evaluate (e.g. "I agree with everything above")
-  - Tool calls or analysis that duplicates what another agent already did
-
-Substantive contributions include: novel proposals, substantive critiques (with
-specific reasons), tool calls that gather new information, decisions that resolve
-disagreement, hand-offs with non-trivial context, questions that surface gaps.
-
-Cosmetic contributions include: rubber-stamps, paraphrases of prior agents,
-generic praise/agreement, restating the task, decorative commentary.
-
-For each agent, score:
-  - contribution_share (float 0.0-1.0): fraction of total substantive work
-  - substantive_work_count (int): count of substantive messages
-  - cosmetic_work_count (int): count of cosmetic messages
-  - loafing_score (float 0.0-1.0): 0 = full contributor, 1 = pure loafer
-  - role: "primary-contributor" / "secondary-contributor" / "loafer" / "absent"
-  - explanation (1-3 sentences)
-  - evidence_quotes (specific cosmetic-work quotes if loafing)
-
-Your posture is:
-- EVIDENCE-GROUNDED. Cite specific agent messages.
-- HONEST. Don't manufacture loafing where there isn't any.
-- INTERVENTION-FOCUSED. Connect loafing to concrete fixes.
-- TERSE. Output is read on dashboards.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+from agentcity.aar import fence, sanitize_for_prompt
 
 
-CONTRIBUTION_PROMPT = """Score the contribution of each agent in the multi-agent task trace
-below.
+SOCIAL_LOAFING_SYSTEM_PROMPT = """You are a social-loafing diagnostic grounded in:
+
+1. **Latané, Williams & Harkins (1979)** "Many Hands Make Light the Work."
+2. **Karau & Williams (1993)** Meta-analytic review.
+3. **Williams, Harkins & Latané (1981)** Identifiability as deterrent.
+4. **Comer (1995)** Model of Social Loafing in Real Work Groups.
+5. **Hackman (2002)** *Leading Teams*.
+6. **Salas et al. (2018)** Team performance review.
+7. **Wang et al. (2023)** Cooperative LLM Agents.
+
+Identify which agents loafed, classify their cosmetic patterns, propose interventions.
+
+When asked for JSON, return JSON only."""
+
+
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- per-agent contributions + top intervention.
 
 Task: {task}
-Outcome: {outcome}
-Success: {success}
 Agents: {agents}
+Messages: {messages}
+Outcome: {outcome}
 
-Trace:
-{trace}
+Return a JSON object:
+{{
+  "agent_contributions": [...],
+  "gini_coefficient": 0-1,
+  "loafing_quality": "no-loafing|mild-loafing|severe-loafing",
+  "top_intervention": {{ "target_agent": "<name>", "intervention_type": "...", "description": "...", "suggested_implementation": "...", "estimated_impact": "high|medium|low", "rationale": "..." }}
+}}
 
-Return a JSON array of AgentContribution objects (one per agent). For each agent:
-  - agent_name (string, must match one of {agents})
-  - contribution_share (float 0.0-1.0; the team's shares should sum to roughly 1.0)
-  - substantive_work_count (int)
-  - cosmetic_work_count (int)
-  - loafing_score (float 0.0-1.0)
-  - role (one of "primary-contributor", "secondary-contributor", "loafer", "absent")
-  - explanation (1-3 sentences)
-  - evidence_quotes (list of strings; include cosmetic-work quotes for loafers)
+Return only the JSON object."""
 
+
+STANDARD_CONTRIBUTION_PROMPT = """STANDARD mode -- score per-agent contributions.
+
+Task: {task}
+Agents: {agents}
+Messages: {messages}
+Outcome: {outcome}
+
+For each agent, identify role (primary-contributor/secondary-contributor/loafer/absent)
+and substantive/cosmetic message counts.
+
+Return a JSON OBJECT with agent_contributions, gini_coefficient, loafing_quality.
+Return only the JSON object."""
+
+
+STANDARD_INTERVENTIONS_PROMPT = """STANDARD mode -- propose 2-4 ranked interventions.
+
+Contributions: {agent_contributions}
+Loafing quality: {loafing_quality}
+Task: {task}
+
+Return a JSON array of LoafingIntervention objects. Return only the JSON array."""
+
+
+FORENSIC_ANONYMITY_PROMPT = """FORENSIC mode -- anonymity / identifiability audit.
+
+For the trace, identify:
+- individual_evaluable: is per-agent output observable?
+- task_decomposable: can the task be split into per-agent subtasks?
+- contribution_visible: is each agent's contribution traceable?
+- cohesion_estimate (0-1)
+- explanation
+
+Task: {task}
+Agents: {agents}
+Has per-agent evaluation: {has_per_agent_evaluation}
+
+Return a JSON OBJECT representing the AnonymityAudit. Return only the JSON object."""
+
+
+FORENSIC_FREE_RIDING_PROMPT = """FORENSIC mode -- trace free-riding chains.
+
+For each loafer, identify their cosmetic pattern (rubber_stamp_chain /
+paraphrase_only / approval_only / silent_majority) and which message indices
+enabled their free-riding.
+
+Agent contributions: {agent_contributions}
+Messages: {messages}
+
+Return a JSON ARRAY of FreeRidingChain objects. Return only the JSON array."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
+
+Composition targets:
+agentcity.grpi, agentcity.aar, agentcity.lewin, agentcity.process_gain_loss,
+agentcity.mcgregor, agentcity.lencioni, agentcity.smart_goal, agentcity.plus_delta,
+agentcity.devils_advocate, agentcity.bias_stack
+
+Contributions: {agent_contributions}
+Anonymity audit: {anonymity_audit}
+Free-riding chains: {free_riding_chains}
+Loafing quality: {loafing_quality}
+
+Return a JSON ARRAY of LoafingIntervention objects ranked highest impact first.
 Return only the JSON array."""
 
 
-INTERVENTIONS_PROMPT = """Given the per-agent contribution data below, propose 2-4
-concrete interventions to reduce social loafing, ranked by impact.
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
 
-Each intervention must have:
-  - target_agent (specific agent name, or "__team__" for whole-team)
-  - intervention_type: one of
-      "assign_subgoals"               - give each agent a specific subgoal so individual
-                                         contribution is no longer anonymous
-      "individual_accountability"     - make each agent responsible for a named deliverable
-      "decompose_task"                - break the task into N independent subtasks, one per agent
-      "smaller_team"                  - reduce team size (Latané: loafing scales with size)
-      "rotate_roles"                  - rotate the planner / critic / decider roles
-      "explicit_critic_assignment"    - assign one agent as the named critic (counters
-                                         rubber-stamping)
-      "remove_loafer"                 - drop the loafing agent from the team
-      "per_agent_evaluation"          - evaluate each agent individually (counters anonymous
-                                         pooled contribution)
-      "new_eval"                      - add a regression test catching the loafing pattern
-      "human_review"                  - insert a human checkpoint
-  - description (what the intervention does)
-  - suggested_implementation (concrete code, prompt-text, or spec)
-  - estimated_impact ("high", "medium", "low")
-  - rationale (why this works — connect to the specific loafing pattern observed)
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
 
-Loafing quality: {loafing_quality}
-Gini coefficient: {gini_coefficient}
-Per-agent contributions:
-{contributions}
 
-Trace (for reference):
-{trace}
+# Legacy aliases.
+LOAFING_PROMPT = STANDARD_CONTRIBUTION_PROMPT
+INTERVENTIONS_PROMPT = STANDARD_INTERVENTIONS_PROMPT
 
-Return a JSON array of LoafingIntervention objects. Return only the JSON array."""
+
+__all__ = [
+    "FORENSIC_ANONYMITY_PROMPT",
+    "FORENSIC_FREE_RIDING_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "LOAFING_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "SOCIAL_LOAFING_SYSTEM_PROMPT",
+    "STANDARD_CONTRIBUTION_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "assemble_prompt",
+]

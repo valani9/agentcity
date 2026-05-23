@@ -119,6 +119,7 @@ agentcity-mcgregor = "agentcity.mcgregor.cli:main"
 agentcity-vroom = "agentcity.vroom_expectancy.cli:main"
 agentcity-grpi = "agentcity.grpi.cli:main"
 agentcity-process = "agentcity.process_gain_loss.cli:main"
+agentcity-loafing = "agentcity.social_loafing.cli:main"
 
 [build-system]
 requires = ["hatchling"]

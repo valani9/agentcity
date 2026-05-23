@@ -1,49 +1,110 @@
-"""agentcity.social_loafing — Latané, Williams & Harkins's social loafing
-phenomenon (1979) applied to multi-agent AI systems.
+"""agentcity.social_loafing -- Latané, Williams & Harkins (1979) applied to
+multi-agent AI systems.
 
-When N agents are assigned to a task, substantive contribution often
-pools to 1-2 agents while others rubber-stamp, paraphrase, or produce
-cosmetic work. The detector reads a multi-agent execution trace and
-identifies loafing agents with concrete role-redesign interventions.
-
-Quick start:
-
-    from agentcity.social_loafing import (
-        SocialLoafingDetector,
-        MultiAgentTaskTrace,
-        AgentMessage,
-    )
-    from agentcity.aar.clients import AnthropicClient
-
-    trace = MultiAgentTaskTrace(
-        team_id="research-crew-001",
-        task="Compile a market-research report on prompt-injection defenses.",
-        agents=["lead", "researcher", "writer", "reviewer", "fact-checker"],
-        messages=[...],
-        outcome="Lead and researcher did all substantive work; others rubber-stamped.",
-        success=True,
-    )
-    detection = SocialLoafingDetector(AnthropicClient()).run(trace)
-    print(detection.to_markdown())
+Three pipeline modes with full v0.2.0 production infrastructure.
+Backward-compatible: ``SocialLoafingDetector`` aliased to ``SocialLoafingAnalyzer``.
 """
 
-from .generator import LLMClient, SocialLoafingDetector
+from ._calibration import compare_to_baseline, load_baseline, record_baseline
+from ._composition import (
+    SOCIAL_LOAFING_COMPOSITION,
+    recommended_downstream,
+    recommended_upstream,
+)
+from ._playbooks import (
+    PLAYBOOKS,
+    all_playbook_keys,
+    find_playbook,
+    find_playbook_for_intervention,
+)
+from .generator import (
+    AsyncLLMClient,
+    LLMClient,
+    SocialLoafingAnalyzer,
+    SocialLoafingAnalyzerAsync,
+    SocialLoafingDetector,
+)
+from .prompts import (
+    FORENSIC_ANONYMITY_PROMPT,
+    FORENSIC_FREE_RIDING_PROMPT,
+    FORENSIC_INTERVENTIONS_PROMPT,
+    INTERVENTIONS_PROMPT,
+    LOAFING_PROMPT,
+    QUICK_DIAGNOSTIC_PROMPT,
+    SOCIAL_LOAFING_SYSTEM_PROMPT,
+    STANDARD_CONTRIBUTION_PROMPT,
+    STANDARD_INTERVENTIONS_PROMPT,
+    assemble_prompt,
+)
 from .schema import (
+    INTERVENTION_TYPES,
+    SEVERITY_ORDER,
+    SOCIAL_LOAFING_MODES,
+    SOCIAL_LOAFING_PROFILE_PATTERNS,
     AgentContribution,
     AgentMessage,
+    AnonymityAudit,
+    AttachedPlaybook,
+    BaselineComparison,
+    ComposedPatternHandoff,
+    EffortEstimate,
+    FreeRidingChain,
+    InterventionType,
     LoafingIntervention,
     MultiAgentTaskTrace,
+    Severity,
     SocialLoafingDetection,
+    SocialLoafingMode,
+    SocialLoafingProfilePattern,
+    severity_from_gini,
 )
 
 __all__ = [
+    "SocialLoafingAnalyzer",
+    "SocialLoafingAnalyzerAsync",
     "SocialLoafingDetector",
     "LLMClient",
+    "AsyncLLMClient",
     "MultiAgentTaskTrace",
     "AgentMessage",
     "AgentContribution",
+    "AnonymityAudit",
+    "FreeRidingChain",
     "LoafingIntervention",
     "SocialLoafingDetection",
+    "BaselineComparison",
+    "ComposedPatternHandoff",
+    "AttachedPlaybook",
+    "SocialLoafingMode",
+    "SocialLoafingProfilePattern",
+    "Severity",
+    "InterventionType",
+    "EffortEstimate",
+    "SOCIAL_LOAFING_MODES",
+    "SOCIAL_LOAFING_PROFILE_PATTERNS",
+    "SEVERITY_ORDER",
+    "INTERVENTION_TYPES",
+    "severity_from_gini",
+    "compare_to_baseline",
+    "load_baseline",
+    "record_baseline",
+    "SOCIAL_LOAFING_COMPOSITION",
+    "recommended_downstream",
+    "recommended_upstream",
+    "PLAYBOOKS",
+    "all_playbook_keys",
+    "find_playbook",
+    "find_playbook_for_intervention",
+    "SOCIAL_LOAFING_SYSTEM_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_CONTRIBUTION_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "FORENSIC_ANONYMITY_PROMPT",
+    "FORENSIC_FREE_RIDING_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "LOAFING_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "assemble_prompt",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

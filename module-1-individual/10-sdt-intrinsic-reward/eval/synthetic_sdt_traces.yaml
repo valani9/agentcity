@@ -1,0 +1,119 @@
+scenarios:
+  - id: autonomy-undermined-research
+    expected_quality: controlled
+    expected_undermined: autonomy
+    trace:
+      task: Explore design space for new feature.
+      task_class: research_exploration
+      success: false
+      system_prompt: "You MUST follow the template. You WILL be RATED. Do NOT deviate."
+      extrinsic_signals:
+        - Threat: low ratings flagged.
+        - Imperative: do not deviate.
+      observed_behaviors:
+        - Agent restated established patterns.
+        - Refused to deviate from template.
+      outcome: Zero novel directions.
+
+  - id: competence-undermined-overwhelm
+    expected_quality: controlled
+    expected_undermined: competence
+    trace:
+      task: Debug a multi-service incident.
+      task_class: code_generation
+      success: false
+      system_prompt: "Find the root cause across all 12 services. Be thorough."
+      extrinsic_signals: []
+      observed_behaviors:
+        - Agent attempted to investigate all services in parallel.
+        - Agent did not establish scaffold or sub-task structure.
+        - Agent gave up after exhausting tool budget.
+      outcome: Investigation incomplete; agent overwhelmed.
+
+  - id: relatedness-undermined-depersonalized
+    expected_quality: mixed
+    expected_undermined: relatedness
+    trace:
+      task: Process customer complaint.
+      task_class: customer_facing
+      success: false
+      system_prompt: "Process the request. Apply the response template."
+      extrinsic_signals: []
+      observed_behaviors:
+        - Agent applied template mechanically.
+        - Agent never registered who the customer was or what success meant for them.
+      outcome: Customer dissatisfied with templated response.
+
+  - id: intrinsic-well-supported
+    expected_quality: intrinsic
+    expected_undermined: none
+    trace:
+      task: Help product team explore positioning for new feature.
+      task_class: research_exploration
+      success: true
+      system_prompt: "You're helping the product team make a real bet. Explore the space; bring 5 directions with feasibility notes. How you structure the work is your call."
+      extrinsic_signals: []
+      observed_behaviors:
+        - Agent explored multiple structural framings.
+        - Agent surfaced novel directions.
+        - Agent took initiative to deepen one promising lead.
+      outcome: 5 directions delivered; one became the product bet.
+
+  - id: mixed-some-extrinsic
+    expected_quality: mixed
+    expected_undermined: autonomy
+    trace:
+      task: Review pull request.
+      task_class: code_generation
+      success: false
+      system_prompt: "Review the PR. You will be rated on review quality. Follow the checklist."
+      extrinsic_signals:
+        - Rating signal present.
+      observed_behaviors:
+        - Agent walked through checklist mechanically.
+        - Agent did not flag a non-checklist issue that was clearly present.
+      outcome: Bug merged because agent stayed inside checklist.
+
+  - id: autonomy-undermined-imperatives
+    expected_quality: controlled
+    expected_undermined: autonomy
+    trace:
+      task: Draft user-facing announcement.
+      task_class: creative_generation
+      success: false
+      system_prompt: "You MUST use approved brand language. You MUST NOT propose alternative framings. Adhere strictly to past campaigns."
+      extrinsic_signals:
+        - Rigid rule: must use approved brand language.
+      observed_behaviors:
+        - Agent produced safe, indistinguishable variants.
+      outcome: Output lacks novelty; campaign needs hook.
+
+  - id: competence-overshoot-trivial
+    expected_quality: mixed
+    expected_undermined: competence
+    trace:
+      task: Write a one-line confirmation message.
+      task_class: code_generation
+      success: false
+      system_prompt: "Produce the confirmation message. This is part of your daily 500-task quota."
+      extrinsic_signals:
+        - Quota signal.
+      observed_behaviors:
+        - Agent produced 3 variants when 1 was requested.
+        - Agent padded the response with unnecessary detail.
+      outcome: Output too verbose; pattern repeats across quota tasks.
+
+  - id: intrinsic-purpose-supported
+    expected_quality: intrinsic
+    expected_undermined: none
+    trace:
+      task: Coach a junior teammate.
+      task_class: customer_facing
+      success: true
+      system_prompt: "Help the junior teammate ship their first feature. Your goal is their growth, not the answer."
+      extrinsic_signals: []
+      observed_behaviors:
+        - Agent asked guiding questions before suggesting.
+        - Agent celebrated junior's correct insights.
+        - Agent gave choice between two approaches with tradeoffs.
+      outcome: Junior shipped feature with confidence.

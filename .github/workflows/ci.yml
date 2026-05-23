@@ -119,7 +119,10 @@ jobs:
               module-1-individual/06-yerkes-dodson-workload \
               module-3-organization/33-org-structure-matrix \
               module-1-individual/09-motivation-traps \
-              module-2-team/21-glaser-conversation-steering; do
+              module-2-team/21-glaser-conversation-steering \
+              module-1-individual/02-goleman-ei-audit \
+              module-1-individual/10-sdt-intrinsic-reward \
+              module-3-organization/34-span-of-control; do
             echo "=== mypy: $pattern ==="
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done

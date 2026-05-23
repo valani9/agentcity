@@ -11,7 +11,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | #   | Pattern                                | OB Framework / Author             | Agent Failure Addressed                                                 | Status |
 |-----|----------------------------------------|-----------------------------------|-------------------------------------------------------------------------|--------|
 | 01  | **Lewin's Formula (B = f(I,E))**       | Kurt Lewin                        | Misplaced effort to "fix the model" instead of the environment          | 🟢 shipped |
-| 02  | Goleman 4-Domain EI Audit              | Daniel Goleman                    | Agent lacks emotional self-awareness / social awareness in conversation | ⚪ planned |
+| 02  | **Goleman 4-Domain EI Audit**          | Goleman / Boyatzis / McKee        | Agent lacks emotional self-awareness / social awareness in conversation | 🟢 shipped |
 | 03  | **Johari Window Self-Audit**           | Luft & Ingham                     | Confabulation (Blind), silent reasoning (Hidden), latent capability (Unknown) | 🟢 shipped |
 | 04  | DANVA-style Emotion Reader             | Nowicki & Duke                    | Agent cannot read user emotion from text                                | ⚪ planned |
 | 05  | Cognitive Reappraisal Module           | Gross / Lazarus                   | Agent emotional suppression vs adaptive reframing under failure         | ⚪ planned |
@@ -19,7 +19,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 07  | HEXACO Personality Profile             | Lee & Ashton                      | Mismatched agent personality for task type; safety = H-factor           | ⚪ planned |
 | 08  | **Strengths-as-Weaknesses Detector**   | Adam Grant                        | Strength overuse (e.g., high agreeableness → executes DROP TABLE)       | 🟢 shipped |
 | 09  | **4 Motivation Traps Diagnostic**      | Bror Saxberg                      | Agent task abandonment — Values / Self-Efficacy / Emotions / Attribution | 🟢 shipped |
-| 10  | SDT Intrinsic Reward Shaping           | Deci & Ryan                       | Over-reliance on extrinsic reward signal vs Knowledge / Accomplishment / Stimulation | ⚪ planned |
+| 10  | **SDT Intrinsic Reward Shaping**       | Deci & Ryan                       | Over-reliance on extrinsic reward signal vs Autonomy / Competence / Relatedness | 🟢 shipped |
 | 11  | **McGregor Theory X/Y Orchestrator Mode** | Douglas McGregor (1960)        | Over-micro-managed sub-agents (X) vs under-supervised (Y) — find the mode | 🟢 shipped |
 | 12  | Vroom Expectancy Calculator            | Victor Vroom                      | Agent commits to tasks where Expectancy × Instrumentality × Valence ≈ 0 | ⚪ planned |
 
@@ -53,7 +53,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 31  | **Schein's Iceberg Culture Audit**     | Edgar Schein (1985)               | Agent culture drift — system prompt vs observed behavior vs training-baked assumptions | 🟢 shipped |
 | 32  | **7-Characteristics Culture Diagnostic** | Robbins & Judge (2017)          | Innovation / Detail / Outcome / People / Team / Aggressiveness / Stability culture profiling | 🟢 shipped |
 | 33  | **Org-Structure Matrix Analyzer**      | Galbraith / Mintzberg             | Functional vs Divisional vs Matrix agent architectures — fitness check  | 🟢 shipped |
-| 34  | Span-of-Control / Centralization Calculator | McShane & Von Glinow         | When to flatten orchestrator / decentralize agent decisions             | ⚪ planned |
+| 34  | **Span-of-Control / Centralization Calculator** | Galbraith / Mintzberg    | When to flatten orchestrator / decentralize agent decisions             | 🟢 shipped |
 
 ---
 
@@ -86,9 +86,12 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 25. **🟢 #33 Org-Structure Matrix Analyzer** — third Module 3 pattern; structural-fit diagnostic. **Shipped at v0.0.12.**
 26. **🟢 #09 4 Motivation Traps (Saxberg)** — task-abandonment diagnostic (Values / Self-Efficacy / Emotions / Attribution). **Shipped at v0.0.12.**
 27. **🟢 #21 Glaser Cortisol/Oxytocin Conversation Steering** — phrasing-level conversation diagnostic. **Shipped at v0.0.12.**
+28. **🟢 #02 Goleman 4-Domain EI Audit** — emotional-intelligence 2x2 (SELF/OTHER × RECOGNITION/REGULATION). **Shipped at v0.0.13.**
+29. **🟢 #10 Deci & Ryan SDT Intrinsic Reward Shaping** — reward-shaping diagnostic (autonomy / competence / relatedness). **Shipped at v0.0.13.**
+30. **🟢 #34 Span-of-Control / Centralization Calculator** — fourth Module 3 pattern; deterministic structural-load metrics. **Shipped at v0.0.13.**
 
-Then the remaining 7 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
+Then the remaining 4 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
 
 ---
 
-*Last updated: 2026-05-23 — Twenty-seven patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13, #24, #25, #23), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), attribution (#01), trust-balance (#19), per-agent contribution (#15), debate-dynamics (#26), process-gain/loss (#14), orchestration-design (#11), strength-overuse (#08), organizational-culture (#31, #32), organizational-structure (#33), routing-fragility (#16), workload-pressure (#06), motivation (#09), and conversation-steering (#21).*
+*Last updated: 2026-05-23 — Thirty patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13, #24, #25, #23), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), attribution (#01), trust-balance (#19), per-agent contribution (#15), debate-dynamics (#26), process-gain/loss (#14), orchestration-design (#11), strength-overuse (#08), organizational-culture (#31, #32), organizational-structure (#33, #34), routing-fragility (#16), workload-pressure (#06), motivation (#09, #10), conversation-steering (#21), and emotional-intelligence (#02).*

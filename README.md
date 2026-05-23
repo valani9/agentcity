@@ -134,7 +134,7 @@ The library is built to ship:
 
 ## Status
 
-**Early.** Twenty-seven patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
+**Early.** Thirty patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
 
 - `agentcity.aar` (#30) — After-Action Review generator
 - `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
@@ -163,8 +163,11 @@ The library is built to ship:
 - `agentcity.org_structure` (#33) — Galbraith/Mintzberg Org-Structure Matrix analyzer (third Module 3 pattern)
 - `agentcity.motivation_traps` (#09) — Saxberg 4 Motivation Traps diagnostic (Values / Self-Efficacy / Emotions / Attribution)
 - `agentcity.glaser_conversation` (#21) — Glaser Cortisol/Oxytocin Conversation Steering diagnostic
+- `agentcity.goleman_ei` (#02) — Goleman/Boyatzis 4-Domain Emotional Intelligence audit (SELF/OTHER × RECOGNITION/REGULATION)
+- `agentcity.sdt_reward` (#10) — Deci & Ryan Self-Determination Theory intrinsic reward shaping (autonomy / competence / relatedness)
+- `agentcity.span_of_control` (#34) — deterministic Span-of-Control / Centralization calculator (fourth Module 3 pattern)
 
-7 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
+4 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
 
 ## License
 

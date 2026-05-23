@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.12"
+version = "0.0.13"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -43,6 +43,12 @@ keywords = [
     "saxberg",
     "conversational-intelligence",
     "glaser",
+    "goleman",
+    "emotional-intelligence",
+    "self-determination-theory",
+    "deci-ryan",
+    "span-of-control",
+    "centralization",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -116,6 +122,9 @@ only-include = []
 "module-3-organization/33-org-structure-matrix/lib" = "agentcity/org_structure"
 "module-1-individual/09-motivation-traps/lib" = "agentcity/motivation_traps"
 "module-2-team/21-glaser-conversation-steering/lib" = "agentcity/glaser_conversation"
+"module-1-individual/02-goleman-ei-audit/lib" = "agentcity/goleman_ei"
+"module-1-individual/10-sdt-intrinsic-reward/lib" = "agentcity/sdt_reward"
+"module-3-organization/34-span-of-control/lib" = "agentcity/span_of_control"
 
 [tool.ruff]
 line-length = 100

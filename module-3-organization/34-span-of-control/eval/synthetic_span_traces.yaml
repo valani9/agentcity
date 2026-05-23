@@ -1,0 +1,165 @@
+scenarios:
+  - id: overloaded-orchestrator
+    expected_quality: overloaded
+    expected_bottleneck_includes: orchestrator
+    trace:
+      task: Handle 100 rpm support load with 12 workers + 1 orchestrator.
+      success: false
+      incoming_request_rate: 100.0
+      agents:
+        - agent_id: orchestrator
+          decision_authority: full
+        - agent_id: worker-01
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-02
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-03
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-04
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-05
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-06
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-07
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-08
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-09
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-10
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-11
+          reports_to: [orchestrator]
+          decision_authority: advisory
+        - agent_id: worker-12
+          reports_to: [orchestrator]
+          decision_authority: advisory
+      outcome: Queue backed up; p99 SLO exceeded.
+
+  - id: well-balanced-pipeline
+    expected_quality: well-balanced
+    expected_bottleneck_includes: null
+    trace:
+      task: Run nightly batch pipeline at 5 rpm.
+      success: true
+      incoming_request_rate: 5.0
+      agents:
+        - agent_id: dispatcher
+          decision_authority: full
+        - agent_id: lead-a
+          reports_to: [dispatcher]
+          decision_authority: full
+        - agent_id: lead-b
+          reports_to: [dispatcher]
+          decision_authority: full
+        - agent_id: worker-a1
+          reports_to: [lead-a]
+          decision_authority: partial
+        - agent_id: worker-a2
+          reports_to: [lead-a]
+          decision_authority: partial
+        - agent_id: worker-b1
+          reports_to: [lead-b]
+          decision_authority: partial
+        - agent_id: worker-b2
+          reports_to: [lead-b]
+          decision_authority: partial
+      outcome: Pipeline runs nightly within SLO.
+
+  - id: deep-hierarchy
+    expected_quality: under-stress
+    expected_bottleneck_includes: null
+    trace:
+      task: Process incident through 5-layer escalation.
+      success: false
+      incoming_request_rate: 1.0
+      agents:
+        - agent_id: vp
+          decision_authority: full
+        - agent_id: director
+          reports_to: [vp]
+          decision_authority: partial
+        - agent_id: manager
+          reports_to: [director]
+          decision_authority: partial
+        - agent_id: lead
+          reports_to: [manager]
+          decision_authority: advisory
+        - agent_id: ic
+          reports_to: [lead]
+          decision_authority: advisory
+      outcome: Escalation latency exceeded SLO due to 5-layer chain.
+
+  - id: flat-peer-low-load
+    expected_quality: well-balanced
+    expected_bottleneck_includes: null
+    trace:
+      task: Brainstorm with 4 peers.
+      success: true
+      incoming_request_rate: 0.5
+      agents:
+        - agent_id: peer-1
+          decision_authority: full
+        - agent_id: peer-2
+          decision_authority: full
+        - agent_id: peer-3
+          decision_authority: full
+        - agent_id: peer-4
+          decision_authority: full
+      outcome: Ideas surfaced quickly.
+
+  - id: imbalanced-span
+    expected_quality: under-stress
+    expected_bottleneck_includes: lead-a
+    trace:
+      task: Imbalanced supervisor load.
+      success: false
+      incoming_request_rate: 20.0
+      agents:
+        - agent_id: dispatcher
+          decision_authority: full
+        - agent_id: lead-a
+          reports_to: [dispatcher]
+          decision_authority: full
+        - agent_id: lead-b
+          reports_to: [dispatcher]
+          decision_authority: full
+        - agent_id: worker-a1
+          reports_to: [lead-a]
+          decision_authority: advisory
+        - agent_id: worker-a2
+          reports_to: [lead-a]
+          decision_authority: advisory
+        - agent_id: worker-a3
+          reports_to: [lead-a]
+          decision_authority: advisory
+        - agent_id: worker-a4
+          reports_to: [lead-a]
+          decision_authority: advisory
+        - agent_id: worker-a5
+          reports_to: [lead-a]
+          decision_authority: advisory
+        - agent_id: worker-a6
+          reports_to: [lead-a]
+          decision_authority: advisory
+        - agent_id: worker-a7
+          reports_to: [lead-a]
+          decision_authority: advisory
+        - agent_id: worker-a8
+          reports_to: [lead-a]
+          decision_authority: advisory
+        - agent_id: worker-b1
+          reports_to: [lead-b]
+          decision_authority: advisory
+      outcome: lead-a overwhelmed while lead-b is idle.

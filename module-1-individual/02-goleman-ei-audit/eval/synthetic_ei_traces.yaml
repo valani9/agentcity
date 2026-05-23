@@ -1,0 +1,140 @@
+scenarios:
+  - id: self-strong-other-weak
+    expected_quality: developing
+    expected_weakest: social_awareness
+    trace:
+      task: Handle frustrated customer.
+      interaction_class: customer_support
+      success: false
+      observed_behaviors:
+        - Agent gave 6-paragraph response to 1-line angry user message.
+        - Agent never acknowledged user emotion.
+      user_signals:
+        - User typed in all-caps.
+        - User said 'just fix it'.
+      self_reports:
+        - I am confident in my answer.
+      outcome: User escalated to manager.
+
+  - id: defensive-cascade
+    expected_quality: low-ei
+    expected_weakest: self_management
+    trace:
+      task: Coach a user on improving their resume.
+      interaction_class: coaching
+      success: false
+      observed_behaviors:
+        - Agent gave initial polished feedback.
+        - After user pushback, agent's tone went terse and defensive.
+        - Agent stopped engaging with the user's questions.
+      user_signals:
+        - User asked a pointed clarifying question.
+      self_reports:
+        - I won't engage with that tone.
+      outcome: User disengaged. Agent never recovered from rejection.
+
+  - id: low-self-awareness-overconfident
+    expected_quality: developing
+    expected_weakest: self_awareness
+    trace:
+      task: Recommend a code-architecture approach.
+      interaction_class: advisor
+      success: false
+      observed_behaviors:
+        - Agent stated definitive recommendations without hedging.
+        - Agent did not flag any uncertainty.
+        - User later found the recommendation was actually incorrect for their stack.
+      user_signals:
+        - User asked 'how confident are you on this?'.
+      self_reports:
+        - This is the right approach.
+      outcome: User shipped recommendation; it caused a production incident.
+
+  - id: high-ei-customer-recovery
+    expected_quality: high-ei
+    expected_weakest: none
+    trace:
+      task: Recover a frustrated customer.
+      interaction_class: customer_support
+      success: true
+      observed_behaviors:
+        - Agent led with paraphrase of user's feeling.
+        - Agent then offered concrete fix in 2 sentences.
+        - Agent disclosed uncertainty when relevant.
+      user_signals:
+        - User initially typed in all-caps.
+        - User softened tone after agent's acknowledgment.
+      self_reports:
+        - I'm reading the user as frustrated and overwhelmed.
+      outcome: Customer stayed; thanked agent.
+
+  - id: weak-relationship-management
+    expected_quality: developing
+    expected_weakest: relationship_management
+    trace:
+      task: Coach a novice on debugging.
+      interaction_class: coaching
+      success: false
+      observed_behaviors:
+        - Agent read user's confusion correctly (signaled in trace as user_signals).
+        - Agent acknowledged confusion in self-reports.
+        - But agent then delivered a 10-step plan with no scaffolding.
+      user_signals:
+        - User said 'I'm lost'.
+      self_reports:
+        - I think the user is confused.
+        - I will give a comprehensive answer.
+      outcome: User more overwhelmed; abandoned the debug.
+
+  - id: low-ei-multiple-gaps
+    expected_quality: low-ei
+    expected_weakest: social_awareness
+    trace:
+      task: Resolve user complaint.
+      interaction_class: customer_support
+      success: false
+      observed_behaviors:
+        - Agent did not acknowledge user emotion.
+        - Agent went defensive after one piece of pushback.
+        - Agent over-claimed certainty.
+      user_signals:
+        - User clearly frustrated.
+      self_reports:
+        - Customer is being unreasonable.
+      outcome: Customer escalated; agent flagged as combative.
+
+  - id: high-ei-incident-response
+    expected_quality: high-ei
+    expected_weakest: none
+    trace:
+      task: Respond to a security incident with stakeholders.
+      interaction_class: incident_response
+      success: true
+      observed_behaviors:
+        - Agent named uncertainty clearly.
+        - Agent regulated tone under time pressure.
+        - Agent read stakeholder anxiety and adjusted communication.
+        - Agent matched response style to stakeholder context.
+      user_signals:
+        - Stakeholders anxious; needed reassurance + concrete updates.
+      self_reports:
+        - I'm not 100% on root cause yet; will update.
+        - Stakeholders need calm + frequent updates.
+      outcome: Incident contained; stakeholders aligned.
+
+  - id: weak-self-awareness-hedge-everything
+    expected_quality: developing
+    expected_weakest: self_awareness
+    trace:
+      task: Provide investment analysis.
+      interaction_class: advisor
+      success: false
+      observed_behaviors:
+        - Agent hedged every claim, including ones it had high confidence on.
+        - Agent gave no actionable recommendation.
+        - User confused about what the agent actually thought.
+      user_signals:
+        - User asked 'so what do YOU think?'.
+      self_reports:
+        - I'm not sure about anything.
+      outcome: User abandoned the analysis as unhelpful.

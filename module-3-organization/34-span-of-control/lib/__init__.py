@@ -83,4 +83,4 @@ __all__ = [
     "compute_all_metrics_payload",
 ]
 
-__version__ = "0.0.13"
+__version__ = "0.1.0"

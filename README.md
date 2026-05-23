@@ -1,5 +1,11 @@
 # AgentCity
 
+[![CI](https://github.com/valani9/AgentCity/actions/workflows/ci.yml/badge.svg)](https://github.com/valani9/AgentCity/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/agentcity.svg)](https://pypi.org/project/agentcity/)
+[![Python versions](https://img.shields.io/pypi/pyversions/agentcity.svg)](https://pypi.org/project/agentcity/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Patterns shipped](https://img.shields.io/badge/patterns-34%2F34-brightgreen.svg)](PATTERNS.md)
+
 **Organizational behavior, practiced on AI agents.**
 
 AgentCity is a curated library of design patterns for AI agents and multi-agent systems, anchored in named organizational-behavior (OB) literature — Wharton's After-Action Review, Lencioni's Five Dysfunctions, Edmondson's Psychological Safety, Frei & Morriss's Trust Triangle, Stone & Heen's "Thanks for the Feedback" — translated into runnable code, public benchmarks, and Substack-ready essays.
@@ -36,23 +42,23 @@ Every pattern in AgentCity ships five layers:
 4. **Benchmarked.** An eval on a public multi-agent task (GAIA, SWE-Bench-multi, AppWorld, AgentBench).
 5. **Written up.** A Substack-ready essay drafting the pattern, the failure it addresses, and the underlying OB theory — paper outline included.
 
-Patterns ship one at a time, fully completed. Quantity loses to quality. Currently shipping: *AAR Generator (Wharton 4-step).*
+Patterns ship one at a time, fully completed. Quantity loses to quality. **All 34 patterns from the roadmap are shipped.** v0.1.0 adds the production-readiness layer (structured logging with run-id correlation, optional token/cost telemetry, prompt-injection input guards, async LLM clients, configurable timeouts, py.typed marker, security policy, release automation).
 
 ## Install
 
 ```bash
-pip install git+https://github.com/valani9/AgentCity.git
+pip install agentcity
 ```
 
 Optional extras (per LLM backend):
 
 ```bash
-pip install "agentcity[anthropic] @ git+https://github.com/valani9/AgentCity.git"   # Anthropic
-pip install "agentcity[openai]    @ git+https://github.com/valani9/AgentCity.git"   # OpenAI
-pip install "agentcity[all]       @ git+https://github.com/valani9/AgentCity.git"   # both
+pip install "agentcity[anthropic]"   # Anthropic
+pip install "agentcity[openai]"      # OpenAI
+pip install "agentcity[all]"         # both
 ```
 
-Python 3.11+ required.
+Python 3.11+ required (3.11, 3.12, 3.13 tested in CI). For the absolute latest pre-release, install from source: `pip install git+https://github.com/valani9/AgentCity.git`.
 
 ## Quick start
 

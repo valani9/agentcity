@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.14"
+version = "0.1.0"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -62,13 +62,18 @@ keywords = [
     "expectancy",
 ]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
 ]
 dependencies = [
     "pydantic>=2.6.0",
@@ -77,18 +82,26 @@ dependencies = [
 [project.optional-dependencies]
 anthropic = ["anthropic>=0.40.0"]
 openai = ["openai>=1.50.0"]
-all = ["agentcity[anthropic,openai]"]
+ollama = ["httpx>=0.27.0"]
+all = ["agentcity[anthropic,openai,ollama]"]
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=5.0.0",
     "ruff>=0.6.0",
     "mypy>=1.11.0",
+    "bandit[toml]>=1.7.10",
+    "pip-audit>=2.7.0",
+    "pre-commit>=3.5.0",
+    "build>=1.2.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/valani9/AgentCity"
 Repository = "https://github.com/valani9/AgentCity"
 Issues = "https://github.com/valani9/AgentCity/issues"
+Changelog = "https://github.com/valani9/AgentCity/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/valani9/AgentCity/issues"
+"Security" = "https://github.com/valani9/AgentCity/security/policy"
 
 [project.scripts]
 agentcity = "agentcity.aar.cli:main"
@@ -106,6 +119,8 @@ build-backend = "hatchling.build"
 only-include = []
 
 [tool.hatch.build.targets.wheel.force-include]
+"_packaging/agentcity/__init__.py" = "agentcity/__init__.py"
+"_packaging/agentcity/py.typed" = "agentcity/py.typed"
 "module-2-team/30-aar-generator/lib" = "agentcity/aar"
 "module-2-team/17-lencioni-diagnostic/lib" = "agentcity/lencioni"
 "module-2-team/18-trust-triangle-audit/lib" = "agentcity/trust_triangle"
@@ -153,3 +168,38 @@ python_version = "3.11"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = [
+    "module-1-individual",
+    "module-2-team",
+    "module-3-organization",
+]
+addopts = "-ra --tb=short --strict-markers"
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning:pydantic.*",
+]
+
+[tool.coverage.run]
+source = ["agentcity"]
+omit = [
+    "*/tests/*",
+    "*/demo/*",
+    "*/benchmark/*",
+    "*/_perf/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.bandit]
+# Library code only; tests + demos exercise canned fixtures.
+exclude_dirs = [".venv", ".git", "dist", "tests", "demo", "examples", "benchmarks"]
+skips = ["B101"]  # asserts are OK in library code; they're not security gates

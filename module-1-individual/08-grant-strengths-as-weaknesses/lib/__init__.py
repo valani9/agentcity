@@ -62,4 +62,4 @@ __all__ = [
     "STRENGTHS",
 ]
 
-__version__ = "0.0.10"
+__version__ = "0.1.0"

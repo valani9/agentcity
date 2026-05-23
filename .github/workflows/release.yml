@@ -1,0 +1,152 @@
+name: Release
+
+# Triggers on a pushed git tag matching `v*` (e.g. `v0.1.0`, `v1.0.0-rc1`).
+# Builds the wheel + sdist, attests the build, and publishes to PyPI via
+# PyPI's trusted publisher (OIDC) — no long-lived API token in repo secrets.
+#
+# To use this workflow you must first configure AgentCity as a trusted
+# publisher on PyPI:
+#   https://docs.pypi.org/trusted-publishers/
+#
+# Once configured, cutting a release is:
+#
+#   git tag v0.1.0
+#   git push origin v0.1.0
+#
+# The workflow does the rest.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build wheel + sdist for release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Verify tag matches pyproject version
+        id: version
+        run: |
+          set -e
+          TAG="${GITHUB_REF_NAME#v}"
+          PYPROJECT_VERSION=$(python -c "import tomllib, pathlib; print(tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'])")
+          echo "Tag version:        $TAG"
+          echo "pyproject version:  $PYPROJECT_VERSION"
+          if [ "$TAG" != "$PYPROJECT_VERSION" ]; then
+            echo "::error::tag $TAG does not match pyproject.toml version $PYPROJECT_VERSION"
+            exit 1
+          fi
+          echo "version=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Install build
+        run: python -m pip install build
+
+      - name: Build wheel + sdist
+        run: python -m build
+
+      - name: Smoke-test wheel imports all 34 namespaces
+        run: |
+          python -m pip install dist/agentcity-*-py3-none-any.whl
+          python -c "
+          import importlib, agentcity
+          assert agentcity.__version__ == '${{ steps.version.outputs.version }}', f'version mismatch: {agentcity.__version__}'
+          for ns in [
+              'agentcity.aar', 'agentcity.lencioni', 'agentcity.trust_triangle',
+              'agentcity.johari', 'agentcity.grpi', 'agentcity.bias_stack',
+              'agentcity.psych_safety', 'agentcity.thomas_kilmann',
+              'agentcity.feedback_triggers', 'agentcity.devils_advocate',
+              'agentcity.lewin', 'agentcity.mcallister_trust',
+              'agentcity.social_loafing', 'agentcity.debate_pathology',
+              'agentcity.process_gain_loss', 'agentcity.smart_goal',
+              'agentcity.mcgregor', 'agentcity.group_decision',
+              'agentcity.schein_culture', 'agentcity.grant_strengths',
+              'agentcity.plus_delta', 'agentcity.robbins_culture',
+              'agentcity.superflocks', 'agentcity.yerkes_dodson',
+              'agentcity.org_structure', 'agentcity.motivation_traps',
+              'agentcity.glaser_conversation', 'agentcity.goleman_ei',
+              'agentcity.sdt_reward', 'agentcity.span_of_control',
+              'agentcity.danva_emotion', 'agentcity.cognitive_reappraisal',
+              'agentcity.hexaco', 'agentcity.vroom_expectancy',
+          ]:
+              importlib.import_module(ns)
+          print('Release smoke test passed')
+          "
+
+      - name: Upload built artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dist
+          path: dist/
+          retention-days: 30
+
+  publish-pypi:
+    name: Publish to PyPI (trusted publisher)
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/agentcity/${{ needs.build.outputs.version }}/
+    permissions:
+      id-token: write
+    steps:
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: Create GitHub Release
+    needs: [build, publish-pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dist
+          path: dist/
+
+      - name: Create GitHub Release with artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: AgentCity ${{ needs.build.outputs.version }}
+          body: |
+            AgentCity ${{ needs.build.outputs.version }}.
+
+            Install:
+            ```
+            pip install agentcity==${{ needs.build.outputs.version }}
+            ```
+
+            See [CHANGELOG.md](https://github.com/valani9/AgentCity/blob/main/CHANGELOG.md) for the full release notes.
+          files: |
+            dist/agentcity-*.whl
+            dist/agentcity-*.tar.gz
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}

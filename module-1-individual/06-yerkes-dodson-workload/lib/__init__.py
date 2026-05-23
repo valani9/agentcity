@@ -61,4 +61,4 @@ __all__ = [
     "WorkloadDetection",
 ]
 
-__version__ = "0.0.11"
+__version__ = "0.1.0"

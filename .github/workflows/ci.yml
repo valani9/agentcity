@@ -35,14 +35,24 @@ jobs:
       - name: Install package + test deps
         run: |
           python -m pip install --upgrade pip
-          # Install agentcity in editable mode so `from agentcity.aar import ...`
-          # and `from agentcity.lencioni import ...` resolve in tests.
           python -m pip install -e .
           python -m pip install pytest pytest-cov pyyaml
 
-      - name: Run tests (all patterns)
+      - name: Run tests (all patterns, with coverage)
         run: |
-          pytest module-1-individual/ module-2-team/ module-3-organization/ -v --tb=short
+          pytest module-1-individual/ module-2-team/ module-3-organization/ \
+            -v --tb=short \
+            --cov=agentcity \
+            --cov-report=term-missing \
+            --cov-report=xml
+
+      - name: Upload coverage artifact
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          retention-days: 14
 
   lint:
     name: Lint (ruff)
@@ -80,8 +90,6 @@ jobs:
       - name: Install mypy and dependencies
         run: |
           python -m pip install mypy pydantic
-          # Install the package so cross-pattern imports
-          # (e.g. agentcity.aar._retry from agentcity.lencioni) resolve.
           python -m pip install -e .
 
       - name: Run mypy per-pattern
@@ -131,6 +139,41 @@ jobs:
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done
 
+  security:
+    name: Security (bandit + pip-audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install security tools
+        run: python -m pip install "bandit[toml]" pip-audit
+
+      - name: Run bandit (library code only)
+        # Tests and demos exercise the library deliberately, so they may
+        # trip rules that flag exec / subprocess / hardcoded "secrets" in
+        # canned fixtures. Scan only the shipping library code.
+        run: |
+          bandit -r \
+            module-1-individual/*/lib \
+            module-2-team/*/lib \
+            module-3-organization/*/lib \
+            -ll -ii -f txt
+
+      - name: Run pip-audit (declared deps)
+        # The library itself only pins pydantic + (optional) anthropic/openai.
+        # pip-audit on the installed environment catches transitive issues.
+        # We use --strict in the primary pass but fall through to a warn-only
+        # pass so a flaky transitive doesn't false-positive the entire matrix.
+        run: |
+          python -m pip install -e ".[all]"
+          pip-audit --strict --progress-spinner=off || pip-audit --progress-spinner=off
+
   build:
     name: Build wheel + sdist
     runs-on: ubuntu-latest
@@ -149,10 +192,57 @@ jobs:
       - name: Build
         run: python -m build
 
-      - name: Verify wheel contents
+      - name: Verify wheel ships all 34 namespaces + py.typed marker
         run: |
           python -m pip install dist/agentcity-*-py3-none-any.whl
-          python -c "from agentcity.aar import AARGenerator, AgentTrace, TraceStep; print('OK')"
+          python -c "
+          import importlib, os
+          import agentcity
+          assert agentcity.__version__, 'top-level __version__ missing'
+          print(f'agentcity v{agentcity.__version__}')
+          assert os.path.exists(os.path.join(os.path.dirname(agentcity.__file__), 'py.typed')), 'py.typed marker missing from wheel'
+          print('py.typed marker present')
+          namespaces = [
+              'agentcity.aar',
+              'agentcity.lencioni',
+              'agentcity.trust_triangle',
+              'agentcity.johari',
+              'agentcity.grpi',
+              'agentcity.bias_stack',
+              'agentcity.psych_safety',
+              'agentcity.thomas_kilmann',
+              'agentcity.feedback_triggers',
+              'agentcity.devils_advocate',
+              'agentcity.lewin',
+              'agentcity.mcallister_trust',
+              'agentcity.social_loafing',
+              'agentcity.debate_pathology',
+              'agentcity.process_gain_loss',
+              'agentcity.smart_goal',
+              'agentcity.mcgregor',
+              'agentcity.group_decision',
+              'agentcity.schein_culture',
+              'agentcity.grant_strengths',
+              'agentcity.plus_delta',
+              'agentcity.robbins_culture',
+              'agentcity.superflocks',
+              'agentcity.yerkes_dodson',
+              'agentcity.org_structure',
+              'agentcity.motivation_traps',
+              'agentcity.glaser_conversation',
+              'agentcity.goleman_ei',
+              'agentcity.sdt_reward',
+              'agentcity.span_of_control',
+              'agentcity.danva_emotion',
+              'agentcity.cognitive_reappraisal',
+              'agentcity.hexaco',
+              'agentcity.vroom_expectancy',
+          ]
+          for ns in namespaces:
+              mod = importlib.import_module(ns)
+              assert hasattr(mod, '__all__'), f'{ns} missing __all__'
+          print(f'All {len(namespaces)} pattern namespaces import cleanly')
+          "
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

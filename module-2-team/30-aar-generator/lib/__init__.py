@@ -24,6 +24,13 @@ See README.md for the full pattern explanation, the OB framework anchoring,
 and the comparison with adjacent agent-postmortem tooling.
 """
 
+from ._analyzer import AARAnalyzer, AARAnalyzerAsync, AsyncLLMClient
+from ._calibration import compare_to_baseline, load_baseline, record_baseline
+from ._composition import (
+    AAR_COMPOSITION,
+    recommended_downstream,
+    recommended_upstream,
+)
 from ._guards import detect_injection, fence, sanitize_for_prompt
 from ._json_parsing import extract_json_array
 from ._logging import (
@@ -34,6 +41,12 @@ from ._logging import (
     get_logger,
     new_run_id,
     run_context,
+)
+from ._playbooks import (
+    PLAYBOOKS,
+    all_playbook_keys,
+    find_playbook,
+    find_playbook_for_intervention,
 )
 from ._retry import with_retry
 from ._telemetry import (
@@ -58,10 +71,29 @@ from .clients import (
     StubClient,
 )
 from .generator import AARGenerator, LLMClient
-from .schema import AAR, AgentTrace, Lesson, NextStep, TraceStep
+from .schema import (
+    AAR,
+    AAR_MODES,
+    AAR_PROFILE_PATTERNS,
+    SEVERITY_ORDER,
+    AARMode,
+    AARProfilePattern,
+    AgentTrace,
+    AttachedPlaybook,
+    BaselineComparison,
+    ComposedPatternHandoff,
+    EffortEstimate,
+    Lesson,
+    LessonGroundednessAudit,
+    NextStep,
+    Severity,
+    TraceQualityAudit,
+    TraceStep,
+    severity_from_gap,
+)
 
 __all__ = [
-    # Pattern #30 — AAR
+    # Pattern #30 -- AAR (legacy v0.0.x surface preserved)
     "AARGenerator",
     "LLMClient",
     "AAR",
@@ -69,6 +101,34 @@ __all__ = [
     "Lesson",
     "NextStep",
     "TraceStep",
+    # v0.2.0 analyzer surface
+    "AARAnalyzer",
+    "AARAnalyzerAsync",
+    "AsyncLLMClient",
+    "AARMode",
+    "AARProfilePattern",
+    "Severity",
+    "EffortEstimate",
+    "AAR_MODES",
+    "AAR_PROFILE_PATTERNS",
+    "SEVERITY_ORDER",
+    "TraceQualityAudit",
+    "LessonGroundednessAudit",
+    "AttachedPlaybook",
+    "BaselineComparison",
+    "ComposedPatternHandoff",
+    "severity_from_gap",
+    # v0.2.0 calibration + composition + playbooks
+    "compare_to_baseline",
+    "load_baseline",
+    "record_baseline",
+    "AAR_COMPOSITION",
+    "recommended_downstream",
+    "recommended_upstream",
+    "PLAYBOOKS",
+    "all_playbook_keys",
+    "find_playbook",
+    "find_playbook_for_intervention",
     # LLM client adapters (sync + async)
     "AnthropicClient",
     "OpenAIClient",
@@ -105,4 +165,4 @@ __all__ = [
     "sanitize_for_prompt",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

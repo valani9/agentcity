@@ -1,45 +1,38 @@
-"""Cross-pattern composition manifest for the Trust Triangle Audit."""
+"""Cross-pattern composition manifest for McAllister Trust Dimensions."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .schema import AgentInteractionTrace, TrustTriangleAudit
+    from .schema import TrustBalanceDetection, TrustConversationTrace
 
 
 _UPSTREAM: tuple[str, ...] = (
     "agentcity.lewin",
     "agentcity.aar",
+    "agentcity.trust_triangle",
     "agentcity.lencioni",
-    "agentcity.mcallister_trust",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "healthy_trust": ("agentcity.aar",),
-    "logic_wobble_dominant": (
+    "balanced_high_trust": ("agentcity.aar",),
+    "cognitive_only": (
+        "agentcity.glaser",
+        "agentcity.danva_emotion",
+        "agentcity.goleman_ei",
+    ),
+    "warm_but_incompetent": (
         "agentcity.devils_advocate",
         "agentcity.bias_stack",
     ),
-    "authenticity_wobble_dominant": (
-        "agentcity.edmondson_psych_safety",
-        "agentcity.devils_advocate",
-    ),
-    "empathy_wobble_dominant": (
-        "agentcity.glaser",
-        "agentcity.mcallister_trust",
-    ),
-    "full_triangle_collapse": (
+    "low_trust": (
         "agentcity.lencioni",
-        "agentcity.edmondson_psych_safety",
         "agentcity.aar",
     ),
-    "logic_authenticity_paired": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
-        "agentcity.edmondson_psych_safety",
-    ),
-    "empathy_isolated_wobble": ("agentcity.glaser",),
+    "cognitive_partial": ("agentcity.devils_advocate",),
+    "affective_partial": ("agentcity.glaser",),
+    "asymmetric_cognitive_strong": ("agentcity.glaser",),
     "indeterminate": (),
 }
 
@@ -55,18 +48,18 @@ def recommended_upstream() -> list[str]:
 
 
 def recommended_downstream(
-    audit: "TrustTriangleAudit",
-    trace: "AgentInteractionTrace | None" = None,
+    detection: "TrustBalanceDetection",
+    trace: "TrustConversationTrace | None" = None,
 ) -> tuple[list[str], str]:
     recommendations: list[str] = []
     reasons: list[str] = []
-    by_profile = _DOWNSTREAM_BY_PROFILE_PATTERN.get(audit.profile_pattern, ())
+    by_profile = _DOWNSTREAM_BY_PROFILE_PATTERN.get(detection.profile_pattern, ())
     for p in by_profile:
         if p not in recommendations:
             recommendations.append(p)
     if by_profile:
         reasons.append(
-            f"profile_pattern={audit.profile_pattern} -> {len(by_profile)} recommendations"
+            f"profile_pattern={detection.profile_pattern} -> {len(by_profile)} recommendations"
         )
     if trace is not None and trace.framework:
         fw_overlay = _FRAMEWORK_OVERLAYS.get(trace.framework, ())
@@ -79,7 +72,7 @@ def recommended_downstream(
     return recommendations, rationale
 
 
-TRUST_TRIANGLE_COMPOSITION: dict[str, object] = {
+MCALLISTER_COMPOSITION: dict[str, object] = {
     "upstream": _UPSTREAM,
     "downstream_by_profile_pattern": _DOWNSTREAM_BY_PROFILE_PATTERN,
     "framework_overlays": _FRAMEWORK_OVERLAYS,
@@ -87,7 +80,7 @@ TRUST_TRIANGLE_COMPOSITION: dict[str, object] = {
 
 
 __all__ = [
-    "TRUST_TRIANGLE_COMPOSITION",
+    "MCALLISTER_COMPOSITION",
     "recommended_downstream",
     "recommended_upstream",
 ]

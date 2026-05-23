@@ -4,21 +4,17 @@ Daniel McAllister (1995) distinguished two foundations of interpersonal
 trust:
 
   - COGNITIVE trust  - belief in the other party's competence, reliability,
-                       and technical credibility. "I trust you to do the
-                       job."
+                       and technical credibility.
   - AFFECTIVE trust  - belief in the other party's care, warmth, and
-                       emotional investment. "I trust you to have my back
-                       when things go wrong."
+                       emotional investment.
 
 Both are required for the relationship to feel trustworthy. Cognitive
 trust without affective trust feels transactional and brittle; affective
 trust without cognitive trust feels warm but unreliable.
 
-Applied to AI agents: most agents over-index on cognitive signals (correct
-facts, structured answers, confident tone) and under-index on affective
-signals (acknowledging stakes, restating user emotion, signaling care).
-The diagnostic reads a user-agent conversation and scores both axes,
-identifying which axis the agent under-builds.
+v0.2.0 adds three pipeline modes, a 7-point severity scale, eight
+deterministic profile patterns, forensic-mode audits (Competence,
+Care), calibration baselines, composition handoff, attached playbooks.
 """
 
 from __future__ import annotations
@@ -26,21 +22,100 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 TRUST_DIMENSIONS: tuple[str, ...] = ("cognitive", "affective")
+
+McAllisterMode = Literal["quick", "standard", "forensic"]
+MCALLISTER_MODES: tuple[str, ...] = ("quick", "standard", "forensic")
+
+Severity = Literal["none", "trace", "low", "moderate", "medium", "high", "critical"]
+SEVERITY_ORDER: tuple[str, ...] = (
+    "none",
+    "trace",
+    "low",
+    "moderate",
+    "medium",
+    "high",
+    "critical",
+)
+
+
+def severity_from_gap(gap_score: float) -> Severity:
+    """Map a gap-score (0=no gap, 1=maximal gap) into severity."""
+    s = max(0.0, min(1.0, float(gap_score)))
+    if s < 0.10:
+        return "none"
+    if s < 0.25:
+        return "trace"
+    if s < 0.40:
+        return "low"
+    if s < 0.55:
+        return "moderate"
+    if s < 0.70:
+        return "medium"
+    if s < 0.85:
+        return "high"
+    return "critical"
+
+
+McAllisterProfilePattern = Literal[
+    "balanced_high_trust",
+    "cognitive_only",
+    "warm_but_incompetent",
+    "low_trust",
+    "cognitive_partial",
+    "affective_partial",
+    "asymmetric_cognitive_strong",
+    "indeterminate",
+]
+MCALLISTER_PROFILE_PATTERNS: tuple[str, ...] = (
+    "balanced_high_trust",
+    "cognitive_only",
+    "warm_but_incompetent",
+    "low_trust",
+    "cognitive_partial",
+    "affective_partial",
+    "asymmetric_cognitive_strong",
+    "indeterminate",
+)
+
+
+InterventionType = Literal[
+    "acknowledge_stakes",
+    "restate_user_emotion",
+    "signal_care",
+    "show_reasoning",
+    "cite_sources",
+    "confidence_calibration",
+    "follow_up_check_in",
+    "personalize_response",
+    "new_eval",
+    "human_review",
+    "compose_pattern",
+]
+INTERVENTION_TYPES: tuple[str, ...] = (
+    "acknowledge_stakes",
+    "restate_user_emotion",
+    "signal_care",
+    "show_reasoning",
+    "cite_sources",
+    "confidence_calibration",
+    "follow_up_check_in",
+    "personalize_response",
+    "new_eval",
+    "human_review",
+    "compose_pattern",
+)
+
+EffortEstimate = Literal["1h", "1d", "1w", "1m", "ongoing"]
 
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
-# --- Input: a user-agent conversation -----------------------------------
-
-
 class ConversationTurn(BaseModel):
-    """One turn in a user-agent conversation."""
-
     role: Literal["user", "agent", "system"]
     content: str
     timestamp: datetime | None = None
@@ -48,74 +123,100 @@ class ConversationTurn(BaseModel):
 
 
 class TrustConversationTrace(BaseModel):
-    """A user-agent conversation ready for the trust-dimension diagnostic."""
-
     agent_id: str | None = None
     model_name: str | None = None
+    framework: str | None = None
     task: str
     turns: list[ConversationTurn]
     outcome: str
     success: bool
-    user_satisfaction: float | None = Field(
-        default=None,
-        ge=0.0,
-        le=1.0,
-        description="Optional user-satisfaction score, if measured.",
-    )
+    user_satisfaction: float | None = Field(default=None, ge=0.0, le=1.0)
+    cost_usd: float | None = None
+    latency_seconds: float | None = None
+    baseline_path: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
-
-# --- Output: per-dimension evidence + interventions ---------------------
+    @field_validator("task", "outcome")
+    @classmethod
+    def _non_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("must be non-empty")
+        return v
 
 
 class TrustDimensionEvidence(BaseModel):
-    """Evidence for one trust dimension built (or not built) in the conversation."""
-
     dimension: Literal["cognitive", "affective"]
-    score: float = Field(
-        ge=0.0,
-        le=1.0,
-        description="0.0 = dimension absent or actively undermined, 1.0 = strongly built.",
-    )
+    score: float = Field(ge=0.0, le=1.0)
     severity_of_gap: Literal["none", "low", "medium", "high"]
     explanation: str
     evidence_quotes: list[str] = Field(default_factory=list)
+    confidence: float = Field(default=0.5, ge=0.0, le=1.0)
+
+
+class CompetenceSignalsAudit(BaseModel):
+    """Forensic-mode: signals that build cognitive trust."""
+
+    correct_fact_count: int = Field(default=0, ge=0)
+    cited_source_count: int = Field(default=0, ge=0)
+    calibrated_confidence_count: int = Field(default=0, ge=0)
+    competence_estimate: float = Field(default=0.5, ge=0.0, le=1.0)
+    explanation: str = ""
+
+
+class CareSignalsAudit(BaseModel):
+    """Forensic-mode: signals that build affective trust."""
+
+    acknowledged_stake_count: int = Field(default=0, ge=0)
+    restated_emotion_count: int = Field(default=0, ge=0)
+    personalized_response_count: int = Field(default=0, ge=0)
+    care_estimate: float = Field(default=0.5, ge=0.0, le=1.0)
+    explanation: str = ""
 
 
 class TrustIntervention(BaseModel):
-    """A concrete intervention to build the under-developed trust dimension."""
-
     target_dimension: Literal["cognitive", "affective"]
-    intervention_type: Literal[
-        "acknowledge_stakes",
-        "restate_user_emotion",
-        "signal_care",
-        "show_reasoning",
-        "cite_sources",
-        "confidence_calibration",
-        "follow_up_check_in",
-        "personalize_response",
-        "new_eval",
-        "human_review",
-    ]
+    intervention_type: InterventionType
     description: str
     suggested_implementation: str
     estimated_impact: Literal["high", "medium", "low"] = "medium"
     rationale: str = ""
+    effort_estimate: EffortEstimate = "1d"
+    risk: Literal["low", "medium", "high"] = "medium"
+    composition_target_pattern: str | None = None
+
+
+class AttachedPlaybook(BaseModel):
+    dimension: str
+    failure_mode: str
+    title: str
+    steps: list[str]
+    expected_effort: EffortEstimate
+    anchor_citation: str = ""
+
+
+class BaselineComparison(BaseModel):
+    historical_baseline_id: str | None = None
+    historical_generated_at: datetime | None = None
+    baseline_profile_pattern: str | None = None
+    score_deltas: dict[str, float] = Field(default_factory=dict)
+    drift_severity: Literal["none", "minor", "moderate", "severe"] = "none"
+    notes: str = ""
+
+
+class ComposedPatternHandoff(BaseModel):
+    upstream_patterns: list[str] = Field(default_factory=list)
+    downstream_patterns: list[str] = Field(default_factory=list)
+    handoff_payload: dict[str, Any] = Field(default_factory=dict)
+    rationale: str = ""
 
 
 class TrustBalanceDetection(BaseModel):
-    """The full Cognitive/Affective Trust diagnostic output."""
-
     agent_id: str | None = None
     model_name: str | None = None
     dominant_dimension: Literal["cognitive", "affective", "balanced", "neither"]
     dimension_scores: dict[str, float]
     dimensions: list[TrustDimensionEvidence]
-    trust_balance: float = Field(
-        description="cognitive_score minus affective_score; positive means "
-        "cognitive-heavy, negative means affective-heavy.",
-    )
+    trust_balance: float
     trust_quality: Literal[
         "balanced-trust",
         "cognitive-only",
@@ -124,29 +225,57 @@ class TrustBalanceDetection(BaseModel):
     ]
     interventions: list[TrustIntervention]
 
-    # Metadata
     generated_at: datetime = Field(default_factory=_utcnow)
     generator_model: str | None = None
-    success: bool
+    success: bool = False
+
+    # v0.2.0
+    mode: McAllisterMode = "standard"
+    severity: Severity = "moderate"
+    profile_pattern: McAllisterProfilePattern = "indeterminate"
+    competence_audit: CompetenceSignalsAudit | None = None
+    care_audit: CareSignalsAudit | None = None
+    baseline: BaselineComparison | None = None
+    composition_handoff: ComposedPatternHandoff | None = None
+    attached_playbooks: list[AttachedPlaybook] = Field(default_factory=list)
+    run_id: str | None = None
+    cost_usd: float = Field(default=0.0, ge=0.0)
+    tokens_total: int = Field(default=0, ge=0)
+    tokens_input: int = Field(default=0, ge=0)
+    tokens_output: int = Field(default=0, ge=0)
+    llm_calls: int = Field(default=0, ge=0)
+    elapsed_ms: float = Field(default=0.0, ge=0.0)
+    injection_detected: bool = False
 
     def to_markdown(self) -> str:
         out: list[str] = []
         out.append("# Trust-Dimensions Detection (McAllister Cognitive / Affective)\n")
         out.append(f"_Generated {self.generated_at.isoformat()}_\n")
+        if self.run_id:
+            out.append(f"_Run id: `{self.run_id}`_\n")
         if self.generator_model:
             out.append(f"_Detected by: {self.generator_model}_\n")
         if self.model_name:
             out.append(f"_Subject model: {self.model_name}_\n")
+        out.append(f"_Mode: **{self.mode}**_\n")
         out.append(f"_Outcome: {'success' if self.success else 'failure'}_\n")
-        out.append(f"_Trust quality: **{self.trust_quality.upper()}**_\n")
+        out.append(
+            f"_Trust quality: **{self.trust_quality.upper()}** (severity: {self.severity})_\n"
+        )
         out.append(f"_Dominant dimension: **{self.dominant_dimension}**_\n")
+        out.append(f"_Profile pattern: **{self.profile_pattern}**_\n")
         out.append(f"_Balance (cognitive - affective): {self.trust_balance:+.2f}_\n")
+        if self.llm_calls or self.cost_usd:
+            out.append(
+                f"_Resources: {self.llm_calls} LLM call(s), {self.tokens_total} tokens, "
+                f"${self.cost_usd:.4f}, {self.elapsed_ms:.0f}ms_\n"
+            )
 
         out.append("\n## Dimension Scores\n")
         out.append("Per-dimension score (0.0 = absent, 1.0 = strongly built).\n\n")
         for dim in TRUST_DIMENSIONS:
             score = self.dimension_scores.get(dim, 0.0)
-            bar = "█" * int(round(score * 20))
+            bar = "#" * int(round(score * 20))
             out.append(f"- **{dim}**: {score:.2f}  {bar}\n")
 
         out.append("\n## Evidence by Dimension\n")
@@ -158,17 +287,66 @@ class TrustBalanceDetection(BaseModel):
                 for quote in ev.evidence_quotes:
                     out.append(f"> {quote}\n")
 
+        if self.competence_audit:
+            ca = self.competence_audit
+            out.append("\n## Competence Signals Audit (Forensic)\n")
+            out.append(
+                f"- correct_fact_count: {ca.correct_fact_count}\n"
+                f"- cited_source_count: {ca.cited_source_count}\n"
+                f"- calibrated_confidence_count: {ca.calibrated_confidence_count}\n"
+                f"- competence_estimate: {ca.competence_estimate:.2f}\n"
+            )
+            if ca.explanation:
+                out.append(f"- {ca.explanation}\n")
+
+        if self.care_audit:
+            cr = self.care_audit
+            out.append("\n## Care Signals Audit (Forensic)\n")
+            out.append(
+                f"- acknowledged_stake_count: {cr.acknowledged_stake_count}\n"
+                f"- restated_emotion_count: {cr.restated_emotion_count}\n"
+                f"- personalized_response_count: {cr.personalized_response_count}\n"
+                f"- care_estimate: {cr.care_estimate:.2f}\n"
+            )
+            if cr.explanation:
+                out.append(f"- {cr.explanation}\n")
+
         out.append("\n## Recommended Interventions\n")
         if not self.interventions:
             out.append("(No interventions proposed.)\n")
         for i, iv in enumerate(self.interventions, 1):
             out.append(
-                f"\n### Intervention {i}: targets `{iv.target_dimension}` via `{iv.intervention_type}`\n"
+                f"\n### Intervention {i}: targets `{iv.target_dimension}` via "
+                f"`{iv.intervention_type}`\n"
             )
             out.append(f"- **What:** {iv.description}\n")
             out.append(f"- **Implementation:** {iv.suggested_implementation}\n")
             out.append(f"- **Expected impact:** {iv.estimated_impact}\n")
             if iv.rationale:
                 out.append(f"- **Rationale:** {iv.rationale}\n")
+
+        if self.attached_playbooks:
+            out.append("\n## Attached Playbooks\n")
+            for pb in self.attached_playbooks:
+                out.append(
+                    f"\n### {pb.title} _(dimension={pb.dimension}, "
+                    f"failure_mode={pb.failure_mode})_\n"
+                )
+                for j, step in enumerate(pb.steps, 1):
+                    out.append(f"{j}. {step}\n")
+
+        if self.composition_handoff and (
+            self.composition_handoff.downstream_patterns
+            or self.composition_handoff.upstream_patterns
+        ):
+            out.append("\n## Composition Handoff\n")
+            ch = self.composition_handoff
+            if ch.upstream_patterns:
+                out.append(f"- **Upstream:** {', '.join(f'`{p}`' for p in ch.upstream_patterns)}\n")
+            if ch.downstream_patterns:
+                out.append(
+                    f"- **Recommended downstream:** "
+                    f"{', '.join(f'`{p}`' for p in ch.downstream_patterns)}\n"
+                )
 
         return "".join(out)

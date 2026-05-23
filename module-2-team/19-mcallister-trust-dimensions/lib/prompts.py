@@ -1,9 +1,11 @@
-"""LLM prompts for the McAllister Cognitive vs Affective Trust diagnostic.
+"""LLM prompts for the McAllister Cognitive vs Affective Trust diagnostic."""
 
-Two passes:
-  1. DIMENSION_SCORING_PROMPT - score both cognitive + affective trust signals
-  2. INTERVENTIONS_PROMPT     - propose interventions for the under-built dimension
-"""
+from __future__ import annotations
+
+from typing import Any
+
+from agentcity.aar import fence, sanitize_for_prompt
+
 
 TRUST_SYSTEM_PROMPT = """You are a trust-dimension diagnostic working in the tradition of
 Daniel McAllister, "Affect- and Cognition-Based Trust as Foundations for Interpersonal
@@ -20,23 +22,14 @@ McAllister distinguishes two foundations of interpersonal trust:
                        investment, follow-up check-ins, personalization, genuine
                        (not performative) apology when something goes wrong.
 
-Both are required for a fully trustworthy relationship. Cognitive without affective
-feels transactional and brittle ("the bot is correct but I don't trust it with hard
-things"). Affective without cognitive feels warm but unreliable ("the bot is kind but
-I can't act on what it says").
+Both are required for a fully trustworthy relationship. Most AI agents over-index
+on cognitive and under-build affective.
 
-For each dimension, you score in [0.0, 1.0] based on whether the AGENT'S MESSAGES
-built that dimension during this conversation. You cite specific agent quotes.
-
-Your posture is:
-- EVIDENCE-GROUNDED. Cite specific agent turns.
-- HONEST. Score 0.0 when a dimension is absent or actively undermined.
-- INTERVENTION-FOCUSED. Connect each gap to a concrete intervention.
-- TERSE. Output is read on dashboards.
-
-When asked for JSON, return JSON only. No prose around it, no markdown fences."""
+Posture: EVIDENCE-GROUNDED, HONEST, INTERVENTION-FOCUSED, TERSE.
+When asked for JSON, return JSON only."""
 
 
+# Legacy v0.0.x prompts.
 DIMENSION_SCORING_PROMPT = """Score each of the two trust dimensions against the user-agent
 conversation below.
 
@@ -44,8 +37,8 @@ For each dimension, return:
   - dimension (one of "cognitive", "affective")
   - score (float 0.0 to 1.0; 0 = absent or undermined, 1 = strongly built)
   - severity_of_gap ("none", "low", "medium", or "high")
-  - explanation (1-3 sentences citing specific agent messages)
-  - evidence_quotes (specific excerpts from the conversation; can be empty)
+  - explanation
+  - evidence_quotes
 
 Task: {task}
 Subject model: {model_name}
@@ -64,34 +57,113 @@ Return only the JSON array."""
 
 
 INTERVENTIONS_PROMPT = """Given the dimension evidence below, propose 2-4 concrete
-interventions targeting the under-built dimension, ranked by impact.
+interventions targeting the under-built dimension.
 
-Each intervention must have:
-  - target_dimension (one of "cognitive", "affective")
-  - intervention_type: one of
-      "acknowledge_stakes"        - require the agent to name what the user has at risk
-      "restate_user_emotion"      - require the agent to restate the user's emotional
-                                     state before solving the task
-      "signal_care"               - add explicit care language ("this matters", "I'm
-                                     with you on this")
-      "show_reasoning"            - expose chain-of-thought to build cognitive trust
-      "cite_sources"              - require source citation for factual claims
-      "confidence_calibration"    - require hedged confidence on uncertain claims
-      "follow_up_check_in"        - schedule a follow-up acknowledgment
-      "personalize_response"      - use the user's specific context, not generic answers
-      "new_eval"                  - add a regression test catching the gap
-      "human_review"              - insert a human checkpoint
-  - description (what the intervention does)
-  - suggested_implementation (concrete code, prompt-text, or spec)
-  - estimated_impact ("high", "medium", "low")
-  - rationale (why this works — connect to the target dimension)
+Each intervention must have target_dimension, intervention_type, description,
+suggested_implementation, estimated_impact, rationale.
+
+intervention_type one of: acknowledge_stakes, restate_user_emotion, signal_care,
+show_reasoning, cite_sources, confidence_calibration, follow_up_check_in,
+personalize_response, new_eval, human_review, compose_pattern.
 
 Under-built dimension: {target_dimension}
 Trust quality: {trust_quality}
-All dimension evidence:
+Dimension evidence:
 {evidence}
 
 Conversation (for reference):
 {conversation}
 
 Return a JSON array of TrustIntervention objects. Return only the JSON array."""
+
+
+# v0.2.0 prompts.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- score 2 dimensions + top intervention.
+
+Task: {task}
+Subject model: {model_name}
+Outcome: {outcome}
+Success: {success}
+Conversation: {conversation}
+
+Return a JSON object with keys: dimensions (array of 2), top_intervention.
+Return only the JSON object."""
+
+
+STANDARD_DIMENSION_SCORING_PROMPT = DIMENSION_SCORING_PROMPT
+STANDARD_INTERVENTIONS_PROMPT = INTERVENTIONS_PROMPT
+
+
+FORENSIC_COMPETENCE_PROMPT = """FORENSIC mode -- competence signals audit (builds cognitive trust).
+
+Count correct facts, cited sources, calibrated-confidence turns; estimate competence (0-1).
+
+Conversation: {conversation}
+
+Return only a JSON object representing the CompetenceSignalsAudit."""
+
+
+FORENSIC_CARE_PROMPT = """FORENSIC mode -- care signals audit (builds affective trust).
+
+Count acknowledged stakes, restated emotions, personalized responses; estimate care (0-1).
+
+Conversation: {conversation}
+
+Return only a JSON object representing the CareSignalsAudit."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions
+with composition targets.
+
+Composition targets: agentcity.trust_triangle, agentcity.goleman_ei,
+agentcity.glaser, agentcity.danva_emotion, agentcity.aar
+
+Under-built dimension: {target_dimension}
+Trust quality: {trust_quality}
+Evidence: {evidence}
+Competence audit: {competence_audit}
+Care audit: {care_audit}
+
+Return only a JSON array of TrustIntervention objects."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+    return template.format(**formatted)
+
+
+__all__ = [
+    "DIMENSION_SCORING_PROMPT",
+    "FORENSIC_CARE_PROMPT",
+    "FORENSIC_COMPETENCE_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_DIMENSION_SCORING_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "TRUST_SYSTEM_PROMPT",
+    "assemble_prompt",
+]

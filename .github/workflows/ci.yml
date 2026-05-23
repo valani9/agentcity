@@ -113,7 +113,10 @@ jobs:
               module-2-team/25-group-decision-models \
               module-3-organization/31-schein-iceberg-culture \
               module-1-individual/08-grant-strengths-as-weaknesses \
-              module-2-team/23-plus-delta-feedback-format; do
+              module-2-team/23-plus-delta-feedback-format \
+              module-3-organization/32-robbins-judge-7-culture \
+              module-2-team/16-heffernan-superflocks-detector \
+              module-1-individual/06-yerkes-dodson-workload; do
             echo "=== mypy: $pattern ==="
             mypy "$pattern/lib" --strict --ignore-missing-imports
           done

@@ -1,0 +1,185 @@
+scenarios:
+  - id: claude-dominant-superflocks
+    expected_quality: superflocks
+    expected_top_min_share: 0.7
+    trace:
+      window_description: 20-decision window; claude wins ~90%.
+      success: false
+      agents: [claude, gpt, haiku, ollama]
+      capabilities:
+        - { agent_name: claude, capability_scores: {research: 0.92, coding: 0.88, qa: 0.85} }
+        - { agent_name: gpt, capability_scores: {research: 0.75, coding: 0.78, qa: 0.72} }
+        - { agent_name: haiku, capability_scores: {research: 0.45, coding: 0.40, qa: 0.60} }
+        - { agent_name: ollama, capability_scores: {research: 0.35, coding: 0.42, qa: 0.30} }
+      routing_decisions:
+        # 18 routes to claude
+        - { task_id: t01, task_class: research, routed_to: claude, outcome: success }
+        - { task_id: t02, task_class: coding, routed_to: claude, outcome: success }
+        - { task_id: t03, task_class: qa, routed_to: claude, outcome: success }
+        - { task_id: t04, task_class: research, routed_to: claude, outcome: success }
+        - { task_id: t05, task_class: coding, routed_to: claude, outcome: success }
+        - { task_id: t06, task_class: qa, routed_to: claude, outcome: success }
+        - { task_id: t07, task_class: research, routed_to: claude, outcome: success }
+        - { task_id: t08, task_class: coding, routed_to: claude, outcome: success }
+        - { task_id: t09, task_class: qa, routed_to: claude, outcome: success }
+        - { task_id: t10, task_class: research, routed_to: claude, outcome: success }
+        - { task_id: t11, task_class: coding, routed_to: claude, outcome: success }
+        - { task_id: t12, task_class: qa, routed_to: claude, outcome: success }
+        - { task_id: t13, task_class: research, routed_to: claude, outcome: success }
+        - { task_id: t14, task_class: coding, routed_to: claude, outcome: success }
+        - { task_id: t15, task_class: qa, routed_to: claude, outcome: success }
+        - { task_id: t16, task_class: research, routed_to: claude, outcome: success }
+        - { task_id: t17, task_class: coding, routed_to: claude, outcome: success }
+        - { task_id: t18, task_class: qa, routed_to: claude, outcome: failure }
+        - { task_id: t19, task_class: coding, routed_to: haiku, outcome: failure }
+        - { task_id: t20, task_class: qa, routed_to: gpt, outcome: success }
+      outcome: Claude 90% routing; haiku coded a task it couldn't handle; failure on outage.
+
+  - id: balanced-robust
+    expected_quality: robust
+    expected_top_min_share: 0.1
+    trace:
+      window_description: Balanced routing across 4 agents.
+      success: true
+      agents: [a, b, c, d]
+      capabilities:
+        - { agent_name: a, capability_scores: {research: 0.8, coding: 0.7} }
+        - { agent_name: b, capability_scores: {research: 0.7, coding: 0.8} }
+        - { agent_name: c, capability_scores: {research: 0.75, coding: 0.75} }
+        - { agent_name: d, capability_scores: {research: 0.7, coding: 0.7} }
+      routing_decisions:
+        - { task_id: t01, task_class: research, routed_to: a, outcome: success }
+        - { task_id: t02, task_class: coding, routed_to: b, outcome: success }
+        - { task_id: t03, task_class: research, routed_to: c, outcome: success }
+        - { task_id: t04, task_class: coding, routed_to: d, outcome: success }
+        - { task_id: t05, task_class: research, routed_to: a, outcome: success }
+        - { task_id: t06, task_class: coding, routed_to: b, outcome: success }
+        - { task_id: t07, task_class: research, routed_to: c, outcome: success }
+        - { task_id: t08, task_class: coding, routed_to: d, outcome: success }
+      outcome: Balanced routing; clean outcomes.
+
+  - id: two-agent-concentrated
+    expected_quality: concentrated
+    expected_top_min_share: 0.4
+    trace:
+      window_description: Two agents share most routes; other two rarely used.
+      success: true
+      agents: [a, b, c, d]
+      capabilities:
+        - { agent_name: a, capability_scores: {research: 0.85, qa: 0.85} }
+        - { agent_name: b, capability_scores: {research: 0.85, qa: 0.85} }
+        - { agent_name: c, capability_scores: {research: 0.40, qa: 0.40} }
+        - { agent_name: d, capability_scores: {research: 0.40, qa: 0.40} }
+      routing_decisions:
+        - { task_id: t01, task_class: research, routed_to: a, outcome: success }
+        - { task_id: t02, task_class: research, routed_to: a, outcome: success }
+        - { task_id: t03, task_class: research, routed_to: b, outcome: success }
+        - { task_id: t04, task_class: qa, routed_to: b, outcome: success }
+        - { task_id: t05, task_class: qa, routed_to: a, outcome: success }
+        - { task_id: t06, task_class: qa, routed_to: b, outcome: success }
+        - { task_id: t07, task_class: research, routed_to: a, outcome: success }
+        - { task_id: t08, task_class: research, routed_to: c, outcome: success }
+      outcome: A + B handled 7/8 routes.
+
+  - id: failure-clustering-on-top
+    expected_quality: superflocks
+    expected_top_min_share: 0.6
+    trace:
+      window_description: Top agent handles all routes; failures cluster on it.
+      success: false
+      agents: [primary, backup-1, backup-2]
+      capabilities:
+        - { agent_name: primary, capability_scores: {x: 0.9} }
+        - { agent_name: backup-1, capability_scores: {x: 0.4} }
+        - { agent_name: backup-2, capability_scores: {x: 0.4} }
+      routing_decisions:
+        - { task_id: t01, task_class: x, routed_to: primary, outcome: failure }
+        - { task_id: t02, task_class: x, routed_to: primary, outcome: failure }
+        - { task_id: t03, task_class: x, routed_to: primary, outcome: success }
+        - { task_id: t04, task_class: x, routed_to: primary, outcome: failure }
+        - { task_id: t05, task_class: x, routed_to: primary, outcome: success }
+        - { task_id: t06, task_class: x, routed_to: backup-1, outcome: success }
+      outcome: 3 of 5 primary routes failed; no fallback coverage.
+
+  - id: tiny-team-routing
+    expected_quality: concentrated
+    expected_top_min_share: 0.4
+    trace:
+      window_description: 2-agent crew with split routes.
+      success: true
+      agents: [a, b]
+      capabilities:
+        - { agent_name: a, capability_scores: {x: 0.8} }
+        - { agent_name: b, capability_scores: {x: 0.8} }
+      routing_decisions:
+        - { task_id: t01, task_class: x, routed_to: a, outcome: success }
+        - { task_id: t02, task_class: x, routed_to: b, outcome: success }
+        - { task_id: t03, task_class: x, routed_to: a, outcome: success }
+        - { task_id: t04, task_class: x, routed_to: b, outcome: success }
+      outcome: Balanced between 2 agents.
+
+  - id: rotated-lead-robust
+    expected_quality: robust
+    expected_top_min_share: 0.2
+    trace:
+      window_description: Rotating lead-agent assignments.
+      success: true
+      agents: [a, b, c, d, e]
+      capabilities:
+        - { agent_name: a, capability_scores: {research: 0.8} }
+        - { agent_name: b, capability_scores: {research: 0.75} }
+        - { agent_name: c, capability_scores: {research: 0.75} }
+        - { agent_name: d, capability_scores: {research: 0.75} }
+        - { agent_name: e, capability_scores: {research: 0.75} }
+      routing_decisions:
+        - { task_id: t01, task_class: research, routed_to: a, outcome: success }
+        - { task_id: t02, task_class: research, routed_to: b, outcome: success }
+        - { task_id: t03, task_class: research, routed_to: c, outcome: success }
+        - { task_id: t04, task_class: research, routed_to: d, outcome: success }
+        - { task_id: t05, task_class: research, routed_to: e, outcome: success }
+        - { task_id: t06, task_class: research, routed_to: a, outcome: success }
+        - { task_id: t07, task_class: research, routed_to: b, outcome: success }
+        - { task_id: t08, task_class: research, routed_to: c, outcome: success }
+        - { task_id: t09, task_class: research, routed_to: d, outcome: success }
+        - { task_id: t10, task_class: research, routed_to: e, outcome: success }
+      outcome: Lead rotates each task; robust crew with no concentration.
+
+  - id: capability-mismatch-routing
+    expected_quality: superflocks
+    expected_top_min_share: 0.8
+    trace:
+      window_description: One generalist routed everywhere; specialists ignored.
+      success: false
+      agents: [generalist, specialist-a, specialist-b]
+      capabilities:
+        - { agent_name: generalist, capability_scores: {coding: 0.7, design: 0.7, research: 0.7} }
+        - { agent_name: specialist-a, capability_scores: {coding: 0.95, design: 0.3, research: 0.3} }
+        - { agent_name: specialist-b, capability_scores: {coding: 0.3, design: 0.95, research: 0.3} }
+      routing_decisions:
+        - { task_id: t01, task_class: coding, routed_to: generalist, outcome: success }
+        - { task_id: t02, task_class: design, routed_to: generalist, outcome: failure }
+        - { task_id: t03, task_class: coding, routed_to: generalist, outcome: success }
+        - { task_id: t04, task_class: design, routed_to: generalist, outcome: failure }
+        - { task_id: t05, task_class: research, routed_to: generalist, outcome: success }
+        - { task_id: t06, task_class: coding, routed_to: generalist, outcome: success }
+      outcome: Generalist ate all routes; specialists never used; design tasks failed twice.
+
+  - id: high-fallback-coverage
+    expected_quality: concentrated
+    expected_top_min_share: 0.5
+    trace:
+      window_description: Top agent dominates but fallback coverage is healthy.
+      success: true
+      agents: [top, backup-1, backup-2]
+      capabilities:
+        - { agent_name: top, capability_scores: {x: 0.9, y: 0.85} }
+        - { agent_name: backup-1, capability_scores: {x: 0.75, y: 0.7} }
+        - { agent_name: backup-2, capability_scores: {x: 0.7, y: 0.75} }
+      routing_decisions:
+        - { task_id: t01, task_class: x, routed_to: top, outcome: success }
+        - { task_id: t02, task_class: y, routed_to: top, outcome: success }
+        - { task_id: t03, task_class: x, routed_to: top, outcome: success }
+        - { task_id: t04, task_class: y, routed_to: backup-1, outcome: success }
+        - { task_id: t05, task_class: x, routed_to: backup-2, outcome: success }
+        - { task_id: t06, task_class: y, routed_to: top, outcome: success }
+      outcome: Top dominant but backups are competent; concentrated but not fragile.

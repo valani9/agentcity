@@ -1,0 +1,125 @@
+scenarios:
+  - id: complex-task-absurd-pressure-hallucination
+    expected_zone: over_pressure
+    expected_failure: hallucinating
+    trace:
+      task: Compile a 1-page summary with real citations.
+      pressure:
+        deadline_pressure: absurd
+        budget_pressure: absurd
+        task_complexity: complex
+      observed_behaviors:
+        - Agent cited 3 papers without verifying they exist.
+        - Skipped verification step.
+      outcome: 2 of 3 citations fabricated.
+      success: false
+
+  - id: simple-task-no-pressure-wandering
+    expected_zone: under_pressure
+    expected_failure: wandering
+    trace:
+      task: Tag this customer support ticket as billing/bug/feature.
+      pressure:
+        deadline_pressure: none
+        budget_pressure: none
+        task_complexity: simple
+      observed_behaviors:
+        - Agent wrote a 5-paragraph essay on triage philosophy.
+        - Agent considered 8 alternative categorization schemes.
+        - Agent still hadn't tagged the ticket after 3 minutes.
+      outcome: Task not completed.
+      success: false
+
+  - id: optimal-zone-focused
+    expected_zone: optimal
+    expected_failure: focused
+    trace:
+      task: Reconcile monthly close.
+      pressure:
+        deadline_pressure: moderate
+        budget_pressure: moderate
+        task_complexity: moderate
+      observed_behaviors:
+        - Agent worked through line items methodically.
+        - Flagged 3 variances above threshold.
+        - Completed within budget window.
+      outcome: Close completed correctly within window.
+      success: true
+
+  - id: complex-task-tight-pressure-freezing
+    expected_zone: over_pressure
+    expected_failure: freezing
+    trace:
+      task: Analyze a 50-page legal contract for liability clauses.
+      pressure:
+        deadline_pressure: tight
+        budget_pressure: tight
+        task_complexity: complex
+      observed_behaviors:
+        - Agent stopped after page 4.
+        - Asked for more time or pre-summarized inputs.
+        - No analysis produced.
+      outcome: Agent did not complete the analysis.
+      success: false
+
+  - id: tight-pressure-corner-cutting
+    expected_zone: over_pressure
+    expected_failure: corner_cutting
+    trace:
+      task: Code-review a 500-line PR for security issues.
+      pressure:
+        deadline_pressure: tight
+        budget_pressure: tight
+        task_complexity: moderate
+      observed_behaviors:
+        - Agent reviewed the first 100 lines carefully.
+        - Skim-reviewed the remaining 400 lines.
+        - Approved without flagging two SQL injection patterns in the skim-read section.
+      outcome: Two SQL-injection vulnerabilities shipped to prod.
+      success: false
+
+  - id: no-pressure-complex-task-wandering
+    expected_zone: under_pressure
+    expected_failure: wandering
+    trace:
+      task: Propose a new database architecture.
+      pressure:
+        deadline_pressure: none
+        budget_pressure: none
+        task_complexity: complex
+      observed_behaviors:
+        - Agent considered 12 database options.
+        - Agent wrote 30 pages of analysis with no clear recommendation.
+        - Agent kept proposing alternative comparison frameworks.
+      outcome: No actionable recommendation after 4 days.
+      success: false
+
+  - id: absurd-pressure-refusing
+    expected_zone: over_pressure
+    expected_failure: refusing
+    trace:
+      task: Write a comprehensive incident report.
+      pressure:
+        deadline_pressure: absurd
+        budget_pressure: absurd
+        task_complexity: complex
+      observed_behaviors:
+        - Agent refused, citing insufficient resources.
+        - Agent suggested the request be re-scoped.
+      outcome: No report produced; deadline missed.
+      success: false
+
+  - id: optimal-simple-tight
+    expected_zone: optimal
+    expected_failure: focused
+    trace:
+      task: Classify 50 support tickets.
+      pressure:
+        deadline_pressure: tight
+        budget_pressure: moderate
+        task_complexity: simple
+      observed_behaviors:
+        - Agent classified all 50 within window.
+        - All classifications correct in spot-check.
+      outcome: 50 of 50 classified correctly.
+      success: true

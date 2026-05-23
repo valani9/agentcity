@@ -1,6 +1,6 @@
 [project]
 name = "agentcity"
-version = "0.0.10"
+version = "0.0.11"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -32,6 +32,10 @@ keywords = [
     "culture",
     "strengths",
     "plus-delta",
+    "robbins-judge",
+    "superflocks",
+    "yerkes-dodson",
+    "workload",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -99,6 +103,9 @@ only-include = []
 "module-3-organization/31-schein-iceberg-culture/lib" = "agentcity/schein_culture"
 "module-1-individual/08-grant-strengths-as-weaknesses/lib" = "agentcity/grant_strengths"
 "module-2-team/23-plus-delta-feedback-format/lib" = "agentcity/plus_delta"
+"module-3-organization/32-robbins-judge-7-culture/lib" = "agentcity/robbins_culture"
+"module-2-team/16-heffernan-superflocks-detector/lib" = "agentcity/superflocks"
+"module-1-individual/06-yerkes-dodson-workload/lib" = "agentcity/yerkes_dodson"
 
 [tool.ruff]
 line-length = 100

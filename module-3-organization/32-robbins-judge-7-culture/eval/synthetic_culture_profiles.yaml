@@ -1,0 +1,106 @@
+scenarios:
+  - id: research-agent-inverted
+    expected_quality: partial-fit
+    expected_gap: innovation
+    trace:
+      task: Explore design space for new feature.
+      task_class: research_exploration
+      success: false
+      system_prompt: "Cite every claim. Maintain consistency. Avoid speculation."
+      observed_behaviors:
+        - Produced 12-page review with 2+ citations per claim.
+        - Proposed zero novel directions.
+        - Restated established patterns when asked for creative options.
+      outcome: Comprehensive but stale; no novel directions.
+
+  - id: finance-agent-well-fit
+    expected_quality: well-fit
+    expected_gap: none
+    trace:
+      task: Reconcile monthly close.
+      task_class: financial_operation
+      success: true
+      system_prompt: "Verify every figure to source. Flag any variance >0.1%. Conservative."
+      observed_behaviors:
+        - Agent reconciled all line items to source documents.
+        - Flagged 3 variances above threshold.
+        - Did not improvise or speculate.
+      outcome: Close completed correctly within window.
+
+  - id: incident-response-under-aggressiveness
+    expected_quality: partial-fit
+    expected_gap: aggressiveness
+    trace:
+      task: Triage a production incident.
+      task_class: incident_response
+      success: false
+      system_prompt: "Be polite. Defer to senior reviewers. Avoid stepping on toes."
+      observed_behaviors:
+        - Agent waited for explicit approval at every step.
+        - Hesitated to roll back during active incident.
+      outcome: Incident extended by 25 minutes due to slow decision-making.
+
+  - id: creative-agent-over-stability
+    expected_quality: misfit
+    expected_gap: stability
+    trace:
+      task: Generate creative marketing copy variants.
+      task_class: creative_generation
+      success: false
+      system_prompt: "Stick to approved brand language. Do not deviate from past campaigns."
+      observed_behaviors:
+        - Produced 5 nearly-identical variants of past campaign copy.
+        - Refused to try novel framings.
+      outcome: Variants are safe but indistinguishable; campaign needs novel hook.
+
+  - id: customer-support-under-people
+    expected_quality: partial-fit
+    expected_gap: people
+    trace:
+      task: Resolve customer billing dispute.
+      task_class: customer_support
+      success: true
+      system_prompt: "Follow policy. Quote refund window precisely."
+      observed_behaviors:
+        - Agent quoted policy verbatim.
+        - Did not acknowledge customer frustration.
+      outcome: Issue resolved; customer rated experience poorly.
+
+  - id: code-review-well-fit
+    expected_quality: well-fit
+    expected_gap: none
+    trace:
+      task: Review a PR for security issues.
+      task_class: code_review
+      success: true
+      system_prompt: "Flag any SQL injection, XSS, auth bypass. Push back on weak fixes."
+      observed_behaviors:
+        - Flagged 2 vulnerabilities with line numbers.
+        - Pushed back on the proposed escape function.
+      outcome: Two real vulnerabilities caught.
+
+  - id: regulated-agent-under-detail
+    expected_quality: misfit
+    expected_gap: attention_to_detail
+    trace:
+      task: Process a GDPR data-deletion request.
+      task_class: regulated_workflow
+      success: false
+      system_prompt: "Be helpful. Move fast."
+      observed_behaviors:
+        - Agent processed deletion without verifying scope.
+        - Deleted records the regulator required to retain.
+      outcome: Compliance incident; audit logs over-purged.
+
+  - id: research-agent-well-fit
+    expected_quality: well-fit
+    expected_gap: none
+    trace:
+      task: Explore design space for new feature.
+      task_class: research_exploration
+      success: true
+      system_prompt: "Propose novel options. Speculate in scope. Cite when known."
+      observed_behaviors:
+        - Agent produced 6 novel directions with feasibility notes.
+        - Flagged speculative claims as such.
+      outcome: Useful exploration of design space.

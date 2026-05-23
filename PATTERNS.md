@@ -15,7 +15,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 03  | **Johari Window Self-Audit**           | Luft & Ingham                     | Confabulation (Blind), silent reasoning (Hidden), latent capability (Unknown) | 🟢 shipped |
 | 04  | DANVA-style Emotion Reader             | Nowicki & Duke                    | Agent cannot read user emotion from text                                | ⚪ planned |
 | 05  | Cognitive Reappraisal Module           | Gross / Lazarus                   | Agent emotional suppression vs adaptive reframing under failure         | ⚪ planned |
-| 06  | Yerkes-Dodson Optimal Workload         | Yerkes & Dodson                   | Agent corner-cutting under pressure / wandering with no pressure        | ⚪ planned |
+| 06  | **Yerkes-Dodson Optimal Workload**     | Yerkes & Dodson (1908)            | Agent corner-cutting under pressure / wandering with no pressure        | 🟢 shipped |
 | 07  | HEXACO Personality Profile             | Lee & Ashton                      | Mismatched agent personality for task type; safety = H-factor           | ⚪ planned |
 | 08  | **Strengths-as-Weaknesses Detector**   | Adam Grant                        | Strength overuse (e.g., high agreeableness → executes DROP TABLE)       | 🟢 shipped |
 | 09  | 4 Motivation Traps Diagnostic          | Bror & Saxberg (HBR)              | Agent task abandonment — Values / Self-Efficacy / Emotions / Attribution | ⚪ planned |
@@ -30,7 +30,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | 13  | **GRPI Working Agreement Generator**   | Beckhard / GRPI model             | Multi-agent deploy with no shared goals / roles / processes / interactions | 🟢 shipped |
 | 14  | **Process Gain/Loss Detector**         | Steiner / Robbins & Judge         | Multi-agent system performs worse than best single agent                | 🟢 shipped |
 | 15  | **Social Loafing Detector**            | Latané et al. (1979)              | Agents in teams that stop contributing real work                        | 🟢 shipped |
-| 16  | Superflocks Detector                   | Margaret Heffernan                | Best-agent-wins routing collapses other agents → fragile system         | ⚪ planned |
+| 16  | **Superflocks Detector**               | Margaret Heffernan / Muir (1996)  | Best-agent-wins routing collapses other agents → fragile system         | 🟢 shipped |
 | 17  | **Lencioni Five Dysfunctions Diagnostic** | Patrick Lencioni               | Multi-agent failures classifiable as Trust / Conflict / Commitment / Accountability / Results | 🟢 shipped |
 | 18  | **Frei & Morriss Trust Triangle Audit** | Frances Frei & Anne Morriss      | Agent "wobble" on Logic / Authenticity / Empathy — cross-model benchmark | 🟢 shipped |
 | 19  | **Cognitive vs Affective Trust Builder** | Daniel McAllister (1995)        | Agents build only cognitive trust (competence), never affective trust (warmth) | 🟢 shipped |
@@ -51,7 +51,7 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 | #   | Pattern                                | OB Framework / Author             | Agent Failure Addressed                                                 | Status |
 |-----|----------------------------------------|-----------------------------------|-------------------------------------------------------------------------|--------|
 | 31  | **Schein's Iceberg Culture Audit**     | Edgar Schein (1985)               | Agent culture drift — system prompt vs observed behavior vs training-baked assumptions | 🟢 shipped |
-| 32  | 7-Characteristics Culture Diagnostic   | Robbins & Judge                   | Innovation / Detail / Outcome / People / Team / Aggressiveness / Stability culture profiling | ⚪ planned |
+| 32  | **7-Characteristics Culture Diagnostic** | Robbins & Judge (2017)          | Innovation / Detail / Outcome / People / Team / Aggressiveness / Stability culture profiling | 🟢 shipped |
 | 33  | Org-Structure Matrix Analyzer          | McShane & Von Glinow              | Functional vs Divisional vs Matrix agent architectures — fitness check  | ⚪ planned |
 | 34  | Span-of-Control / Centralization Calculator | McShane & Von Glinow         | When to flatten orchestrator / decentralize agent decisions             | ⚪ planned |
 
@@ -80,9 +80,12 @@ Status legend: `🟢 shipped` / `🟡 in progress` / `⚪ planned` / `🔴 depre
 19. **🟢 #31 Schein's Iceberg Culture Audit** — first Module 3 pattern; culture-layer drift. **Shipped at v0.0.10.**
 20. **🟢 #08 Strengths-as-Weaknesses Detector** — strength-overuse failures (helpfulness → DROP TABLE). **Shipped at v0.0.10.**
 21. **🟢 #23 Plus/Delta Inter-Agent Feedback Format** — fourth generative pattern; agent-on-agent feedback. **Shipped at v0.0.10.**
+22. **🟢 #32 Robbins & Judge 7-Characteristics Culture** — second Module 3 pattern; culture profiling. **Shipped at v0.0.11.**
+23. **🟢 #16 Heffernan Superflocks Detector** — multi-agent routing-fragility diagnostic. **Shipped at v0.0.11.**
+24. **🟢 #06 Yerkes-Dodson Optimal Workload** — performance-vs-pressure curve. **Shipped at v0.0.11.**
 
-Then the remaining 13 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
+Then the remaining 10 in the order whichever pattern most clearly addresses a public agent-failure incident in the news that week.
 
 ---
 
-*Last updated: 2026-05-22 — Twenty-one patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13, #24, #25, #23), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), attribution (#01), trust-balance (#19), per-agent contribution (#15), debate-dynamics (#26), process-gain/loss (#14), orchestration-design (#11), strength-overuse (#08), and organizational-culture (#31).*
+*Last updated: 2026-05-22 — Twenty-four patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay). Diagnostic axes covered: generative (#13, #24, #25, #23), event (#30), team (#17), character (#18), self-knowledge (#03), team-climate (#20), reasoning-pattern (#27), conflict-style (#29), feedback-intake (#22), role-structure (#28), attribution (#01), trust-balance (#19), per-agent contribution (#15), debate-dynamics (#26), process-gain/loss (#14), orchestration-design (#11), strength-overuse (#08), organizational-culture (#31, #32), routing-fragility (#16), and workload-pressure (#06).*

@@ -134,7 +134,7 @@ The library is built to ship:
 
 ## Status
 
-**Early.** Twenty-one patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
+**Early.** Twenty-four patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
 
 - `agentcity.aar` (#30) — After-Action Review generator
 - `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
@@ -157,8 +157,11 @@ The library is built to ship:
 - `agentcity.schein_culture` (#31) — Schein Iceberg Culture Audit (first Module 3 pattern)
 - `agentcity.grant_strengths` (#08) — Adam Grant Strengths-as-Weaknesses detector
 - `agentcity.plus_delta` (#23) — Brené Brown Plus/Delta inter-agent feedback format generator
+- `agentcity.robbins_culture` (#32) — Robbins & Judge 7-Characteristics Culture profile diagnostic
+- `agentcity.superflocks` (#16) — Heffernan/Muir Superflocks routing-fragility detector
+- `agentcity.yerkes_dodson` (#06) — Yerkes-Dodson Optimal Workload pressure-curve diagnostic
 
-13 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
+10 more patterns on the roadmap. See [PATTERNS.md](PATTERNS.md) for the full list.
 
 ## License
 

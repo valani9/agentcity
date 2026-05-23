@@ -112,6 +112,7 @@ agentcity-danva = "agentcity.danva_emotion.cli:main"
 agentcity-reappraisal = "agentcity.cognitive_reappraisal.cli:main"
 agentcity-yerkes = "agentcity.yerkes_dodson.cli:main"
 agentcity-hexaco = "agentcity.hexaco.cli:main"
+agentcity-grant = "agentcity.grant_strengths.cli:main"
 
 [build-system]
 requires = ["hatchling"]

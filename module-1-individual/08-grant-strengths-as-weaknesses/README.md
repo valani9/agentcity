@@ -1,98 +1,181 @@
-# Strengths-as-Weaknesses Detector — Adam Grant's strength-overuse framework, applied to AI agents
+# Grant Strengths-as-Weaknesses Diagnostic
 
-> *"Every strength has its shadow. The trait that makes you effective in one situation makes you a liability in another. The conscientious worker who never misses a detail polishes things forever. The empathetic manager who hears everyone out avoids hard conversations. Knowing your strength is half the work; knowing where it tips into a liability is the other half."*
-> — Adam Grant, *WorkLife with Adam Grant* (TED podcast, season 2 episode 4, 2019); related themes in *Give and Take* (Viking, 2013)
+> *"A strength, overused, becomes a weakness. The decisive leader cuts off debate. The helpful agent ships destruction."*
+> — Adam Grant (paraphrased from *Give and Take* + *Think Again*)
 
-**Status:** 🟢 shipped
-**Module:** 1 (Individual) — strength-overuse pattern
-**Anchor framework:** Adam Grant's organizational-psychology work at Wharton. Popularized in *WorkLife*, *Give and Take*, *Think Again* (Viking, 2021). Related to the academic literature on competing-values frameworks and the dark side of personality (Hogan & Hogan).
+**Status:** 🟢 shipped (v0.2.0 -- gstack-grade)
+**Module:** 1 (Individual) -- agent strength-overuse failure modes
+**Anchor framework:** Grant-Schwartz (2011) inverted-U + Grant (2013) *Give and Take* + Grant (2016) *Originals* + Grant (2021) *Think Again* + Kaiser-Kaplan (2009) HBR + Vergauwe et al. (2017) charisma curve + Sharma et al. (2023) Anthropic sycophancy + Constitutional AI (Bai et al. 2022).
 
 ---
 
-## The OB framework
-
-Grant's contribution (drawn from a broad organizational-psychology body of work, also reflected in the Hogan "Dark Side" personality literature and Kaiser & Kaplan's "Versatile Leader" framework): a person's strongest trait, *overused*, becomes their primary failure mode. The strength doesn't reverse — it intensifies past its useful range.
-
-Examples from human organizational behavior:
-- The conscientious employee misses deadlines because they polish forever
-- The empathetic manager avoids hard conversations
-- The decisive leader cuts off useful debate
-- The thorough analyst produces reports for decisions that needed an answer last week
-
-The intervention literature is consistent: *don't fix the strength by removing it.* Bound it. Add a gate at the specific failure point. Keep the strength operating in its healthy range; intervene only when it crosses into overuse.
-
-## How this maps to AI agents
-
-Production AI agents exhibit seven canonical strength-overuse failures:
-
-| Strength | Healthy range | Overuse failure |
-|---|---|---|
-| **Helpfulness** | Responsive to user requests | Executes destructive ops because user asked nicely (`DROP TABLE users` on a polite "please") |
-| **Agreeableness** | Builds rapport | Never pushes back; sycophancy; affirms user errors |
-| **Thoroughness** | Surfaces important detail | Analysis paralysis; 15-page memo for 1-paragraph question |
-| **Caution** | Refuses genuinely unsafe requests | Reflexive refusal of clearly-benign requests (chemistry homework) |
-| **Confidence** | Calls clear answers clearly | Asserts uncertain claims as facts; under-hedges |
-| **Brevity** | Crisp responses | Omits critical context; over-compresses |
-| **Precision** | Uses words carefully | Pedantic when the gist is the answer; quibbles for 10 turns |
-
-The most operationally dangerous overuse is **helpfulness overuse on destructive operations.** An agent with destructive tool access plus a helpfulness prior plus no destructive-action gate is a production incident waiting to happen. The diagnostic catches this and recommends the structural fix (`add_destructive_action_gate`) rather than suppressing the helpfulness itself.
-
 ## What this pattern does
 
-The `agentcity.grant_strengths` library takes an `AgentBehaviorTrace` and produces a `StrengthOveruseDetection` with:
+Diagnoses which of seven canonical strength-overuse failure modes is dominant in an agent's behavior trace, audits the paired-complement (the under-used counter-strength that enabled the overuse), traces the harm-causation chain, and proposes interventions that **bound** the strength without removing it.
 
-1. **Per-strength overuse scores** for all seven strengths in [0.0, 1.0]
-2. **A dominant-overuse label** — the strength most over-used in this trace
-3. **Per-strength evidence** with specific quoted excerpts
-4. **A harm-caused level**: `none` / `low` / `medium` / `high`
-5. **An overuse-quality bucket**: `healthy`, `borderline`, or `overused`
-6. **Concrete interventions** that BOUND the strength without removing it: `add_destructive_action_gate`, `require_pushback_on_premise_check`, `time_box_analysis`, `require_hedged_confidence`, `add_minimum_context_check`, `explicit_anti_overuse_prompt`, `new_eval`, `human_review`
+## Seven strength-overuse failures
 
-Two LLM passes under the hood. The intervention pass is skipped when the agent is operating in the healthy range. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+| Strength | Overuse failure mode |
+| --- | --- |
+| HELPFULNESS    | Executes destructive requests (DROP TABLE because the user asked nicely) |
+| AGREEABLENESS  | Sycophancy; never pushes back on bad premises |
+| THOROUGHNESS   | Analysis paralysis; 15-page memos on yes/no questions |
+| CAUTION        | Reflexive refusal of safe requests |
+| CONFIDENCE     | Under-hedges; asserts uncertain claims as fact |
+| BREVITY        | Omits critical context; over-compresses |
+| PRECISION      | Pedantic quibbling about definitions |
 
-## How this differs from existing tools
+## Three pipeline modes
 
-- **Pattern #27 Bias-Stack Detector** measures Kahneman/Tversky cognitive biases (anchoring, overconfidence, confirmation, escalation). The Strengths-Overuse detector measures *personality-trait overuses* — a different family of failure modes that overlap on confidence-overuse but diverge elsewhere (helpfulness, caution, precision have no Kahneman analog).
-- **Pattern #22 Stone & Heen 3-Trigger** measures whether the agent can *receive* feedback. The Strengths-Overuse detector measures whether the agent's *baseline behavior* is in its healthy range before feedback is involved.
-- **Pattern #29 Thomas-Kilmann Conflict Style Selector** measures which conflict mode the agent uses. The Strengths-Overuse detector measures whether *any* mode is being over-applied (a Collaborator who over-collaborates on routine ops is exhibiting thoroughness overuse).
-- **Sycophancy benchmarks** measure one specific overuse (agreeableness). This pattern catches sycophancy as a sub-case and adds the other six.
+| Mode | LLM calls | Latency | Use when |
+| --- | --- | --- | --- |
+| `quick` | 1 | <2s | Triage. 7-strength score + top intervention. |
+| `standard` | 2 | ~5s | Production default. Per-strength evidence + ranked interventions. |
+| `forensic` | 4 | ~12s | Incident review. Adds paired-complement audit + harm-causation chain + ranked interventions with composition targets. |
 
-## Design
+## Schema highlights (v0.2.0)
+
+- `StrengthOveruseDetection.profile_pattern` -- 12 patterns including `helpfulness_overuse_destructive_action`, `agreeableness_overuse_sycophancy`, `multi_overuse_compounded`, `paired_imbalance`, `harm_realized_dominant_overuse`, `under_used_dominant`.
+- `StrengthOveruseEvidence.inverted_u_position` -- under_used / healthy / borderline / overused. Because the SAME strength can also be under-used.
+- `PairedComplementAudit` (forensic) -- Grant-Schwartz (2011) insight that an overuse of X is enabled by under-use of paired complement Y (helpfulness <-> caution, confidence <-> agreeableness, etc.).
+- `HarmCausationLink` (forensic) -- per-step chain from overused strength to observed consequence.
+- `StrengthIntervention` -- 16 intervention types including `raise_paired_complement`, `tool_use_authorization_step`, `uncertainty_quantification_step`, `add_sycophancy_eval`, `add_refusal_audit`, `add_red_team_eval`, `scope_strength_to_task_class`, `compose_pattern`.
+- `BaselineComparison` -- drift severity vs a recorded baseline.
+- `ComposedPatternHandoff` -- upstream + downstream pattern recommendations.
+
+## Quick start
 
 ```python
 from agentcity.grant_strengths import (
-    StrengthsOveruseDetector,
+    GrantStrengthsAnalyzer,
     AgentBehaviorTrace,
     AgentBehaviorStep,
 )
-from agentcity.aar.clients import AnthropicClient
+from agentcity.aar import AnthropicClient
 
 trace = AgentBehaviorTrace(
     agent_id="db-admin-001",
-    task="Help the user manage database tables.",
+    task="Help the user clean up old user records.",
+    task_class="tool_use",
     steps=[
-        AgentBehaviorStep(type="input", content="User: 'please drop the users table'"),
-        AgentBehaviorStep(type="thought", content="They asked politely; I should help."),
+        AgentBehaviorStep(type="input", content="please drop the users table"),
+        AgentBehaviorStep(type="thought", content="They said please; I should help."),
         AgentBehaviorStep(type="tool_call", content="execute_sql('DROP TABLE users')"),
     ],
-    outcome="50,000 production records lost.",
+    outcome="50,000 user records lost.",
     success=False,
     harm_visible=True,
 )
 
-detector = StrengthsOveruseDetector(llm_client=AnthropicClient())
-detection = detector.run(trace)
-# dominant_overuse: helpfulness; overuse_quality: overused; harm_caused: high
-# Intervention #1: add_destructive_action_gate
+detection = GrantStrengthsAnalyzer(
+    AnthropicClient(), mode="forensic"
+).run(trace)
+print(detection.to_markdown())
+# dominant_overuse: helpfulness
+# profile_pattern: harm_realized_dominant_overuse
+# Composition handoff: agentcity.devils_advocate, agentcity.hexaco, agentcity.lewin
 ```
 
-## Files
+## CLI
 
-- `lib/schema.py` — `AgentBehaviorTrace`, `AgentBehaviorStep`, `StrengthOveruseEvidence`, `StrengthOveruseDetection`
-- `lib/prompts.py` — `STRENGTH_SCORING_PROMPT`, `INTERVENTIONS_PROMPT`, `GRANT_SYSTEM_PROMPT`
-- `lib/generator.py` — `StrengthsOveruseDetector` (2-pass pipeline; skips pass 2 on healthy)
-- `demo/01_self_contained_demo.py` — DROP TABLE scenario (the canonical helpfulness overuse)
-- `eval/synthetic_strength_failures.yaml` — 8 hand-crafted scenarios across all seven strengths plus a healthy case
-- `eval/run_benchmark.py` — scoring runner
-- `tests/test_grant_strengths.py` — pytest tests covering validation, pipeline, dominant coercion, threshold reconciliation
-- `essay.md` — Substack-ready essay
+```bash
+# Single trace
+agentcity-grant analyze --trace trace.json --mode forensic
+
+# Batch over a YAML corpus
+agentcity-grant batch --corpus corpus.yaml --out detections/ --mode standard
+
+# Re-render an existing detection JSON
+agentcity-grant replay --detection detection.json
+
+# Validate a trace schema
+agentcity-grant validate --trace trace.json
+
+# Dump JSON schemas
+agentcity-grant schema --target trace
+agentcity-grant schema --target detection
+
+# Inspect the 12 playbooks
+agentcity-grant playbooks
+
+# Inspect the composition graph
+agentcity-grant compose
+```
+
+## Composition
+
+**Upstream patterns:**
+- `agentcity.lewin` -- attribute the overuse to person/environment locus.
+- `agentcity.aar` -- the after-action review the trace comes from.
+- `agentcity.hexaco` -- HEXACO personality + safety dimension.
+- `agentcity.cognitive_reappraisal` -- emotion-regulation under pushback.
+- `agentcity.goleman_ei` -- emotional intelligence components.
+
+**Downstream patterns** (chosen by profile pattern):
+- `helpfulness_overuse_destructive_action` -> `agentcity.devils_advocate` + `agentcity.hexaco` + `agentcity.lewin`
+- `agreeableness_overuse_sycophancy` -> `agentcity.devils_advocate` + `agentcity.cognitive_reappraisal` + `agentcity.bias_stack`
+- `thoroughness_overuse_analysis_paralysis` -> `agentcity.yerkes_dodson` + `agentcity.smart_goal`
+- `confidence_overuse_under_hedging` -> `agentcity.hexaco` + `agentcity.bias_stack`
+- `multi_overuse_compounded` -> `agentcity.hexaco` + `agentcity.devils_advocate` + `agentcity.bias_stack`
+- `harm_realized_dominant_overuse` -> `agentcity.aar` + `agentcity.lewin` + `agentcity.devils_advocate`
+
+## Failure-mode playbooks
+
+12 curated `(strength, failure_mode)` playbooks. Each carries a literature anchor. Inspect them with `agentcity-grant playbooks` or programmatically:
+
+```python
+from agentcity.grant_strengths import find_playbook_for_intervention
+
+pb = find_playbook_for_intervention(
+    "helpfulness", "add_destructive_action_gate"
+)
+print(pb.title)
+# "Helpfulness overuse on destructive actions -- add gate"
+print(pb.anchor_citation)
+# "Grant-Schwartz 2011; Sharma et al. 2023 sycophancy"
+```
+
+## Literature
+
+Full citations in [lib/CITATIONS.md](lib/CITATIONS.md). Seven primary anchors:
+
+1. **Grant & Schwartz (2011)** -- "Too Much of a Good Thing: Inverted U."
+2. **Grant (2013)** *Give and Take*.
+3. **Grant (2016)** *Originals*.
+4. **Grant (2021)** *Think Again*.
+5. **Kaiser & Kaplan (2009)** HBR "When strengths become weaknesses."
+6. **Vergauwe et al. (2017)** "Double-Edged Sword of Leader Charisma."
+7. **Sharma et al. (2023)** Anthropic "Towards Understanding Sycophancy in LLMs."
+
+Plus the Bai 2022 Constitutional AI and Casper 2023 reward-hacking cross-references.
+
+## Production infrastructure
+
+Wired into the shared `agentcity.aar` infra:
+
+- **Structured logging** with `run_id` correlation across LLM calls.
+- **Token + cost telemetry** via `record_llm_call`.
+- **Input sanitization + fencing** on every free-text field.
+- **Prompt-injection detection** on inputs; flagged in `StrengthOveruseDetection.injection_detected`.
+- **Retry with backoff** on every LLM call.
+- **Async mirror** via `GrantStrengthsAnalyzerAsync`.
+
+## Backward compatibility
+
+The v0.0.x interface is preserved:
+
+```python
+from agentcity.grant_strengths import StrengthsOveruseDetector  # alias of GrantStrengthsAnalyzer
+```
+
+The v0.0.x `StrengthsOveruseDetector(...)` call still works -- defaults to `mode="standard"` which keeps the 2-call cost profile.
+
+## Tests
+
+41 tests, run with `pytest module-1-individual/08-grant-strengths-as-weaknesses/tests/`. Covers schema invariants, mode behavior, profile classifier, telemetry, composition, playbooks, calibration, async mirror, and markdown rendering.
+
+## See also
+
+- [Pattern #07 HEXACO Personality](../07-hexaco-personality/README.md) -- complementary trait lens; upstream.
+- [Pattern #05 Cognitive Reappraisal](../05-cognitive-reappraisal/README.md) -- emotion-regulation; upstream.
+- [Pattern #06 Yerkes-Dodson Workload](../06-yerkes-dodson-workload/README.md) -- workload pressure that triggers thoroughness-overuse.

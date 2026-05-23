@@ -121,6 +121,7 @@ agentcity-grpi = "agentcity.grpi.cli:main"
 agentcity-process = "agentcity.process_gain_loss.cli:main"
 agentcity-loafing = "agentcity.social_loafing.cli:main"
 agentcity-superflocks = "agentcity.superflocks.cli:main"
+agentcity-lencioni = "agentcity.lencioni.cli:main"
 
 [build-system]
 requires = ["hatchling"]

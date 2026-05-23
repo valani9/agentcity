@@ -1,10 +1,17 @@
 """LLM prompts for the Org-Structure Matrix Analyzer.
 
-Two passes:
-  1. STRUCTURE_PROMPT      - score each of the six dimensions observed
-                              vs target, plus archetype classification
-  2. INTERVENTIONS_PROMPT  - propose interventions to close the biggest gap
+v0.2.0 prompts cover quick / standard / forensic modes:
+  - STRUCTURE_PROMPT (legacy + standard)
+  - QUICK_STRUCTURE_PROMPT (mode=quick)
+  - INTERVENTIONS_PROMPT (legacy + standard)
+  - FORENSIC_REPORTING_GRAPH_PROMPT, FORENSIC_BOTTLENECK_PROMPT,
+    FORENSIC_INTERVENTIONS_PROMPT
+  - assemble_prompt(): fence + sanitize untrusted fields using agentcity.aar.
 """
+
+from __future__ import annotations
+
+from agentcity.aar import fence, sanitize_for_prompt
 
 STRUCTURE_SYSTEM_PROMPT = """You are an org-structure diagnostic working in the tradition of
 Jay Galbraith's Star Model and Henry Mintzberg's structural configurations
@@ -22,19 +29,11 @@ independent dimensions:
   - DEPARTMENTALIZATION   - by what dimension are agents grouped (function /
                               product / customer / geography / matrix)?
 
-Each dimension is INDEPENDENT — a crew can be high-specialization low-centralization
+Each dimension is INDEPENDENT - a crew can be high-specialization low-centralization
 (distributed expertise), or low-specialization high-centralization (one orchestrator
 running generalist workers), etc.
 
-You will be given a CrewStructureTrace plus a TASK CLASS. For each of the six
-dimensions, you score:
-  - observed_score (float 0-1): how strongly this dimension shows up
-  - target_score (float 0-1): what the dimension SHOULD score for this task class
-  - fit_score (float 0-1): 1 - abs(observed - target)
-  - explanation (1-3 sentences citing specific evidence)
-  - evidence_quotes (specific excerpts; can be empty)
-
-Target profiles by task class (rough heuristics — adjust based on specifics):
+Target profiles by task class (rough heuristics -- adjust based on specifics):
 
   - creative_brainstorm:      low specialization, low formalization, low
                               centralization, very low hierarchy, wide span,
@@ -96,11 +95,36 @@ Return a single JSON OBJECT with these fields:
       5. span_of_control
       6. departmentalization
     Each has: dimension, observed_score (float 0-1), target_score (float 0-1),
-    fit_score (float 0-1), explanation (str), evidence_quotes (list of str)
+    fit_score (float 0-1), explanation (str), evidence_quotes (list of str),
+    confidence (float 0-1), risk ("low" | "medium" | "high")
   - overall_fit: float 0-1 (mean of the six fit_scores)
   - fit_quality: one of "well-fit", "partial-fit", "misfit"
   - biggest_gap: which dimension has the LARGEST gap between observed and target
     (or "none" if no gap is significant)
+
+Return only the JSON object."""
+
+
+QUICK_STRUCTURE_PROMPT = """Quick-mode org-structure profile + one top intervention.
+
+Task: {task}
+Task class: {task_class}
+Outcome: {outcome}
+Success: {success}
+
+Agent roster ({n_agents} agents):
+{roster}
+
+Observed behaviors:
+{observed_behaviors}
+
+Return a single JSON OBJECT with:
+  - archetype: archetype label
+  - dimensions: 6 StructureDimensionScore objects (same shape as standard)
+  - overall_fit: float
+  - fit_quality: "well-fit" | "partial-fit" | "misfit"
+  - biggest_gap: dimension name or "none"
+  - top_intervention: ONE StructureIntervention object, OR null if well-fit
 
 Return only the JSON object."""
 
@@ -125,10 +149,13 @@ Each intervention must have:
       "remove_routing_layer"     - direct peer access
       "new_eval"                 - regression test against the structural failure
       "human_review"             - human checkpoint
+      "compose_pattern"          - hand off to another agentcity pattern
   - description (what the intervention does)
   - suggested_implementation (concrete spec, role definition, or org-chart change)
   - estimated_impact ("high", "medium", "low")
-  - rationale (why this works — connect to the dominant gap)
+  - rationale (why this works -- connect to the dominant gap)
+  - effort_estimate (one of "1h", "1d", "1w", "1m", "ongoing")
+  - risk (one of "low", "medium", "high")
 
 Task class: {task_class}
 Archetype: {archetype}
@@ -138,3 +165,89 @@ All dimension evidence:
 {evidence}
 
 Return a JSON array of StructureIntervention objects. Return only the JSON array."""
+
+
+FORENSIC_REPORTING_GRAPH_PROMPT = """Forensic-mode: analyze the reporting graph as a DAG.
+
+Roster ({n_agents} agents):
+{roster}
+
+Return a single JSON OBJECT with:
+  - depth: integer (longest reporting path)
+  - branching_factor: float (mean direct reports per supervisor; 0 if no supervisors)
+  - cycles_detected: boolean
+  - orphans: list of agent_ids with no reports_to and no reports from anyone
+  - bottleneck_agents: list of agent_ids whose removal would disconnect the graph
+  - explanation (1-2 sentences)
+
+Return only the JSON object."""
+
+
+FORENSIC_BOTTLENECK_PROMPT = """Forensic-mode: identify the decision bottleneck (if any).
+
+Task class: {task_class}
+Roster:
+{roster}
+Observed behaviors:
+{observed_behaviors}
+
+Return a single JSON OBJECT with:
+  - bottleneck_agent_id: agent_id or null
+  - affected_dimensions: list of dimensions whose target score the bottleneck
+    blocks (e.g. "centralization" / "hierarchy")
+  - severity_estimate: "low" | "medium" | "high"
+  - explanation (1-2 sentences)
+
+Return only the JSON object."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """Forensic-mode interventions. Use the reporting-graph
+audit + decision-bottleneck audit to propose 3-6 interventions ranked by
+(structural-leverage x gap-size).
+
+Task class: {task_class}
+Archetype: {archetype}
+Fit quality: {fit_quality}
+Biggest gap: {biggest_gap}
+Reporting graph: {reporting_graph}
+Decision bottleneck: {decision_bottleneck}
+All dimension evidence:
+{evidence}
+
+Same intervention schema as INTERVENTIONS_PROMPT. Return only the JSON array."""
+
+
+def assemble_prompt(
+    template: str,
+    /,
+    *,
+    roster: str = "",
+    observed_behaviors: list[str] | None = None,
+    **kwargs: object,
+) -> str:
+    """Fence + sanitize untrusted fields, then fill the template."""
+    safe_roster = fence("roster", sanitize_for_prompt(roster or "(empty)"))
+    behaviors = observed_behaviors or []
+    if behaviors:
+        behaviors_text = "\n".join(f"- {sanitize_for_prompt(b)}" for b in behaviors)
+    else:
+        behaviors_text = "(none)"
+    safe_behaviors = fence("observed_behaviors", behaviors_text)
+    fields: dict[str, object] = {
+        "roster": safe_roster,
+        "observed_behaviors": safe_behaviors,
+    }
+    fields.update(kwargs)
+    return template.format(**fields)
+
+
+__all__ = [
+    "FORENSIC_BOTTLENECK_PROMPT",
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_REPORTING_GRAPH_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "QUICK_STRUCTURE_PROMPT",
+    "STRUCTURE_PROMPT",
+    "STRUCTURE_SYSTEM_PROMPT",
+    "assemble_prompt",
+]

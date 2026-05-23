@@ -1,15 +1,25 @@
-"""agentcity.org_structure — Org-Structure Matrix Analyzer for AI agent
-crews. Third Module 3 (organizational) pattern.
+"""agentcity.org_structure -- Org-Structure Matrix diagnostic for AI agent
+crews. Module 3 (organizational) pattern.
 
-The six structural dimensions: specialization, formalization,
-centralization, hierarchy, span_of_control, departmentalization. Each
-task class implies a different target structure profile; the diagnostic
-identifies where the crew's observed structure fails to match.
+Six dimensions: specialization, formalization, centralization, hierarchy,
+span_of_control, departmentalization. Maps each crew to a structural
+archetype (flat-peer, hierarchical, centralized-functional,
+decentralized-product, matrix, mixed) and reports the fit gap against
+the task class.
 
-Where Schein's Iceberg (#31) measures *coherence* and Robbins/Judge's
-7-Characteristics (#32) measures *cultural shape*, this pattern measures
-*structural fit*. The three compose into the Module 3 organizational
-diagnostic stack.
+Where Schein's Iceberg (#31) measures coherence and Robbins/Judge's
+7-Characteristics (#32) measures cultural fit, this pattern measures
+*structural* fit.
+
+v0.2.0 features:
+  - Three pipeline modes (quick/standard/forensic)
+  - 10 StructureProfilePattern variants + 7-point Severity scale
+  - Forensic ReportingGraphAudit + DecisionBottleneckAudit passes
+  - Calibration baseline roundtrip + drift comparison
+  - Cross-pattern composition manifest
+  - 12 (dimension, failure_mode) playbooks anchored to Galbraith /
+    Mintzberg
+  - Production infra via agentcity.aar shared module
 
 Quick start:
 
@@ -18,48 +28,111 @@ Quick start:
         CrewStructureTrace,
         AgentRole,
     )
-    from agentcity.aar.clients import AnthropicClient
+    from agentcity.aar import AnthropicClient
 
     trace = CrewStructureTrace(
-        crew_id="incident-response-crew",
-        task="Investigate latency spike across the order pipeline.",
+        crew_id="incident-001",
+        task="Triage prod outage",
         task_class="incident_response",
         agents=[
             AgentRole(agent_id="a1", role_name="generalist"),
             AgentRole(agent_id="a2", role_name="generalist"),
-            AgentRole(agent_id="a3", role_name="generalist"),
         ],
-        observed_behaviors=[
-            "No agent owns the incident; all three propose ideas in parallel.",
-            "Decisions are made by majority vote, not by an incident commander.",
-        ],
-        outcome="Investigation diverges; MTTR exceeds SLO by 3x.",
+        observed_behaviors=["both agents propose conflicting fixes"],
+        outcome="conflict unresolved",
         success=False,
     )
     analysis = StructureMatrixAnalyzer(AnthropicClient()).run(trace)
     print(analysis.to_markdown())
-    # archetype: flat-peer; gap: centralization; intervention: add_supervisor_layer
+    # profile_pattern: too_flat_for_critical_task
 """
 
-from .generator import LLMClient, StructureMatrixAnalyzer
+from ._calibration import (
+    compare_to_baseline,
+    load_baseline,
+    record_baseline,
+)
+from ._composition import (
+    STRUCTURE_COMPOSITION,
+    recommended_downstream,
+    recommended_upstream,
+)
+from ._playbooks import (
+    PLAYBOOKS,
+    all_playbook_keys,
+    find_playbook,
+    find_playbook_for_intervention,
+)
+from .generator import (
+    AsyncLLMClient,
+    LLMClient,
+    StructureMatrixAnalyzer,
+    StructureMatrixAnalyzerAsync,
+)
 from .schema import (
+    SEVERITY_ORDER,
+    STRUCTURE_ARCHETYPES,
     STRUCTURE_DIMENSIONS,
+    STRUCTURE_MODES,
+    STRUCTURE_PROFILE_PATTERNS,
     AgentRole,
+    AttachedPlaybook,
+    BaselineComparison,
+    ComposedPatternHandoff,
     CrewStructureTrace,
+    DecisionBottleneckAudit,
+    EffortEstimate,
+    InterventionType,
+    ReportingGraphAudit,
+    Severity,
     StructureAnalysis,
+    StructureArchetype,
     StructureDimensionScore,
     StructureIntervention,
+    StructureMode,
+    StructureProfilePattern,
+    TaskClass,
+    severity_from_misfit,
 )
 
 __all__ = [
-    "StructureMatrixAnalyzer",
-    "LLMClient",
     "AgentRole",
+    "AsyncLLMClient",
+    "AttachedPlaybook",
+    "BaselineComparison",
+    "ComposedPatternHandoff",
     "CrewStructureTrace",
+    "DecisionBottleneckAudit",
+    "EffortEstimate",
+    "InterventionType",
+    "LLMClient",
+    "PLAYBOOKS",
+    "ReportingGraphAudit",
+    "SEVERITY_ORDER",
+    "STRUCTURE_ARCHETYPES",
+    "STRUCTURE_COMPOSITION",
+    "STRUCTURE_DIMENSIONS",
+    "STRUCTURE_MODES",
+    "STRUCTURE_PROFILE_PATTERNS",
+    "Severity",
     "StructureAnalysis",
+    "StructureArchetype",
     "StructureDimensionScore",
     "StructureIntervention",
-    "STRUCTURE_DIMENSIONS",
+    "StructureMatrixAnalyzer",
+    "StructureMatrixAnalyzerAsync",
+    "StructureMode",
+    "StructureProfilePattern",
+    "TaskClass",
+    "all_playbook_keys",
+    "compare_to_baseline",
+    "find_playbook",
+    "find_playbook_for_intervention",
+    "load_baseline",
+    "record_baseline",
+    "recommended_downstream",
+    "recommended_upstream",
+    "severity_from_misfit",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

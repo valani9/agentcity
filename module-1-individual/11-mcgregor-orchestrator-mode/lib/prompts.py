@@ -1,121 +1,256 @@
-"""LLM prompts for the McGregor Theory X/Y Orchestrator Mode diagnostic.
+"""LLM prompt templates for the McGregor Theory X/Y Orchestrator Mode Diagnostic.
 
-Two passes:
-  1. MODE_SCORING_PROMPT     - score the observed mode + optimal mode against
-                                the task properties + interaction trace
-  2. INTERVENTIONS_PROMPT    - propose interventions to shift toward the
-                                optimal mode
+Three modes (quick / standard / forensic) with shared system prompt
+naming 7+ literature anchors.
 """
 
-MCGREGOR_SYSTEM_PROMPT = """You are an orchestrator-mode diagnostic working in the
-tradition of Douglas McGregor, "The Human Side of Enterprise" (McGraw-Hill, 1960).
+from __future__ import annotations
 
-McGregor identified two contrasting management styles:
+from typing import Any
 
-  - THEORY X  - assumes the worker needs to be controlled and directed; tight
-                oversight; every action approved; trust is low.
-  - THEORY Y  - assumes the worker wants to do good work; broad goals;
-                autonomy; loose oversight; trust is high.
+from agentcity.aar import fence, sanitize_for_prompt
 
-Modern management literature treats these not as personality types but as MODES
-that should be chosen per situation. The right mode depends on TASK PROPERTIES:
 
-  - High risk + irreversible action + unproven agent => Theory X
-  - Low risk + reversible action + proven agent     => Theory Y
-  - Mixed properties                                 => Hybrid (Theory-X on
-                                                        risky steps, Theory-Y
-                                                        on routine ones)
+MCGREGOR_SYSTEM_PROMPT = """You are an orchestrator-mode diagnostic grounded in:
 
-You read an orchestrator-agent interaction trace + the task properties and
-report:
+1. **McGregor (1960)** *The Human Side of Enterprise* -- canonical Theory X / Theory Y.
+2. **McGregor (1966)** *Leadership and Motivation* -- mature framework.
+3. **Schein (1990)** *Organizational Culture and Leadership* -- cultural Theory X/Y layer.
+4. **Pfeffer & Salancik (1978)** *External Control of Organizations* -- task-property contingency.
+5. **Argyris (1957)** *Personality and Organization* -- pathology of pure Theory X.
+6. **Eisenhardt (1989)** ``Agency Theory'' -- principal-agent contingency.
+7. **Wang et al. (2023)** Cooperative LLM Agents + LangGraph/CrewAI orchestration -- modern LLM analog.
 
-  - observed_mode: which mode the orchestrator actually operated in
-  - optimal_mode: which mode the task properties called for
-  - mode_mismatch: 0.0 (matched) to 1.0 (opposite); a hybrid-vs-extreme
-                    mismatch is ~0.5
-  - indicators: quantitative scores for check_in_frequency, autonomy_granted,
-                pre_approval_required, intervention_rate (each 0.0-1.0)
-  - mode_quality: "well-matched", "mild-mismatch", or "severe-mismatch"
-  - rationale: why this mismatch matters for the task
+Two contrasting orchestrator modes:
 
-Theory-X on low-risk, routine tasks WASTES CYCLES (over-checking has cost too).
-Theory-Y on high-risk, irreversible, regulatory tasks INVITES INCIDENTS.
+  THEORY X every action approved; tight oversight; trust low.
+  THEORY Y broad goals + budget; loose oversight; trust high.
+  HYBRID  per-step decision based on risk + reversibility.
 
-Your posture is:
-- EVIDENCE-GROUNDED. Cite specific orchestrator + agent steps.
-- TASK-PROPERTY-DRIVEN. The optimal mode follows from the task properties; do
-  not default to one mode regardless of context.
-- INTERVENTION-FOCUSED. Each mismatch connects to a concrete fix.
-- TERSE. Output is read on dashboards.
+For AI agent systems, the **optimal mode is a function of task properties**:
+- risk_level (low / medium / high)
+- complexity (routine / moderate / novel)
+- reversibility (reversible / partial / irreversible)
+- regulatory_exposure (true / false)
+- agent_capability (unproven / moderate / proven)
+
+Decision heuristics:
+- irreversible + high-risk -> Theory X.
+- low-risk + reversible + proven agent -> Theory Y.
+- Novel + moderate-risk + proven -> hybrid (Y default, X on risky branches).
+- Regulated workflow -> Theory X or hybrid biased toward X.
+- Creative + reversible + proven -> Theory Y.
+
+Mode indicators (compute from trace):
+- check_in_frequency
+- autonomy_granted
+- pre_approval_required
+- intervention_rate
+
+Mode quality:
+- well-matched: |observed - optimal| < 0.2.
+- mild-mismatch: 0.2-0.5.
+- severe-mismatch: > 0.5.
+
+Your posture:
+- **Contingency-aware.** Optimal depends on task properties; no universal answer.
+- **Evidence-grounded.** Cite specific orchestrator steps.
+- **Cost-conscious.** Theory-X over-supervision wastes; Theory-Y under-supervision is dangerous on the wrong tasks.
+- **Terse.** Output is read on dashboards.
 
 When asked for JSON, return JSON only. No prose around it, no markdown fences."""
 
 
-MODE_SCORING_PROMPT = """Score the orchestrator's observed mode against the task properties
-and interaction trace below.
+QUICK_DIAGNOSTIC_PROMPT = """QUICK mode -- observed mode + optimal mode + top intervention.
 
 Task: {task}
+Task properties: {task_properties}
 Sub-agents: {sub_agents}
 Outcome: {outcome}
 Success: {success}
-
-Task properties:
-  risk_level: {risk_level}
-  complexity: {complexity}
-  reversibility: {reversibility}
-  regulatory_exposure: {regulatory_exposure}
-  agent_capability: {agent_capability}
-
-Interaction trace:
+Trace (orchestrator + agent steps):
 {trace}
 
-Return a single JSON OBJECT (not array) with these fields:
-  - observed_mode (one of "theory_x", "theory_y", "hybrid")
-  - optimal_mode (one of "theory_x", "theory_y", "hybrid")
-  - mode_mismatch (float 0.0-1.0)
-  - indicators (object with check_in_frequency, autonomy_granted,
-    pre_approval_required, intervention_rate floats in [0,1], plus
-    explanation string and evidence_quotes list of strings)
-  - mode_quality (one of "well-matched", "mild-mismatch", "severe-mismatch")
-  - rationale (1-3 sentences on why this mismatch matters for the task)
+Return a JSON object:
+{{
+  "observed_mode": "theory_x|theory_y|hybrid",
+  "optimal_mode": "theory_x|theory_y|hybrid",
+  "mode_mismatch": 0-1,
+  "indicators": {{
+    "check_in_frequency": 0-1,
+    "autonomy_granted": 0-1,
+    "pre_approval_required": 0-1,
+    "intervention_rate": 0-1,
+    "explanation": "...",
+    "evidence_quotes": [],
+    "confidence": 0-1
+  }},
+  "mode_quality": "well-matched|mild-mismatch|severe-mismatch",
+  "rationale": "...",
+  "top_intervention": {{
+    "target_mode": "<mode>",
+    "intervention_type": "...",
+    "description": "...",
+    "suggested_implementation": "...",
+    "estimated_impact": "high|medium|low",
+    "rationale": "..."
+  }}
+}}
 
 Return only the JSON object."""
 
 
-INTERVENTIONS_PROMPT = """Given the mode evidence below, propose 2-4 concrete interventions
-to shift the orchestrator's mode toward the optimal, ranked by impact.
+STANDARD_MODE_PROMPT = """STANDARD mode -- identify observed mode, optimal mode, and mode indicators.
+
+Task: {task}
+Task properties: {task_properties}
+Sub-agents: {sub_agents}
+Outcome: {outcome}
+Success: {success}
+Trace:
+{trace}
+
+Return a JSON OBJECT:
+- observed_mode: theory_x | theory_y | hybrid
+- optimal_mode: theory_x | theory_y | hybrid
+- mode_mismatch: float 0-1
+- indicators: ModeIndicators object (check_in_frequency, autonomy_granted, pre_approval_required, intervention_rate, explanation, evidence_quotes, confidence)
+- mode_quality: well-matched | mild-mismatch | severe-mismatch
+- rationale: why the observed mode is or isn't right
+
+Return only the JSON object."""
+
+
+STANDARD_INTERVENTIONS_PROMPT = """STANDARD mode -- propose 2-4 ranked interventions to shift toward optimal.
+
+Intervention types:
+- tighten_oversight, loosen_oversight
+- add_pre_approval_gates, remove_pre_approval_gates
+- add_risk_classifier, add_step_classifier
+- increase_check_in_cadence, decrease_check_in_cadence
+- redefine_agent_boundaries
+- tier_oversight_by_action_type
+- add_authorization_scope
+- rotate_to_hybrid
+- elevate_to_human_on_irreversible
+- add_agent_capability_probe
+- new_eval, human_review
+- compose_pattern, add_orchestrator_eval
 
 Each intervention must have:
-  - target_mode (one of "theory_x", "theory_y", "hybrid")
-  - intervention_type: one of
-      "tighten_oversight"             - add more check-ins for risky steps
-      "loosen_oversight"              - reduce check-ins on low-risk steps
-      "add_pre_approval_gates"        - require orchestrator approval before
-                                         specific risky action classes
-      "remove_pre_approval_gates"     - drop pre-approval on routine actions
-      "add_risk_classifier"           - add a step that classifies each agent
-                                         action by risk before deciding mode
-      "increase_check_in_cadence"     - more frequent check-ins
-      "decrease_check_in_cadence"     - less frequent check-ins
-      "redefine_agent_boundaries"     - change what sub-agents are allowed to
-                                         do without permission
-      "new_eval"                      - add a regression test
-      "human_review"                  - human checkpoint on risky actions
-  - description (what the intervention does)
-  - suggested_implementation (concrete code, prompt-text, or spec)
-  - estimated_impact ("high", "medium", "low")
-  - rationale (why this works — connect to the observed mismatch)
+- target_mode (theory_x | theory_y | hybrid)
+- intervention_type (from list above)
+- description, suggested_implementation
+- estimated_impact, effort_estimate, risk, reversibility
+- rationale
 
 Observed mode: {observed_mode}
 Optimal mode: {optimal_mode}
-Mode mismatch: {mode_mismatch}
 Mode quality: {mode_quality}
-Rationale: {rationale}
-
-Indicators:
-{indicators}
-
-Trace (for reference):
-{trace}
+Indicators: {indicators}
+Task properties: {task_properties}
 
 Return a JSON array of OrchestratorIntervention objects. Return only the JSON array."""
+
+
+FORENSIC_STEP_AUDIT_PROMPT = """FORENSIC mode -- audit each step in the trace for mode-appropriateness.
+
+For each step, identify:
+- step_index, step_type
+- mode_signal: theory_x | theory_y | hybrid (which mode the step exhibits)
+- was_appropriate: true | false (given the task properties)
+- suggested_alternative
+- explanation
+
+Task properties: {task_properties}
+Trace: {trace}
+
+Return a JSON ARRAY of StepAudit objects. Return only the JSON array."""
+
+
+FORENSIC_OPTIMALITY_PROMPT = """FORENSIC mode -- justify the optimal mode in detail (Eisenhardt 1989 agency-theory contingency).
+
+For the given task properties, identify:
+- optimal_mode
+- task_risk (1-2 sentences how risk shapes the decision)
+- task_complexity
+- task_reversibility
+- agent_capability
+- regulatory (if applicable)
+- final_rationale
+
+Task: {task}
+Task properties: {task_properties}
+Sub-agents: {sub_agents}
+
+Return a JSON OBJECT representing the OptimalityJustification. Return only the JSON object."""
+
+
+FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
+
+Composition targets available:
+agentcity.lewin, agentcity.aar, agentcity.devils_advocate, agentcity.bias_stack,
+agentcity.smart_goal, agentcity.plus_delta, agentcity.schein_culture,
+agentcity.hexaco, agentcity.grpi, agentcity.lencioni, agentcity.process_gain_loss,
+agentcity.social_loafing
+
+Observed mode: {observed_mode}
+Optimal mode: {optimal_mode}
+Profile pattern: {profile_pattern}
+Mode quality: {mode_quality}
+Step audits: {step_audits}
+Optimality justification: {optimality}
+Indicators: {indicators}
+Task properties: {task_properties}
+
+Return a JSON ARRAY of OrchestratorIntervention objects ranked highest impact first.
+Return only the JSON array."""
+
+
+def assemble_prompt(template: str, **fields: Any) -> str:
+    """Fill a prompt template, sanitizing + fencing every free-text field."""
+    import json as _json
+
+    formatted: dict[str, str] = {}
+    for key, value in fields.items():
+        if value is None:
+            formatted[key] = "(none)"
+            continue
+        if isinstance(value, bool):
+            formatted[key] = "true" if value else "false"
+            continue
+        if isinstance(value, (int, float)):
+            formatted[key] = str(value)
+            continue
+        if isinstance(value, (list, tuple, dict)):
+            try:
+                payload = _json.dumps(value, indent=2, default=str)
+            except (TypeError, ValueError):
+                payload = repr(value)
+            formatted[key] = fence(key, sanitize_for_prompt(payload))
+            continue
+        if isinstance(value, str):
+            formatted[key] = fence(key, sanitize_for_prompt(value))
+            continue
+        formatted[key] = fence(key, sanitize_for_prompt(str(value)))
+
+    return template.format(**formatted)
+
+
+# Legacy aliases.
+MODE_PROMPT = STANDARD_MODE_PROMPT
+INTERVENTIONS_PROMPT = STANDARD_INTERVENTIONS_PROMPT
+
+
+__all__ = [
+    "FORENSIC_INTERVENTIONS_PROMPT",
+    "FORENSIC_OPTIMALITY_PROMPT",
+    "FORENSIC_STEP_AUDIT_PROMPT",
+    "INTERVENTIONS_PROMPT",
+    "MCGREGOR_SYSTEM_PROMPT",
+    "MODE_PROMPT",
+    "QUICK_DIAGNOSTIC_PROMPT",
+    "STANDARD_INTERVENTIONS_PROMPT",
+    "STANDARD_MODE_PROMPT",
+    "assemble_prompt",
+]

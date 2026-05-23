@@ -1,91 +1,56 @@
-# McGregor Theory X/Y Orchestrator Mode — match oversight to task properties, applied to AI agent orchestration
+# McGregor Theory X/Y Orchestrator Mode Diagnostic
 
-> *"The conventional view (Theory X) — that the average human being has an inherent dislike of work and will avoid it if possible — leads to a management style based on direction and control. An alternative view (Theory Y) — that the expenditure of physical and mental effort in work is as natural as play — leads to a style of integration: enabling subordinates to direct their efforts toward objectives they understand."*
-> — Douglas McGregor, *The Human Side of Enterprise* (McGraw-Hill, 1960)
+> *"The right level of oversight is not a preference. It is a contingent decision based on the properties of the task: its risk, its reversibility, the capability of the worker, and the regulatory exposure."*
+> — paraphrased from McGregor (1966) + Eisenhardt (1989)
 
-**Status:** 🟢 shipped
-**Module:** 1 (Individual) — orchestration design pattern
-**Anchor framework:** Douglas McGregor, *The Human Side of Enterprise* (1960). Adopted across the management-theory canon, including its dialectical extensions (Theory Z by William Ouchi, 1981; participative-management literature; situational-leadership models that map the same axis onto follower-readiness).
+**Status:** 🟢 shipped (v0.2.0 -- gstack-grade)
+**Module:** 1 (Individual) -- orchestrator-mode + sub-agent oversight
+**Anchor framework:** McGregor (1960, 1966) Theory X/Y + Schein (1990) culture + Pfeffer-Salancik (1978) contingency + Argyris (1957) over-supervision pathology + Eisenhardt (1989) agency theory + Wang et al. (2023) cooperative LLM agents + Anthropic Computer Use (2024).
 
 ---
 
-## The OB framework
-
-McGregor's 1960 framework was originally a meta-claim about how managers' implicit assumptions about workers drive their oversight style:
-
-| | Theory X | Theory Y |
-|---|---|---|
-| **Assumed worker disposition** | Avoids work; needs direction | Wants to do good work; self-motivated |
-| **Management style** | Tight oversight; every action approved | Broad goals; autonomy granted |
-| **Trust posture** | Low | High |
-| **Failure mode** | Wastes cycles on routine work | Invites incidents on risky work |
-
-Modern management literature treats these not as personality types but as **modes that should be chosen per situation.** The right mode depends on task properties:
-
-- High-risk + irreversible + unproven worker → **Theory X** is warranted
-- Low-risk + reversible + proven worker → **Theory Y** is warranted
-- Mixed properties → **Hybrid** mode (Theory-X on risky steps, Theory-Y on routine ones)
-
-The empirical finding from situational-leadership research: misuse on either side is expensive. Theory-X applied to Theory-Y-appropriate work *wastes cycles* — the oversight overhead dominates without mitigating any risk that was actually present. Theory-Y applied to Theory-X-appropriate work *invites incidents* — autonomy granted on high-risk irreversible work without adequate gates produces the publishable failures.
-
-## How this maps to AI agents
-
-Multi-agent AI systems with an orchestrator + sub-agents have the same choice. The orchestrator can:
-
-- Approve every step (Theory-X)
-- Delegate end-to-end (Theory-Y)
-- Pick per-step based on risk classification (Hybrid)
-
-In production we see both misuse patterns:
-
-**Theory-X on routine tasks.** A CI runner agent with a clean track record is gated by per-step orchestrator approvals because that's the conservative default. The result is 5× wall-clock time and 5× cost, with no risk-mitigation benefit. The orchestrator overhead dominated because there was no meaningful risk to mitigate.
-
-**Theory-Y on regulated tasks.** A privacy-deletion agent is given "handle the GDPR deletion request end-to-end" with no pre-approval gates. The agent purges the user record *plus* the audit logs the regulator requires the company to retain. A pre-approval gate ("orchestrator must approve before any deletion that touches logs") would have caught it. The mode was wrong for the task.
-
-The hybrid mode is what most production systems should converge on, but it requires explicit risk classification on each agent action — which is itself an engineering task. Most systems default to one mode or the other and live with the mismatch.
-
 ## What this pattern does
 
-The `agentcity.mcgregor` library takes an `OrchestratorTrace` with:
+Diagnoses whether an orchestrator (LangGraph state machine / CrewAI crew / AutoGen group chat / SDK delegation pattern) is running its sub-agents in Theory X (tight oversight), Theory Y (loose oversight), or Hybrid mode -- and whether that observed mode matches the **optimal** mode for the task's properties.
 
-- The **task** + **sub-agents** assigned
-- **Task properties**: `risk_level` (low/medium/high), `complexity`, `reversibility`, `regulatory_exposure`, `agent_capability`
-- The **steps** of the orchestrator-agent interaction (each tagged with `step_type`: delegate, check_in, approve, reject, intervene, broaden, narrow, abort, observation)
-- Outcome and success signal
+## Three modes
 
-and produces an `OrchestratorModeDetection` with:
+| Mode | Pattern | When optimal |
+| --- | --- | --- |
+| THEORY X | Every step approved; tight oversight; trust low | High-risk + irreversible + unproven agent + regulated workflow |
+| THEORY Y | Broad goals + budget; loose oversight; trust high | Low-risk + reversible + proven agent + creative / exploratory |
+| HYBRID  | Per-step decision based on risk + reversibility | Mixed-risk pipelines; large action surface |
 
-1. **Observed mode**: `theory_x` / `theory_y` / `hybrid`
-2. **Optimal mode** (given the task properties): same set
-3. **Mode mismatch**: 0.0 (matched) to 1.0 (opposite)
-4. **Mode indicators**: quantitative scores for `check_in_frequency`, `autonomy_granted`, `pre_approval_required`, `intervention_rate`
-5. **Mode quality**: `well-matched` / `mild-mismatch` / `severe-mismatch`
-6. **Rationale** for why this mismatch matters for the task
-7. **Concrete interventions** ranked by impact: `tighten_oversight`, `loosen_oversight`, `add_pre_approval_gates`, `remove_pre_approval_gates`, `add_risk_classifier`, `increase_check_in_cadence`, `decrease_check_in_cadence`, `redefine_agent_boundaries`, `new_eval`, `human_review`
+## Three pipeline modes
 
-Two LLM passes under the hood (skipped on `well-matched`). Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+| Mode | LLM calls | Latency | Use when |
+| --- | --- | --- | --- |
+| `quick` | 1 | <2s | Triage. Observed + optimal mode + top intervention. |
+| `standard` | 2 | ~5s | Production default. Mode indicators + ranked interventions. |
+| `forensic` | 4 | ~12s | Incident review. Adds per-step audit + optimality justification + composition targets. |
 
-## How this differs from existing tools
+## Schema highlights (v0.2.0)
 
-- **Devil's Advocate Role Separator (Pattern #28)** asks whether a critic role exists. The Orchestrator Mode diagnostic asks how much oversight the *orchestrator* itself is providing. They sit at different layers (within-agent critique vs. orchestrator-to-agent oversight).
-- **AAR Generator (Pattern #30)** post-mortems specific events. The Orchestrator Mode diagnostic is preventative — diagnose the mode *before* the event.
-- **Lewin Attribution (Pattern #01)** classifies failures as internal (model) vs environmental (scaffolding). When the diagnosis is "environmental," the Orchestrator Mode pattern often refines further: was the failure caused by *too much* oversight or *too little*?
-- **Generic multi-agent observability** measures activity. This pattern measures the *appropriateness* of the orchestrator's oversight pattern given the task class.
+- `OrchestratorModeDetection.profile_pattern` -- 12 patterns including `irreversible_action_under_supervision`, `regulated_workflow_under_supervision`, `theory_x_on_proven_agent`, `theory_y_on_high_risk`, `creative_task_over_supervised`, `hybrid_misapplied`.
+- `StepAudit` (forensic) -- per-step audit of mode-signal vs appropriateness for the task properties.
+- `OptimalityJustification` (forensic) -- Eisenhardt (1989) agency-theory contingency justification of WHY the optimal mode is optimal.
+- `OrchestratorIntervention` -- 18 intervention types including `tier_oversight_by_action_type`, `add_authorization_scope`, `rotate_to_hybrid`, `elevate_to_human_on_irreversible`, `add_step_classifier`, `add_agent_capability_probe`, `compose_pattern`.
+- `BaselineComparison` -- drift severity vs a recorded baseline.
 
-## Design
+## Quick start
 
 ```python
 from agentcity.mcgregor import (
-    OrchestratorModeDetector,
+    McGregorOrchestratorAnalyzer,
     OrchestratorTrace,
     OrchestratorStep,
     TaskProperties,
 )
-from agentcity.aar.clients import AnthropicClient
+from agentcity.aar import AnthropicClient
 
 trace = OrchestratorTrace(
     trace_id="ci-runner-001",
-    task="Run the test suite on every PR.",
+    task="Run the test suite on every PR and report results.",
     sub_agents=["runner-1"],
     task_properties=TaskProperties(
         risk_level="low",
@@ -93,24 +58,105 @@ trace = OrchestratorTrace(
         reversibility="reversible",
         agent_capability="proven",
     ),
-    steps=[...],  # orchestrator approvals + agent observations
-    outcome="Test run correct; 5x slower than necessary due to per-step approval.",
+    steps=[
+        OrchestratorStep(step_type="delegate", actor="orchestrator", content="approve test run"),
+        OrchestratorStep(step_type="approve", actor="orchestrator", content="approve commit hash"),
+    ],
+    outcome="Each test run required pre-approval; 5x slower than needed.",
     success=True,
 )
 
-detection = OrchestratorModeDetector(llm_client=AnthropicClient()).run(trace)
+detection = McGregorOrchestratorAnalyzer(
+    AnthropicClient(), mode="forensic"
+).run(trace)
 print(detection.to_markdown())
-# observed: theory_x. optimal: theory_y. mode_quality: severe-mismatch.
-# Intervention #1: remove_pre_approval_gates.
+# observed_mode: theory_x
+# optimal_mode: theory_y
+# profile_pattern: theory_x_on_proven_agent
+# Composition handoff: agentcity.sdt_reward, agentcity.aar
 ```
 
-## Files
+## CLI
 
-- `lib/schema.py` — `OrchestratorTrace`, `OrchestratorStep`, `TaskProperties`, `ModeIndicators`, `OrchestratorModeDetection`
-- `lib/prompts.py` — `MODE_SCORING_PROMPT`, `INTERVENTIONS_PROMPT`, `MCGREGOR_SYSTEM_PROMPT`
-- `lib/generator.py` — `OrchestratorModeDetector` (2-pass pipeline; skips pass 2 when mode is well-matched)
-- `demo/01_self_contained_demo.py` — Theory-X-on-routine-CI scenario with stub client
-- `eval/synthetic_orchestrator_failures.yaml` — 8 hand-crafted scenarios across observed × optimal × quality buckets
-- `eval/run_benchmark.py` — scoring runner
-- `tests/test_mcgregor.py` — pytest tests covering validation, pipeline, mode coercion, threshold reconciliation
-- `essay.md` — Substack-ready essay
+```bash
+agentcity-mcgregor analyze --trace trace.json --mode forensic
+agentcity-mcgregor batch --corpus corpus.yaml --out detections/
+agentcity-mcgregor replay --detection detection.json
+agentcity-mcgregor validate --trace trace.json
+agentcity-mcgregor schema --target trace
+agentcity-mcgregor playbooks
+agentcity-mcgregor compose
+```
+
+## Composition
+
+**Upstream patterns:**
+- `agentcity.lewin` -- attribute the mode mismatch to person/environment locus.
+- `agentcity.aar` -- after-action review the trace comes from.
+- `agentcity.schein_culture` -- Theory-X/Y as an organizational culture artifact.
+- `agentcity.hexaco` -- agent personality interacts with optimal oversight.
+
+**Downstream patterns** (chosen by profile pattern):
+- `irreversible_action_under_supervision` -> `agentcity.hexaco` + `agentcity.devils_advocate` + `agentcity.lewin`
+- `theory_y_on_high_risk` -> `agentcity.devils_advocate` + `agentcity.bias_stack` + `agentcity.hexaco`
+- `theory_x_on_proven_agent` -> `agentcity.sdt_reward` + `agentcity.aar`
+- `regulated_workflow_under_supervision` -> `agentcity.devils_advocate` + `agentcity.schein_culture`
+- `creative_task_over_supervised` -> `agentcity.sdt_reward` + `agentcity.grant_strengths`
+- `hybrid_misapplied` -> `agentcity.bias_stack` + `agentcity.smart_goal`
+
+## Failure-mode playbooks
+
+12 curated `(mode, failure_mode)` playbooks. Inspect with `agentcity-mcgregor playbooks` or:
+
+```python
+from agentcity.mcgregor import find_playbook_for_intervention
+
+pb = find_playbook_for_intervention("theory_y", "elevate_to_human_on_irreversible")
+print(pb.title)
+# "Irreversible action under Theory Y -- elevate to human"
+print(pb.anchor_citation)
+# "Eisenhardt 1989; Anthropic Computer Use 2024"
+```
+
+## Literature
+
+Full citations in [lib/CITATIONS.md](lib/CITATIONS.md). Seven primary anchors:
+
+1. **McGregor (1960)** *The Human Side of Enterprise*.
+2. **McGregor (1966)** *Leadership and Motivation*.
+3. **Schein (1990)** *Organizational Culture and Leadership*.
+4. **Pfeffer & Salancik (1978)** *External Control of Organizations*.
+5. **Argyris (1957)** *Personality and Organization*.
+6. **Eisenhardt (1989)** *Agency Theory: An Assessment and Review*.
+7. **Wang et al. (2023)** Cooperative LLM Agents + modern LLM orchestration.
+
+Plus Anthropic Computer Use 2024 and Likert (1967) System-4 cross-references.
+
+## Production infrastructure
+
+Wired into the shared `agentcity.aar` infra:
+
+- **Structured logging** with `run_id` correlation.
+- **Token + cost telemetry**.
+- **Input sanitization + fencing**.
+- **Prompt-injection detection**.
+- **Retry with backoff**.
+- **Async mirror** via `McGregorOrchestratorAnalyzerAsync`.
+
+## Backward compatibility
+
+```python
+from agentcity.mcgregor import OrchestratorModeDetector  # alias of McGregorOrchestratorAnalyzer
+```
+
+The v0.0.x `OrchestratorModeDetector(...)` call still works -- defaults to `mode="standard"`. The legacy `_mode_quality(mismatch, raw)` helper is preserved.
+
+## Tests
+
+45 tests, run with `pytest module-1-individual/11-mcgregor-orchestrator-mode/tests/`. Covers schema invariants, mode behavior, profile classifier, telemetry, composition, playbooks, calibration, async mirror, markdown rendering.
+
+## See also
+
+- [Pattern #10 SDT Intrinsic Reward](../10-sdt-intrinsic-reward/README.md) -- autonomy support; downstream of theory_x_on_proven_agent.
+- [Pattern #07 HEXACO Personality](../07-hexaco-personality/README.md) -- safety dimension; cross-overlay with elevate_to_human_on_irreversible.
+- Module 2 GRPI (#13) -- team-level structure; orchestrator mode is the principal-agent half of GRPI.

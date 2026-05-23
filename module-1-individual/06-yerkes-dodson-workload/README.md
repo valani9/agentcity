@@ -1,17 +1,17 @@
-# Yerkes-Dodson Optimal Workload Detector — performance-vs-pressure curve, applied to AI agents
+# Yerkes-Dodson Optimal Workload Detector
 
 > *"The relation of strength of stimulus to rapidity of habit-formation is such that a definite optimum of intensity exists. Performance increases up to that optimum and decreases beyond it. The optimum varies with the difficulty of the task."*
-> — Robert M. Yerkes & John D. Dodson, *The Relation of Strength of Stimulus to Rapidity of Habit Formation* (Journal of Comparative Neurology and Psychology, 18, 1908)
+> — Robert M. Yerkes & John D. Dodson (1908)
 
-**Status:** 🟢 shipped
-**Module:** 1 (Individual) — individual agent performance under pressure
-**Anchor framework:** Robert M. Yerkes & John D. Dodson, 1908 — the original Yerkes-Dodson Law experiments on mice running mazes under varying shock intensity. Refined by Hebb (1955) on optimal-arousal theory; modern operational treatments in performance-psychology literature.
+**Status:** 🟢 shipped (v0.2.0 -- gstack-grade)
+**Module:** 1 (Individual) -- individual agent performance under pressure
+**Anchor framework:** Yerkes-Dodson (1908) inverted-U + Sweller (1988/1994/2011) Cognitive Load Theory + Kahneman (1973) attention capacity + Hancock-Warm (1989) dynamic adaptability + Eysenck-Calvo (1992) Attentional Control Theory + Hebb (1955) arousal-as-precursor + Liu et al. (2024) lost-in-the-middle.
 
 ---
 
-## The OB framework
+## What this pattern does
 
-The 1908 Yerkes-Dodson experiments established that performance on a task has an **inverted-U relationship with arousal (or pressure):**
+Diagnoses **where an AI agent sits on the inverted-U workload curve**: under-pressure (wandering / drifting), optimal (focused), or over-pressure (corner-cutting / freezing / hallucinating / refusing). Then proposes ranked interventions, attaches failure-mode playbooks, and hands off to downstream AgentCity patterns.
 
 ```
   performance
@@ -20,112 +20,165 @@ The 1908 Yerkes-Dodson experiments established that performance on a task has an
        │      ╱   ╲
        │     ╱     ╲
        │    ╱       ╲
-       │   ╱         ╲
-       │  ╱           ╲___
+       │   ╱         ╲___
        └──────────────────▶
          low    optimal    high
                 pressure
+
+         (the optimum sits LOWER on the curve when tasks are complex)
 ```
 
-Three zones:
-- **Under pressure** → performance *wanders.* Attention drifts. The actor explores tangentially, over-elaborates, fails to commit. The signal in human work: 15-page memos for 1-paragraph decisions; analysis paralysis on simple choices.
-- **Optimal** → performance is *focused.* Attention is concentrated on the task. The actor commits.
-- **Over pressure** → performance *collapses.* The actor corner-cuts, freezes, hallucinates, or refuses.
+## Three pipeline modes
 
-The 1908 paper added a critical second finding: **the optimum varies with task complexity.** Simple tasks peak at *higher* pressure (focus dominates over exploration). Complex tasks peak at *lower* pressure (need cognitive headroom for the harder problem). The Yerkes-Dodson Law gives you a different optimum for each task class.
+| Mode | LLM calls | Latency | Use when |
+| --- | --- | --- | --- |
+| `quick` | 1 | <2s | Triage; dashboards; tight cost budgets. Zone + top intervention. |
+| `standard` | 1 | ~3s | Production default. Zone evidence + ranked interventions. |
+| `forensic` | 4 | ~10s | Incident review. Adds Sweller CLT decomposition + Liu-2024 context-saturation analysis + 4-8 ranked interventions with composition targets. |
 
-## How this maps to AI agents
+## Schema highlights (v0.2.0)
 
-The same curve appears in agent traces with disturbing fidelity. The "pressure" inputs are the operational equivalents of the 1908 experiment's shock intensity:
+- `WorkloadDetection.profile_pattern` -- one of 11 patterns including `context_saturation`, `extraneous_load_overload`, `intrinsic_load_overload`, plus the 3-zone × failure-mode variants.
+- `CognitiveLoadAnalysis` -- intrinsic / extraneous / germane decomposition (Sweller CLT). Forensic mode.
+- `ContextSaturation` -- saturation_ratio + lost_in_middle_risk (Liu et al. 2024). Auto-computed deterministically from `pressure.context_size_tokens` / `pressure.context_window_size`.
+- `WorkloadIntervention` -- 18 intervention types including `chunk_context`, `context_compression`, `reduce_extraneous_load`, `add_intrinsic_load_step_by_step`, `promote_germane_load`, `compose_pattern`. Adds effort_estimate, risk, reversibility, success_metric, composition_target_pattern, preconditions.
+- `BaselineComparison` -- drift severity (none / minor / moderate / severe) vs a recorded baseline.
+- `ComposedPatternHandoff` -- upstream + downstream pattern recommendations driven by profile pattern + framework.
 
-| Pressure input | Operational analog |
-|---|---|
-| **Deadline pressure** | How tight is the wall-clock budget? |
-| **Budget pressure** | How tight is the token/cost budget? |
-| **Retry cap** | How many retries are allowed? |
-| **Error visibility** | How costly are errors when they happen? |
-| **Task complexity** | How cognitively demanding is the task? |
-
-The three zones manifest in agent traces as canonical failure modes:
-
-| Zone | Failure mode | What it looks like |
-|---|---|---|
-| Under pressure | **Wandering** | Agent considers 12 alternatives for a simple categorization; produces 30 pages of analysis with no recommendation |
-| Optimal | **Focused** | Agent commits to a path, executes, ships within budget |
-| Over pressure (mild) | **Corner-cutting** | Agent skim-reviews half the PR; ships unverified citations |
-| Over pressure (medium) | **Freezing** | Agent asks for more time / pre-summarized inputs; produces nothing |
-| Over pressure (severe) | **Hallucinating** | Agent confabulates citations rather than verifying; pretends a function exists |
-| Over pressure (severe) | **Refusing** | Agent declines, suggests re-scoping |
-
-The most common production failure is **hallucinating under absurd pressure on a complex task** — the operational analog of the Yerkes-Dodson high-arousal collapse on a hard problem.
-
-## What this pattern does
-
-The `agentcity.yerkes_dodson` library takes an `AgentPerformanceTrace` containing:
-
-- The agent's **task**
-- The **pressure inputs**: `deadline_pressure` / `budget_pressure` / `retry_cap` / `error_visibility` / `task_complexity`
-- The **observed behaviors** (concrete behavioral observations from the trace)
-- Outcome and success signal
-
-and produces a `WorkloadDetection` with:
-
-1. **Per-zone evidence** for `under_pressure`, `optimal`, `over_pressure` — each with score, explanation, evidence quotes
-2. **Observed zone** — the dominant zone
-3. **Distance from optimal** in [0.0, 1.0] — 0 = on the curve's peak; 1 = on the worst tail
-4. **Failure mode** — one of `wandering`, `focused`, `corner_cutting`, `freezing`, `hallucinating`, `refusing`, `unknown`
-5. **Concrete interventions** to push toward optimal, each with a direction (`increase_pressure` / `decrease_pressure`) and intervention_type: `tighten_deadline`, `add_budget_cap`, `loosen_deadline`, `loosen_budget`, `add_kill_criterion`, `raise_retry_cap`, `lower_retry_cap`, `explicit_focus_prompt`, `human_review`, `new_eval`
-
-Single LLM pass. Interventions are skipped when the agent is in the optimal zone. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
-
-The diagnostic is **bidirectional**: some agents need *more* pressure (the wandering analyst), others need *less* (the hallucinating researcher). This is the key feature that distinguishes Yerkes-Dodson from naive "give the agent more time" advice — sometimes the fix is the opposite direction.
-
-## How this differs from existing tools
-
-- **Pattern #08 Adam Grant Strengths-as-Weaknesses** measures personality-trait overuse independent of pressure. Yerkes-Dodson measures *pressure-dependent* failure modes. Both can fire together: an over-cautious agent under absurd pressure refuses (Grant: caution overuse; Yerkes-Dodson: over-pressure / refusing).
-- **Pattern #27 Bias-Stack Detector** measures cognitive biases in reasoning. Yerkes-Dodson asks whether the *level of pressure* is producing the biases. Anchoring under absurd pressure often surfaces because the agent skipped the verification step (corner_cutting) that would have updated the anchor.
-- **Pattern #24 SMART Goal Generator** generates the goal spec including budget/deadline. Yerkes-Dodson audits whether those budget/deadline choices are *in the optimal range for the task complexity.*
-- **Pattern #14 Process Gain/Loss Detector** measures outcome-level multi-agent metrics. Yerkes-Dodson explains a specific cause when an individual agent on the crew is failing: it's operating off the curve.
-
-## Design
+## Quick start
 
 ```python
 from agentcity.yerkes_dodson import (
-    WorkloadDetector,
+    YerkesDodsonAnalyzer,
     AgentPerformanceTrace,
     PressureInputs,
 )
-from agentcity.aar.clients import AnthropicClient
+from agentcity.aar import AnthropicClient
 
 trace = AgentPerformanceTrace(
     agent_id="research-agent-001",
-    task="Compile a 1-page summary with real citations.",
+    task="Compile a 1-page summary on prompt injection defenses.",
     pressure=PressureInputs(
         deadline_pressure="absurd",
         budget_pressure="absurd",
         task_complexity="complex",
+        context_size_tokens=80_000,
+        context_window_size=100_000,
     ),
     observed_behaviors=[
         "Agent cited 3 papers without verifying they exist.",
-        "Agent skipped verification step.",
+        "Agent shipped without running its own check.",
     ],
-    outcome="2 of 3 citations fabricated.",
+    outcome="Summary contains 2 fabricated citations.",
     success=False,
 )
 
-detector = WorkloadDetector(llm_client=AnthropicClient())
-detection = detector.run(trace)
-# observed_zone: over_pressure; failure_mode: hallucinating
-# Intervention #1: loosen_deadline (complex tasks peak at lower pressure)
+detection = YerkesDodsonAnalyzer(AnthropicClient(), mode="forensic").run(trace)
+print(detection.to_markdown())
+# observed_zone: over_pressure
+# profile_pattern: context_saturation
+# Composition handoff: agentcity.lewin, agentcity.johari
 ```
 
-## Files
+## CLI
 
-- `lib/schema.py` — `AgentPerformanceTrace`, `PressureInputs`, `WorkloadZoneEvidence`, `WorkloadDetection`
-- `lib/prompts.py` — `WORKLOAD_PROMPT`, `YERKES_DODSON_SYSTEM_PROMPT`
-- `lib/generator.py` — `WorkloadDetector` (single-pass pipeline; skips interventions when in optimal zone)
-- `demo/01_self_contained_demo.py` — research agent on absurd-pressure complex task (hallucination case)
-- `eval/synthetic_workload_failures.yaml` — 8 hand-crafted scenarios spanning all three zones + multiple failure modes
-- `eval/run_benchmark.py` — scoring runner
-- `tests/test_yerkes_dodson.py` — pytest tests covering validation, pipeline, zone fill, fallback, threshold logic
-- `essay.md` — Substack-ready essay
+```bash
+# Single trace
+agentcity-yerkes analyze --trace trace.json --mode forensic
+
+# Batch over a YAML corpus
+agentcity-yerkes batch --corpus corpus.yaml --out detections/ --mode standard
+
+# Re-render an existing detection JSON
+agentcity-yerkes replay --detection detection.json
+
+# Validate a trace schema
+agentcity-yerkes validate --trace trace.json
+
+# Dump JSON schemas
+agentcity-yerkes schema --target trace
+agentcity-yerkes schema --target detection
+
+# Inspect the 12 playbooks
+agentcity-yerkes playbooks
+
+# Inspect the composition graph
+agentcity-yerkes compose
+```
+
+## Composition
+
+**Upstream patterns** (run these before Yerkes-Dodson):
+- `agentcity.lewin` -- attribute the workload pressure to person/environment locus.
+- `agentcity.aar` -- generate the after-action review the trace comes from.
+- `agentcity.cognitive_reappraisal` -- detect emotion-regulation pressure on the agent.
+- `agentcity.goleman_ei` -- audit the agent's emotional intelligence under load.
+
+**Downstream patterns** (chosen by profile_pattern):
+- `over_pressure_hallucinating` -> `agentcity.johari` + `agentcity.lewin`
+- `over_pressure_corner_cutting` -> `agentcity.devils_advocate` + `agentcity.bias_stack`
+- `over_pressure_freezing` -> `agentcity.cognitive_reappraisal` + `agentcity.mcgregor`
+- `over_pressure_refusing` -> `agentcity.cognitive_reappraisal` + `agentcity.grant_strengths`
+- `context_saturation` -> `agentcity.lewin`
+- `optimal_zone` -> `agentcity.aar` (record the baseline)
+
+**Framework overlays** (added if `trace.framework` is set):
+- `langgraph` / `crewai` / `autogen` / `mastra` / `strands` -> `agentcity.grpi`
+- `claude-agent-sdk` / `openai-agents-sdk` -> `agentcity.process_gain_loss`
+
+## Failure-mode playbooks
+
+12 curated `(zone, failure_mode)` playbooks anchored in the literature. Inspect them with `agentcity-yerkes playbooks` or programmatically:
+
+```python
+from agentcity.yerkes_dodson import find_playbook_for_intervention
+
+pb = find_playbook_for_intervention("over_pressure", "chunk_context")
+print(pb.title)
+# "Context window saturated -- chunk + map-reduce"
+print(pb.anchor_citation)
+# "Liu et al. 2024 lost-in-the-middle; Sweller 2011 CLT update"
+```
+
+## Literature
+
+Full citations in [lib/CITATIONS.md](lib/CITATIONS.md). Seven primary anchors:
+
+1. **Yerkes & Dodson (1908)** -- original inverted-U.
+2. **Sweller (1988/1994/2011)** -- Cognitive Load Theory (intrinsic / extraneous / germane).
+3. **Kahneman (1973)** -- attention as limited capacity.
+4. **Hancock & Warm (1989)** -- dynamic adaptability + sharp performance threshold.
+5. **Eysenck-Calvo (1992)** -- Attentional Control Theory (anxiety -> efficiency before effectiveness).
+6. **Hebb (1955)** -- arousal-as-physiological-precursor.
+7. **Liu et al. (2024)** -- lost-in-the-middle LLM context-saturation finding.
+
+## Production infrastructure
+
+Wired into the shared `agentcity.aar` infra:
+
+- **Structured logging** with `run_id` correlation across all LLM calls in a detection.
+- **Token + cost telemetry** via `record_llm_call` to the configured sink.
+- **Input sanitization + fencing** for every free-text field (`task`, `outcome`, `observed_behaviors`, etc.).
+- **Prompt-injection detection** runs on every input; flagged in `WorkloadDetection.injection_detected`.
+- **Retry with backoff** on every LLM call.
+- **Async mirror** via `YerkesDodsonAnalyzerAsync`.
+
+## Backward compatibility
+
+The v0.0.x interface is preserved:
+
+```python
+from agentcity.yerkes_dodson import WorkloadDetector  # alias of YerkesDodsonAnalyzer
+```
+
+The v0.0.x `WorkloadDetector(...)` call still works -- defaults to `mode="standard"` which keeps the 1-call cost profile.
+
+## Tests
+
+39 tests, run with `pytest module-1-individual/06-yerkes-dodson-workload/tests/`. Covers schema invariants, mode behavior, profile classifier, telemetry, composition, playbooks, calibration, async mirror, and markdown rendering.
+
+## See also
+
+- [Pattern #01 Lewin Formula](../01-lewin-formula/README.md) -- locus attribution upstream.
+- [Pattern #05 Cognitive Reappraisal](../05-cognitive-reappraisal/README.md) -- emotion-regulation diagnostic upstream.
+- [Pattern #11 McGregor Orchestrator Mode](../11-mcgregor-orchestrator/README.md) -- orchestration overlay for over_pressure_freezing.

@@ -110,6 +110,7 @@ agentcity-goleman = "agentcity.goleman_ei.cli:main"
 agentcity-johari = "agentcity.johari.cli:main"
 agentcity-danva = "agentcity.danva_emotion.cli:main"
 agentcity-reappraisal = "agentcity.cognitive_reappraisal.cli:main"
+agentcity-yerkes = "agentcity.yerkes_dodson.cli:main"
 
 [build-system]
 requires = ["hatchling"]

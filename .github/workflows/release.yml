@@ -90,6 +90,8 @@ jobs:
               'vstack.mcp', 'vstack.memory', 'vstack.upgrade', 'vstack.api',
               # surface modules added in v0.4.0
               'vstack.adapters', 'vstack.learnings', 'vstack.analytics',
+              # surface modules added in v0.5.0
+              'vstack.browser', 'vstack.gbrain', 'vstack.benchmarks',
           ]:
               importlib.import_module(ns)
           print('Release smoke test passed')

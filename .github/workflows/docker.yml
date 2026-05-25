@@ -1,24 +1,23 @@
 name: Docker
 
-# Triggers, in priority order:
-#   1. workflow_run after Release completes successfully -- the canonical
+# Triggers:
+#   1. workflow_run after Release completes successfully -- THE canonical
 #      path. We download the wheel artifact that release.yml uploaded and
 #      install from it inside the container, bypassing PyPI entirely.
-#      Eliminates the CDN-propagation race that bit v0.4.0 (the runner's
-#      pip simple-index edge took >10 minutes to see the new wheel even
-#      though release.yml's publish step had already returned).
-#   2. push of a v*.*.* tag -- still wired but uses the workflow_run path
-#      preferentially. If release.yml is also tag-triggered, GitHub fires
-#      both; the concurrency group below dedupes them.
-#   3. workflow_dispatch -- manual retries. These install from PyPI
-#      (versioned via the ref) since no wheel artifact is available.
+#   2. workflow_dispatch -- manual retries.
+#
+# The push-tag trigger was REMOVED in v0.5.0. When a v*.*.* tag is
+# pushed, GitHub fires release.yml AND docker.yml in parallel; the
+# docker.yml run starts immediately and the dist/ artifact doesn't
+# exist yet (release.yml hasn't finished building it), AND PyPI
+# doesn't have the new version yet either. Both paths in the
+# Dockerfile fail. The workflow_run path waits for release.yml to
+# fully complete, then downloads the wheel artifact, which is the
+# reliable path.
 on:
   workflow_run:
     workflows: ["Release"]
     types: [completed]
-  push:
-    tags:
-      - "v*.*.*"
   workflow_dispatch:
     inputs:
       ref:

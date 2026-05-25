@@ -1,125 +1,141 @@
 # Contributing to vstack
 
-vstack ships curated organizational-behavior patterns for AI agents. Each pattern is anchored in named OB literature and shipped with five layers: README + working library + runnable demo + benchmark + Substack-ready essay.
+Thanks for wanting to make vstack better.
 
-If you want to contribute, the highest-leverage things are:
+This guide is short because contributing should be easy. If something here is unclear, that's a bug in this guide — please open an issue.
 
-## Real failure traces
-
-If you ship production AI agents and have a failure trace that maps onto one of the patterns in [PATTERNS.md](PATTERNS.md), open an issue with the failure description and we'll work together on whether the pattern's library code handles it well. Real failures > synthetic.
-
-## New pattern proposals
-
-The pattern library is finite (34 planned) but extensible. If you find an OB framework not yet in the index that maps cleanly to a real agent failure mode, open an issue with:
-
-1. The OB framework + primary academic citation.
-2. The named agent failure mode it addresses.
-3. A concrete example of the failure.
-4. A proposed intervention.
-
-If the proposal is accepted, you can either implement the pattern yourself (PR welcome) or it gets added to the planned roadmap.
-
-## Framework integrations
-
-Each pattern needs adapters for the major agent frameworks (Claude Agent SDK, LangGraph, OpenAI Agents SDK, CrewAI, AutoGen, Microsoft Agent Framework, Mastra). If you maintain or contribute to one of these frameworks and want to add the canonical adapter for vstack patterns, please do. Adapters live in `frameworks/<framework-name>/`.
-
-## Benchmarks
-
-Public benchmarks are the credibility loop. If you have a public agent-failure dataset or you'd like to run a pattern against your private corpus and report results, open an issue.
-
-## Essays and citations
-
-Every pattern ships with a Substack-ready essay (`essay.md`). If you write an essay that uses one of the patterns or extends one, please add a link to your essay in the pattern's README under a "Community essays" section. The goal is to compound the literature.
-
-## What we will not accept
-
-- Pattern proposals that don't anchor in named OB literature. vstack is specifically the OB-literature-anchored layer; pure design-pattern proposals belong in projects like [Architecting Agentic Communities Using Design Patterns](https://arxiv.org/abs/2601.03624).
-- Implementations that don't ship all five layers (README + lib + demo + benchmark + essay). Half-shipped patterns dilute the library's quality bar. Better one well-shipped pattern than five half-shipped ones.
-- Contributions of any university course's internal materials (slides, exercises, solutions). The library uses public OB-literature concepts only.
-
-## Code style
-
-Python:
-- Python 3.11+
-- `ruff` for formatting (line length 100, double quotes)
-- `mypy` strict
-- `pytest` for tests
-
-TypeScript:
-- ESM only
-- `tsc --strict`
-- `prettier` for formatting
-- `vitest` for tests
-
-## Development workflow
-
-Set up a working environment from a clean clone:
+## The 60-second on-ramp
 
 ```bash
 git clone https://github.com/valani9/vstack.git
 cd vstack
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev,all]"
-pre-commit install   # optional but recommended
+vstack-doctor                       # confirms your dev install works
+pytest -q                           # 2,097 tests should pass in ~4 seconds
 ```
 
-Run the full validation suite before opening a PR:
+That's it. You're ready to edit code, write a pattern, or fix a bug.
+
+## What's most useful
+
+Ranked by impact, lowest barrier first:
+
+| Contribution | Why it matters | Effort |
+|---|---|---|
+| **Bug reports with `vstack-doctor` output** | Catches real install issues we can fix in one PR | 5 min |
+| **Real failure traces** that map onto a pattern | Synthetic traces miss things; real ones don't | 10 min |
+| **Docs improvements + typo fixes** | Every doc page that gets clearer pays compounding interest | varies |
+| **A new framework adapter** (Mastra, Strands, Smolagents) | New users of that framework get vstack for free | 1–2 hours |
+| **A public-benchmark eval** for an existing pattern | Patterns without public evals have no public credibility loop | 2–4 hours |
+| **A new OB-anchored pattern** (rare — most are shipped) | Extends the literature mapping; must cite a named source | 1–2 days |
+| **An essay** that uses or extends a pattern | The essays compound the library's reach | varies |
+
+## How to add a new pattern
+
+Each pattern ships **five layers**:
+
+1. **README** — what the framework is, the citation, the failure mode it addresses, the proposed intervention
+2. **Python library** — the runnable code, under `module-N-<scope>/<NN>-<pattern>/lib/`
+3. **Runnable demo** — a working example on at least one major agent framework
+4. **Public-benchmark eval** — a comparison on GAIA, SWE-Bench-multi, AppWorld, AgentBench, or equivalent
+5. **Essay** — a Substack-ready write-up of the pattern + its OB anchor
+
+If any of those five is missing, the pattern is half-shipped. Half-shipped patterns dilute the bar.
+
+Open an issue with the [feature-request template](.github/ISSUE_TEMPLATE/feature_request.yml) before writing code — we'll align on whether the framework anchor fits.
+
+## Code style
+
+**Python** — 3.11+ · `ruff format` · `ruff check` · `mypy --strict` · `pytest`
 
 ```bash
-pytest module-1-individual/ module-2-team/ module-3-organization/ -q
-ruff check module-1-individual/ module-2-team/ module-3-organization/
-ruff format --check module-1-individual/ module-2-team/ module-3-organization/
-# mypy per-pattern (avoids "Duplicate module named lib" across patterns)
-for p in module-1-individual/* module-2-team/* module-3-organization/*; do
-  [ -d "$p/lib" ] && mypy "$p/lib" --strict --ignore-missing-imports || true
-done
-python -m build && pip install --force-reinstall --no-deps dist/vstack-*.whl
+ruff format .
+ruff check .
+mypy <touched-lib-dir> --strict --ignore-missing-imports
+pytest <touched-dir> -q
 ```
+
+The mypy command runs **per-pattern** because each pattern's `lib/` is its own logical package (via the force-include build map). Running mypy across all patterns at once hits a "Duplicate module named `lib`" error.
+
+**Comments** — default to none. Comment only when *why* is non-obvious (a workaround, an invariant, a constraint a future reader would miss).
 
 ## API stability promise
 
-Every published pattern exposes its public surface via `__all__` in its
-package's `__init__.py`. Symbols listed there follow this stability
-promise:
+Every published pattern exposes its public surface via `__all__` in its package's `__init__.py`. The promise:
 
-- **`0.x.y` releases** — breaking changes are permitted in `minor`
-  bumps (`0.0.x` → `0.1.0`). Patch bumps (`0.x.y` → `0.x.(y+1)`)
-  are non-breaking. Breaking changes are always documented in
-  [CHANGELOG.md](CHANGELOG.md).
-- **`1.x.y` and later** — strict SemVer. Breaking changes only on a
-  `major` bump, and only after at least one `minor` release where
-  the API was marked deprecated and emitted a `DeprecationWarning`.
+- **`0.x.y` releases** — breaking changes allowed in `minor` bumps (`0.x` → `0.(x+1)`). Patch bumps (`0.x.y` → `0.x.(y+1)`) are non-breaking.
+- **`1.x.y` and later** — strict SemVer. Breaking changes only on `major` bumps, and only after at least one `minor` release where the API was marked deprecated and emitted `DeprecationWarning`.
 
-Symbols not listed in `__all__` are private. Importing them from a
-sub-package is supported only on a best-effort basis and may change
-between any two releases — please open an issue if you need a private
-symbol promoted to the public surface.
+Symbols not listed in `__all__` are private. Importing them from a sub-package is supported on a best-effort basis and may change between any two releases.
 
 ## Production-readiness checklist for new patterns
 
-In addition to the existing 5-layer requirement (README + lib + demo +
-benchmark + essay), patterns merged after `0.1.0` should:
+Patterns merged after `0.1.0` should:
 
-1. Use `vstack.aar.get_logger(...)` rather than
-   `logging.getLogger(...)` so log lines carry the run-id correlation
-   field.
-2. Wrap the body of `run(...)` (or equivalent entry point) in
-   `with run_context(new_run_id(), pattern="<pkg_name>"):`.
-3. Call `record_llm_call(...)` after each successful LLM completion
-   with the model, token counts (from `client.last_usage`), and
-   elapsed_ms (via `time_call()`).
-4. Pass any free-text input from outside the application boundary
-   through `sanitize_for_prompt` before string-formatting it into a
-   prompt template.
-5. Ship a stub-client micro-benchmark in
-   `benchmarks/_perf/patterns/<pattern>.py` so the perf regression
-   harness can detect performance regressions on the deterministic
-   parts of the pipeline.
+1. Use `vstack.aar.get_logger(...)` (not `logging.getLogger(...)`) so log lines carry the run-id correlation field.
+2. Wrap the body of `run(...)` in `with run_context(new_run_id(), pattern="<pkg_name>"):`.
+3. Call `record_llm_call(...)` after each successful LLM completion with model, token counts (from `client.last_usage`), and `elapsed_ms` (via `time_call()`).
+4. Pass any free-text input from outside the application boundary through `sanitize_for_prompt` before string-formatting it into a prompt template.
+5. Ship a stub-client micro-benchmark in `benchmarks/_perf/patterns/<pattern>.py` so the perf regression harness can detect performance regressions.
 
-These are recommendations, not blockers. Existing patterns are being
-migrated incrementally and contributors are welcome to migrate any
-they touch.
+These are recommendations, not blockers. Existing patterns are being migrated incrementally — contributors welcome to migrate any.
 
-## License
+## How to add a framework adapter
 
-By contributing, you agree your contribution will be licensed under the MIT license used by the rest of the project.
+Adapters live in `_adapters/lib/<framework>.py`. Each adapter exposes the same shape:
+
+```python
+from vstack.registry import all_patterns
+
+def as_<framework>_tools(*, mode: str = "standard") -> list:
+    """Return every vstack pattern wrapped as a native <framework> tool."""
+    ...
+```
+
+Look at `_adapters/lib/langchain.py` as the canonical example — every other adapter mirrors its shape.
+
+Then:
+
+```bash
+# Add the framework's lib to the optional-deps in pyproject.toml
+# Add a test in _adapters/tests/test_<framework>.py
+pytest _adapters/ -q
+mypy _adapters/lib --strict --ignore-missing-imports
+```
+
+Open a PR. The CI matrix already covers Python 3.11–3.13 on Linux + macOS.
+
+## What we won't accept
+
+- **Patterns without a named OB-literature anchor.** vstack is specifically the OB-literature-anchored layer. Pure design-pattern proposals belong in projects like [Architecting Agentic Communities Using Design Patterns](https://arxiv.org/abs/2601.03624).
+- **Half-shipped patterns** (missing any of the five layers). Better one well-shipped pattern than five half-shipped ones.
+- **University course internals** (slides, exercises, solutions). The library uses public OB-literature concepts only.
+- **Mocked tests where integration tests are needed.** Patterns that touch the LLM client or the file store get real integration tests against the stub LLM + a temp dir.
+
+## Releasing
+
+vstack uses tag-based releases. Process:
+
+1. Bump `pyproject.toml` `version` **and** `_packaging/vstack/__init__.py` `__version__` together. The release-workflow smoke test verifies they match.
+2. Update `CHANGELOG.md` with a new `## [X.Y.Z] — YYYY-MM-DD` section.
+3. Tag: `git tag vX.Y.Z && git push origin vX.Y.Z`.
+4. The Release workflow builds the wheel, publishes to PyPI via Trusted Publisher (OIDC), and creates a GitHub Release with the changelog section rendered into the body.
+5. The Docker workflow (`workflow_run` on Release) builds + pushes multi-arch images to GHCR.
+
+If anything in the release flow surprises you, see [`.github/workflows/release.yml`](.github/workflows/release.yml) — it's the source of truth.
+
+## Where to ask
+
+- **Bugs** → [open an issue](https://github.com/valani9/vstack/issues/new/choose) with the bug-report template.
+- **Feature requests** → the feature-request template.
+- **Usage questions** → the question template (often gets a faster answer than email).
+- **Security disclosures** → please use [GitHub Security Advisories](https://github.com/valani9/vstack/security/policy) — not public issues.
+
+## Code of conduct
+
+Be kind. Disagree with code, not people. Cite your sources. If you're not sure whether something is appropriate, ask.
+
+---
+
+vstack is MIT-licensed and will stay that way. By contributing, you agree your changes ship under the same license.

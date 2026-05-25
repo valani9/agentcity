@@ -71,8 +71,52 @@ vstack-mcp serve             # MCP server (stdio)
 vstack-api serve             # REST API (FastAPI on 127.0.0.1:8000)
 vstack-config list           # ~/.vstack/ preferences
 vstack-upgrade               # check PyPI for newer releases
+vstack-learn recall          # browse the learning store (~/.vstack/learnings.jsonl)
+vstack-analytics summary     # aggregate LLM-call telemetry from ~/.vstack/analytics/
 vstack-<pattern> --help      # one CLI per pattern (vstack-lewin, vstack-schein-culture, ...)
 ```
+
+## Use vstack from a framework (LangChain / CrewAI / AutoGen / ...)
+
+For agent-builder workflows, ``vstack.adapters`` wraps every pattern as a native tool in your favorite framework. The shape stays consistent — same input model, same detection output, same registry — only the framework wrapper differs.
+
+```python
+# LangChain
+from vstack.adapters.langchain import as_langchain_tools
+tools = as_langchain_tools()                # ['StructuredTool', ...] × 34
+
+# LangGraph
+from vstack.adapters.langgraph import as_langgraph_nodes
+nodes = as_langgraph_nodes()                # {'vstack_lewin': node_fn, ...}
+
+# CrewAI
+from vstack.adapters.crewai import as_crewai_tools
+tools = as_crewai_tools()
+
+# AutoGen (no autogen import required — pure JSON manifest + Python callables)
+from vstack.adapters.autogen import as_autogen_function_manifest, as_autogen_callables
+manifest = as_autogen_function_manifest()
+callables = as_autogen_callables()
+
+# LlamaIndex
+from vstack.adapters.llamaindex import as_llamaindex_tools
+tools = as_llamaindex_tools()
+
+# Pydantic AI
+from vstack.adapters.pydantic_ai import as_pydantic_ai_tools
+tools = as_pydantic_ai_tools()
+
+# OpenAI Assistants API / function calling (pure JSON)
+from vstack.adapters.openai import as_openai_tool_schemas, as_anthropic_tool_schemas
+openai_tools = as_openai_tool_schemas()
+anthropic_tools = as_anthropic_tool_schemas()
+
+# Open WebUI tool manifest pointing at a running vstack-api
+from vstack.adapters.openwebui import as_openwebui_manifest
+manifest = as_openwebui_manifest(api_base_url="http://127.0.0.1:8000")
+```
+
+Install only the framework extras you need (`valanistack[langchain]`, `valanistack[crewai]`, etc.) — `valanistack[adapters]` bundles all of them.
 
 ## Use vstack from your AI client (MCP)
 

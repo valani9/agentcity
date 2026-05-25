@@ -1,5 +1,6 @@
-# vstack -- single-image bundle of the Python library + all CLIs (vstack-mcp,
-# vstack-api, vstack-config, vstack-upgrade, plus the 34 per-pattern CLIs).
+# vstack -- single-image bundle of the Python library + all CLIs (vstack,
+# vstack-mcp, vstack-api, vstack-config, vstack-upgrade, vstack-learn,
+# vstack-analytics, plus the 34 per-pattern CLIs).
 #
 # The image is multi-arch by default (the docker.yml workflow builds for
 # linux/amd64 and linux/arm64). It is intended as a portable runtime; the
@@ -11,12 +12,19 @@
 #   docker run --rm -p 8000:8000 -e ANTHROPIC_API_KEY=... ghcr.io/valani9/vstack:latest \
 #       vstack-api serve --host 0.0.0.0 --port 8000
 #   docker run --rm ghcr.io/valani9/vstack:latest vstack --help
+#
+# Install path selection (the RUN step picks the first match):
+#   1. A .whl file under `dist/` in the build context -- preferred. The
+#      docker.yml workflow downloads the wheel artifact from release.yml
+#      and drops it under dist/ before invoking buildx. This bypasses
+#      the PyPI CDN-propagation race entirely.
+#   2. A pinned VSTACK_VERSION build arg -- pip install from PyPI at the
+#      pinned version. Used by manual local builds when no wheel exists
+#      in the build context.
+#   3. The latest PyPI version of valanistack[all] -- final fallback.
 
 FROM python:3.13-slim AS runtime
 
-# Tools installed via uv are reproducible, fast, and don't drag in pip's
-# resolver. We still keep `pip` available for `pip install` of plugins
-# at runtime (e.g. user-installed Anthropic/OpenAI extras).
 RUN useradd --create-home --uid 1000 vstack \
     && apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl tini \
@@ -30,25 +38,33 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /opt/vstack
 
-# Install vstack with every optional extra so the resulting image
-# supports MCP stdio + REST API + Anthropic / OpenAI / Ollama clients
-# out of the box. Pinning to the major version makes the docker tag
-# predictable; the CI workflow rebuilds the image on every release.
-ARG VSTACK_VERSION
-RUN python -m pip install --upgrade pip \
-    && if [ -n "$VSTACK_VERSION" ]; then \
-         pip install "valanistack[all]==$VSTACK_VERSION"; \
-       else \
-         pip install "valanistack[all]"; \
-       fi \
-    && mkdir -p "$VSTACK_HOME" && chown -R vstack:vstack "$VSTACK_HOME" /opt/vstack
+# Always create dist/ in the image; copy any wheels the build context
+# happens to have. When dist/ is absent in the context, the workflow
+# pre-creates an empty one with a sentinel file so this COPY succeeds.
+COPY dist/ /opt/vstack/dist/
+
+ARG VSTACK_VERSION=""
+
+RUN set -eux; \
+    python -m pip install --upgrade pip; \
+    WHEEL=$(ls /opt/vstack/dist/valanistack-*-py3-none-any.whl 2>/dev/null | head -n1 || true); \
+    if [ -n "$WHEEL" ]; then \
+        echo "Installing from local wheel: $WHEEL"; \
+        pip install "${WHEEL}[all]"; \
+    elif [ -n "$VSTACK_VERSION" ]; then \
+        echo "Installing valanistack[all]==$VSTACK_VERSION from PyPI"; \
+        pip install "valanistack[all]==$VSTACK_VERSION"; \
+    else \
+        echo "Installing latest valanistack[all] from PyPI"; \
+        pip install "valanistack[all]"; \
+    fi; \
+    rm -rf /opt/vstack/dist; \
+    mkdir -p "$VSTACK_HOME"; \
+    chown -R vstack:vstack "$VSTACK_HOME" /opt/vstack
 
 USER vstack
 
-# Expose the API port for `vstack-api serve --host 0.0.0.0`.
 EXPOSE 8000
 
-# tini reaps zombie children cleanly when running short-lived CLI
-# invocations or when uvicorn is signaled.
 ENTRYPOINT ["tini", "--"]
 CMD ["vstack-mcp", "serve"]

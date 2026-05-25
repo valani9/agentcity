@@ -1,13 +1,17 @@
 name: Docker
 
 # Triggers, in priority order:
-#   1. workflow_run after Release completes successfully -- this is the
-#      reliable path because the PyPI upload has already returned 200 by
-#      then, so the pip CDN is closer to consistent.
-#   2. push of a v*.*.* tag -- fallback for users who push tags via
-#      release.yml dispatch or manual scripts. The poll loop below has
-#      to compensate for CDN propagation lag.
-#   3. workflow_dispatch -- manual retries.
+#   1. workflow_run after Release completes successfully -- the canonical
+#      path. We download the wheel artifact that release.yml uploaded and
+#      install from it inside the container, bypassing PyPI entirely.
+#      Eliminates the CDN-propagation race that bit v0.4.0 (the runner's
+#      pip simple-index edge took >10 minutes to see the new wheel even
+#      though release.yml's publish step had already returned).
+#   2. push of a v*.*.* tag -- still wired but uses the workflow_run path
+#      preferentially. If release.yml is also tag-triggered, GitHub fires
+#      both; the concurrency group below dedupes them.
+#   3. workflow_dispatch -- manual retries. These install from PyPI
+#      (versioned via the ref) since no wheel artifact is available.
 on:
   workflow_run:
     workflows: ["Release"]
@@ -26,9 +30,11 @@ permissions:
   contents: read
   packages: write
   id-token: write
+  actions: read
 
 concurrency:
-  group: docker-${{ github.ref }}
+  # Dedupe push-tag + workflow_run firings for the same tag.
+  group: docker-${{ github.event.workflow_run.head_sha || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -99,9 +105,6 @@ jobs:
         id: ver
         run: |
           set -e
-          # Pick the version from whatever ref triggered the run. We
-          # pin the wheel install so the container is reproducible per
-          # release.
           ref="${{ steps.ref.outputs.ref }}"
           ref="${ref##*/}"
           case "$ref" in
@@ -109,45 +112,27 @@ jobs:
               echo "version=${ref#v}" >> "$GITHUB_OUTPUT"
               ;;
             *)
-              # For non-tag dispatches we still try the latest published
-              # version. The poll step below confirms it's actually
-              # resolvable through the simple-index, which is what pip
-              # will use inside docker.
               echo "version=" >> "$GITHUB_OUTPUT"
               ;;
           esac
 
-      - name: Set up Python for the readiness probe
-        uses: actions/setup-python@v5
+      # On workflow_run, download the wheel that release.yml just built
+      # and uploaded as an artifact (artifact name set in release.yml).
+      # Skips the PyPI CDN race entirely.
+      - name: Download wheel artifact from the triggering Release run
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v4
         with:
-          python-version: "3.13"
+          name: release-dist
+          path: dist/
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Wait for PyPI simple-index to serve the new wheel
-        if: steps.ver.outputs.version != ''
+      - name: Ensure dist/ exists for the docker build context
         run: |
           set -e
-          target="${{ steps.ver.outputs.version }}"
-          echo "Waiting for valanistack==$target to be resolvable via pip's simple-index..."
-          # Probe via the exact resolver pip will use inside the docker
-          # build (pip's --dry-run download against the simple index).
-          # The JSON endpoint at /pypi/<name>/json propagates faster
-          # than the simple-index, so curl-on-json is misleading; we
-          # need a positive signal from pip itself.
-          for i in $(seq 1 60); do
-            if pip download --quiet --no-deps --dry-run --dest /tmp/pypi-probe \
-                "valanistack==$target" 2>/dev/null; then
-              echo "pip can resolve valanistack==$target."
-              # Buffer to let any straggling CDN edges catch up before
-              # we kick off the multi-arch docker build (it may hit
-              # different edges than the runner's pip did).
-              sleep 30
-              exit 0
-            fi
-            echo "  attempt $i: not yet; sleeping 10s"
-            sleep 10
-          done
-          echo "pip never resolved valanistack==$target -- failing the docker build."
-          exit 1
+          mkdir -p dist
+          ls -la dist/ || true
 
       - name: Build + push image
         uses: docker/build-push-action@v6

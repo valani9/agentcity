@@ -6,7 +6,9 @@
 .ruff_cache/
 __pycache__/
 *.pyc
-dist/
+# dist/ is intentionally NOT excluded -- the Dockerfile installs the
+# release.yml-built wheel from this directory when present (CI flow).
+# Local builds with no wheel in dist/ fall back to PyPI install.
 build/
 docs/
 session-transcripts/

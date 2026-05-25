@@ -49,6 +49,7 @@ jobs:
                  _mcp/ _memory/ _upgrade/ _api/ \
                  _adapters/ _learnings/ _analytics/ \
                  _browser/ _gbrain/ _benchmarks/ \
+                 _security/ _cache/ _observability/ _doctor/ \
             -v --tb=short \
             --cov=vstack \
             --cov-report=term-missing \
@@ -81,13 +82,15 @@ jobs:
         run: |
           ruff check module-1-individual/ module-2-team/ module-3-organization/ \
                      _mcp/ _memory/ _upgrade/ _api/ _adapters/ _learnings/ _analytics/ \
-                     _browser/ _gbrain/ _benchmarks/ examples/ _baselines/scripts/
+                     _browser/ _gbrain/ _benchmarks/ examples/ _baselines/scripts/ \
+                     _security/ _cache/ _observability/ _doctor/
 
       - name: Run ruff format check
         run: |
           ruff format --check module-1-individual/ module-2-team/ module-3-organization/ \
                               _mcp/ _memory/ _upgrade/ _api/ _adapters/ _learnings/ _analytics/ \
-                              _browser/ _gbrain/ _benchmarks/ examples/ _baselines/scripts/
+                              _browser/ _gbrain/ _benchmarks/ examples/ _baselines/scripts/ \
+                              _security/ _cache/ _observability/ _doctor/
 
   typecheck:
     name: Typecheck (mypy)
@@ -126,6 +129,10 @@ jobs:
               _browser \
               _gbrain \
               _benchmarks \
+              _security \
+              _cache \
+              _observability \
+              _doctor \
               module-2-team/30-aar-generator \
               module-2-team/17-lencioni-diagnostic \
               module-2-team/18-trust-triangle-audit \

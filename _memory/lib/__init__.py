@@ -51,6 +51,14 @@ CLI
     vstack-config path  # prints VSTACK_HOME
 """
 
+from ._fs_atomic import (
+    FileLock,
+    FileLockTimeout,
+    append_locked,
+    atomic_write_bytes,
+    atomic_write_text,
+    shared_read_lock,
+)
 from ._home import (
     DEFAULT_HOME_ENV,
     baseline_path_for,
@@ -89,6 +97,12 @@ __all__ = [
     "load_config",
     "save_config",
     "set_key",
+    "FileLock",
+    "FileLockTimeout",
+    "append_locked",
+    "atomic_write_bytes",
+    "atomic_write_text",
+    "shared_read_lock",
 ]
 
 __version__ = "0.3.0"

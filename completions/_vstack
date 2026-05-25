@@ -1,0 +1,146 @@
+#compdef vstack vstack-mcp vstack-api vstack-config vstack-upgrade vstack-learn vstack-analytics vstack-browser vstack-gbrain vstack-bench vstack-doctor
+# Zsh completion for the vstack CLI family.
+# Install:
+#   mkdir -p ~/.zsh/completions && cp completions/_vstack ~/.zsh/completions/
+#   echo 'fpath=(~/.zsh/completions $fpath)' >> ~/.zshrc
+#   echo 'autoload -U compinit && compinit' >> ~/.zshrc
+
+_vstack-mcp() {
+    local -a commands
+    commands=(
+        'serve:Start the stdio MCP server.'
+        'list-tools:List the 34 registered MCP tool names.'
+        'list-resources:List the 102 resource URIs.'
+        'config-snippet:Print a config snippet for a target MCP client.'
+    )
+    _arguments -C \
+        '1:command:->cmd' \
+        '*::arg:->args'
+    case $state in
+        cmd) _describe -t commands 'vstack-mcp command' commands ;;
+        args)
+            case $words[1] in
+                config-snippet)
+                    _values 'client' 'claude-desktop' 'cursor' 'cline' 'continue' 'generic'
+                    ;;
+            esac ;;
+    esac
+}
+
+_vstack-api() {
+    local -a commands
+    commands=(
+        'serve:Start the FastAPI HTTP server.'
+        'routes:Print every registered route.'
+        'openapi:Print the OpenAPI JSON spec.'
+    )
+    _arguments -C '1:command:->cmd'
+    [[ $state == cmd ]] && _describe -t commands 'vstack-api command' commands
+}
+
+_vstack-config() {
+    local -a commands
+    commands=(
+        'get:Print the value of one config key.'
+        'set:Set a config key.'
+        'list:Print every known config key.'
+        'unset:Delete one config key.'
+        'path:Print the resolved ~/.vstack/ home or subpath.'
+        'keys:List documented config keys + descriptions.'
+        'install-skills:Copy the vstack Claude Code skills into ~/.claude/skills/vstack.'
+        'gen-platform:Print a config snippet for a non-MCP-default AI client.'
+    )
+    _arguments -C \
+        '1:command:->cmd' \
+        '*::arg:->args'
+    case $state in
+        cmd) _describe -t commands 'vstack-config command' commands ;;
+        args)
+            case $words[1] in
+                path) _values 'kind' 'home' 'baselines' 'sessions' 'analytics' 'config' ;;
+                gen-platform)
+                    _values 'platform' 'claude-desktop' 'cursor' 'cline' 'continue' \
+                        'roo-code' 'windsurf' 'zed' 'aider' 'goose' 'kiro' \
+                        'openclaw' 'codex-cli' 'opencode' 'docker-compose'
+                    ;;
+                get|set|unset)
+                    _values 'key' 'default_mode' 'default_model' 'telemetry' \
+                        'log_level' 'preferred_llm' 'api_host' 'api_port' \
+                        'skills_install_path'
+                    ;;
+            esac ;;
+    esac
+}
+
+_vstack-learn() {
+    local -a commands
+    commands=(
+        'record:Append a learning record.'
+        'recall:Print recent matching records (newest first).'
+        'outcome:Mark a follow-up outcome on the latest matching record.'
+        'outcomes:Aggregate (pattern, intervention) -> outcomes counts.'
+        'path:Print the learnings.jsonl path.'
+        'clear:Delete the learnings.jsonl file.'
+    )
+    _arguments -C '1:command:->cmd'
+    [[ $state == cmd ]] && _describe -t commands 'vstack-learn command' commands
+}
+
+_vstack-analytics() {
+    local -a commands
+    commands=(
+        'summary:Per-pattern / model / day usage rollups.'
+        'top-costs:N most expensive calls.'
+        'cost:Total estimated cost in USD.'
+        'path:Print the telemetry.jsonl path.'
+        'raw:Stream every event as one JSON line.'
+    )
+    _arguments -C '1:command:->cmd'
+    [[ $state == cmd ]] && _describe -t commands 'vstack-analytics command' commands
+}
+
+_vstack-browser() {
+    local -a commands
+    commands=(
+        'scrape:Navigate to a dashboard URL and dump the structured trace.'
+        'screenshot:Take a screenshot of any URL.'
+        'tools:List upstream chrome-devtools-mcp tools.'
+    )
+    _arguments -C '1:command:->cmd'
+    [[ $state == cmd ]] && _describe -t commands 'vstack-browser command' commands
+}
+
+_vstack-gbrain() {
+    local -a commands
+    commands=(
+        'status:Show whether gbrain is reachable.'
+        'sync:Write the 34 pattern documents into gbrain.'
+        'search:Semantic-or-keyword search over the catalogue.'
+        'corpus:Dump the indexed corpus as JSON.'
+    )
+    _arguments -C '1:command:->cmd'
+    [[ $state == cmd ]] && _describe -t commands 'vstack-gbrain command' commands
+}
+
+_vstack-bench() {
+    local -a commands
+    commands=(
+        'list:Show what is in the canonical suite.'
+        'run:Run a benchmark suite end-to-end.'
+        'compare:Run a suite across quick / standard / forensic.'
+    )
+    _arguments -C '1:command:->cmd'
+    [[ $state == cmd ]] && _describe -t commands 'vstack-bench command' commands
+}
+
+_vstack-doctor() {
+    _arguments \
+        '--json[Emit JSON instead of pretty text]' \
+        '--skip-network[Skip the PyPI upgrade check]' \
+        '--only-errors[Print only ERROR-level findings]'
+}
+
+_vstack() {
+    # The top-level `vstack` CLI runs the AAR generator.
+    _arguments '1:command:(aar bench version)' '*::arg:_files'
+}

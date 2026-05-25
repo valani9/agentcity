@@ -1,6 +1,6 @@
 [project]
 name = "valanistack"
-version = "0.5.0"
+version = "0.6.0"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -127,6 +127,7 @@ vstack-analytics = "vstack.analytics.cli:main"
 vstack-browser = "vstack.browser.cli:main"
 vstack-gbrain = "vstack.gbrain.cli:main"
 vstack-bench = "vstack.benchmarks.cli:main"
+vstack-doctor = "vstack.doctor.cli:main"
 vstack-lewin = "vstack.lewin.cli:main"
 vstack-goleman = "vstack.goleman_ei.cli:main"
 vstack-johari = "vstack.johari.cli:main"
@@ -186,6 +187,10 @@ only-include = []
 "_browser/lib" = "vstack/browser"
 "_gbrain/lib" = "vstack/gbrain"
 "_benchmarks/lib" = "vstack/benchmarks"
+"_security/lib" = "vstack/security"
+"_cache/lib" = "vstack/cache"
+"_observability/lib" = "vstack/observability"
+"_doctor/lib" = "vstack/doctor"
 "module-2-team/30-aar-generator/lib" = "vstack/aar"
 "module-2-team/17-lencioni-diagnostic/lib" = "vstack/lencioni"
 "module-2-team/18-trust-triangle-audit/lib" = "vstack/trust_triangle"
@@ -250,6 +255,10 @@ testpaths = [
     "_browser",
     "_gbrain",
     "_benchmarks",
+    "_security",
+    "_cache",
+    "_observability",
+    "_doctor",
 ]
 addopts = "-ra --tb=short --strict-markers"
 filterwarnings = [

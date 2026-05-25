@@ -77,6 +77,9 @@ nav:
       - Config keys: reference/config-keys.md
       - MCP resource URIs: reference/mcp-uris.md
       - REST API: reference/rest-endpoints.md
+  - Operations:
+      - Production deploy: operations/deploy.md
+      - Security model: operations/security.md
   - Recipes:
       - recipes/index.md
       - Diagnose a confidently wrong agent: recipes/confidently-wrong.md

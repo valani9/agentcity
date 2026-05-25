@@ -6,6 +6,141 @@ project adheres to [Semantic Versioning](https://semver.org/) from
 `1.0.0` onward. During the `0.x` series, minor bumps may include
 breaking changes (see API stability promise in `vstack/__init__.py`).
 
+## [0.6.0] — 2026-05-25
+
+Production-hardening release. Adds the security + cache + observability +
+diagnostic infrastructure that takes `vstack-api` from "fine for localhost"
+to "ready for thousands of concurrent users."
+
+### Added — `vstack.security`
+
+- `APIKeyStore` + `APIKey` — SHA-256-hashed in-memory keys with
+  constant-time verification. Load from `VSTACK_API_KEYS` /
+  `VSTACK_API_KEYS_FILE`.
+- `InMemoryRateLimiter` — sliding-window per-key (or per-IP) limiter
+  with `RateLimitDecision` + `Retry-After` semantics.
+- `RequestLimits` — declarative caps on body size, trace steps,
+  message count, per-string chars, total chars, request timeout.
+  Configured via `VSTACK_API_MAX_*` env vars.
+- `audit_input_for_injection` / `safe_pattern_name` / `safe_path` /
+  `safe_subprocess_argv` / `warn_on_suspicious_inputs` — defense-in-
+  depth helpers for the parts of vstack that take user input.
+
+### Added — `vstack.cache`
+
+- `InMemoryLRUCache` + `NullCache` + `CacheBackend` protocol +
+  `CacheEntry` + `CacheStats`.
+- `build_cache_key(pattern, mode, model, trace)` — SHA-256 over the
+  canonical JSON of the trace + run params; identical traces hit
+  the cache cleanly.
+- `resolve_cache_from_env()` honors `VSTACK_CACHE=memory|off`,
+  `VSTACK_CACHE_CAPACITY`, `VSTACK_CACHE_TTL_SECONDS`.
+
+### Added — `vstack.observability`
+
+- `MetricsRegistry` + `Counter` + `Histogram` + `render_prometheus()`
+  — hand-rolled Prometheus text-format exporter, no
+  `prometheus_client` dependency.
+- `record_request` / `time_request` — request-level helpers that
+  populate `vstack_requests_total{surface,pattern,mode,status}` +
+  `vstack_request_duration_seconds{surface,pattern,mode}`.
+- `REQUEST_ID_HEADER` constant + `get_or_create_request_id` /
+  `set_current_request_id` / `current_request_id` — `X-Request-ID`
+  round-trip + contextvar binding for log correlation.
+- `install_sentry_if_configured()` — optional `sentry-sdk`
+  integration via `SENTRY_DSN`. Silently no-ops if the SDK isn't
+  installed or `SENTRY_DSN` is unset.
+
+### Added — `vstack.api` hardening
+
+- **Auth middleware** — `Authorization: Bearer` + `X-API-Key`
+  support; constant-time comparison; rejects with `401` +
+  `WWW-Authenticate` when `require_auth=True` and the key is
+  missing/wrong.
+- **Rate-limit middleware** — `429` + `Retry-After` + the
+  `X-RateLimit-Limit` / `X-RateLimit-Remaining` headers on every
+  response.
+- **Body-size middleware** — rejects oversized POSTs with `413`
+  before they're decoded.
+- **Security-headers middleware** — `X-Content-Type-Options`,
+  `X-Frame-Options`, `CSP`, `Referrer-Policy`, conditional HSTS.
+- **Request-ID middleware** — generates / echoes `X-Request-ID`;
+  binds to a contextvar for log correlation.
+- **CORS middleware** — opt-in via `VSTACK_API_CORS_ORIGINS`.
+- **`/readyz` + `/livez` + `/metrics`** — separated K8s probe
+  semantics (`readyz` flips to `draining` on shutdown); Prometheus
+  metrics endpoint at `/metrics`.
+- **Graceful shutdown** — FastAPI lifespan handler drains in-flight
+  requests on `SIGTERM`.
+- **Async analyze path** — uses analyzer `*Async` mirrors when the
+  LLM client has `acomplete`; falls back to a thread executor for
+  the sync analyzer so concurrent HTTP requests don't serialize on
+  the event loop.
+- **Cache integration** — cache lookup happens BEFORE LLM resolution
+  so a cache hit costs zero LLM round-trips.
+- **Request timeout** — server-side per-request deadline
+  (`VSTACK_API_REQUEST_TIMEOUT`, default 120s); returns `504` on
+  exceedance.
+
+### Added — File-store safety
+
+- `vstack.memory.atomic_write_text` / `atomic_write_bytes` — tmp-
+  file + `os.replace` for crash-safe writes. Wired into
+  `save_config()` and `LearningStore.update_outcome()`.
+- `vstack.memory.append_locked` / `shared_read_lock` / `FileLock` —
+  POSIX advisory locks (with Windows `msvcrt` fallback) for cross-
+  process JSONL append + read. Wired into `LearningStore.record()`
+  and `FileTelemetrySink.record()`.
+
+### Added — `vstack-doctor` diagnostic CLI
+
+- Audits 25+ checks across Python version, vstack install, pattern
+  registry, `~/.vstack/` writability, LLM client resolvability,
+  every documented CLI on PATH, every optional extra, gbrain
+  reachability, Node.js availability for browser, API auth
+  misconfiguration, and PyPI upgrade availability.
+- `--json` for machine-readable output; `--skip-network` for
+  air-gapped CI; `--only-errors` for terse output.
+- Exit code 1 when any check is ERROR-level; 0 otherwise.
+
+### Added — Shell completions
+
+- `completions/vstack.bash`, `completions/_vstack` (zsh), and
+  `completions/vstack.fish` — tab-completion for all 10 top-level
+  CLIs + subcommands + key arguments (pattern names, platform
+  names, path kinds, config keys).
+- `completions/README.md` installs instructions.
+
+### Added — Production docs
+
+- `docs/operations/deploy.md` — minimum production checklist;
+  Docker-only + Kubernetes Deployment manifests; auth + rate
+  limiting + request limits + cache + observability config; what
+  stays in-process vs. needs a shared backend at scale;
+  troubleshooting.
+- `docs/operations/security.md` — three-ring security model
+  (library guards, configurable API guards, deployment
+  responsibilities), threat model, audit posture, vulnerability
+  reporting.
+
+### Packaging
+
+- 4 new force-include lines (`_security/lib`, `_cache/lib`,
+  `_observability/lib`, `_doctor/lib`).
+- 1 new `[project.scripts]` entry: `vstack-doctor`.
+- 4 new testpaths.
+- Version bump 0.5.0 → 0.6.0.
+
+### Tests
+
+- +113 new tests across `_security/tests/` (53),
+  `_cache/tests/` (15), `_observability/tests/` (17),
+  `_doctor/tests/` (8), and `_api/tests/test_api_security.py` (21
+  new hardening + caching tests).
+- Suite total: **2,088 passing** (up from 1,969 in v0.5.0).
+- Mypy strict clean across all 14 surface lib dirs (the 10 from
+  v0.5.0 + `_security`, `_cache`, `_observability`, `_doctor`).
+
 ## [0.5.0] — 2026-05-25
 
 Phase 3 surface + depth-pass release. Adds the browser dev tooling

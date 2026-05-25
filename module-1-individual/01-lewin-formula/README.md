@@ -48,7 +48,7 @@ It reads an agent failure trace and outputs:
 ## Install
 
 ```bash
-pip install vstack                # Stub-only — no API key needed for demos and CI.
+pip install valanistack                # Stub-only — no API key needed for demos and CI.
 pip install "vstack[anthropic]"   # Add the Anthropic client.
 pip install "vstack[openai]"      # Add the OpenAI client.
 pip install "vstack[ollama]"      # Add the local-Ollama client.

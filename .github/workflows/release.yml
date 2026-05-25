@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/vstack/${{ needs.build.outputs.version }}/
+      url: https://pypi.org/project/valanistack/${{ needs.build.outputs.version }}/
     permissions:
       id-token: write
     steps:
@@ -141,7 +141,7 @@ jobs:
 
             Install:
             ```
-            pip install vstack==${{ needs.build.outputs.version }}
+            pip install valanistack==${{ needs.build.outputs.version }}
             ```
 
             See [CHANGELOG.md](https://github.com/valani9/vstack/blob/main/CHANGELOG.md) for the full release notes.

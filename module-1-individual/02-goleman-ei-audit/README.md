@@ -55,7 +55,7 @@ The diagnostic reads an agent's interaction trace and outputs:
 ## Install
 
 ```bash
-pip install vstack                # Stub-only.
+pip install valanistack                # Stub-only.
 pip install "vstack[anthropic]"   # + Anthropic.
 pip install "vstack[openai]"      # + OpenAI.
 pip install "vstack[ollama]"      # + local Ollama.

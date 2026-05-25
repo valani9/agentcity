@@ -6,6 +6,134 @@ project adheres to [Semantic Versioning](https://semver.org/) from
 `1.0.0` onward. During the `0.x` series, minor bumps may include
 breaking changes (see API stability promise in `vstack/__init__.py`).
 
+## [0.5.0] — 2026-05-25
+
+Phase 3 surface + depth-pass release. Adds the browser dev tooling
+(Tier C #I5), the gbrain integration (semantic search over the
+pattern catalogue), the canonical Span-of-Control calibration
+baselines, the cross-pattern composition runbook, the in-repo
+mkdocs-material documentation site, runnable framework demos under
+`examples/`, the benchmark + comparative-eval harness, and the first
+six narrative essays at Substack depth.
+
+### Added — `vstack.browser` (Chrome DevTools MCP integration)
+
+- Wraps the upstream `chrome-devtools-mcp` server. Scrape agent
+  traces from LangSmith / Phoenix / Helicone / Langfuse without
+  screen-scraping; screenshot detection reports; drive agents in
+  the browser for evaluation.
+- `BrowserSession`, `open_session` async context manager,
+  `scrape_trace`, `screenshot_url`, `fill_form`, `KNOWN_DASHBOARDS`
+  recipe catalogue (5 vendors).
+- `vstack-browser` CLI: `scrape`, `screenshot`, `tools`
+  subcommands.
+- New `[browser]` optional extra (`pip install valanistack[browser]`).
+- 28 new tests; all mock the upstream MCP boundary so Chrome
+  doesn't need to be installed in CI.
+
+### Added — `vstack.gbrain` (semantic search over patterns)
+
+- Detects gbrain on PATH; semantic search via the gbrain CLI when
+  available; graceful keyword-fallback when not.
+- `indexed_corpus()` builds 34 documents (summary + group +
+  schema info + playbook keys + composition); `sync_corpus()`
+  writes them into gbrain idempotently.
+- `vstack-gbrain` CLI: `status`, `sync`, `search`, `corpus`.
+- 18 new tests; all mock `shutil.which` and `subprocess.run` so
+  gbrain doesn't need to be installed in CI.
+
+### Added — canonical calibration baselines (`_baselines/`)
+
+- Three pre-computed Span-of-Control baselines covering the
+  textbook crew topologies (small-flat, two-layer, hub-and-spoke).
+  Deterministic because Span-of-Control's math is gated to Python.
+- `_baselines/scripts/generate_canonical.py` regenerates them
+  reproducibly.
+- `_baselines/README.md` documents the recipe for users to build
+  per-pattern baselines for the 33 LLM-bearing patterns.
+
+### Added — `COMPOSITION-RUNBOOK.md`
+
+- Repo-root document mapping the five canonical chains (F1
+  confidently-wrong, T1 audit-crew, S1 bottleneck, C1 culture, D1
+  calibration). Code + per-chain decision tables + cross-chain
+  transitions + the shared executive-readout template.
+
+### Added — in-repo documentation site (`docs/` + `mkdocs.yml`)
+
+- mkdocs-material configuration with full navigation: Home, Quick
+  start, Concepts, Patterns (3 modules), Surfaces (7), Workflows
+  (5), Reference (4), Recipes (4 worked examples), Changelog.
+- Build offline with `pip install valanistack[docs] && mkdocs
+  build` (writes `site/` — no hosting required).
+- 18 pages of structured content; integrates with the existing
+  README + COMPOSITION-RUNBOOK + per-pattern docs.
+
+### Added — `examples/` (runnable framework demos)
+
+- 7 demo scripts: `langchain_demo.py`, `langgraph_demo.py`,
+  `crewai_demo.py`, `autogen_demo.py`, `llamaindex_demo.py`,
+  `pydantic_ai_demo.py`, `openai_assistants_demo.py`.
+- Each script is self-contained (~50 lines) and exercises the
+  adapter end-to-end with a tiny canonical Lewin / AAR / Lencioni
+  invocation.
+
+### Added — `vstack.benchmarks` + `vstack-bench` CLI
+
+- `BenchmarkCase`, `BenchmarkSuite`, `BenchmarkRunner`,
+  `BenchmarkReport` for running pattern suites end-to-end.
+- Canonical 3-case suite (Lewin / AAR / Schein) ships built-in;
+  custom suites loaded from JSON via `load_suite(path)`.
+- Comparative harness: quick / standard / forensic side-by-side
+  with elapsed-ms + severity + dominant-finding agreement signal.
+- Stub-LLM friendly: the test suite drives the harness without
+  burning API spend. Real numbers arrive when the user runs with
+  their own LLM client.
+- `vstack-bench` CLI: `list`, `run`, `compare` subcommands.
+- 30 new tests.
+
+### Added — `essays/` (Substack-ready narrative essays)
+
+- `_TEMPLATE.md` canonical structure.
+- Six anchor essays at depth (~700-900 words each): Lewin (#01),
+  Lencioni (#17), Edmondson psych safety (#20), AAR (#30), Schein
+  (#31), Span-of-Control (#34). The remaining 28 essays follow
+  the template; quality bar established here.
+
+### Packaging
+
+- 3 new `[project.scripts]` entries: `vstack-browser`,
+  `vstack-gbrain`, `vstack-bench`.
+- 2 new optional extras: `[browser]` (pulls `mcp>=1.20.0`),
+  `[docs]` (mkdocs + mkdocs-material).
+- 3 new force-include lines.
+- 3 new testpaths.
+
+### Docker
+
+- Refactored Dockerfile to install from the release.yml-built
+  wheel artifact when present in `dist/`, with a PyPI fallback
+  for local builds. Bypasses the PyPI CDN-propagation race that
+  bit v0.4.0's docker workflow.
+- docker.yml now triggers on `workflow_run` of Release (success),
+  downloads the `release-dist` artifact, and feeds it to buildx.
+  No PyPI calls inside the build.
+
+### CI
+
+- mypy strict loop covers all 10 surface lib dirs (the 7 from
+  v0.4.0 + `_browser`, `_gbrain`, `_benchmarks`).
+- Test job runs the new test dirs.
+- Lint job covers the new dirs + `examples/` + `_baselines/scripts/`.
+- Release smoke test imports `vstack.browser` / `vstack.gbrain` /
+  `vstack.benchmarks`.
+
+### Tests
+
+- +74 new tests (28 browser + 18 gbrain + 30 benchmarks). Suite
+  total: **1,969 passing** (up from 1,895 in v0.4.0).
+- Mypy strict clean across all 10 surface lib dirs.
+
 ## [0.4.0] — 2026-05-25
 
 Phase 2 of the expansion roadmap lands. v0.4.0 adds framework

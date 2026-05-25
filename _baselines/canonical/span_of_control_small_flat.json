@@ -1,0 +1,85 @@
+{
+  "crew_id": "canonical-small-flat",
+  "metrics": [
+    {
+      "metric": "max_span",
+      "value": 2.0,
+      "normalized_score": 0.14285714285714285,
+      "explanation": "Widest span = 2 subordinates. Healthy."
+    },
+    {
+      "metric": "mean_span",
+      "value": 2.0,
+      "normalized_score": 0.1,
+      "explanation": "Mean span across 1 supervisors = 2.00."
+    },
+    {
+      "metric": "centralization_index",
+      "value": 0.8571,
+      "normalized_score": 0.78565,
+      "explanation": "Top supervisors hold 86% of weighted decision authority."
+    },
+    {
+      "metric": "hierarchy_depth",
+      "value": 2.0,
+      "normalized_score": 0.0,
+      "explanation": "Longest reports_to chain = 2 levels."
+    },
+    {
+      "metric": "span_gini",
+      "value": 0.6667,
+      "normalized_score": 0.6667,
+      "explanation": "Span distribution Gini = 0.67. Imbalanced — load concentrates on a few supervisors."
+    },
+    {
+      "metric": "decision_bottleneck",
+      "value": 0.4,
+      "normalized_score": 0.4,
+      "explanation": "Bottleneck risk = 0.40 (incoming rate = 10.0/min). Bottleneck agents: orchestrator."
+    }
+  ],
+  "structural_load_score": 0.4026,
+  "structural_load_quality": "under-stress",
+  "bottleneck_agent_ids": [
+    "orchestrator"
+  ],
+  "interventions": [],
+  "generated_at": "2026-05-25T12:30:06.011393Z",
+  "generator_model": "claude-sonnet-4-6",
+  "success": true,
+  "mode": "quick",
+  "severity": "moderate",
+  "profile_pattern": "over_centralized",
+  "structural_anomaly_audit": null,
+  "load_amplification_audit": null,
+  "baseline": null,
+  "composition_handoff": {
+    "upstream_patterns": [
+      "vstack.org_structure",
+      "vstack.robbins_culture",
+      "vstack.schein_culture",
+      "vstack.aar"
+    ],
+    "downstream_patterns": [
+      "vstack.group_decision",
+      "vstack.devils_advocate"
+    ],
+    "handoff_payload": {
+      "profile_pattern": "over_centralized",
+      "bottleneck_agent_ids": [
+        "orchestrator"
+      ],
+      "framework": null
+    },
+    "rationale": "profile_pattern=over_centralized -> 2 recommendations"
+  },
+  "attached_playbooks": [],
+  "run_id": "7DL_BFqijj1b",
+  "cost_usd": 0.0,
+  "tokens_total": 0,
+  "tokens_input": 0,
+  "tokens_output": 0,
+  "llm_calls": 0,
+  "elapsed_ms": 0.1650830017752014,
+  "injection_detected": false
+}

@@ -1,0 +1,85 @@
+{
+  "crew_id": "canonical-two-layer",
+  "metrics": [
+    {
+      "metric": "max_span",
+      "value": 3.0,
+      "normalized_score": 0.21428571428571427,
+      "explanation": "Widest span = 3 subordinates. Healthy."
+    },
+    {
+      "metric": "mean_span",
+      "value": 3.0,
+      "normalized_score": 0.15,
+      "explanation": "Mean span across 4 supervisors = 3.00."
+    },
+    {
+      "metric": "centralization_index",
+      "value": 0.4898,
+      "normalized_score": 0.2449,
+      "explanation": "Top supervisors hold 49% of weighted decision authority."
+    },
+    {
+      "metric": "hierarchy_depth",
+      "value": 3.0,
+      "normalized_score": 0.2,
+      "explanation": "Longest reports_to chain = 3 levels. Deep hierarchy adds latency."
+    },
+    {
+      "metric": "span_gini",
+      "value": 0.6923,
+      "normalized_score": 0.6923,
+      "explanation": "Span distribution Gini = 0.69. Imbalanced — load concentrates on a few supervisors."
+    },
+    {
+      "metric": "decision_bottleneck",
+      "value": 0.6,
+      "normalized_score": 0.6,
+      "explanation": "Bottleneck risk = 0.60 (incoming rate = 50.0/min). Bottleneck agents: orchestrator."
+    }
+  ],
+  "structural_load_score": 0.4223,
+  "structural_load_quality": "under-stress",
+  "bottleneck_agent_ids": [
+    "orchestrator"
+  ],
+  "interventions": [],
+  "generated_at": "2026-05-25T12:30:22.077119Z",
+  "generator_model": "claude-sonnet-4-6",
+  "success": true,
+  "mode": "quick",
+  "severity": "moderate",
+  "profile_pattern": "imbalanced_supervisors",
+  "structural_anomaly_audit": null,
+  "load_amplification_audit": null,
+  "baseline": null,
+  "composition_handoff": {
+    "upstream_patterns": [
+      "vstack.org_structure",
+      "vstack.robbins_culture",
+      "vstack.schein_culture",
+      "vstack.aar"
+    ],
+    "downstream_patterns": [
+      "vstack.org_structure",
+      "vstack.social_loafing"
+    ],
+    "handoff_payload": {
+      "profile_pattern": "imbalanced_supervisors",
+      "bottleneck_agent_ids": [
+        "orchestrator"
+      ],
+      "framework": null
+    },
+    "rationale": "profile_pattern=imbalanced_supervisors -> 2 recommendations"
+  },
+  "attached_playbooks": [],
+  "run_id": "P1lgQ5H7NLTc",
+  "cost_usd": 0.0,
+  "tokens_total": 0,
+  "tokens_input": 0,
+  "tokens_output": 0,
+  "llm_calls": 0,
+  "elapsed_ms": 0.22729199918103404,
+  "injection_detected": false
+}

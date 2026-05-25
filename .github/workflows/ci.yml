@@ -48,6 +48,7 @@ jobs:
           pytest module-1-individual/ module-2-team/ module-3-organization/ \
                  _mcp/ _memory/ _upgrade/ _api/ \
                  _adapters/ _learnings/ _analytics/ \
+                 _browser/ _gbrain/ _benchmarks/ \
             -v --tb=short \
             --cov=vstack \
             --cov-report=term-missing \
@@ -79,12 +80,14 @@ jobs:
       - name: Run ruff check
         run: |
           ruff check module-1-individual/ module-2-team/ module-3-organization/ \
-                     _mcp/ _memory/ _upgrade/ _api/ _adapters/ _learnings/ _analytics/
+                     _mcp/ _memory/ _upgrade/ _api/ _adapters/ _learnings/ _analytics/ \
+                     _browser/ _gbrain/ _benchmarks/ examples/ _baselines/scripts/
 
       - name: Run ruff format check
         run: |
           ruff format --check module-1-individual/ module-2-team/ module-3-organization/ \
-                              _mcp/ _memory/ _upgrade/ _api/ _adapters/ _learnings/ _analytics/
+                              _mcp/ _memory/ _upgrade/ _api/ _adapters/ _learnings/ _analytics/ \
+                              _browser/ _gbrain/ _benchmarks/ examples/ _baselines/scripts/
 
   typecheck:
     name: Typecheck (mypy)
@@ -120,6 +123,9 @@ jobs:
               _adapters \
               _learnings \
               _analytics \
+              _browser \
+              _gbrain \
+              _benchmarks \
               module-2-team/30-aar-generator \
               module-2-team/17-lencioni-diagnostic \
               module-2-team/18-trust-triangle-audit \

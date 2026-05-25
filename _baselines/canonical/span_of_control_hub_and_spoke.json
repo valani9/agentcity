@@ -1,0 +1,86 @@
+{
+  "crew_id": "canonical-hub-and-spoke",
+  "metrics": [
+    {
+      "metric": "max_span",
+      "value": 12.0,
+      "normalized_score": 1.0,
+      "explanation": "Widest span = 12 subordinates. Wide span — supervisor at risk of becoming a bottleneck."
+    },
+    {
+      "metric": "mean_span",
+      "value": 12.0,
+      "normalized_score": 0.95,
+      "explanation": "Mean span across 1 supervisors = 12.00."
+    },
+    {
+      "metric": "centralization_index",
+      "value": 0.8281,
+      "normalized_score": 0.7421499999999999,
+      "explanation": "Top supervisors hold 83% of weighted decision authority."
+    },
+    {
+      "metric": "hierarchy_depth",
+      "value": 2.0,
+      "normalized_score": 0.0,
+      "explanation": "Longest reports_to chain = 2 levels."
+    },
+    {
+      "metric": "span_gini",
+      "value": 0.9231,
+      "normalized_score": 0.9231,
+      "explanation": "Span distribution Gini = 0.92. Imbalanced — load concentrates on a few supervisors."
+    },
+    {
+      "metric": "decision_bottleneck",
+      "value": 1.0,
+      "normalized_score": 1.0,
+      "explanation": "Bottleneck risk = 1.00 (incoming rate = 100.0/min). Bottleneck agents: orchestrator."
+    }
+  ],
+  "structural_load_score": 0.8409,
+  "structural_load_quality": "overloaded",
+  "bottleneck_agent_ids": [
+    "orchestrator"
+  ],
+  "interventions": [],
+  "generated_at": "2026-05-25T12:30:06.012544Z",
+  "generator_model": "claude-sonnet-4-6",
+  "success": false,
+  "mode": "quick",
+  "severity": "high",
+  "profile_pattern": "broadly_overloaded",
+  "structural_anomaly_audit": null,
+  "load_amplification_audit": null,
+  "baseline": null,
+  "composition_handoff": {
+    "upstream_patterns": [
+      "vstack.org_structure",
+      "vstack.robbins_culture",
+      "vstack.schein_culture",
+      "vstack.aar"
+    ],
+    "downstream_patterns": [
+      "vstack.org_structure",
+      "vstack.lewin",
+      "vstack.aar"
+    ],
+    "handoff_payload": {
+      "profile_pattern": "broadly_overloaded",
+      "bottleneck_agent_ids": [
+        "orchestrator"
+      ],
+      "framework": null
+    },
+    "rationale": "profile_pattern=broadly_overloaded -> 3 recommendations"
+  },
+  "attached_playbooks": [],
+  "run_id": "q4UOyo-u9r-y",
+  "cost_usd": 0.0,
+  "tokens_total": 0,
+  "tokens_input": 0,
+  "tokens_output": 0,
+  "llm_calls": 0,
+  "elapsed_ms": 0.06379200203809887,
+  "injection_detected": false
+}

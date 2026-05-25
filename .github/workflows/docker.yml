@@ -120,7 +120,7 @@ jobs:
       # Skips the PyPI CDN race entirely.
       - name: Download wheel artifact from the triggering Release run
         if: github.event_name == 'workflow_run'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: release-dist
           path: dist/

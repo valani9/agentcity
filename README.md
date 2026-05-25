@@ -20,11 +20,9 @@
 >
 > Both are in this library. Along with 32 more.
 
-<br/>
-
 ## The story
 
-In my first semester at **Boston University's Questrom School of Business**, I took **MO221 — Management & Organizations**. Our team got stuck on a group project. Three weeks in, we were arguing about scope instead of working — two people had quietly checked out. The course handed us a worksheet: the Wharton four-step **After-Action Review**, plus Lencioni's **Five Dysfunctions** diagnostic. Forty minutes later we had seven specific things to change. We shipped on time.
+In my first semester at **Boston University's Questrom School of Business**, I took **MO221 — Management & Organizations**. Our team got stuck on a group project. Three weeks in, we were arguing about scope instead of working — two people had quietly checked out. The course handed us a worksheet: the Wharton four-step **After-Action Review**, plus Lencioni's **Five Dysfunctions** diagnostic. Forty minutes later we had seven specific things to change. We shipped on&nbsp;time.
 
 That same year I was building AI agents that were failing in ways that looked *exactly* like our team had been failing. Looping on the same idea. Patching the symptom instead of the cause. Reverting silently without surfacing what went wrong. Escalating commitment to clearly-broken approaches.
 
@@ -38,7 +36,7 @@ That's **vstack**.
 
 ## Why this works
 
-Seventy years of organizational-behavior research catalogued how human teams fail. AI agents are now failing in the same recognizable shapes. Same forensic vocabulary. Same fixes. The translation is the work.
+Seventy years of organizational-behavior research catalogued how human teams fail. AI agents are now failing in the same recognizable shapes. Same forensic vocabulary. Same fixes. The translation is&nbsp;the&nbsp;work.
 
 | OB framework anchor | Year | What it diagnoses in agents |
 |---|---|---|
@@ -271,7 +269,7 @@ vstack ships **12 invocation surfaces**. Same patterns, same data shape, differe
 | 3 | **MCP server** | `pip install "valanistack[mcp]"` · `vstack-mcp serve` | Any MCP-speaking AI client (see table below) |
 | 4 | **REST API (FastAPI)** | `pip install "valanistack[api]"` · `vstack-api serve` | Production multi-tenant deploys; auth + rate-limit baked in |
 | 5 | **Docker** | `docker pull ghcr.io/valani9/vstack:0.7.0` | Kubernetes deploys; multi-arch (amd64 + arm64) |
-| 6 | **Agent skills** | Skill manifests under `_skills/lib/` | Drop into any host that loads `SKILL.md` files |
+| 6 | **Claude Code skills** | 7 task-shaped `SKILL.md` files under `_skills/lib/` | Drop into `~/.claude/skills/vstack/` so `/vstack-aar`, `/vstack-audit-crew`, `/vstack-post-incident`, etc. show up in Claude Code |
 | 7 | **Framework adapters** | `pip install "valanistack[adapters]"` | LangChain · LangGraph · CrewAI · AutoGen · LlamaIndex · Pydantic AI |
 | 8 | **OpenAI / Anthropic tool JSON** | `vstack.adapters.openai_assistants` · `vstack.adapters.anthropic` | Pure-JSON tool manifests — no library install on the consumer side |
 | 9 | **Open WebUI plugin** | `vstack.adapters.openwebui` | Drop-in tool manifest for Open WebUI |
@@ -510,7 +508,7 @@ The full security and privacy stance is in [docs/operations/security.md](docs/op
 
 ## Troubleshooting
 
-**`vstack-doctor` is the first thing to run.** It walks 25+ install checks and prints a one-line fix hint for anything not OK.
+**`vstack-doctor` is the first thing to run.** It walks 25+ install checks and prints a one-line fix hint for anything that isn't green.
 
 | Symptom | Fix |
 |---|---|

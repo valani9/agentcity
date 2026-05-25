@@ -39,9 +39,7 @@ import secrets
 from contextlib import contextmanager
 from typing import Any, Iterator
 
-_RUN_ID: contextvars.ContextVar[str | None] = contextvars.ContextVar(
-    "vstack_run_id", default=None
-)
+_RUN_ID: contextvars.ContextVar[str | None] = contextvars.ContextVar("vstack_run_id", default=None)
 _PATTERN: contextvars.ContextVar[str | None] = contextvars.ContextVar(
     "vstack_pattern", default=None
 )

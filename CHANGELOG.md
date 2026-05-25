@@ -6,6 +6,119 @@ project adheres to [Semantic Versioning](https://semver.org/) from
 `1.0.0` onward. During the `0.x` series, minor bumps may include
 breaking changes (see API stability promise in `vstack/__init__.py`).
 
+## [0.4.0] — 2026-05-25
+
+Phase 2 of the expansion roadmap lands. v0.4.0 adds framework
+adapters, a learning store, a telemetry aggregator, and config
+generators for the remaining Tier B native platforms. vstack is now
+reachable from LangChain / LangGraph / CrewAI / AutoGen / LlamaIndex
+/ Pydantic AI / Open WebUI / OpenAI Assistants / Anthropic Messages
+in addition to the v0.2.0+v0.3.0 surfaces.
+
+### Added — `vstack.adapters` (framework bindings)
+
+- Unified, registry-driven adapter module: same 34 patterns, eight
+  framework-native shapes.
+  - ``as_openai_tool_schemas()`` — OpenAI Chat / Assistants
+    ``tools`` array. Pure JSON; no extra dependency.
+  - ``as_anthropic_tool_schemas()`` — Anthropic Messages ``tools``
+    array. Pure JSON.
+  - ``as_autogen_function_manifest()`` + ``as_autogen_callables()``
+    — Microsoft AutoGen function manifest + Python callables. Pure
+    Python; no autogen import required.
+  - ``as_openwebui_manifest(api_base_url=...)`` — Open WebUI tool-
+    plugin manifest pointing at a running ``vstack-api``.
+  - ``as_langchain_tools()`` — ``StructuredTool`` instances; needs
+    ``valanistack[langchain]``.
+  - ``as_langgraph_nodes()`` / ``node_for(pattern_name)`` — state-
+    delta node factories; needs ``valanistack[langgraph]``.
+  - ``as_crewai_tools()`` — ``BaseTool`` subclass instances; needs
+    ``valanistack[crewai]``.
+  - ``as_llamaindex_tools()`` — ``FunctionTool`` instances; needs
+    ``valanistack[llamaindex]``.
+  - ``as_pydantic_ai_tools()`` — ``(name, description, func)``
+    triples; needs ``valanistack[pydantic_ai]``.
+- Shared dispatcher (``run_pattern_dispatch``) — every adapter
+  validates input against the pattern's Pydantic model, resolves an
+  LLM client, runs the analyzer, and returns the detection as a
+  JSON-safe dict (or a structured ``{"error", "message"}`` envelope).
+- Adapter spec types (``PatternToolSpec``,
+  ``list_pattern_tool_specs``) are framework-neutral and reusable
+  for any custom adapter you want to write.
+
+### Added — `vstack.learnings` + `vstack-learn` CLI
+
+- Append-only JSONL store at ``~/.vstack/learnings.jsonl``.
+- ``LearningRecord`` schema: pattern, mode, agent_id / crew_id,
+  severity, profile_pattern, dominant_finding, interventions_applied,
+  follow_up_outcome, notes, extra.
+- ``LearningStore.record / recall / update_outcome / outcomes /
+  iter_records / clear`` — streaming reads, latest-open-record
+  mutation for outcome tagging.
+- ``OutcomeAggregate`` rolls up ``(pattern, intervention) ->
+  improved / no_change / worse / unknown`` counts with an
+  ``improvement_rate`` property.
+- ``vstack-learn`` subcommands: ``record``, ``recall``,
+  ``outcome``, ``outcomes``, ``path``, ``clear``; all support
+  ``--json``.
+
+### Added — `vstack.analytics` + `vstack-analytics` CLI
+
+- ``FileTelemetrySink`` — drop-in for ``vstack.aar.TelemetrySink``
+  that appends one JSONL line per ``record_llm_call`` event to
+  ``~/.vstack/analytics/telemetry.jsonl``. Activate once with
+  ``enable_file_telemetry()`` at process start.
+- ``TelemetryAggregator`` — streaming roll-ups: ``per_pattern()``,
+  ``per_model()``, ``per_day()``, ``top_costs(n)``, ``total_cost()``.
+- ``CostEstimator`` — baseline $/1k token rates for the major model
+  ids (Claude 4 / 3.5, GPT-5 / 4o / 4-turbo, o1, local). Override
+  per-model rates via the ``rates`` kwarg.
+- ``vstack-analytics`` subcommands: ``summary``, ``top-costs``,
+  ``cost``, ``raw``, ``path``; all support ``--json``.
+
+### Added — `vstack-config gen-platform` (Tier B platforms)
+
+- One-command config generators for the platforms that aren't already
+  covered by ``vstack-mcp config-snippet``:
+  ``cursor``, ``cline``, ``continue``, ``roo-code``, ``windsurf``,
+  ``zed``, ``aider``, ``goose``, ``kiro``, ``openclaw``,
+  ``codex-cli``, ``opencode``, ``docker-compose``.
+- ``--write`` + ``--out`` + ``--force`` for writing the snippet
+  directly to its suggested path.
+
+### Packaging
+
+- New optional extras: ``valanistack[langchain]``,
+  ``valanistack[langgraph]``, ``valanistack[crewai]``,
+  ``valanistack[llamaindex]``, ``valanistack[pydantic_ai]``,
+  ``valanistack[adapters]`` (bundles all five). ``valanistack[all]``
+  now includes everything.
+- 2 new ``[project.scripts]`` entries: ``vstack-learn``,
+  ``vstack-analytics``.
+- Force-include extended with ``_adapters/lib``,
+  ``_learnings/lib``, ``_analytics/lib``; pytest testpaths
+  extended to include the new test dirs.
+
+### CI
+
+- mypy strict loop now covers ``_adapters``, ``_learnings``,
+  ``_analytics`` alongside the v0.2.0 / v0.3.0 surfaces. Loop
+  installs ``langchain-core langgraph llama-index-core pydantic-ai``
+  so the framework-gated tests don't all skip in CI.
+- Test job runs the new test dirs and installs the same lightweight
+  framework extras. CrewAI stays gated locally (heavier dep tree).
+- Lint job covers the new dirs.
+- Release smoke test imports ``vstack.adapters`` /
+  ``vstack.learnings`` / ``vstack.analytics`` so a dropped force-
+  include can't ship.
+
+### Tests
+
+- ``_adapters/tests/`` (51), ``_learnings/tests/`` (15),
+  ``_analytics/tests/`` (15), plus 7 new ``gen-platform`` tests in
+  ``_memory/tests/`` bring the suite to **1,895 passing** (up from
+  1,811 in v0.3.0; +84 new).
+
 ## [0.3.0] — 2026-05-25
 
 Phase 1 of the expansion roadmap is complete. v0.3.0 lands four additional

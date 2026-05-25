@@ -98,6 +98,45 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="Print the planned copies without touching the filesystem.",
     )
 
+    p_gen = sub.add_parser(
+        "gen-platform",
+        help=(
+            "Print a ready-to-paste config snippet for a non-MCP-default "
+            "AI client (cursor / cline / continue / roo-code / windsurf / "
+            "zed / aider / goose / kiro / openclaw / codex-cli / opencode "
+            "/ docker-compose)."
+        ),
+    )
+    p_gen.add_argument(
+        "platform",
+        nargs="?",
+        default=None,
+        help="Platform identifier. Omit to list available platforms.",
+    )
+    p_gen.add_argument(
+        "--list",
+        action="store_true",
+        help="List supported platform identifiers and exit.",
+    )
+    p_gen.add_argument(
+        "--write",
+        action="store_true",
+        help=(
+            "Write the snippet to the suggested path (or to --out) "
+            "instead of printing it. Refuses to overwrite without --force."
+        ),
+    )
+    p_gen.add_argument(
+        "--out",
+        default=None,
+        help="Override the destination path for --write.",
+    )
+    p_gen.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite an existing file when --write is set.",
+    )
+
     args = parser.parse_args(argv)
     cmd = args.command or "list"
 
@@ -116,6 +155,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _cmd_keys()
         if cmd == "install-skills":
             return _cmd_install_skills(source=args.source, force=args.force, dry_run=args.dry_run)
+        if cmd == "gen-platform":
+            return _cmd_gen_platform(
+                platform=args.platform,
+                list_only=args.list,
+                write=args.write,
+                out=args.out,
+                force=args.force,
+            )
     except ConfigError as e:
         print(f"vstack-config: {e}", file=sys.stderr)
         return 2
@@ -250,6 +297,62 @@ def _resolve_skills_source(supplied: str | None) -> Path | None:
         if candidate.is_dir():
             return candidate
     return None
+
+
+def _cmd_gen_platform(
+    *,
+    platform: str | None,
+    list_only: bool,
+    write: bool,
+    out: str | None,
+    force: bool,
+) -> int:
+    from ._platforms import generate, list_platforms
+
+    if list_only or platform is None:
+        for name in list_platforms():
+            print(name)
+        return 0
+    try:
+        snippet = generate(platform)
+    except KeyError as e:
+        print(f"vstack-config: {e}", file=sys.stderr)
+        return 2
+
+    if not write:
+        print(f"# Platform: {snippet.platform}")
+        print(f"# Suggested path: {snippet.suggested_path}")
+        print(f"# Notes: {snippet.notes}")
+        print()
+        print(snippet.body)
+        return 0
+
+    if out is None:
+        # Heuristic: take the first whitespace-delimited token as the path
+        # when the suggested-path string is multi-clause; users overriding
+        # should pass --out explicitly.
+        candidate = snippet.suggested_path.split(" ", 1)[0]
+        if candidate.startswith("~") or candidate.startswith("/") or candidate.startswith("./"):
+            out = candidate
+        else:
+            print(
+                f"vstack-config gen-platform --write needs --out for {platform!r}: "
+                f"suggested path '{snippet.suggested_path}' is ambiguous.",
+                file=sys.stderr,
+            )
+            return 2
+
+    dest = Path(os.path.expanduser(out)).resolve()
+    if dest.exists() and not force:
+        print(
+            f"vstack-config: refusing to overwrite {dest}; pass --force to replace.",
+            file=sys.stderr,
+        )
+        return 2
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(snippet.body + "\n", encoding="utf-8")
+    print(f"Wrote {dest}")
+    return 0
 
 
 def _format_value(value: object) -> str:

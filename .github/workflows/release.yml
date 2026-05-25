@@ -88,6 +88,8 @@ jobs:
               'vstack.hexaco', 'vstack.vroom_expectancy',
               # surface modules added in v0.2.0 / v0.3.0
               'vstack.mcp', 'vstack.memory', 'vstack.upgrade', 'vstack.api',
+              # surface modules added in v0.4.0
+              'vstack.adapters', 'vstack.learnings', 'vstack.analytics',
           ]:
               importlib.import_module(ns)
           print('Release smoke test passed')

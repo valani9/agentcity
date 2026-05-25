@@ -212,3 +212,73 @@ def test_install_skills_missing_source_returns_2(
     rc = cli_main(["install-skills", "--source", str(bogus)])
     assert rc == 2
     assert "not found" in capsys.readouterr().err
+
+
+# ----------------------------------------------------------------------
+# gen-platform subcommand
+# ----------------------------------------------------------------------
+
+
+def test_gen_platform_list(tmp_home: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rc = cli_main(["gen-platform", "--list"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    for name in (
+        "cursor",
+        "cline",
+        "continue",
+        "roo-code",
+        "windsurf",
+        "zed",
+        "aider",
+        "goose",
+        "kiro",
+        "openclaw",
+        "codex-cli",
+        "opencode",
+        "docker-compose",
+        "claude-desktop",
+    ):
+        assert name in out
+
+
+def test_gen_platform_no_arg_lists(tmp_home: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rc = cli_main(["gen-platform"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "cursor" in out
+
+
+def test_gen_platform_prints_body(tmp_home: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rc = cli_main(["gen-platform", "cursor"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "mcpServers" in out
+    assert "vstack-mcp" in out
+
+
+def test_gen_platform_unknown_returns_2(tmp_home: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rc = cli_main(["gen-platform", "does-not-exist"])
+    assert rc == 2
+    assert "Unknown platform" in capsys.readouterr().err
+
+
+def test_gen_platform_write_to_explicit_out(
+    tmp_home: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    dest = tmp_path / "mcp.json"
+    rc = cli_main(["gen-platform", "cursor", "--write", "--out", str(dest)])
+    assert rc == 0
+    assert dest.exists()
+    assert "mcpServers" in dest.read_text()
+
+
+def test_gen_platform_write_refuses_overwrite(tmp_home: Path, tmp_path: Path) -> None:
+    dest = tmp_path / "mcp.json"
+    dest.write_text("existing\n", encoding="utf-8")
+    rc = cli_main(["gen-platform", "cursor", "--write", "--out", str(dest)])
+    assert rc == 2
+    assert dest.read_text() == "existing\n"
+    rc = cli_main(["gen-platform", "cursor", "--write", "--out", str(dest), "--force"])
+    assert rc == 0
+    assert "mcpServers" in dest.read_text()

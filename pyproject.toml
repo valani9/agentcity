@@ -1,6 +1,6 @@
 [project]
 name = "valanistack"
-version = "0.3.0"
+version = "0.4.0"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -85,7 +85,13 @@ openai = ["openai>=1.50.0"]
 ollama = ["httpx>=0.27.0"]
 mcp = ["mcp>=1.20.0"]
 api = ["fastapi>=0.115.0", "uvicorn[standard]>=0.30.0"]
-all = ["valanistack[anthropic,openai,ollama,mcp,api]"]
+langchain = ["langchain-core>=0.3.0"]
+langgraph = ["langgraph>=0.2.0"]
+crewai = ["crewai>=0.70.0"]
+llamaindex = ["llama-index-core>=0.12.0"]
+pydantic_ai = ["pydantic-ai>=0.0.20"]
+adapters = ["valanistack[langchain,langgraph,crewai,llamaindex,pydantic_ai]"]
+all = ["valanistack[anthropic,openai,ollama,mcp,api,adapters]"]
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=5.0.0",
@@ -114,6 +120,8 @@ vstack-mcp = "vstack.mcp.cli:main"
 vstack-api = "vstack.api.cli:main"
 vstack-config = "vstack.memory.cli:main"
 vstack-upgrade = "vstack.upgrade.cli:main"
+vstack-learn = "vstack.learnings.cli:main"
+vstack-analytics = "vstack.analytics.cli:main"
 vstack-lewin = "vstack.lewin.cli:main"
 vstack-goleman = "vstack.goleman_ei.cli:main"
 vstack-johari = "vstack.johari.cli:main"
@@ -167,6 +175,9 @@ only-include = []
 "_memory/lib" = "vstack/memory"
 "_upgrade/lib" = "vstack/upgrade"
 "_api/lib" = "vstack/api"
+"_adapters/lib" = "vstack/adapters"
+"_learnings/lib" = "vstack/learnings"
+"_analytics/lib" = "vstack/analytics"
 "module-2-team/30-aar-generator/lib" = "vstack/aar"
 "module-2-team/17-lencioni-diagnostic/lib" = "vstack/lencioni"
 "module-2-team/18-trust-triangle-audit/lib" = "vstack/trust_triangle"
@@ -225,6 +236,9 @@ testpaths = [
     "_memory",
     "_upgrade",
     "_api",
+    "_adapters",
+    "_learnings",
+    "_analytics",
 ]
 addopts = "-ra --tb=short --strict-markers"
 filterwarnings = [

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/hero.svg" alt="vstack — Organizational behavior, practiced on AI agents." width="100%"/>
+</p>
+
 # vstack
 
 [![CI](https://github.com/valani9/vstack/actions/workflows/ci.yml/badge.svg)](https://github.com/valani9/vstack/actions/workflows/ci.yml)

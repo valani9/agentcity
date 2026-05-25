@@ -1,0 +1,166 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1280 440"
+  role="img"
+  aria-label="vstack: three module cards (Individual, Team, Organization) fan out from a single stack. Wordmark and tagline sit to the right."
+  preserveAspectRatio="xMidYMid meet"
+  font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif"
+>
+  <title>vstack — Organizational behavior, practiced on AI agents.</title>
+
+  <!--
+    Layout (1280 × 440):
+      Cards (190×230 each, corner radius 14) start stacked at one
+      center pose, then fan out into three side-by-side positions.
+      Rotation happens around each card's CENTER so the tilt doesn't
+      swing any corner into the adjacent card's text area.
+
+      Stacked center (all 3):  (285, 80) translate / center (380, 195)
+      Fanned poses:
+        Individual            translate (75, 100)   center (170, 215)  rotate -6°
+        Team                  translate (285, 80)   center (380, 195)  no rotation
+        Organization          translate (495, 100)  center (590, 215)  rotate +6°
+
+      Side-card effective horizontal half-extent at 6°:
+        95·cos(6°) + 115·sin(6°) ≈ 94.5 + 12.0 = 106.5
+      Individual right effective edge: 170 + 106.5 = 276.5
+      Team left edge:                  380 -  95.0 = 285.0
+      => 8.5 px clean gap between adjacent cards on both sides.
+
+      Wordmark column starts at x = 800.
+  -->
+
+  <defs>
+    <linearGradient id="card-individual" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0e7490"/>
+    </linearGradient>
+    <linearGradient id="card-team" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#9a3412"/>
+    </linearGradient>
+    <linearGradient id="card-org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
+    </linearGradient>
+
+    <linearGradient id="card-shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="card-shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="12"/>
+      <feOffset dx="0" dy="10" result="shadow"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.22"/></feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="440" fill="#ffffff"/>
+
+  <!-- ===================== Card: ORGANIZATION (back / right) ===================== -->
+  <g filter="url(#card-shadow)" opacity="0">
+    <animate attributeName="opacity"
+      values="0;1;1;1;0;0"
+      keyTimes="0;0.10;0.20;0.92;0.98;1"
+      dur="6s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="translate"
+      values="285,80; 285,80; 495,100; 495,100; 495,100; 285,80"
+      keyTimes="0;0.10;0.35;0.92;0.95;1"
+      calcMode="spline"
+      keySplines="0.25 0.1 0.25 1; 0.25 0.1 0.25 1; 0 0 1 1; 0 0 1 1; 0 0 1 1"
+      dur="6s" repeatCount="indefinite"/>
+    <g>
+      <!-- Rotation centered on (95, 115) — the card's visual center. -->
+      <animateTransform attributeName="transform" type="rotate"
+        values="0 95 115; 0 95 115; 6 95 115; 6 95 115; 6 95 115; 0 95 115"
+        keyTimes="0;0.10;0.35;0.92;0.95;1"
+        calcMode="spline"
+        keySplines="0.25 0.1 0.25 1; 0.25 0.1 0.25 1; 0 0 1 1; 0 0 1 1; 0 0 1 1"
+        dur="6s" repeatCount="indefinite"/>
+      <rect width="190" height="230" rx="14" ry="14" fill="url(#card-org)"/>
+      <rect width="190" height="56" rx="14" ry="14" fill="url(#card-shine)"/>
+      <text x="20" y="36" fill="#ffffff" font-size="11" font-weight="700" letter-spacing="2.5" opacity="0.9">MODULE 3</text>
+      <text x="20" y="130" fill="#ffffff" font-size="24" font-weight="800" letter-spacing="-0.5">Organization</text>
+      <text x="20" y="176" fill="#ffffff" font-size="13" font-weight="700" opacity="0.95">4 patterns</text>
+      <text x="20" y="200" fill="#ffffff" font-size="10.5" opacity="0.78" letter-spacing="0.2">Schein · Span · Robbins</text>
+    </g>
+  </g>
+
+  <!-- ===================== Card: TEAM (middle) ===================== -->
+  <g filter="url(#card-shadow)" opacity="0">
+    <animate attributeName="opacity"
+      values="0;1;1;1;0;0"
+      keyTimes="0;0.07;0.20;0.92;0.98;1"
+      dur="6s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="translate"
+      values="285,80; 285,80; 285,80; 285,80; 285,80; 285,80"
+      keyTimes="0;0.07;0.35;0.92;0.95;1"
+      calcMode="spline"
+      keySplines="0.25 0.1 0.25 1; 0.25 0.1 0.25 1; 0 0 1 1; 0 0 1 1; 0 0 1 1"
+      dur="6s" repeatCount="indefinite"/>
+    <g>
+      <rect width="190" height="230" rx="14" ry="14" fill="url(#card-team)"/>
+      <rect width="190" height="56" rx="14" ry="14" fill="url(#card-shine)"/>
+      <text x="20" y="36" fill="#ffffff" font-size="11" font-weight="700" letter-spacing="2.5" opacity="0.9">MODULE 2</text>
+      <text x="20" y="130" fill="#ffffff" font-size="36" font-weight="800" letter-spacing="-1.2">Team</text>
+      <text x="20" y="176" fill="#ffffff" font-size="13" font-weight="700" opacity="0.95">18 patterns</text>
+      <text x="20" y="200" fill="#ffffff" font-size="10.5" opacity="0.82" letter-spacing="0.2">AAR · Lencioni · Edmondson</text>
+    </g>
+  </g>
+
+  <!-- ===================== Card: INDIVIDUAL (front / left) ===================== -->
+  <g filter="url(#card-shadow)" opacity="0">
+    <animate attributeName="opacity"
+      values="0;1;1;1;0;0"
+      keyTimes="0;0.05;0.20;0.92;0.98;1"
+      dur="6s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="translate"
+      values="285,80; 285,80; 75,100; 75,100; 75,100; 285,80"
+      keyTimes="0;0.05;0.35;0.92;0.95;1"
+      calcMode="spline"
+      keySplines="0.25 0.1 0.25 1; 0.25 0.1 0.25 1; 0 0 1 1; 0 0 1 1; 0 0 1 1"
+      dur="6s" repeatCount="indefinite"/>
+    <g>
+      <animateTransform attributeName="transform" type="rotate"
+        values="0 95 115; 0 95 115; -6 95 115; -6 95 115; -6 95 115; 0 95 115"
+        keyTimes="0;0.05;0.35;0.92;0.95;1"
+        calcMode="spline"
+        keySplines="0.25 0.1 0.25 1; 0.25 0.1 0.25 1; 0 0 1 1; 0 0 1 1; 0 0 1 1"
+        dur="6s" repeatCount="indefinite"/>
+      <rect width="190" height="230" rx="14" ry="14" fill="url(#card-individual)"/>
+      <rect width="190" height="56" rx="14" ry="14" fill="url(#card-shine)"/>
+      <text x="20" y="36" fill="#ffffff" font-size="11" font-weight="700" letter-spacing="2.5" opacity="0.9">MODULE 1</text>
+      <text x="20" y="130" fill="#ffffff" font-size="28" font-weight="800" letter-spacing="-0.8">Individual</text>
+      <text x="20" y="176" fill="#ffffff" font-size="13" font-weight="700" opacity="0.95">12 patterns</text>
+      <text x="20" y="200" fill="#ffffff" font-size="10.5" opacity="0.82" letter-spacing="0.2">Lewin · Goleman · HEXACO</text>
+    </g>
+  </g>
+
+  <!-- ===================== Wordmark + tagline (right column) ===================== -->
+  <g opacity="0">
+    <animate attributeName="opacity"
+      values="0;0;1;1;0;0"
+      keyTimes="0;0.30;0.42;0.92;0.98;1"
+      dur="6s" repeatCount="indefinite"/>
+
+    <text x="800" y="210"
+      fill="#0f172a"
+      font-size="92" font-weight="800" letter-spacing="-3.5">vstack</text>
+
+    <text x="800" y="252"
+      fill="#475569"
+      font-size="18" font-weight="500" letter-spacing="0.2">
+      <tspan x="800" dy="0">Organizational behavior,</tspan>
+      <tspan x="800" dy="24">practiced on AI agents.</tspan>
+    </text>
+
+    <text x="800" y="320"
+      fill="#94a3b8"
+      font-size="13" font-weight="600" letter-spacing="1.5">34 PATTERNS  ·  12 INVOCATION SURFACES</text>
+  </g>
+</svg>

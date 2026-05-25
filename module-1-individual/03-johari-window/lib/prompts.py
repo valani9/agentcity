@@ -3,8 +3,8 @@
 System prompt names the full literature thread (Luft 1969, Eurich 2018,
 Stone & Heen 2014, Kadavath 2022, Anthropic 2025). Templates are
 filled via :func:`assemble_prompt` which sanitizes free-text fields
-with ``agentcity.aar.sanitize_for_prompt`` and fences them with
-``agentcity.aar.fence``.
+with ``vstack.aar.sanitize_for_prompt`` and fences them with
+``vstack.aar.fence``.
 
 Three modes:
   - quick (1 call): combined quadrant + dominant + top intervention
@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 JOHARI_SYSTEM_PROMPT = """You are a Johari Window self-audit diagnostic for AI agents, grounded in:
@@ -135,7 +135,7 @@ Each intervention must have:
   - rationale
 
 When intervention_type == compose_pattern, set composition_target_pattern
-to the AgentCity pattern import path.
+to the vstack pattern import path.
 
 Dominant quadrant: {dominant_quadrant}
 Quadrants:
@@ -265,12 +265,12 @@ Each intervention must have:
     FeedbackOpportunity / DisclosureOpportunity / CapabilityProbe)
 
 Composition targets available:
-  agentcity.aar, agentcity.lewin, agentcity.goleman_ei,
-  agentcity.cognitive_reappraisal, agentcity.danva_emotion,
-  agentcity.glaser_conversation, agentcity.schein_culture,
-  agentcity.devils_advocate, agentcity.bias_stack, agentcity.hexaco,
-  agentcity.grant_strengths, agentcity.trust_triangle,
-  agentcity.feedback_triggers, agentcity.plus_delta
+  vstack.aar, vstack.lewin, vstack.goleman_ei,
+  vstack.cognitive_reappraisal, vstack.danva_emotion,
+  vstack.glaser_conversation, vstack.schein_culture,
+  vstack.devils_advocate, vstack.bias_stack, vstack.hexaco,
+  vstack.grant_strengths, vstack.trust_triangle,
+  vstack.feedback_triggers, vstack.plus_delta
 
 Dominant quadrant: {dominant_quadrant}
 Profile pattern: {profile_pattern}

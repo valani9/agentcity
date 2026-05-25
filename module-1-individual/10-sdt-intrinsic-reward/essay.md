@@ -1,6 +1,6 @@
 # Your "you WILL be RATED" prompt is killing your agent's exploration. Deci & Ryan called it in 1971.
 
-*A twenty-eighth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-eighth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -47,7 +47,7 @@ In SDT terms: autonomy restored (choice-granting language), relatedness restored
 
 The most counterintuitive part of SDT, for engineering audiences, is that **adding more external reward signal usually makes things worse**, not better. The intuition from RL training transfers poorly: at inference time, an agent isn't optimizing a reward function — it's selecting outputs conditional on a context. A context heavy on rating-threats produces outputs optimized for rating-avoidance, which is structurally the opposite of exploration. The overjustification effect predicts this. It's been replicated in ~200 studies across 50 years on human subjects. The same dynamic shows up in language models because language models were trained on language produced by humans operating under the same dynamic.
 
-## What `agentcity.sdt_reward` does
+## What `vstack.sdt_reward` does
 
 The library takes an `AgentSDTTrace` containing:
 
@@ -64,7 +64,7 @@ and produces an `SDTDetection` with:
 4. **Most-undermined need** — the lowest-scoring one (or "none" if all ≥ 0.7)
 5. **A ranked list of interventions** targeted at the undermined need: remove_external_reward_threat, add_choice_grant, soften_imperative_language, add_scaffold_for_competence, add_progress_signal, lower_difficulty_step, add_purpose_framing, add_user_connection, rewrite_system_prompt, new_eval, human_review
 
-Two LLM passes under the hood. The intervention pass is skipped when quality is `intrinsic`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when quality is `intrinsic`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -76,7 +76,7 @@ The third pattern is **relatedness-undermined customer-facing** — depersonaliz
 
 The diagnostic value is that the three needs are independent, so the intervention is targeted. Pushing on competence (adding scaffolding) does not fix an autonomy problem. Pushing on autonomy (removing imperatives) does not fix a competence problem. The diagnostic identifies *which* need to support, and the intervention list maps cleanly from there.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #10 of 34 — the twenty-ninth pattern shipped. It sits in Module 1 (individual-agent) and composes with several other diagnostics in the motivation / reward-shaping space:
 
@@ -90,7 +90,7 @@ SDT and #09 Saxberg compose tightly. Saxberg's four traps describe *why* an agen
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -102,4 +102,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

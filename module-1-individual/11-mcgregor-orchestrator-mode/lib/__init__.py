@@ -1,4 +1,4 @@
-"""agentcity.mcgregor -- Douglas McGregor's Theory X / Theory Y
+"""vstack.mcgregor -- Douglas McGregor's Theory X / Theory Y
 framework applied to orchestrator-agent oversight design.
 
 Anchored in:
@@ -19,13 +19,13 @@ an alias for ``McGregorOrchestratorAnalyzer``.
 Quick start
 -----------
 
-    from agentcity.mcgregor import (
+    from vstack.mcgregor import (
         McGregorOrchestratorAnalyzer,
         OrchestratorTrace,
         OrchestratorStep,
         TaskProperties,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = OrchestratorTrace(
         trace_id="ci-runner-001",
@@ -49,10 +49,10 @@ Quick start
 CLI
 ---
 
-    agentcity-mcgregor analyze --trace trace.json --mode forensic
-    agentcity-mcgregor playbooks
-    agentcity-mcgregor compose
-    agentcity-mcgregor schema --target trace
+    vstack-mcgregor analyze --trace trace.json --mode forensic
+    vstack-mcgregor playbooks
+    vstack-mcgregor compose
+    vstack-mcgregor schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

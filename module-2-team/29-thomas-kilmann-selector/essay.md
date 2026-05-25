@@ -1,6 +1,6 @@
 # Your agent has one conflict style and uses it on every situation. Thomas & Kilmann would have a problem with that.
 
-*An eighth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*An eighth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -24,7 +24,7 @@ Today's AI agents almost never do this. Most have a single, fixed conflict style
 
 The diagnostic value comes from the *gap* — what style the agent used versus what would have been optimal for the situation.
 
-## What `agentcity.thomas_kilmann` does
+## What `vstack.thomas_kilmann` does
 
 The library takes an agent interaction trace and produces a `ConflictStyleSelection`:
 
@@ -36,9 +36,9 @@ The library takes an agent interaction trace and produces a `ConflictStyleSelect
 6. **Rationale** for why the optimal style was selected given the situation
 7. **A ranked list of recommendations** — prompt patches, scaffold changes, context classifiers, style routers — to enable style-switching for similar future tasks
 
-Two LLM passes (selection + recommendations). Same retry/JSON/logging infrastructure as the rest of AgentCity.
+Two LLM passes (selection + recommendations). Same retry/JSON/logging infrastructure as the rest of vstack.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #29 of 34 planned. With this pattern, the library now ships eight patterns:
 
@@ -57,4 +57,4 @@ Twenty-six patterns to come.
 
 ---
 
-*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/agentcity](https://github.com/valani9/agentcity).*
+*Ilhan Valani is a builder shipping vstack in public. The repo lives at [github.com/valani9/vstack](https://github.com/valani9/vstack).*

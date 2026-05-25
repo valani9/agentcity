@@ -16,7 +16,7 @@ import json
 
 import pytest
 
-from agentcity.trust_triangle import (
+from vstack.trust_triangle import (
     LEGS,
     AgentInteractionTrace,
     InteractionTurn,

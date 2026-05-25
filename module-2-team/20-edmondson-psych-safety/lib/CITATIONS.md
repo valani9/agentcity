@@ -27,5 +27,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.psych_safety` is a derivative
+and publishers. `vstack.psych_safety` is a derivative
 implementation; no copyrighted text is reproduced here.

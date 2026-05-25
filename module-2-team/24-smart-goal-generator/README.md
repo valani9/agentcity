@@ -37,7 +37,7 @@ Three specific failure modes the SMART spec catches:
 
 ## What this pattern does
 
-The `agentcity.smart_goal` library takes a `GoalRequest` containing a vague goal plus context, available resources, known constraints, and an optional deadline hint, and produces a `SMARTGoal` with:
+The `vstack.smart_goal` library takes a `GoalRequest` containing a vague goal plus context, available resources, known constraints, and an optional deadline hint, and produces a `SMARTGoal` with:
 
 1. **A single-paragraph SMART restatement** of the goal
 2. **Per-criterion statements** (one per SMART dimension) with self-reported quality scores
@@ -50,7 +50,7 @@ The `agentcity.smart_goal` library takes a `GoalRequest` containing a vague goal
 
 The output also exposes `to_agent_preamble()` which renders a condensed text block to prepend to the working agent's system prompt — so the agent literally executes the SMART version, not the vague original.
 
-Single LLM pass under the hood; the generator post-processes the response to fill missing criteria, recompute the overall score if absent, and reconcile the quality bucket with the score. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Single LLM pass under the hood; the generator post-processes the response to fill missing criteria, recompute the overall score if absent, and reconcile the quality bucket with the score. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -62,8 +62,8 @@ Single LLM pass under the hood; the generator post-processes the response to fil
 ## Design
 
 ```python
-from agentcity.smart_goal import SMARTGoalGenerator, GoalRequest
-from agentcity.aar.clients import AnthropicClient
+from vstack.smart_goal import SMARTGoalGenerator, GoalRequest
+from vstack.aar.clients import AnthropicClient
 
 request = GoalRequest(
     goal_id="onboarding-q2",

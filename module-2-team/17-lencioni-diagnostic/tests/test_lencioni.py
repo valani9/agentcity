@@ -22,8 +22,8 @@ import pytest
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.lencioni.generator import LencioniDiagnostic  # noqa: E402
-from agentcity.lencioni.schema import (  # noqa: E402
+from vstack.lencioni.generator import LencioniDiagnostic  # noqa: E402
+from vstack.lencioni.schema import (  # noqa: E402
     DYSFUNCTIONS,
     AgentMessage,
     DysfunctionEvidence,

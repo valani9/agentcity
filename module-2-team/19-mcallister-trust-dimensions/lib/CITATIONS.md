@@ -14,8 +14,8 @@
 2. **Goleman, D. (1995)** *Emotional Intelligence.* Bantam Books.
    Source for the affective-trust failure modes
    (absent_emotional_acknowledgement, no_stakes_named, performative_apology)
-   and the upstream composition with `agentcity.danva_emotion` /
-   `agentcity.goleman_ei`.
+   and the upstream composition with `vstack.danva_emotion` /
+   `vstack.goleman_ei`.
 
 3. **Frei, F. X., & Morriss, A. (2020)** "Begin with Trust." HBR.
    Pairs upstream of McAllister: their Trust Triangle's authenticity +
@@ -30,5 +30,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.mcallister_trust` is a derivative
+and publishers. `vstack.mcallister_trust` is a derivative
 implementation; no copyrighted text is reproduced here.

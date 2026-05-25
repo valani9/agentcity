@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.mcallister_trust import (
+from vstack.mcallister_trust import (
     TRUST_DIMENSIONS,
     ConversationTurn,
     TrustBalanceDetection,

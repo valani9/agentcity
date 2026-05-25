@@ -43,7 +43,7 @@ Outputs:
 > Earns its keep on: **sycophantic capitulation** — when the agent
 > abandons a correct initial answer under user pressure. The
 > `suppression_under_pushback` profile catches this and routes to
-> `agentcity.devils_advocate` for a structural critic.
+> `vstack.devils_advocate` for a structural critic.
 
 ---
 
@@ -60,11 +60,11 @@ Outputs:
 ## Python quick start
 
 ```python
-from agentcity.cognitive_reappraisal import (
+from vstack.cognitive_reappraisal import (
     ReappraisalAnalyzer,
     AgentRegulationTrace,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentRegulationTrace(
     agent_id="support-agent",
@@ -87,13 +87,13 @@ print(detection.to_markdown())
 ## CLI
 
 ```bash
-agentcity-reappraisal analyze --trace trace.json --client stub --stub-responses stub.json
-agentcity-reappraisal analyze --trace fail.json --client anthropic --mode forensic
-agentcity-reappraisal batch --corpus eval/synthetic_regulation_traces.yaml --out detections/
-agentcity-reappraisal replay --detection detections/scenario-1.json
-agentcity-reappraisal playbooks
-agentcity-reappraisal compose
-agentcity-reappraisal schema --target trace
+vstack-reappraisal analyze --trace trace.json --client stub --stub-responses stub.json
+vstack-reappraisal analyze --trace fail.json --client anthropic --mode forensic
+vstack-reappraisal batch --corpus eval/synthetic_regulation_traces.yaml --out detections/
+vstack-reappraisal replay --detection detections/scenario-1.json
+vstack-reappraisal playbooks
+vstack-reappraisal compose
+vstack-reappraisal schema --target trace
 ```
 
 ---
@@ -104,7 +104,7 @@ agentcity-reappraisal schema --target trace
   - **reappraisal_developing** -- reappraisal 0.3-0.7.
   - **suppression_dominant** -- suppression >= 0.6.
   - **suppression_under_pushback** -- sycophancy signature (pushback +
-    suppression). Routes to `agentcity.devils_advocate`.
+    suppression). Routes to `vstack.devils_advocate`.
   - **rumination_loop** -- rumination >= 0.6.
   - **rumination_brooding** -- maladaptive passive comparison
     (NH-Wisco-Lyubomirsky 2008).

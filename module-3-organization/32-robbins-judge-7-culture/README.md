@@ -41,7 +41,7 @@ Each of these is *not* a hallucination, *not* a refusal failure, *not* an underl
 
 ## What this pattern does
 
-The `agentcity.robbins_culture` library takes an `AgentCultureTrace` with:
+The `vstack.robbins_culture` library takes an `AgentCultureTrace` with:
 
 - The agent's **task** and **task class** (`research_exploration`, `creative_generation`, `regulated_workflow`, `financial_operation`, `customer_support`, `code_review`, `incident_response`, `general_purpose`)
 - The **system prompt** (espoused-values source) and **observed behaviors**
@@ -55,7 +55,7 @@ and produces a `CultureProfileDetection` with:
 4. **Biggest gap** — which characteristic has the largest observed-vs-target delta
 5. **Concrete interventions** targeting the biggest gap: `rewrite_system_prompt`, `adjust_temperature`, `add_guardrail`, `swap_model`, `add_team_scaffold`, `remove_solo_path`, `add_kill_criterion`, `new_eval`, `human_review`
 
-Two LLM passes under the hood. The intervention pass is skipped when fit quality is `well-fit`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when fit quality is `well-fit`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -67,11 +67,11 @@ Two LLM passes under the hood. The intervention pass is skipped when fit quality
 ## Design
 
 ```python
-from agentcity.robbins_culture import (
+from vstack.robbins_culture import (
     CultureProfileDetector,
     AgentCultureTrace,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = AgentCultureTrace(
     agent_id="research-agent-001",

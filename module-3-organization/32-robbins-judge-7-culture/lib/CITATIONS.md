@@ -25,5 +25,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.robbins_culture` is a derivative
+and publishers. `vstack.robbins_culture` is a derivative
 implementation; no copyrighted text is reproduced here.

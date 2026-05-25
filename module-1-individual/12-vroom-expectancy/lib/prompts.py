@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 VROOM_SYSTEM_PROMPT = """You are an expectancy-motivation diagnostic grounded in:
@@ -169,11 +169,11 @@ Return a JSON OBJECT representing the EIVInteractionAudit. Return only the JSON 
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
 Composition targets available:
-agentcity.lewin, agentcity.aar, agentcity.cognitive_reappraisal, agentcity.goleman_ei,
-agentcity.devils_advocate, agentcity.bias_stack, agentcity.johari,
-agentcity.smart_goal, agentcity.plus_delta, agentcity.schein_culture,
-agentcity.mcgregor, agentcity.hexaco, agentcity.grant_strengths,
-agentcity.motivation_traps, agentcity.sdt_reward
+vstack.lewin, vstack.aar, vstack.cognitive_reappraisal, vstack.goleman_ei,
+vstack.devils_advocate, vstack.bias_stack, vstack.johari,
+vstack.smart_goal, vstack.plus_delta, vstack.schein_culture,
+vstack.mcgregor, vstack.hexaco, vstack.grant_strengths,
+vstack.motivation_traps, vstack.sdt_reward
 
 Bottleneck: {bottleneck_term}
 Motivation quality: {motivation_quality}

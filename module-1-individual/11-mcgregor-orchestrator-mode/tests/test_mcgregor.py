@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.mcgregor import (
+from vstack.mcgregor import (
     ModeIndicators,
     OrchestratorIntervention,
     OrchestratorModeDetection,

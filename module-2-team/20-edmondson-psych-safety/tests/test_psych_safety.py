@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from agentcity.psych_safety import (
+from vstack.psych_safety import (
     BEHAVIORS,
     AgentMessage,
     BehaviorEvidence,

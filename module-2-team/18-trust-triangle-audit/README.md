@@ -43,7 +43,7 @@ The wobble pattern holds in agents too. Specific models wobble on specific legs.
 
 ## What this pattern does
 
-The `agentcity.trust_triangle` library takes a structured agent trace (single-agent run, conversation, or task completion) and produces:
+The `vstack.trust_triangle` library takes a structured agent trace (single-agent run, conversation, or task completion) and produces:
 
 1. **A per-leg wobble score** — 0.0 (rock-solid) to 1.0 (severe wobble) for Logic, Authenticity, and Empathy.
 2. **A dominant-wobble diagnosis** — which of the three legs the agent wobbles on most.
@@ -78,12 +78,12 @@ This benchmark is paper-shaped. The corpus in `eval/synthetic_trust_failures.yam
 ## Design
 
 ```python
-from agentcity.trust_triangle import (
+from vstack.trust_triangle import (
     TrustTriangleAudit,
     AgentInteractionTrace,
     InteractionTurn,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = AgentInteractionTrace(
     agent_id="customer-support-v3",

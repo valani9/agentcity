@@ -1,6 +1,6 @@
 """Cross-pattern composition manifest for the Lewin diagnostic.
 
-The Lewin pattern sits in the middle of the AgentCity dependency graph:
+The Lewin pattern sits in the middle of the vstack dependency graph:
 many patterns produce traces that should be diagnosed via Lewin first
 (to redirect engineering effort), and Lewin's diagnosis points to
 several downstream patterns based on the dominant locus.
@@ -33,10 +33,10 @@ if TYPE_CHECKING:
 # An AAR (pattern #30) produces "lessons" — each lesson can be turned
 # into an AgentFailureTrace and fed into Lewin for locus attribution.
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.aar",
+    "vstack.aar",
     # Yerkes-Dodson workload diagnostic may surface a workload-driven
     # failure that you then want to attribute via Lewin to confirm.
-    "agentcity.yerkes_dodson",
+    "vstack.yerkes_dodson",
 )
 
 # Per-locus downstream recommendations. When dominant_locus == K, the
@@ -47,9 +47,9 @@ _DOWNSTREAM_BY_LOCUS: dict[str, tuple[str, ...]] = {
         # Bias-Stack diagnoses the specific reasoning bias; HEXACO
         # characterizes the model's "personality" against the task fit;
         # Goleman EI tests emotional-recognition competency.
-        "agentcity.bias_stack",
-        "agentcity.hexaco",
-        "agentcity.goleman_ei",
+        "vstack.bias_stack",
+        "vstack.hexaco",
+        "vstack.goleman_ei",
     ),
     "environmental": (
         # If the locus is environmental, the failure is in the
@@ -59,25 +59,25 @@ _DOWNSTREAM_BY_LOCUS: dict[str, tuple[str, ...]] = {
         # Schein iceberg surfaces the system-prompt-encoded "culture";
         # Edmondson psych-safety checks whether the orchestration
         # punishes dissent (relevant in critic/critique loops).
-        "agentcity.smart_goal",
-        "agentcity.grpi",
-        "agentcity.lencioni",
-        "agentcity.schein_culture",
-        "agentcity.psych_safety",
+        "vstack.smart_goal",
+        "vstack.grpi",
+        "vstack.lencioni",
+        "vstack.schein_culture",
+        "vstack.psych_safety",
     ),
     "interactional": (
         # If the locus is interactional, a full postmortem via AAR is
         # the right next step; trust-triangle and Vroom expectancy can
         # also help (the agent may have given up early due to low
         # expectancy in the specific environment it's in).
-        "agentcity.aar",
-        "agentcity.trust_triangle",
-        "agentcity.vroom_expectancy",
+        "vstack.aar",
+        "vstack.trust_triangle",
+        "vstack.vroom_expectancy",
     ),
     "indeterminate": (
         # When the diagnostic is inconclusive, route to AAR for a
         # human-led postmortem rather than guessing.
-        "agentcity.aar",
+        "vstack.aar",
     ),
 }
 
@@ -87,35 +87,35 @@ _DOWNSTREAM_BY_LOCUS: dict[str, tuple[str, ...]] = {
 # otherwise surface them.
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
     "langgraph": (
-        "agentcity.devils_advocate",
-        "agentcity.group_decision",
+        "vstack.devils_advocate",
+        "vstack.group_decision",
     ),
     "crewai": (
-        "agentcity.grpi",
-        "agentcity.social_loafing",
-        "agentcity.devils_advocate",
+        "vstack.grpi",
+        "vstack.social_loafing",
+        "vstack.devils_advocate",
     ),
     "autogen": (
-        "agentcity.group_decision",
-        "agentcity.devils_advocate",
-        "agentcity.social_loafing",
+        "vstack.group_decision",
+        "vstack.devils_advocate",
+        "vstack.social_loafing",
     ),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
-    "mastra": ("agentcity.grpi",),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "strands": ("agentcity.grpi",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
+    "mastra": ("vstack.grpi",),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "strands": ("vstack.grpi",),
 }
 
 # Intervention-type-conditional overlays. Some intervention types
 # point so directly at another pattern that we should always surface
 # it as a downstream.
 _INTERVENTION_OVERLAYS: dict[str, str] = {
-    "change_prompt": "agentcity.schein_culture",
-    "add_verification_step": "agentcity.devils_advocate",
-    "change_topology": "agentcity.grpi",
-    "change_memory": "agentcity.johari",
-    "new_eval": "agentcity.smart_goal",
-    "human_review": "agentcity.plus_delta",
+    "change_prompt": "vstack.schein_culture",
+    "add_verification_step": "vstack.devils_advocate",
+    "change_topology": "vstack.grpi",
+    "change_memory": "vstack.johari",
+    "new_eval": "vstack.smart_goal",
+    "human_review": "vstack.plus_delta",
 }
 
 
@@ -173,7 +173,7 @@ def recommended_downstream(
 
 
 # The composition manifest as a public read-only dict (handy for
-# documentation generators and the CLI's `agentcity lewin compose` view).
+# documentation generators and the CLI's `vstack lewin compose` view).
 LEWIN_COMPOSITION: dict[str, object] = {
     "upstream": _UPSTREAM,
     "downstream_by_locus": _DOWNSTREAM_BY_LOCUS,

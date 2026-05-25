@@ -1,4 +1,4 @@
-"""agentcity.mcallister_trust -- McAllister cognitive vs affective trust
+"""vstack.mcallister_trust -- McAllister cognitive vs affective trust
 dimensions applied to user-agent conversations.
 
 Anchored in McAllister (1995), Goleman (1995).

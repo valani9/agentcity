@@ -9,71 +9,71 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.schein_culture",
-    "agentcity.lewin",
-    "agentcity.aar",
+    "vstack.schein_culture",
+    "vstack.lewin",
+    "vstack.aar",
 )
 
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "well_fit": ("agentcity.aar",),
+    "well_fit": ("vstack.aar",),
     "innovation_starved": (
-        "agentcity.devils_advocate",
-        "agentcity.aar",
+        "vstack.devils_advocate",
+        "vstack.aar",
     ),
     "detail_starved": (
-        "agentcity.aar",
-        "agentcity.bias_stack",
+        "vstack.aar",
+        "vstack.bias_stack",
     ),
     "innovation_excess": (
-        "agentcity.aar",
-        "agentcity.devils_advocate",
+        "vstack.aar",
+        "vstack.devils_advocate",
     ),
     "stability_excess": (
-        "agentcity.aar",
-        "agentcity.lewin",
+        "vstack.aar",
+        "vstack.lewin",
     ),
     "team_excess": (
-        "agentcity.lencioni",
-        "agentcity.psych_safety",
+        "vstack.lencioni",
+        "vstack.psych_safety",
     ),
     "team_starved": (
-        "agentcity.lencioni",
-        "agentcity.trust_triangle",
+        "vstack.lencioni",
+        "vstack.trust_triangle",
     ),
     "aggressiveness_excess": (
-        "agentcity.psych_safety",
-        "agentcity.glaser_conversation",
+        "vstack.psych_safety",
+        "vstack.glaser_conversation",
     ),
     "people_starved": (
-        "agentcity.glaser_conversation",
-        "agentcity.feedback_triggers",
+        "vstack.glaser_conversation",
+        "vstack.feedback_triggers",
     ),
     "outcome_starved": (
-        "agentcity.smart_goal",
-        "agentcity.aar",
+        "vstack.smart_goal",
+        "vstack.aar",
     ),
     "broadly_misfit": (
-        "agentcity.schein_culture",
-        "agentcity.aar",
-        "agentcity.lewin",
+        "vstack.schein_culture",
+        "vstack.aar",
+        "vstack.lewin",
     ),
     "indeterminate": (),
 }
 
 
 _DOWNSTREAM_BY_TASK_CLASS: dict[str, tuple[str, ...]] = {
-    "regulated_workflow": ("agentcity.bias_stack",),
-    "financial_operation": ("agentcity.bias_stack",),
-    "incident_response": ("agentcity.aar",),
-    "code_review": ("agentcity.devils_advocate",),
+    "regulated_workflow": ("vstack.bias_stack",),
+    "financial_operation": ("vstack.bias_stack",),
+    "incident_response": ("vstack.aar",),
+    "code_review": ("vstack.devils_advocate",),
 }
 
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

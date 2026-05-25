@@ -1,4 +1,4 @@
-"""agentcity.smart_goal -- Doran SMART criteria (Specific, Measurable,
+"""vstack.smart_goal -- Doran SMART criteria (Specific, Measurable,
 Achievable, Relevant, Time-bound) applied to AI agent goal-setting.
 
 Anchored in Doran 1981. Generative pattern: takes a vague goal and

@@ -1,4 +1,4 @@
-# AgentCity Performance Suite
+# vstack Performance Suite
 
 A per-pattern micro-benchmark harness that times the **deterministic**
 portions of every pattern's pipeline — schema validation, prompt

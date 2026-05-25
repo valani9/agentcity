@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 TRIGGER_SYSTEM_PROMPT = """You are a feedback-intake diagnostic working in the tradition of
@@ -102,8 +102,8 @@ Return only a JSON object representing the SourceAttributionAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions
 with composition targets.
 
-Composition targets: agentcity.psych_safety, agentcity.glaser_conversation,
-agentcity.plus_delta, agentcity.aar, agentcity.mcallister_trust
+Composition targets: vstack.psych_safety, vstack.glaser_conversation,
+vstack.plus_delta, vstack.aar, vstack.mcallister_trust
 
 Dominant trigger: {dominant}
 Evidence: {evidence}

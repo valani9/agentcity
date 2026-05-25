@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.hexaco import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.hexaco import (
     HEXACO_COMPOSITION,
     HEXACO_FACTORS,
     HEXACO_MODES,
@@ -59,7 +59,7 @@ def _trace(
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -369,11 +369,11 @@ class TestComposition:
             profile_pattern="h_factor_dominant_risk",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_upstream_includes_lewin(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.lewin" in up
+        assert "vstack.lewin" in up
 
 
 # ---------------------------------------------------------------------------

@@ -9,44 +9,44 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.lencioni",
-    "agentcity.mcallister_trust",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.lencioni",
+    "vstack.mcallister_trust",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "healthy_trust": ("agentcity.aar",),
+    "healthy_trust": ("vstack.aar",),
     "logic_wobble_dominant": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
+        "vstack.devils_advocate",
+        "vstack.bias_stack",
     ),
     "authenticity_wobble_dominant": (
-        "agentcity.psych_safety",
-        "agentcity.devils_advocate",
+        "vstack.psych_safety",
+        "vstack.devils_advocate",
     ),
     "empathy_wobble_dominant": (
-        "agentcity.glaser_conversation",
-        "agentcity.mcallister_trust",
+        "vstack.glaser_conversation",
+        "vstack.mcallister_trust",
     ),
     "full_triangle_collapse": (
-        "agentcity.lencioni",
-        "agentcity.psych_safety",
-        "agentcity.aar",
+        "vstack.lencioni",
+        "vstack.psych_safety",
+        "vstack.aar",
     ),
     "logic_authenticity_paired": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
-        "agentcity.psych_safety",
+        "vstack.devils_advocate",
+        "vstack.bias_stack",
+        "vstack.psych_safety",
     ),
-    "empathy_isolated_wobble": ("agentcity.glaser_conversation",),
+    "empathy_isolated_wobble": ("vstack.glaser_conversation",),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

@@ -1,6 +1,6 @@
 # Your multi-agent crew is a chicken superflock. Muir and Heffernan called it.
 
-*A twenty-third essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-third essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -28,7 +28,7 @@ This is the pattern the Superflocks detector measures. Five quantitative metrics
 - **fallback_coverage** — fraction of task classes where ≥2 agents have meaningful capability. Low coverage is the single-point-of-failure signal.
 - **failure_clustering** — fraction of observed failures concentrated on the top agent's domain. High clustering confirms the system is single-point-of-failure-fragile in practice.
 
-## What `agentcity.superflocks` does
+## What `vstack.superflocks` does
 
 The library takes a `RoutingTrace` containing:
 
@@ -44,7 +44,7 @@ and produces a `SuperflocksDetection` with:
 4. **A fragility-quality bucket**: `robust`, `concentrated`, or `superflocks`
 5. **A ranked list of interventions** for robustness: `introduce_routing_jitter`, `require_minimum_agent_diversity`, `add_capability_complement_check`, `rotate_lead_agent`, `load_balancing_floor`, `redundant_routing`, `swap_top_agent_offline_drill`, `human_review`, `new_eval`
 
-The metric values are deterministic — Python, no LLM. The LLM is used only for *qualitative explanations + severity assessment + intervention recommendations.* The generator explicitly overrides any LLM-reported metric value with the local computation, because the math should not depend on model whim. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+The metric values are deterministic — Python, no LLM. The LLM is used only for *qualitative explanations + severity assessment + intervention recommendations.* The generator explicitly overrides any LLM-reported metric value with the local computation, because the math should not depend on model whim. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -52,9 +52,9 @@ The strongest single intervention from the catalog is **redundant_routing** — 
 
 The second-most-valuable intervention is the **swap_top_agent_offline_drill** — once per week, route everything to the next-best agent for a 4-hour window. The drill is the multi-agent analog of chaos engineering. It surfaces the brittleness before the real outage does. Production teams that adopt this pattern discover, often unpleasantly, how dependent they are on one agent — and then they have data, not vibes, to motivate the routing rule change.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #16 of 34 — the twenty-third pattern shipped. AgentCity's multi-agent stack now reaches across the full crew-dynamics surface:
+This is pattern #16 of 34 — the twenty-third pattern shipped. vstack's multi-agent stack now reaches across the full crew-dynamics surface:
 
 - **#14 Process Gain/Loss Detector** — outcome-level: does the team beat the best single agent?
 - **#15 Social Loafing Detector** — per-agent contribution: are roles actually being done?
@@ -68,7 +68,7 @@ The six compose. Pattern #14 reports the *outcome* of the crew's design; #15, #1
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -80,4 +80,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

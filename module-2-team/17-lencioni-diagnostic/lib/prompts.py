@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 LENCIONI_SYSTEM_PROMPT = """You are a multi-agent-systems team-dynamics diagnostic grounded in:
@@ -100,9 +100,9 @@ Return only the JSON object."""
 
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
-Composition targets: agentcity.grpi, agentcity.psych_safety,
-agentcity.trust_triangle, agentcity.devils_advocate, agentcity.bias_stack,
-agentcity.smart_goal, agentcity.aar, agentcity.plus_delta
+Composition targets: vstack.grpi, vstack.psych_safety,
+vstack.trust_triangle, vstack.devils_advocate, vstack.bias_stack,
+vstack.smart_goal, vstack.aar, vstack.plus_delta
 
 Dominant: {dominant}
 Evidence: {evidence}

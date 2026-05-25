@@ -107,7 +107,7 @@ failure modes.
 **Antonakis, J., Ashkanasy, N. M., & Dasborough, M. T. (2009). Does leadership need emotional intelligence?** *The Leadership Quarterly*, 20, 247–261.
 The skeptical position. Most EI-leadership studies suffer from
 self-report bias, common-source variance, weak measurement.
-**For AgentCity:** the diagnostic must require observed behaviors AND
+**For vstack:** the diagnostic must require observed behaviors AND
 user signals AND outcome correspondence — not just self-reports.
 
 Used in: System prompt's evidence-grounded posture, validation rule

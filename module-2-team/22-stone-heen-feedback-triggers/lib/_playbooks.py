@@ -64,7 +64,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agent dismisses user expertise.",
             "Add `separate_data_from_source` prompt patch.",
-            "Compose with `agentcity.psych_safety`.",
+            "Compose with `vstack.psych_safety`.",
         ],
         "1d",
         "Stone & Heen 2014",
@@ -86,7 +86,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Low-trust default -- compose with trust patterns",
         [
             "Detect signature: agent treats user as low-trust by default.",
-            "Compose with `agentcity.mcallister_trust`, `agentcity.trust_triangle`.",
+            "Compose with `vstack.mcallister_trust`, `vstack.trust_triangle`.",
         ],
         "1w",
         "Stone & Heen 2014; McAllister 1995",
@@ -142,7 +142,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: 2+ feedback messages rejected by source attack.",
             "Add `human_review` for the thread.",
-            "Compose with `agentcity.aar`.",
+            "Compose with `vstack.aar`.",
         ],
         "1w",
         "Stone & Heen 2014",

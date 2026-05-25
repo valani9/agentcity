@@ -9,84 +9,84 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.motivation_traps",
-    "agentcity.hexaco",
-    "agentcity.cognitive_reappraisal",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.motivation_traps",
+    "vstack.hexaco",
+    "vstack.cognitive_reappraisal",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "intrinsic_balanced": ("agentcity.aar",),
+    "intrinsic_balanced": ("vstack.aar",),
     "autonomy_undermined_dominant": (
-        "agentcity.schein_culture",
-        "agentcity.bias_stack",
+        "vstack.schein_culture",
+        "vstack.bias_stack",
     ),
     "competence_undermined_dominant": (
-        "agentcity.smart_goal",
-        "agentcity.motivation_traps",
+        "vstack.smart_goal",
+        "vstack.motivation_traps",
     ),
     "relatedness_undermined_dominant": (
-        "agentcity.goleman_ei",
-        "agentcity.schein_culture",
+        "vstack.goleman_ei",
+        "vstack.schein_culture",
     ),
     "overjustification_active": (
-        "agentcity.bias_stack",
-        "agentcity.schein_culture",
+        "vstack.bias_stack",
+        "vstack.schein_culture",
     ),
     "controlled_motivation_dominant": (
-        "agentcity.schein_culture",
-        "agentcity.bias_stack",
-        "agentcity.hexaco",
+        "vstack.schein_culture",
+        "vstack.bias_stack",
+        "vstack.hexaco",
     ),
     "competence_collapse_under_deadline": (
-        "agentcity.yerkes_dodson",
-        "agentcity.smart_goal",
+        "vstack.yerkes_dodson",
+        "vstack.smart_goal",
     ),
     "autonomy_collapse_under_rule_imposition": (
-        "agentcity.schein_culture",
-        "agentcity.mcgregor",
+        "vstack.schein_culture",
+        "vstack.mcgregor",
     ),
-    "regulated_workflow_low_autonomy_acceptable": ("agentcity.aar",),
+    "regulated_workflow_low_autonomy_acceptable": ("vstack.aar",),
     "creative_task_low_autonomy_misfit": (
-        "agentcity.grant_strengths",
-        "agentcity.devils_advocate",
+        "vstack.grant_strengths",
+        "vstack.devils_advocate",
     ),
     "multi_need_undermined": (
-        "agentcity.hexaco",
-        "agentcity.cognitive_reappraisal",
-        "agentcity.lewin",
+        "vstack.hexaco",
+        "vstack.cognitive_reappraisal",
+        "vstack.lewin",
     ),
     "indeterminate": (),
 }
 
 _DOWNSTREAM_BY_NEED: dict[str, tuple[str, ...]] = {
-    "autonomy": ("agentcity.schein_culture", "agentcity.bias_stack"),
-    "competence": ("agentcity.smart_goal", "agentcity.motivation_traps"),
-    "relatedness": ("agentcity.goleman_ei", "agentcity.schein_culture"),
-    "none": ("agentcity.aar",),
+    "autonomy": ("vstack.schein_culture", "vstack.bias_stack"),
+    "competence": ("vstack.smart_goal", "vstack.motivation_traps"),
+    "relatedness": ("vstack.goleman_ei", "vstack.schein_culture"),
+    "none": ("vstack.aar",),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.grpi", "agentcity.social_loafing"),
-    "autogen": ("agentcity.grpi", "agentcity.social_loafing"),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
-    "mastra": ("agentcity.grpi",),
-    "strands": ("agentcity.grpi",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.grpi", "vstack.social_loafing"),
+    "autogen": ("vstack.grpi", "vstack.social_loafing"),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
+    "mastra": ("vstack.grpi",),
+    "strands": ("vstack.grpi",),
 }
 
 _INTERVENTION_OVERLAYS: dict[str, str] = {
-    "remove_external_reward_threat": "agentcity.schein_culture",
-    "add_choice_grant": "agentcity.mcgregor",
-    "soften_imperative_language": "agentcity.schein_culture",
-    "add_scaffold_for_competence": "agentcity.smart_goal",
-    "add_purpose_framing": "agentcity.schein_culture",
-    "add_user_connection": "agentcity.goleman_ei",
-    "rebalance_extrinsic_to_intrinsic": "agentcity.bias_stack",
-    "remove_metric_gaming_path": "agentcity.bias_stack",
-    "human_review": "agentcity.plus_delta",
+    "remove_external_reward_threat": "vstack.schein_culture",
+    "add_choice_grant": "vstack.mcgregor",
+    "soften_imperative_language": "vstack.schein_culture",
+    "add_scaffold_for_competence": "vstack.smart_goal",
+    "add_purpose_framing": "vstack.schein_culture",
+    "add_user_connection": "vstack.goleman_ei",
+    "rebalance_extrinsic_to_intrinsic": "vstack.bias_stack",
+    "remove_metric_gaming_path": "vstack.bias_stack",
+    "human_review": "vstack.plus_delta",
 }
 
 

@@ -9,74 +9,74 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.goleman_ei",  # social_awareness weakest -> drill via DANVA
-    "agentcity.aar",  # AAR lessons mentioning emotion miscalibration
-    "agentcity.yerkes_dodson",  # workload-modulated emotion recognition
-    "agentcity.lewin",  # internal-locus failures with affective signal
+    "vstack.goleman_ei",  # social_awareness weakest -> drill via DANVA
+    "vstack.aar",  # AAR lessons mentioning emotion miscalibration
+    "vstack.yerkes_dodson",  # workload-modulated emotion recognition
+    "vstack.lewin",  # internal-locus failures with affective signal
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
     "anger_blind": (
-        "agentcity.glaser_conversation",
-        "agentcity.cognitive_reappraisal",
+        "vstack.glaser_conversation",
+        "vstack.cognitive_reappraisal",
     ),
     "sadness_collapse": (
-        "agentcity.cognitive_reappraisal",
-        "agentcity.yerkes_dodson",
+        "vstack.cognitive_reappraisal",
+        "vstack.yerkes_dodson",
     ),
     "positive_bias": (
-        "agentcity.glaser_conversation",
-        "agentcity.johari",
+        "vstack.glaser_conversation",
+        "vstack.johari",
     ),
     "negative_bias": (
-        "agentcity.cognitive_reappraisal",
-        "agentcity.lewin",
+        "vstack.cognitive_reappraisal",
+        "vstack.lewin",
     ),
-    "valence_only_signal": ("agentcity.glaser_conversation",),
-    "categorical_signal_only": ("agentcity.yerkes_dodson",),
-    "fear_sadness_confusion": ("agentcity.cognitive_reappraisal",),
-    "neutral_collapse": ("agentcity.goleman_ei",),
-    "uncertain_dump": ("agentcity.johari",),
+    "valence_only_signal": ("vstack.glaser_conversation",),
+    "categorical_signal_only": ("vstack.yerkes_dodson",),
+    "fear_sadness_confusion": ("vstack.cognitive_reappraisal",),
+    "neutral_collapse": ("vstack.goleman_ei",),
+    "uncertain_dump": ("vstack.johari",),
     "sarcasm_blind": (
-        "agentcity.glaser_conversation",
-        "agentcity.hexaco",
+        "vstack.glaser_conversation",
+        "vstack.hexaco",
     ),
     "balanced_low": (
-        "agentcity.lewin",
-        "agentcity.aar",
+        "vstack.lewin",
+        "vstack.aar",
     ),
 }
 
 _DOWNSTREAM_BY_WEAKEST_EMOTION: dict[str, tuple[str, ...]] = {
-    "angry": ("agentcity.glaser_conversation",),
-    "fearful": ("agentcity.cognitive_reappraisal",),
-    "sad": ("agentcity.cognitive_reappraisal",),
-    "disgust": ("agentcity.hexaco",),
-    "surprise": ("agentcity.lewin",),
-    "happy": ("agentcity.glaser_conversation",),
-    "neutral": ("agentcity.goleman_ei",),
-    "none": ("agentcity.aar",),
+    "angry": ("vstack.glaser_conversation",),
+    "fearful": ("vstack.cognitive_reappraisal",),
+    "sad": ("vstack.cognitive_reappraisal",),
+    "disgust": ("vstack.hexaco",),
+    "surprise": ("vstack.lewin",),
+    "happy": ("vstack.glaser_conversation",),
+    "neutral": ("vstack.goleman_ei",),
+    "none": ("vstack.aar",),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.lencioni", "agentcity.grpi"),
-    "crewai": ("agentcity.lencioni", "agentcity.grpi", "agentcity.social_loafing"),
-    "autogen": ("agentcity.grpi", "agentcity.social_loafing"),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
-    "mastra": ("agentcity.grpi",),
-    "strands": ("agentcity.grpi",),
+    "langgraph": ("vstack.lencioni", "vstack.grpi"),
+    "crewai": ("vstack.lencioni", "vstack.grpi", "vstack.social_loafing"),
+    "autogen": ("vstack.grpi", "vstack.social_loafing"),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
+    "mastra": ("vstack.grpi",),
+    "strands": ("vstack.grpi",),
 }
 
 _INTERVENTION_OVERLAYS: dict[str, str] = {
-    "add_cue_inventory": "agentcity.glaser_conversation",
-    "add_confusion_clarification": "agentcity.goleman_ei",
-    "add_intensity_calibration_step": "agentcity.yerkes_dodson",
-    "add_sarcasm_detection_step": "agentcity.hexaco",
-    "add_cultural_context_check": "agentcity.schein_culture",
-    "swap_model": "agentcity.lewin",
-    "human_review": "agentcity.plus_delta",
-    "add_constitutional_principle": "agentcity.schein_culture",
+    "add_cue_inventory": "vstack.glaser_conversation",
+    "add_confusion_clarification": "vstack.goleman_ei",
+    "add_intensity_calibration_step": "vstack.yerkes_dodson",
+    "add_sarcasm_detection_step": "vstack.hexaco",
+    "add_cultural_context_check": "vstack.schein_culture",
+    "swap_model": "vstack.lewin",
+    "human_review": "vstack.plus_delta",
+    "add_constitutional_principle": "vstack.schein_culture",
 }
 
 

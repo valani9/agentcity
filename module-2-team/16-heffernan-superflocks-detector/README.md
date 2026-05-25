@@ -41,7 +41,7 @@ Five quantitative metrics expose the pattern:
 
 ## What this pattern does
 
-The `agentcity.superflocks` library takes a `RoutingTrace` with:
+The `vstack.superflocks` library takes a `RoutingTrace` with:
 
 - The agent **roster**
 - Optional per-agent **capability scores** by task class
@@ -69,13 +69,13 @@ The five metrics are computed *locally* in Python — deterministic, no LLM. The
 ## Design
 
 ```python
-from agentcity.superflocks import (
+from vstack.superflocks import (
     SuperflocksDetector,
     RoutingTrace,
     RoutingDecision,
     AgentCapability,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = RoutingTrace(
     trace_id="prod-routing-2026-W21",

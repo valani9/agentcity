@@ -1,4 +1,4 @@
-"""agentcity.johari -- Luft & Ingham's Johari Window applied to AI agent
+"""vstack.johari -- Luft & Ingham's Johari Window applied to AI agent
 self-awareness.
 
 Four quadrants: OPEN / BLIND / HIDDEN / UNKNOWN. The diagnostic reads
@@ -19,7 +19,7 @@ Production wiring (v0.1.0 infra):
 
   - Structured logging with run-id correlation (every log line carries
     ``run_id`` + ``pattern="johari"``).
-  - Token / cost telemetry via :func:`agentcity.aar.record_llm_call`.
+  - Token / cost telemetry via :func:`vstack.aar.record_llm_call`.
   - Prompt-injection input guards on every free-text field.
   - Async mirror :class:`JohariSelfAuditorAsync`.
   - Tool-receipt deterministic cross-reference (Basu et al. 2026).
@@ -35,13 +35,13 @@ Composition:
 Quick start
 -----------
 
-    from agentcity.johari import (
+    from vstack.johari import (
         JohariSelfAuditor,
         AgentSelfReportTrace,
         InteractionTurn,
         ToolReceipt,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentSelfReportTrace(
         agent_id="research-agent-007",
@@ -64,10 +64,10 @@ Quick start
 CLI
 ---
 
-    agentcity-johari analyze --trace trace.json --mode forensic
-    agentcity-johari playbooks
-    agentcity-johari compose
-    agentcity-johari schema --target trace
+    vstack-johari analyze --trace trace.json --mode forensic
+    vstack-johari playbooks
+    vstack-johari compose
+    vstack-johari schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

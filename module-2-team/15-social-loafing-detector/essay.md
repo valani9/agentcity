@@ -1,6 +1,6 @@
 # Your multi-agent crew has loafers. Latané proved this in 1979.
 
-*A thirteenth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A thirteenth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -28,7 +28,7 @@ The phenomenon scales with three factors that should sound familiar to anyone de
 
 Multi-agent AI crews exhibit *all three of these conditions by default.* The crew has a shared output. The orchestrator evaluates the crew, not the agents. The team is over-staffed because adding agents looks like adding capability. And — the twist that makes AI loafing worse than human loafing — the LLM behind each agent has no internal motivation to fight the gravitational pull of the role. The "reviewer" prompt suggests reviewers often say "looks good"; the model generates "looks good." There's no friction, no embarrassment, no peer noticing. The loafing is structural.
 
-## What `agentcity.social_loafing` does
+## What `vstack.social_loafing` does
 
 The library takes a `MultiAgentTaskTrace` — task, the list of agents on the team, the messages each agent produced (each tagged with `message_type`: proposal / critique / approval / rubber_stamp / paraphrase / tool_call / observation / decision / handoff / question / other), outcome, success — and produces a `SocialLoafingDetection` with:
 
@@ -37,7 +37,7 @@ The library takes a `MultiAgentTaskTrace` — task, the list of agents on the te
 3. **A loafing-quality bucket**: `no-loafing`, `mild-loafing`, `severe-loafing`.
 4. **A ranked list of interventions** targeting the loafing agents: assign-subgoals, individual-accountability, decompose-task, smaller-team, rotate-roles, explicit-critic-assignment, remove-loafer, per-agent-evaluation.
 
-Two LLM passes: one to score per-agent contribution, one to propose interventions. Same retry / graceful-degradation / structured-logging infrastructure as the rest of AgentCity.
+Two LLM passes: one to score per-agent contribution, one to propose interventions. Same retry / graceful-degradation / structured-logging infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -47,9 +47,9 @@ The diagnostic catches this. The fact-checker's nominal job was to verify citati
 
 The second most operationally relevant loafing pattern is *paraphrase loafing*: an agent downstream of a primary contributor whose entire output is a restatement. The classic case is a writer agent who follows a researcher agent. The researcher does all the substantive work; the writer paraphrases. The intervention here is `decompose_task` — give the writer a non-overlapping deliverable (executive summary, threat-model framing, open-questions section) so their work isn't just downstream-of-researcher.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #15 of 34 — the thirteenth pattern shipped. AgentCity now ships three patterns that diagnose different multi-agent crew dysfunctions:
+This is pattern #15 of 34 — the thirteenth pattern shipped. vstack now ships three patterns that diagnose different multi-agent crew dysfunctions:
 
 - **#17 Lencioni Five Dysfunctions** — the high-level team dysfunction taxonomy (trust → conflict → commitment → accountability → results)
 - **#28 Devil's Advocate Role Separator** — is the critic role *structurally present*?
@@ -60,7 +60,7 @@ The three compose: Lencioni for the team-shape diagnostic, Devil's Advocate for 
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -72,4 +72,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

@@ -1,4 +1,4 @@
-"""agentcity.trust_triangle -- Frei & Morriss's Trust Triangle
+"""vstack.trust_triangle -- Frei & Morriss's Trust Triangle
 (Logic / Authenticity / Empathy), applied to AI agents.
 
 Anchored in Frei & Morriss 2020, Edmondson 1999, Goleman 1995,

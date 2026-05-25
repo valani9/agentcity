@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from agentcity.goleman_ei.cli import main as cli_main
+from vstack.goleman_ei.cli import main as cli_main
 
 
 def _write_trace(tmp_path: Path) -> Path:

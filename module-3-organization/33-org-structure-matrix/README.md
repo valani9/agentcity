@@ -2,7 +2,7 @@
 
 **Layer:** Module 3 — Organization
 **Status:** Shipped
-**Package:** `agentcity.org_structure`
+**Package:** `vstack.org_structure`
 
 The third Module 3 pattern. Where Schein's Iceberg (#31) measures
 *coherence* across culture layers and Robbins/Judge's 7-Characteristics
@@ -48,7 +48,7 @@ profile for the task class.
 - Archetype classification falls back to `mixed` on garbage input.
 - Biggest-gap fallback: largest `|observed - target|` across dimensions.
 - Same retry / graceful-degradation infrastructure as the rest of
-  AgentCity.
+  vstack.
 
 ## Files
 
@@ -63,12 +63,12 @@ profile for the task class.
 ## Quick start
 
 ```python
-from agentcity.org_structure import (
+from vstack.org_structure import (
     AgentRole,
     CrewStructureTrace,
     StructureMatrixAnalyzer,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = CrewStructureTrace(
     crew_id="incident-crew",

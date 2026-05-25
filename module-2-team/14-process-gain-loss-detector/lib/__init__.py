@@ -1,4 +1,4 @@
-"""agentcity.process_gain_loss -- Steiner / Robbins-&-Judge process-gain
+"""vstack.process_gain_loss -- Steiner / Robbins-&-Judge process-gain
 and process-loss diagnostic for multi-agent systems.
 
 Anchored in: Steiner (1972), Hill (1982), Hackman-Vidmar (1970),

@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.vroom_expectancy import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.vroom_expectancy import (
     PLAYBOOKS,
     SEVERITY_ORDER,
     VROOM_COMPOSITION,
@@ -55,7 +55,7 @@ def _trace(
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -345,11 +345,11 @@ class TestComposition:
             profile_pattern="expectancy_bottleneck",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.smart_goal" in recs
+        assert "vstack.smart_goal" in recs
 
     def test_upstream_includes_sdt(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.sdt_reward" in up
+        assert "vstack.sdt_reward" in up
 
 
 # ---------------------------------------------------------------------------

@@ -9,50 +9,50 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.psych_safety",
-    "agentcity.group_decision",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.psych_safety",
+    "vstack.group_decision",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "healthy_debate": ("agentcity.aar",),
+    "healthy_debate": ("vstack.aar",),
     "groupthink_collapse": (
-        "agentcity.devils_advocate",
-        "agentcity.psych_safety",
+        "vstack.devils_advocate",
+        "vstack.psych_safety",
     ),
     "polarization_runaway": (
-        "agentcity.bias_stack",
-        "agentcity.devils_advocate",
+        "vstack.bias_stack",
+        "vstack.devils_advocate",
     ),
     "contagion_dominated": (
-        "agentcity.glaser_conversation",
-        "agentcity.danva_emotion",
+        "vstack.glaser_conversation",
+        "vstack.danva_emotion",
     ),
     "multi_pathology_severe": (
-        "agentcity.aar",
-        "agentcity.lencioni",
-        "agentcity.group_decision",
+        "vstack.aar",
+        "vstack.lencioni",
+        "vstack.group_decision",
     ),
     "premature_convergence": (
-        "agentcity.devils_advocate",
-        "agentcity.group_decision",
+        "vstack.devils_advocate",
+        "vstack.group_decision",
     ),
     "tone_overrides_content": (
-        "agentcity.glaser_conversation",
-        "agentcity.bias_stack",
+        "vstack.glaser_conversation",
+        "vstack.bias_stack",
     ),
     "dissent_suppressed": (
-        "agentcity.psych_safety",
-        "agentcity.devils_advocate",
+        "vstack.psych_safety",
+        "vstack.devils_advocate",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

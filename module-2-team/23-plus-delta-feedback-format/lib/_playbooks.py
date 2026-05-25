@@ -141,7 +141,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: feedback has no follow-up commitments.",
             "Add `add_commitment` step requiring at least one commitment.",
-            "Compose with `agentcity.smart_goal`.",
+            "Compose with `vstack.smart_goal`.",
         ],
         "1d",
         "Brown 2018",

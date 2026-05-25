@@ -45,10 +45,10 @@ Outputs:
 ## Install
 
 ```bash
-pip install agentcity
-pip install "agentcity[anthropic]"
-pip install "agentcity[openai]"
-pip install "agentcity[ollama]"
+pip install vstack
+pip install "vstack[anthropic]"
+pip install "vstack[openai]"
+pip install "vstack[ollama]"
 ```
 
 ---
@@ -66,12 +66,12 @@ pip install "agentcity[ollama]"
 ## Python quick start
 
 ```python
-from agentcity.danva_emotion import (
+from vstack.danva_emotion import (
     EmotionRecognitionAnalyzer,
     AgentEmotionTrace,
     EmotionItem,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentEmotionTrace(
     agent_id="support-agent",
@@ -96,13 +96,13 @@ print(analysis.to_markdown())
 ## CLI
 
 ```bash
-agentcity-danva analyze --trace trace.json --client stub --stub-responses stub.json
-agentcity-danva analyze --trace fail.json --client anthropic --mode forensic
-agentcity-danva batch --corpus eval/synthetic_emotion_batches.yaml --out analyses/
-agentcity-danva replay --analysis analyses/scenario-1.json
-agentcity-danva playbooks
-agentcity-danva compose
-agentcity-danva schema --target trace
+vstack-danva analyze --trace trace.json --client stub --stub-responses stub.json
+vstack-danva analyze --trace fail.json --client anthropic --mode forensic
+vstack-danva batch --corpus eval/synthetic_emotion_batches.yaml --out analyses/
+vstack-danva replay --analysis analyses/scenario-1.json
+vstack-danva playbooks
+vstack-danva compose
+vstack-danva schema --target trace
 ```
 
 ---
@@ -160,7 +160,7 @@ EI domains (use Goleman); to detect prompt injection (use aar guards).
 ## Calibration
 
 ```python
-from agentcity.danva_emotion import record_baseline, load_baseline, compare_to_baseline
+from vstack.danva_emotion import record_baseline, load_baseline, compare_to_baseline
 
 record_baseline(analysis, "baselines/support-agent.json")
 fresh = EmotionRecognitionAnalyzer(client).run(trace)

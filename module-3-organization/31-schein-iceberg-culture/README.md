@@ -39,7 +39,7 @@ This is the most operationally important Schein result for AI builders. It expla
 
 ## What this pattern does
 
-The `agentcity.schein_culture` library takes an `AgentCultureTrace` containing:
+The `vstack.schein_culture` library takes an `AgentCultureTrace` containing:
 
 - The **task** the agent ran
 - The **system prompt** (espoused values source)
@@ -62,7 +62,7 @@ and produces a `CultureAuditDetection` with:
 4. **A culture-quality bucket**: `aligned`, `drifting`, or `incoherent`
 5. **Concrete interventions** ranked by impact: `rewrite_system_prompt`, `fine_tune_against_assumption`, `add_guardrail`, `add_eval_for_drift`, `swap_model`, `scaffold_around_assumption`, `explicit_values_check`, `human_review`
 
-Two LLM passes under the hood. The intervention pass is skipped when culture quality is `aligned`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when culture quality is `aligned`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -73,11 +73,11 @@ Two LLM passes under the hood. The intervention pass is skipped when culture qua
 ## Design
 
 ```python
-from agentcity.schein_culture import (
+from vstack.schein_culture import (
     CultureAuditDetector,
     AgentCultureTrace,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = AgentCultureTrace(
     agent_id="support-agent-001",

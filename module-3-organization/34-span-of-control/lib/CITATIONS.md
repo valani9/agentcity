@@ -30,5 +30,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.span_of_control` is a derivative
+and publishers. `vstack.span_of_control` is a derivative
 implementation; no copyrighted text is reproduced here.

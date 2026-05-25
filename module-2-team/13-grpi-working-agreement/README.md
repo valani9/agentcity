@@ -35,11 +35,11 @@ Multi-agent AI systems are teams in literally the same sense Beckhard meant: a g
 | **Processes** | No decision protocol (majority vote? consensus? planner-rules?). No escalation path. No abandonment criterion. Loop pathology. |
 | **Interactions** | No norms for inter-agent challenge. No structured disagreement format. The Lencioni "fear of conflict" failure (Pattern #17). |
 
-The first four patterns AgentCity shipped (AAR, Lencioni, Trust Triangle, Johari) are all *diagnostic* — they look at what happened after the failure. **GRPI is the opposite shape: it's the pre-flight contract that prevents many of those failures in the first place.**
+The first four patterns vstack shipped (AAR, Lencioni, Trust Triangle, Johari) are all *diagnostic* — they look at what happened after the failure. **GRPI is the opposite shape: it's the pre-flight contract that prevents many of those failures in the first place.**
 
 ## What this pattern does
 
-The `agentcity.grpi` library is a *generative* pattern, not a diagnostic. It takes a team-setup request — a task description, an agent roster, optional constraints — and produces a structured **Working Agreement** document covering all four GRPI dimensions:
+The `vstack.grpi` library is a *generative* pattern, not a diagnostic. It takes a team-setup request — a task description, an agent roster, optional constraints — and produces a structured **Working Agreement** document covering all four GRPI dimensions:
 
 1. **Goals section** — measurable success criteria, scope boundaries, deliverables, kill criteria
 2. **Roles section** — per-agent role definition, decision rights, accountability owner per work-stream
@@ -57,12 +57,12 @@ The output is both human-readable markdown and machine-readable JSON — the JSO
 ## Design
 
 ```python
-from agentcity.grpi import (
+from vstack.grpi import (
     GRPIWorkingAgreementGenerator,
     TeamSetupRequest,
     AgentRole,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 request = TeamSetupRequest(
     team_id="marketing-campaign-crew-q3",

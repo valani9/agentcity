@@ -37,7 +37,7 @@ None of these are wrong universally; all of them are wrong on some non-trivial s
 
 ## What this pattern does
 
-The `agentcity.group_decision` library takes a `DecisionRequest` with:
+The `vstack.group_decision` library takes a `DecisionRequest` with:
 
 - The **decision title** and **options**
 - The **agents** participating
@@ -55,7 +55,7 @@ and produces a `DecisionProtocol` with:
 7. **Fallback model** — what to use if the primary doesn't converge
 8. **Tally result** (optional) — when votes are supplied, a deterministic local tally runs without a second LLM call
 
-Single LLM pass for the protocol; the tally is pure Python. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Single LLM pass for the protocol; the tally is pure Python. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 The output also exposes `to_orchestrator_preamble()` for prepending the protocol to an orchestrator's system prompt — so the orchestrator literally executes the recommended method, not a default.
 
@@ -70,13 +70,13 @@ The output also exposes `to_orchestrator_preamble()` for prepending the protocol
 ## Design
 
 ```python
-from agentcity.group_decision import (
+from vstack.group_decision import (
     DecisionProtocolGenerator,
     DecisionRequest,
     DecisionOption,
     AgentVote,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 request = DecisionRequest(
     decision_id="db-choice",

@@ -9,42 +9,42 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.grpi",
-    "agentcity.aar",
-    "agentcity.schein_culture",
+    "vstack.lewin",
+    "vstack.grpi",
+    "vstack.aar",
+    "vstack.schein_culture",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "strong_smart_goal": ("agentcity.aar",),
+    "strong_smart_goal": ("vstack.aar",),
     "vague_unspecific": (
-        "agentcity.devils_advocate",
-        "agentcity.aar",
+        "vstack.devils_advocate",
+        "vstack.aar",
     ),
     "unmeasurable": (
-        "agentcity.aar",
-        "agentcity.grpi",
+        "vstack.aar",
+        "vstack.grpi",
     ),
     "unachievable_stretch": (
-        "agentcity.grpi",
-        "agentcity.lewin",
+        "vstack.grpi",
+        "vstack.lewin",
     ),
     "irrelevant_to_context": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
+        "vstack.devils_advocate",
+        "vstack.bias_stack",
     ),
-    "no_deadline": ("agentcity.aar",),
+    "no_deadline": ("vstack.aar",),
     "missing_kill_criteria": (
-        "agentcity.aar",
-        "agentcity.devils_advocate",
+        "vstack.aar",
+        "vstack.devils_advocate",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.grpi", "agentcity.lencioni"),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.grpi", "vstack.lencioni"),
+    "autogen": ("vstack.aar",),
 }
 
 

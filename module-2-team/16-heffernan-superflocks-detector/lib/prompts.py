@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 SUPERFLOCKS_SYSTEM_PROMPT = """You are a superflocks-fragility diagnostic grounded in:
@@ -80,8 +80,8 @@ Return only the JSON object."""
 
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
-Composition targets: agentcity.lewin, agentcity.grpi, agentcity.mcgregor,
-agentcity.process_gain_loss, agentcity.aar, agentcity.bias_stack, agentcity.devils_advocate
+Composition targets: vstack.lewin, vstack.grpi, vstack.mcgregor,
+vstack.process_gain_loss, vstack.aar, vstack.bias_stack, vstack.devils_advocate
 
 Metrics: {metrics}
 Fragility quality: {fragility_quality}

@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: no vulnerability shown; no error admission.",
             "Add `add_psych_safety_signal` to the system prompt.",
-            "Compose with `agentcity.psych_safety`, `agentcity.trust_triangle`.",
+            "Compose with `vstack.psych_safety`, `vstack.trust_triangle`.",
         ],
         "1d",
         "Lencioni 2002; Edmondson 1999",
@@ -43,7 +43,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: zero challenge messages despite disagreement.",
             "Add `structured_dissent_protocol` (1 mandatory dissent per decision).",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Lencioni 2002",
@@ -55,7 +55,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: decisions made but not explicit; no buy-in step.",
             "Add `communication_protocol` requiring explicit commit/dissent.",
-            "Compose with `agentcity.grpi`, `agentcity.smart_goal`.",
+            "Compose with `vstack.grpi`, `vstack.smart_goal`.",
         ],
         "1d",
         "Lencioni 2002",
@@ -67,7 +67,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: no peer-to-peer feedback observed.",
             "Add `role_assignment` for explicit peer reviewers.",
-            "Compose with `agentcity.plus_delta`.",
+            "Compose with `vstack.plus_delta`.",
         ],
         "1d",
         "Lencioni 2002",
@@ -79,7 +79,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agents optimize personal metrics, not team outcome.",
             "Add `new_eval` measuring shared outcome.",
-            "Compose with `agentcity.grpi`, `agentcity.aar`.",
+            "Compose with `vstack.grpi`, `vstack.aar`.",
         ],
         "1w",
         "Lencioni 2002; Hackman 2002",
@@ -100,7 +100,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "False consensus -- explicit critic role",
         [
             "Add `role_assignment` for a critic agent.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Lencioni 2002; Janis 1972 groupthink",
@@ -111,7 +111,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Drifting priorities -- scaffold change",
         [
             "Run `scaffold_change` adding explicit goal anchor in each turn.",
-            "Compose with `agentcity.smart_goal`.",
+            "Compose with `vstack.smart_goal`.",
         ],
         "1d",
         "Lencioni 2002",
@@ -122,7 +122,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Blame diffusion -- communication protocol + AAR",
         [
             "Add `communication_protocol` for explicit ownership.",
-            "Compose with `agentcity.aar`.",
+            "Compose with `vstack.aar`.",
         ],
         "1d",
         "Lencioni 2002",
@@ -134,7 +134,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Run `new_eval` exposing the gaming.",
             "Consider `team_composition_change`.",
-            "Compose with `agentcity.bias_stack`.",
+            "Compose with `vstack.bias_stack`.",
         ],
         "1w",
         "Lencioni 2002; Casper 2023",
@@ -155,7 +155,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Full-pyramid dysfunction -- human review",
         [
             "Run `human_review` for full team redesign.",
-            "Compose with `agentcity.grpi` for rebuild.",
+            "Compose with `vstack.grpi` for rebuild.",
         ],
         "1w",
         "Lencioni 2002",

@@ -1,6 +1,6 @@
 # Your agent dropped a production table because the user said please. Adam Grant predicted this.
 
-*A twentieth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twentieth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -30,7 +30,7 @@ The most operationally dangerous of these is helpfulness overuse on destructive 
 
 The Grant framework's most useful contribution is the **intervention discipline**: *don't fix the strength by removing it.* Bound it. Add a gate at the specific failure point. Keep the strength operating in its healthy range; intervene only when it crosses into overuse. Applied to the DROP TABLE case, the fix isn't to make the agent less helpful — that would degrade it on the 99.9% of cases that aren't destructive. The fix is `add_destructive_action_gate`: classify the operation by reversibility, and require explicit confirmation only on irreversible operations. Helpfulness stays intact; the gate fires on the small subset of operations whose magnitude warrants double-check.
 
-## What `agentcity.grant_strengths` does
+## What `vstack.grant_strengths` does
 
 The library takes an `AgentBehaviorTrace` — task, behavior steps (input / thought / tool_call / observation / decision / output / refusal), outcome, success, and a `harm_visible` flag — and produces a `StrengthOveruseDetection` with:
 
@@ -41,7 +41,7 @@ The library takes an `AgentBehaviorTrace` — task, behavior steps (input / thou
 5. **An overuse-quality bucket**: `healthy`, `borderline`, `overused`
 6. **A ranked list of interventions** that bound the strength without removing it: `add_destructive_action_gate`, `require_pushback_on_premise_check`, `time_box_analysis`, `require_hedged_confidence`, `add_minimum_context_check`, `explicit_anti_overuse_prompt`, regression tests, human review
 
-Two LLM passes under the hood; the intervention pass is skipped when the agent is operating in its healthy range. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood; the intervention pass is skipped when the agent is operating in its healthy range. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -51,9 +51,9 @@ The recommended interventions all share a property: they create a *gate* at the 
 
 This is also why the Grant framework composes well with the Schein audit (Pattern #31): Schein tells you *the underlying assumption is winning*; Grant tells you *which specific assumption* and *at what point it tips into harm*. Use them together when prompt engineering fails.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #08 of 34 — the twentieth pattern shipped. AgentCity's Module 1 (Individual) now ships four patterns at three different abstraction levels:
+This is pattern #08 of 34 — the twentieth pattern shipped. vstack's Module 1 (Individual) now ships four patterns at three different abstraction levels:
 
 - **Pattern #01 Lewin Formula (B = f(I, E))** — top-level attribution: is the failure in the model or the environment?
 - **Pattern #03 Johari Window** — self-knowledge: what doesn't the agent know about its own behavior?
@@ -65,7 +65,7 @@ The four compose: Lewin redirects from prompt-engineering to scaffolding fixes; 
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -77,4 +77,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

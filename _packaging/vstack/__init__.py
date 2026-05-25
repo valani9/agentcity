@@ -1,10 +1,10 @@
-"""AgentCity: organizational behavior, practiced on AI agents.
+"""vstack: organizational behavior, practiced on AI agents.
 
 A library of 34 diagnostic patterns drawn from organizational behavior,
 social psychology, and group dynamics — each one rewritten for the
 domain of AI agents rather than human teams. Patterns ship as
-independent sub-packages under the `agentcity.*` namespace and share a
-common LLM-client + retry + JSON-parsing core in `agentcity.aar`.
+independent sub-packages under the `vstack.*` namespace and share a
+common LLM-client + retry + JSON-parsing core in `vstack.aar`.
 
 Public API stability
 --------------------
@@ -21,8 +21,8 @@ release. Symbols in ``__all__`` follow this stability promise:
 Quick start
 -----------
 
-    from agentcity.aar import AARGenerator, AgentTrace, TraceStep
-    from agentcity.aar.clients import AnthropicClient
+    from vstack.aar import AARGenerator, AgentTrace, TraceStep
+    from vstack.aar.clients import AnthropicClient
 
     generator = AARGenerator(llm_client=AnthropicClient())
     aar = generator.run(my_trace)

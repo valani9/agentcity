@@ -1,6 +1,6 @@
-# Contributing to AgentCity
+# Contributing to vstack
 
-AgentCity ships curated organizational-behavior patterns for AI agents. Each pattern is anchored in named OB literature and shipped with five layers: README + working library + runnable demo + benchmark + Substack-ready essay.
+vstack ships curated organizational-behavior patterns for AI agents. Each pattern is anchored in named OB literature and shipped with five layers: README + working library + runnable demo + benchmark + Substack-ready essay.
 
 If you want to contribute, the highest-leverage things are:
 
@@ -21,7 +21,7 @@ If the proposal is accepted, you can either implement the pattern yourself (PR w
 
 ## Framework integrations
 
-Each pattern needs adapters for the major agent frameworks (Claude Agent SDK, LangGraph, OpenAI Agents SDK, CrewAI, AutoGen, Microsoft Agent Framework, Mastra). If you maintain or contribute to one of these frameworks and want to add the canonical adapter for AgentCity patterns, please do. Adapters live in `frameworks/<framework-name>/`.
+Each pattern needs adapters for the major agent frameworks (Claude Agent SDK, LangGraph, OpenAI Agents SDK, CrewAI, AutoGen, Microsoft Agent Framework, Mastra). If you maintain or contribute to one of these frameworks and want to add the canonical adapter for vstack patterns, please do. Adapters live in `frameworks/<framework-name>/`.
 
 ## Benchmarks
 
@@ -33,7 +33,7 @@ Every pattern ships with a Substack-ready essay (`essay.md`). If you write an es
 
 ## What we will not accept
 
-- Pattern proposals that don't anchor in named OB literature. AgentCity is specifically the OB-literature-anchored layer; pure design-pattern proposals belong in projects like [Architecting Agentic Communities Using Design Patterns](https://arxiv.org/abs/2601.03624).
+- Pattern proposals that don't anchor in named OB literature. vstack is specifically the OB-literature-anchored layer; pure design-pattern proposals belong in projects like [Architecting Agentic Communities Using Design Patterns](https://arxiv.org/abs/2601.03624).
 - Implementations that don't ship all five layers (README + lib + demo + benchmark + essay). Half-shipped patterns dilute the library's quality bar. Better one well-shipped pattern than five half-shipped ones.
 - Contributions of any university course's internal materials (slides, exercises, solutions). The library uses public OB-literature concepts only.
 
@@ -56,8 +56,8 @@ TypeScript:
 Set up a working environment from a clean clone:
 
 ```bash
-git clone https://github.com/valani9/AgentCity.git
-cd AgentCity
+git clone https://github.com/valani9/vstack.git
+cd vstack
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev,all]"
 pre-commit install   # optional but recommended
@@ -73,7 +73,7 @@ ruff format --check module-1-individual/ module-2-team/ module-3-organization/
 for p in module-1-individual/* module-2-team/* module-3-organization/*; do
   [ -d "$p/lib" ] && mypy "$p/lib" --strict --ignore-missing-imports || true
 done
-python -m build && pip install --force-reinstall --no-deps dist/agentcity-*.whl
+python -m build && pip install --force-reinstall --no-deps dist/vstack-*.whl
 ```
 
 ## API stability promise
@@ -100,7 +100,7 @@ symbol promoted to the public surface.
 In addition to the existing 5-layer requirement (README + lib + demo +
 benchmark + essay), patterns merged after `0.1.0` should:
 
-1. Use `agentcity.aar.get_logger(...)` rather than
+1. Use `vstack.aar.get_logger(...)` rather than
    `logging.getLogger(...)` so log lines carry the run-id correlation
    field.
 2. Wrap the body of `run(...)` (or equivalent entry point) in

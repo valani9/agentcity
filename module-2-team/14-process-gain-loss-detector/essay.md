@@ -1,6 +1,6 @@
 # Your 5-agent crew is worse than your best single agent. Steiner explained this in 1972.
 
-*A fifteenth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A fifteenth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -41,7 +41,7 @@ The diagnostic counts which of these is doing the most damage. The intervention 
 6. **Structured handoffs** + **context summarization** — preserve information across transitions.
 7. **Fixed vote aggregation** — replace consensus with median/max/plurality.
 
-## What `agentcity.process_gain_loss` does
+## What `vstack.process_gain_loss` does
 
 The library takes a `ProcessTrace` containing:
 
@@ -58,17 +58,17 @@ and produces a `ProcessGainLossDetection` with:
 4. **Per-factor evidence** for the six canonical loss factors (each scored 0-1 with severity + evidence quotes)
 5. **A ranked list of interventions** from the catalog above
 
-Two LLM passes: one to score the six factors, one to propose interventions. *Skipped entirely on process gain* — when the team beat the best single, there's nothing to fix. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes: one to score the six factors, one to propose interventions. *Skipped entirely on process gain* — when the team beat the best single, there's nothing to fix. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
 This is the **only** multi-agent metric that answers the question whose answer is required to justify the multi-agent architecture at all: *did the team's combined cost produce something the best single agent couldn't?* Most multi-agent observability dashboards measure activity (tokens, latency, message counts). Activity is not value. The process-gain/loss diagnostic measures value-relative-to-counterfactual, which is what the engineering decision actually needs.
 
-The OVERTURNS-style verdict from this pattern is high-impact: a 5-agent crew that has been running in production for months, with a budget line item and an internal owner, gets diagnosed as process-loss-with-5x-cost-overhead and the recommendation is *use the single best agent.* This is the moment that justifies the rest of AgentCity's diagnostic catalog — when the verdict is "the right answer is to use less" rather than "tune the prompt better."
+The OVERTURNS-style verdict from this pattern is high-impact: a 5-agent crew that has been running in production for months, with a budget line item and an internal owner, gets diagnosed as process-loss-with-5x-cost-overhead and the recommendation is *use the single best agent.* This is the moment that justifies the rest of vstack's diagnostic catalog — when the verdict is "the right answer is to use less" rather than "tune the prompt better."
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #14 of 34 — the fifteenth pattern shipped. AgentCity now ships **five** patterns that diagnose multi-agent crews at different levels of the diagnostic hierarchy:
+This is pattern #14 of 34 — the fifteenth pattern shipped. vstack now ships **five** patterns that diagnose multi-agent crews at different levels of the diagnostic hierarchy:
 
 - **Outcome-level (this pattern, #14)** — did the team beat the best single agent?
 - **Team-shape (#17 Lencioni)** — which of the 5 dysfunctions does the team have?
@@ -81,7 +81,7 @@ The five compose into a layered diagnostic stack. Pattern #14 sits at the top: i
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -93,4 +93,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

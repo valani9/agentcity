@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 SMART_SYSTEM_PROMPT = """You are a SMART-goal generator working in the tradition of
@@ -82,8 +82,8 @@ Return only a JSON object representing the MeasurementRigorAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 quality-improvement
 interventions for a SMART goal spec.
 
-Composition targets: agentcity.grpi, agentcity.aar, agentcity.plus_delta,
-agentcity.lewin, agentcity.devils_advocate
+Composition targets: vstack.grpi, vstack.aar, vstack.plus_delta,
+vstack.lewin, vstack.devils_advocate
 
 intervention_type one of: tighten_specificity, add_measurement,
 calibrate_achievability, ground_relevance, add_deadline, add_kill_criteria,

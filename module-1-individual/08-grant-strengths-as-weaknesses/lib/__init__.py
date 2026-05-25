@@ -1,4 +1,4 @@
-"""agentcity.grant_strengths -- Adam Grant's "strengths as weaknesses"
+"""vstack.grant_strengths -- Adam Grant's "strengths as weaknesses"
 phenomenon applied to AI agent failure modes.
 
 Anchored in:
@@ -24,12 +24,12 @@ an alias for ``GrantStrengthsAnalyzer``.
 Quick start
 -----------
 
-    from agentcity.grant_strengths import (
+    from vstack.grant_strengths import (
         GrantStrengthsAnalyzer,
         AgentBehaviorTrace,
         AgentBehaviorStep,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentBehaviorTrace(
         agent_id="db-admin-001",
@@ -51,10 +51,10 @@ Quick start
 CLI
 ---
 
-    agentcity-grant analyze --trace trace.json --mode forensic
-    agentcity-grant playbooks
-    agentcity-grant compose
-    agentcity-grant schema --target trace
+    vstack-grant analyze --trace trace.json --mode forensic
+    vstack-grant playbooks
+    vstack-grant compose
+    vstack-grant schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

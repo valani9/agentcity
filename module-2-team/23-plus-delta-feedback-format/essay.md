@@ -1,6 +1,6 @@
 # "LGTM" is not feedback. Brené Brown explained why in 2018.
 
-*A twenty-first essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-first essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -24,7 +24,7 @@ The format's enduring usefulness across thirty years of meeting-design literatur
 
 Multi-agent AI crews need this discipline badly. The default agent-on-agent review is overwhelmingly "LGTM" / "looks good" / "could be improved." None of these are actionable. The subject agent can't tell *which* parts to keep doing or *which* parts to change. The reviewer agent is producing the *appearance* of review without doing the *work* of review — the canonical social-loafing pattern in multi-agent crews.
 
-## What `agentcity.plus_delta` does
+## What `vstack.plus_delta` does
 
 The library takes a `FeedbackRequest` with:
 
@@ -44,7 +44,7 @@ and produces a `PlusDeltaFeedback` artifact with:
 
 The prompt enforces the behavioral-specificity rule explicitly: *no plus item may be a generic affirmation; no delta item may be a generic critique.* Generic items get replaced or dropped.
 
-Single LLM pass. Post-processing enforces max-item caps, infers the overall assessment from delta severities if the LLM omitted it, and reconciles the quality score. Two output formats: `to_markdown()` for the full structured artifact and `to_inline_feedback()` for chat-style returns. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Single LLM pass. Post-processing enforces max-item caps, infers the overall assessment from delta severities if the LLM omitted it, and reconciles the quality score. Two output formats: `to_markdown()` for the full structured artifact and `to_inline_feedback()` for chat-style returns. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -58,7 +58,7 @@ Multi-agent crews fail in three ways that plus/delta directly addresses:
 
 The composition with Pattern #22 (Stone & Heen 3-Trigger) is also tight: #23 produces *high-quality* agent-on-agent feedback; #22 catches when even high-quality feedback gets rejected by the subject agent via a truth / relationship / identity trigger. Use both.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #23 of 34 — the twenty-first pattern shipped, and the **fourth generative pattern**:
 
@@ -72,7 +72,7 @@ The four generative patterns now cover team setup, individual goal-setting, coll
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -84,4 +84,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

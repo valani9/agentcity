@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.process_gain_loss import (
+from vstack.process_gain_loss import (
     PROCESS_FACTORS,
     IndividualBaseline,
     ProcessFactorEvidence,

@@ -17,7 +17,7 @@ deterministic helpers in metrics.py so the LLM cannot move the numbers.
 
 from __future__ import annotations
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 SPAN_SYSTEM_PROMPT = """You are an org-design intervention assistant operating in
 the tradition of Jay Galbraith's Star Model and Henry Mintzberg's structural

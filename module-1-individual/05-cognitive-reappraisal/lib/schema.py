@@ -35,7 +35,7 @@ modulation* on its own affect. The ``suppression_under_pushback``
 profile pattern catches this specifically.
 
 Full 14-source literature thread in
-:mod:`agentcity.cognitive_reappraisal.CITATIONS` (``lib/CITATIONS.md``).
+:mod:`vstack.cognitive_reappraisal.CITATIONS` (``lib/CITATIONS.md``).
 """
 
 from __future__ import annotations
@@ -384,7 +384,7 @@ class BaselineComparison(BaseModel):
 
 
 class ComposedPatternHandoff(BaseModel):
-    """Where this detection feeds into the rest of the AgentCity library."""
+    """Where this detection feeds into the rest of the vstack library."""
 
     upstream_patterns: list[str] = Field(default_factory=list)
     downstream_patterns: list[str] = Field(default_factory=list)

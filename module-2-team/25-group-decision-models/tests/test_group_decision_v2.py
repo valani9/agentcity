@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.group_decision import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.group_decision import (  # noqa: E402
     DECISION_MODELS,
     GROUP_DECISION_COMPOSITION,
     GROUP_DECISION_MODES,
@@ -242,13 +242,13 @@ class TestComposition:
 
     def test_upstream_includes_grpi(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.grpi" in up
+        assert "vstack.grpi" in up
 
     def test_majority_buyin_recommends_lencioni(self) -> None:
         stub = StubClient([_protocol_payload(model="majority")])
         p = DecisionProtocolAnalyzer(stub).run(_request(stakes="high", buy_in_required=True))
         recs, _ = recommended_downstream(p)
-        assert "agentcity.lencioni" in recs
+        assert "vstack.lencioni" in recs
 
 
 class TestPlaybooks:

@@ -44,7 +44,7 @@ from .schema import (
     severity_from_gap,
 )
 
-log = get_logger("agentcity.aar.analyzer")
+log = get_logger("vstack.aar.analyzer")
 
 
 _DEFAULT_COST_PER_1K = {"input": 0.003, "output": 0.015}

@@ -1,6 +1,6 @@
 # Your agent reads "I JUST WANT THIS FIXED!!!" as neutral. DANVA quantifies the gap.
 
-*A thirtieth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A thirtieth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -43,7 +43,7 @@ The second-highest-leverage use is **diagnosing *which* emotion is the problem.*
 
 The third use is **comparative analysis across models / agents.** Because the math is deterministic, you can run the same eval batch across Claude / GPT / Llama / your fine-tune and get directly comparable accuracy numbers per emotion. This is the kind of comparison that's impossible with LLM-judged diagnostics because the judge's scoring is non-deterministic.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #04 — the thirty-first pattern shipped. It composes with several other Module 1 / Module 2 patterns:
 
@@ -56,7 +56,7 @@ The four together cover the full emotional-intelligence stack: #02 at the compet
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -68,4 +68,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

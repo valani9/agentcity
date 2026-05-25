@@ -1,6 +1,6 @@
 # Your agents have amnesia. Borrow this trick from the US Army.
 
-*A first essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A first essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -51,11 +51,11 @@ What is missing — visibly missing — is the AAR. There is no ritual between t
 
 When the same developer who watched the agent fail at task X six months ago hires the agent to do task Y today, that developer remembers (sometimes). The *agent* does not. There is no organizational memory in the system, because there is no organization. There is just an agent and a function call.
 
-This is the gap AgentCity exists to close. And specifically, this is the gap pattern #30 — the **AAR Generator** — exists to close.
+This is the gap vstack exists to close. And specifically, this is the gap pattern #30 — the **AAR Generator** — exists to close.
 
 ## What the AAR Generator does
 
-`agentcity.aar` is an open-source library that takes a structured agent run trace and produces, automatically, the four AAR artifacts:
+`vstack.aar` is an open-source library that takes a structured agent run trace and produces, automatically, the four AAR artifacts:
 
 1. **A written AAR document** — Goal / Results / Lessons / Next Steps, formatted as markdown, ready to drop in a Confluence page or attached to a LangSmith trace.
 2. **A specific prompt-patch suggestion** — a concrete edit to the agent's system prompt or instructions that, if applied, would prevent the failure on the next run.
@@ -81,7 +81,7 @@ The AAR Generator is the thing that sits in the gap between observability (we se
 
 ## Why this is just the first of thirty-four patterns
 
-The AAR is one organizational ritual. There are thirty-three more in the AgentCity library, each anchored in named OB literature, each addressing a specific named failure mode in AI agent systems:
+The AAR is one organizational ritual. There are thirty-three more in the vstack library, each anchored in named OB literature, each addressing a specific named failure mode in AI agent systems:
 
 - The **Lencioni Five Dysfunctions Diagnostic** (pattern #17) classifies multi-agent system failures by the same five-layer dysfunction pyramid Patrick Lencioni gave human teams in 2002.
 - The **Trust Triangle Audit** (pattern #18) applies Frei & Morriss's three-leg trust model — Logic, Authenticity, Empathy — to cross-model agent comparison. Some models wobble on Authenticity (they hedge instead of guess, or guess instead of hedge). Some wobble on Empathy. The wobble determines where each model fits.
@@ -94,7 +94,7 @@ It is the *gstack* model applied to AI agents — Garry Tan's open-source-tools-
 
 ## The invitation
 
-If you ship production AI agents and have noticed that they fail in patterns that look more like organizational problems than engineering problems, the AAR Generator is for you. Start there. The library is on GitHub at [github.com/valani9/AgentCity](https://github.com/valani9/AgentCity) (early; feedback issues welcome). The first integration target is the Claude Agent SDK; LangGraph and OpenAI Agents SDK follow.
+If you ship production AI agents and have noticed that they fail in patterns that look more like organizational problems than engineering problems, the AAR Generator is for you. Start there. The library is on GitHub at [github.com/valani9/vstack](https://github.com/valani9/vstack) (early; feedback issues welcome). The first integration target is the Claude Agent SDK; LangGraph and OpenAI Agents SDK follow.
 
 If you are an OB researcher and the cross-application of named frameworks (Lencioni, Edmondson, Frei, Stone & Heen) to AI agents intrigues you, please tell me where I have anchored a framework imprecisely. The pattern library is meant to honor the source literature, not pattern-match on names.
 
@@ -104,4 +104,4 @@ There are thirty-three patterns to come. The first one is here.
 
 ---
 
-*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/AgentCity](https://github.com/valani9/AgentCity). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*
+*Ilhan Valani is a builder shipping vstack in public. The repo lives at [github.com/valani9/vstack](https://github.com/valani9/vstack). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*

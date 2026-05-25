@@ -7,11 +7,11 @@ import json
 from pathlib import Path
 
 
-from agentcity.aar import (
+from vstack.aar import (
     InMemoryTelemetrySink,
     set_default_sink,
 )
-from agentcity.danva_emotion import (
+from vstack.danva_emotion import (
     DANVA_COMPOSITION,
     DANVA_MODES,
     DANVA_PROFILE_PATTERNS,
@@ -63,7 +63,7 @@ def _trace(items: list[EmotionItem], **overrides) -> AgentEmotionTrace:  # type:
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -316,11 +316,11 @@ class TestComposition:
             profile_pattern="anger_blind",
         )
         recs, _ = recommended_downstream(analysis)
-        assert "agentcity.glaser_conversation" in recs
+        assert "vstack.glaser_conversation" in recs
 
     def test_recommended_upstream_includes_goleman(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.goleman_ei" in up
+        assert "vstack.goleman_ei" in up
 
 
 class TestPlaybooks:

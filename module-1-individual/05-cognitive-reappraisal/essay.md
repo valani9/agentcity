@@ -1,6 +1,6 @@
 # Your agent said "I understand your concern" and lost the customer. Gross has a name for that.
 
-*A thirty-first essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A thirty-first essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -24,7 +24,7 @@ Gross's framework names three other strategies that also show up in agent traces
 
 The framework's diagnostic value is that the four maladaptive patterns have *different fixes*. Suppression needs `add_reframe_step` — explicit antecedent-focused reinterpretation before responding. Rumination needs `add_alternative_meaning_generation` — force two alternative readings instead of cycling on one. Avoidance needs `add_state_acknowledgment` — engage the emotional content before pivoting to procedure. Generic *"be more empathetic"* fails all three because it doesn't specify which lever to pull.
 
-## What `agentcity.cognitive_reappraisal` does
+## What `vstack.cognitive_reappraisal` does
 
 The library takes an `AgentRegulationTrace` containing:
 
@@ -40,7 +40,7 @@ and produces a `RegulationDetection` with:
 3. **Adaptivity bucket**: `adaptive` (reappraisal dominant ≥0.6), `mixed`, `maladaptive`
 4. **A ranked list of interventions** targeted at shifting toward reappraisal: add_reframe_step, remove_suppression_pattern, add_alternative_meaning_generation, add_state_acknowledgment, rewrite_system_prompt, few_shot_reappraisal_examples, swap_model, new_eval, human_review
 
-Two LLM passes under the hood. The intervention pass is skipped when adaptivity is `adaptive`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when adaptivity is `adaptive`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -50,7 +50,7 @@ The second-highest-leverage use is **catching rumination in long chain-of-though
 
 The third use is **role-fit triage.** Some agent roles genuinely require avoidance (a triage agent that *should* deflect deployment-safety questions to oncall). The diagnostic doesn't blindly flag avoidance as bad — it returns the evidence so a human can decide whether the avoidance was role-appropriate or a fail.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #05 — the thirty-second pattern shipped. It composes with the rest of the emotion / EI stack:
 
@@ -66,7 +66,7 @@ The four cover the full EI pipeline: recognition (#04) → competency (#02) → 
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -78,4 +78,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

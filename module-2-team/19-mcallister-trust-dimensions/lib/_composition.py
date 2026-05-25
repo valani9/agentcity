@@ -9,37 +9,37 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.trust_triangle",
-    "agentcity.lencioni",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.trust_triangle",
+    "vstack.lencioni",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "balanced_high_trust": ("agentcity.aar",),
+    "balanced_high_trust": ("vstack.aar",),
     "cognitive_only": (
-        "agentcity.glaser_conversation",
-        "agentcity.danva_emotion",
-        "agentcity.goleman_ei",
+        "vstack.glaser_conversation",
+        "vstack.danva_emotion",
+        "vstack.goleman_ei",
     ),
     "warm_but_incompetent": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
+        "vstack.devils_advocate",
+        "vstack.bias_stack",
     ),
     "low_trust": (
-        "agentcity.lencioni",
-        "agentcity.aar",
+        "vstack.lencioni",
+        "vstack.aar",
     ),
-    "cognitive_partial": ("agentcity.devils_advocate",),
-    "affective_partial": ("agentcity.glaser_conversation",),
-    "asymmetric_cognitive_strong": ("agentcity.glaser_conversation",),
+    "cognitive_partial": ("vstack.devils_advocate",),
+    "affective_partial": ("vstack.glaser_conversation",),
+    "asymmetric_cognitive_strong": ("vstack.glaser_conversation",),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

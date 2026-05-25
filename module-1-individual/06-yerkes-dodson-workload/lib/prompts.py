@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 YERKES_DODSON_SYSTEM_PROMPT = """You are a workload-pressure diagnostic grounded in:
@@ -134,9 +134,9 @@ Return only the JSON object."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
 Composition targets available:
-  agentcity.smart_goal, agentcity.cognitive_reappraisal, agentcity.devils_advocate,
-  agentcity.lewin, agentcity.aar, agentcity.johari, agentcity.bias_stack,
-  agentcity.mcgregor, agentcity.schein_culture, agentcity.plus_delta
+  vstack.smart_goal, vstack.cognitive_reappraisal, vstack.devils_advocate,
+  vstack.lewin, vstack.aar, vstack.johari, vstack.bias_stack,
+  vstack.mcgregor, vstack.schein_culture, vstack.plus_delta
 
 Observed zone: {observed_zone}
 Failure mode: {failure_mode}

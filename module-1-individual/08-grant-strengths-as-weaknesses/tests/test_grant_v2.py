@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.grant_strengths import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.grant_strengths import (
     GRANT_COMPOSITION,
     GRANT_MODES,
     GRANT_PROFILE_PATTERNS,
@@ -60,7 +60,7 @@ def _trace(
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -324,12 +324,12 @@ class TestComposition:
             profile_pattern="helpfulness_overuse_destructive_action",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_upstream_includes_hexaco(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.hexaco" in up
-        assert "agentcity.lewin" in up
+        assert "vstack.hexaco" in up
+        assert "vstack.lewin" in up
 
 
 # ---------------------------------------------------------------------------

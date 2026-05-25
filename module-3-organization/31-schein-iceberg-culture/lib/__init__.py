@@ -1,4 +1,4 @@
-"""agentcity.schein_culture -- Edgar Schein's three-layer culture model
+"""vstack.schein_culture -- Edgar Schein's three-layer culture model
 (artifacts / espoused values / underlying assumptions) applied to AI
 agent behavior.
 

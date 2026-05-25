@@ -38,7 +38,7 @@ The diagnostic reads an agent's interaction trace and outputs:
     earliest stage at which competence drops.
   - **Ranked interventions** with effort, risk, reversibility, ESConv
     strategy, composition target.
-  - **Composition handoffs** -- names the next AgentCity pattern(s) to
+  - **Composition handoffs** -- names the next vstack pattern(s) to
     run based on weakest_domain + profile_pattern + framework.
   - **Failure-mode playbooks** -- 15 curated 3-6 step recipes.
   - **Baseline comparison** -- drift severity vs a stored historical
@@ -55,11 +55,11 @@ The diagnostic reads an agent's interaction trace and outputs:
 ## Install
 
 ```bash
-pip install agentcity                # Stub-only.
-pip install "agentcity[anthropic]"   # + Anthropic.
-pip install "agentcity[openai]"      # + OpenAI.
-pip install "agentcity[ollama]"      # + local Ollama.
-pip install "agentcity[all]"         # All three.
+pip install vstack                # Stub-only.
+pip install "vstack[anthropic]"   # + Anthropic.
+pip install "vstack[openai]"      # + OpenAI.
+pip install "vstack[ollama]"      # + local Ollama.
+pip install "vstack[all]"         # All three.
 ```
 
 ---
@@ -90,13 +90,13 @@ pip install "agentcity[all]"         # All three.
 ## Python quick start
 
 ```python
-from agentcity.goleman_ei import (
+from vstack.goleman_ei import (
     EIAuditDetector,
     AgentEITrace,
     UserSignal,
     CovarianceOnUserState,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentEITrace(
     agent_id="support-agent",
@@ -132,13 +132,13 @@ print(detection.to_markdown())
 ## CLI quick start
 
 ```bash
-agentcity-goleman analyze --trace trace.json --client stub --stub-responses stub.json
-agentcity-goleman analyze --trace fail.json --client anthropic --mode forensic --format json | jq '.weakest_domain'
-agentcity-goleman batch --corpus eval/synthetic_ei_traces.yaml --out detections/
-agentcity-goleman replay --detection detections/scenario-1.json
-agentcity-goleman playbooks
-agentcity-goleman compose
-agentcity-goleman schema --target trace --out schemas/trace.json
+vstack-goleman analyze --trace trace.json --client stub --stub-responses stub.json
+vstack-goleman analyze --trace fail.json --client anthropic --mode forensic --format json | jq '.weakest_domain'
+vstack-goleman batch --corpus eval/synthetic_ei_traces.yaml --out detections/
+vstack-goleman replay --detection detections/scenario-1.json
+vstack-goleman playbooks
+vstack-goleman compose
+vstack-goleman schema --target trace --out schemas/trace.json
 ```
 
 ---
@@ -209,20 +209,20 @@ outcome correspondence -- not just self_reports.
 
 ## Composition with other patterns
 
-**Upstream:** `agentcity.lewin`, `agentcity.aar`,
-`agentcity.danva_emotion`, `agentcity.yerkes_dodson`.
+**Upstream:** `vstack.lewin`, `vstack.aar`,
+`vstack.danva_emotion`, `vstack.yerkes_dodson`.
 
 **Per-domain downstream:**
 
-  - `self_awareness` weakest -> `agentcity.johari`,
-    `agentcity.grant_strengths`, `agentcity.bias_stack`.
-  - `self_management` weakest -> `agentcity.cognitive_reappraisal`
-    (THE canonical downstream), `agentcity.yerkes_dodson`,
-    `agentcity.motivation_traps`.
-  - `social_awareness` weakest -> `agentcity.danva_emotion`,
-    `agentcity.glaser_conversation`.
-  - `relationship_management` weakest -> `agentcity.glaser_conversation`,
-    `agentcity.trust_triangle`, `agentcity.mcgregor`.
+  - `self_awareness` weakest -> `vstack.johari`,
+    `vstack.grant_strengths`, `vstack.bias_stack`.
+  - `self_management` weakest -> `vstack.cognitive_reappraisal`
+    (THE canonical downstream), `vstack.yerkes_dodson`,
+    `vstack.motivation_traps`.
+  - `social_awareness` weakest -> `vstack.danva_emotion`,
+    `vstack.glaser_conversation`.
+  - `relationship_management` weakest -> `vstack.glaser_conversation`,
+    `vstack.trust_triangle`, `vstack.mcgregor`.
 
 **Framework overlays** (additive): crewai -> lencioni + grpi +
 social_loafing; langgraph -> lencioni + grpi; autogen -> grpi +
@@ -280,7 +280,7 @@ Joseph-Newman / ESConv anchor citation.
   - You need to evaluate output factual quality (use HaluEval).
   - You need to score raw emotion-recognition accuracy (use Pattern
     #04 DANVA directly).
-  - You need to detect prompt injection (use `agentcity.aar._guards`).
+  - You need to detect prompt injection (use `vstack.aar._guards`).
   - The failure is clearly environmental (use Pattern #01 Lewin first).
 
 ---
@@ -301,7 +301,7 @@ Joseph-Newman / ESConv anchor citation.
 ## Calibration & baselines
 
 ```python
-from agentcity.goleman_ei import record_baseline, load_baseline, compare_to_baseline
+from vstack.goleman_ei import record_baseline, load_baseline, compare_to_baseline
 
 record_baseline(detection, "baselines/support-agent.json")
 
@@ -315,7 +315,7 @@ print(comparison.drift_severity)  # none | minor | moderate | severe
 
 ## Telemetry
 
-Every LLM call is reported to `agentcity.aar.set_default_sink(...)`
+Every LLM call is reported to `vstack.aar.set_default_sink(...)`
 with `pattern="goleman_ei"`, `run_id`, `pass=<pass>`, `mode=<active>`,
 `model`, token counts, `elapsed_ms`. Real cost is recorded on
 `detection.cost_usd` after every run.

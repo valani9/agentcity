@@ -1,6 +1,6 @@
 # Your support agent gave a six-paragraph technical answer to an all-caps user. Goleman's 2x2 explains it.
 
-*A twenty-seventh essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-seventh essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -38,7 +38,7 @@ The interventions for the support agent above are not *"be more polite"* or *"be
 
 The interventions are *not interchangeable across domains*. If the failure had been self-management instead — the agent going defensive after one pushback — the fix would be `add_state_reset_protocol`, not `add_emotion_reading_step`. Wrong intervention for wrong domain produces no improvement.
 
-## What `agentcity.goleman_ei` does
+## What `vstack.goleman_ei` does
 
 The library takes an `AgentEITrace` containing:
 
@@ -56,7 +56,7 @@ and produces an `EIDetection` with:
 4. **Weakest domain** — the lowest-scoring one (or "none" if all ≥ 0.7)
 5. **A ranked list of interventions** targeted at the weakest domain: add_confidence_calibration, add_self_check_prompt, add_state_reset_protocol, add_emotion_reading_step, add_paraphrase_requirement, add_tone_matching, rewrite_system_prompt, swap_model, new_eval, human_review
 
-Two LLM passes under the hood. The intervention pass is skipped when quality is `high-ei`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when quality is `high-ei`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -68,7 +68,7 @@ The third pattern is **high RECOGNITION, low REGULATION** — the agent can name
 
 The diagnostic value is that you don't have to guess the failure mode. The weakest-domain score tells you which cell of the 2x2 is the bottleneck, and the intervention list maps cleanly from there. *"Be more empathetic"* is not actionable; *"add a 1-sentence emotion-reading step before every response"* is.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #02 of 34 — the twenty-eighth pattern shipped, and it sits alongside the other Module 1 (individual-agent) diagnostics:
 
@@ -85,7 +85,7 @@ Goleman composes naturally with #21 Glaser Conversation Steering: the EI audit t
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -97,4 +97,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

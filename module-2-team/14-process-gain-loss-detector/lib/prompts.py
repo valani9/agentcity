@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 PROCESS_GAIN_LOSS_SYSTEM_PROMPT = """You are a team-process-loss diagnostic grounded in:
@@ -98,9 +98,9 @@ Return a JSON OBJECT representing the CounterfactualAudit. Return only the JSON 
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
 Composition targets:
-agentcity.lewin, agentcity.aar, agentcity.grpi, agentcity.social_loafing,
-agentcity.devils_advocate, agentcity.bias_stack, agentcity.mcgregor,
-agentcity.lencioni, agentcity.smart_goal, agentcity.plus_delta
+vstack.lewin, vstack.aar, vstack.grpi, vstack.social_loafing,
+vstack.devils_advocate, vstack.bias_stack, vstack.mcgregor,
+vstack.lencioni, vstack.smart_goal, vstack.plus_delta
 
 Factors: {contributing_factors}
 Process quality: {process_quality}

@@ -23,11 +23,11 @@ import pytest
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar._json_parsing import extract_json_array  # noqa: E402
-from agentcity.aar._retry import _is_retryable, with_retry  # noqa: E402
-from agentcity.aar.clients import StubClient  # noqa: E402
-from agentcity.aar.generator import AARGenerator  # noqa: E402
-from agentcity.aar.schema import AgentTrace, TraceStep  # noqa: E402
+from vstack.aar._json_parsing import extract_json_array  # noqa: E402
+from vstack.aar._retry import _is_retryable, with_retry  # noqa: E402
+from vstack.aar.clients import StubClient  # noqa: E402
+from vstack.aar.generator import AARGenerator  # noqa: E402
+from vstack.aar.schema import AgentTrace, TraceStep  # noqa: E402
 
 
 def _trace(**overrides: object) -> AgentTrace:

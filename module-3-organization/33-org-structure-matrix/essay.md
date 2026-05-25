@@ -1,6 +1,6 @@
 # Your agent crew is a flat-peer brainstorm running an incident. Galbraith and Mintzberg called it.
 
-*A twenty-fourth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-fourth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -27,7 +27,7 @@ The Org-Structure Matrix Analyzer is the diagnostic for this. Six dimensions:
 
 Each task class implies a different target profile. **Incident response** needs high centralization (a commander), moderate hierarchy (escalation path), and high specialization (db / cache / queue tagged roles). **Creative brainstorm** needs the opposite — low centralization, zero hierarchy, low specialization. **High-throughput pipelines** need high formalization, moderate centralization, and high specialization. The same crew profile can be the right answer or the wrong answer depending on what they're running.
 
-## What `agentcity.org_structure` does
+## What `vstack.org_structure` does
 
 The library takes a `CrewStructureTrace` containing:
 
@@ -44,7 +44,7 @@ and produces a `StructureAnalysis` with:
 5. **Biggest gap** — which dimension has the largest observed-vs-target delta
 6. **A ranked list of interventions** targeting the biggest gap: add_supervisor_layer, flatten_hierarchy, consolidate_roles, split_roles, shift_decision_authority, regroup_by_product, regroup_by_function, introduce_matrix, add_routing_layer, remove_routing_layer, new_eval, human_review
 
-Two LLM passes under the hood. The intervention pass is skipped when fit quality is `well-fit`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when fit quality is `well-fit`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -56,7 +56,7 @@ The second most expensive structural failure mode is the **hierarchical creative
 
 The diagnostic value is that you don't have to guess *which* fix. The biggest-gap dimension tells you which dial to turn. `centralization` divergence calls for adding or removing the commander. `specialization` divergence calls for splitting or consolidating roles. `departmentalization` divergence calls for regrouping. Each gap maps to a specific class of intervention.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #33 of 34 — the twenty-fourth pattern shipped, and the **third Module 3 (Organizational) pattern.** Module 3 now covers the full organizational diagnostic surface:
 
@@ -69,7 +69,7 @@ The three compose. Schein for culture coherence, Robbins/Judge for culture shape
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -81,4 +81,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

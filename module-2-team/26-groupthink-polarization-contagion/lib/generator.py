@@ -15,7 +15,7 @@ from collections.abc import Callable, Coroutine, Iterable, Iterator
 from pathlib import Path
 from typing import Any, Literal, Protocol, cast
 
-from agentcity.aar import (
+from vstack.aar import (
     LLMUsage,
     detect_injection,
     extract_json_array,
@@ -55,7 +55,7 @@ from .schema import (
     severity_from_pathology,
 )
 
-log = get_logger("agentcity.debate_pathology.generator")
+log = get_logger("vstack.debate_pathology.generator")
 
 
 _DEFAULT_COST_PER_1K = {"input": 0.003, "output": 0.015}
@@ -745,5 +745,5 @@ def _try_json_object(raw: str) -> dict[str, Any] | None:
     return None
 
 
-_legacy_log = logging.getLogger("agentcity.debate_pathology.generator")
+_legacy_log = logging.getLogger("vstack.debate_pathology.generator")
 _legacy_log.addHandler(logging.NullHandler())

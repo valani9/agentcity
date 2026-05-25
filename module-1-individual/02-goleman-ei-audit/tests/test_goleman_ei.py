@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.goleman_ei import (
+from vstack.goleman_ei import (
     EI_DOMAINS,
     AgentEITrace,
     DomainScore,

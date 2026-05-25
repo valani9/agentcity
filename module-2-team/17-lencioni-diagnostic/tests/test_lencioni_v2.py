@@ -12,8 +12,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.lencioni import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.lencioni import (  # noqa: E402
     DYSFUNCTIONS,
     LENCIONI_COMPOSITION,
     LENCIONI_MODES,
@@ -268,17 +268,17 @@ class TestComposition:
         diag = LencioniAnalyzer(stub).run(_trace())
         assert diag.composition_handoff is not None
         recs, _ = recommended_downstream(diag)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_upstream_includes_grpi(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.grpi" in up
+        assert "vstack.grpi" in up
 
     def test_framework_overlay_applied(self) -> None:
         stub = StubClient([_scores_payload(), _interventions_payload()])
         diag = LencioniAnalyzer(stub).run(_trace(framework="crewai"))
         assert diag.composition_handoff is not None
-        assert "agentcity.social_loafing" in diag.composition_handoff.downstream_patterns
+        assert "vstack.social_loafing" in diag.composition_handoff.downstream_patterns
 
 
 class TestPlaybooks:

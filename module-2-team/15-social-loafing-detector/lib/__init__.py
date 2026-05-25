@@ -1,4 +1,4 @@
-"""agentcity.social_loafing -- Latané, Williams & Harkins (1979) applied to
+"""vstack.social_loafing -- Latané, Williams & Harkins (1979) applied to
 multi-agent AI systems.
 
 Three pipeline modes with full v0.2.0 production infrastructure.

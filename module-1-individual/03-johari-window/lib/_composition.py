@@ -1,12 +1,12 @@
 """Cross-pattern composition manifest for the Johari Window self-audit.
 
-Johari sits at the introspection layer of the AgentCity dependency graph.
+Johari sits at the introspection layer of the vstack dependency graph.
 Two edges are already declared by upstream patterns:
 
-  - ``agentcity.lewin._composition`` declares ``change_memory ->
-    agentcity.johari`` (Lewin recommends Johari when memory drift is an
+  - ``vstack.lewin._composition`` declares ``change_memory ->
+    vstack.johari`` (Lewin recommends Johari when memory drift is an
     intervention candidate).
-  - ``agentcity.goleman_ei._composition`` declares Johari as the canonical
+  - ``vstack.goleman_ei._composition`` declares Johari as the canonical
     downstream when ``self_awareness`` is the weakest domain.
 
 This module closes those edges (adding Lewin + Goleman to the Johari
@@ -24,46 +24,46 @@ if TYPE_CHECKING:
 
 # Patterns that naturally produce a trace consumable by Johari.
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",  # Lewin internal-locus failures -> "does the agent know it just failed?"
-    "agentcity.aar",  # AAR lessons with a self_report field are Johari candidates
-    "agentcity.goleman_ei",  # Goleman EI self_awareness-weakest -> Johari is the canonical drill-down
-    "agentcity.yerkes_dodson",  # workload-driven hidden content sometimes surfaces here
+    "vstack.lewin",  # Lewin internal-locus failures -> "does the agent know it just failed?"
+    "vstack.aar",  # AAR lessons with a self_report field are Johari candidates
+    "vstack.goleman_ei",  # Goleman EI self_awareness-weakest -> Johari is the canonical drill-down
+    "vstack.yerkes_dodson",  # workload-driven hidden content sometimes surfaces here
 )
 
 # Per-quadrant downstream recommendations.
 _DOWNSTREAM_BY_QUADRANT: dict[str, tuple[str, ...]] = {
     "blind": (
         # AAR for postmortem on the specific divergence.
-        "agentcity.aar",
+        "vstack.aar",
         # Lewin for locus attribution on whether the blind spot is
         # internal vs environmental.
-        "agentcity.lewin",
+        "vstack.lewin",
         # Devil's-advocate as a live critic.
-        "agentcity.devils_advocate",
+        "vstack.devils_advocate",
         # Stone-Heen feedback-triggers (the canonical reference for blind-spot
         # mechanism diagnosis).
-        "agentcity.feedback_triggers",
+        "vstack.feedback_triggers",
     ),
     "hidden": (
         # Schein iceberg -- hidden content sits at espoused-values or
         # underlying-assumptions level.
-        "agentcity.schein_culture",
+        "vstack.schein_culture",
         # Glaser conversation steering for word-level disclosure prompting.
-        "agentcity.glaser_conversation",
+        "vstack.glaser_conversation",
         # Trust triangle: hidden uncertainty erodes the "care" leg.
-        "agentcity.trust_triangle",
+        "vstack.trust_triangle",
     ),
     "unknown": (
         # Bias-stack -- red-team known biases as probes.
-        "agentcity.bias_stack",
+        "vstack.bias_stack",
         # HEXACO -- personality-fit probing surfaces unknown traits.
-        "agentcity.hexaco",
+        "vstack.hexaco",
         # Grant strengths-as-weaknesses surfacing.
-        "agentcity.grant_strengths",
+        "vstack.grant_strengths",
     ),
     "open": (
         # Healthy case but still worth capturing the lesson.
-        "agentcity.aar",
+        "vstack.aar",
     ),
 }
 
@@ -71,71 +71,71 @@ _DOWNSTREAM_BY_QUADRANT: dict[str, tuple[str, ...]] = {
 _PROFILE_PATTERN_OVERLAYS: dict[str, tuple[str, ...]] = {
     "self_unaware_other_aware": (
         # Eurich's external > internal -- needs internal-awareness work.
-        "agentcity.cognitive_reappraisal",
+        "vstack.cognitive_reappraisal",
     ),
     "self_aware_other_unaware": (
         # Eurich's internal > external -- needs disclosure work.
-        "agentcity.glaser_conversation",
-        "agentcity.trust_triangle",
+        "vstack.glaser_conversation",
+        "vstack.trust_triangle",
     ),
     "opaque_to_users": (
-        "agentcity.schein_culture",
-        "agentcity.glaser_conversation",
+        "vstack.schein_culture",
+        "vstack.glaser_conversation",
     ),
     "confabulating": (
-        "agentcity.aar",
-        "agentcity.lewin",
-        "agentcity.devils_advocate",
+        "vstack.aar",
+        "vstack.lewin",
+        "vstack.devils_advocate",
     ),
     "sandbagging": (
-        "agentcity.grant_strengths",
-        "agentcity.hexaco",
+        "vstack.grant_strengths",
+        "vstack.hexaco",
     ),
     "over_disclosing": (
         # Some hidden was functional; restore it.
-        "agentcity.schein_culture",
+        "vstack.schein_culture",
     ),
     "balanced_low": (
         # All four weak -- usually environmental.
-        "agentcity.lewin",
-        "agentcity.aar",
+        "vstack.lewin",
+        "vstack.aar",
     ),
 }
 
 # Framework overlays for multi-agent traces.
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
     "langgraph": (
-        "agentcity.lencioni",
-        "agentcity.grpi",
+        "vstack.lencioni",
+        "vstack.grpi",
     ),
     "crewai": (
-        "agentcity.lencioni",
-        "agentcity.grpi",
-        "agentcity.social_loafing",
+        "vstack.lencioni",
+        "vstack.grpi",
+        "vstack.social_loafing",
     ),
     "autogen": (
-        "agentcity.grpi",
-        "agentcity.social_loafing",
+        "vstack.grpi",
+        "vstack.social_loafing",
     ),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "mastra": ("agentcity.grpi",),
-    "strands": ("agentcity.grpi",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "mastra": ("vstack.grpi",),
+    "strands": ("vstack.grpi",),
 }
 
 # Intervention-type overlays.
 _INTERVENTION_OVERLAYS: dict[str, str] = {
-    "feedback_loop": "agentcity.aar",
-    "disclosure_prompt": "agentcity.glaser_conversation",
-    "self_consistency_check": "agentcity.devils_advocate",
-    "uncertainty_surfacing": "agentcity.cognitive_reappraisal",
-    "capability_probe": "agentcity.grant_strengths",
-    "tool_receipt_validator": "agentcity.lewin",
-    "negative_feedback_solicitation": "agentcity.aar",
-    "red_team_probe": "agentcity.bias_stack",
-    "external_audit_loop": "agentcity.plus_delta",
-    "verbalized_confidence": "agentcity.cognitive_reappraisal",
-    "trace_self_review": "agentcity.aar",
+    "feedback_loop": "vstack.aar",
+    "disclosure_prompt": "vstack.glaser_conversation",
+    "self_consistency_check": "vstack.devils_advocate",
+    "uncertainty_surfacing": "vstack.cognitive_reappraisal",
+    "capability_probe": "vstack.grant_strengths",
+    "tool_receipt_validator": "vstack.lewin",
+    "negative_feedback_solicitation": "vstack.aar",
+    "red_team_probe": "vstack.bias_stack",
+    "external_audit_loop": "vstack.plus_delta",
+    "verbalized_confidence": "vstack.cognitive_reappraisal",
+    "trace_self_review": "vstack.aar",
 }
 
 

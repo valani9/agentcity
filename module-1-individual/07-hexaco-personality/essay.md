@@ -1,6 +1,6 @@
 # Your "helpful" tool agent just ran DROP TABLE. The H in HEXACO is the dimension you missed.
 
-*A thirty-second essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A thirty-second essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -47,7 +47,7 @@ The interventions for this profile aren't generic *"make it safer."* They're fac
 
 None of these are model-level interventions. None require fine-tuning. All three are system-prompt structural changes that close specific paths the agent's HEXACO profile would otherwise produce.
 
-## What `agentcity.hexaco` does
+## What `vstack.hexaco` does
 
 The library takes an `AgentPersonalityTrace` containing:
 
@@ -75,7 +75,7 @@ The second-highest-leverage use is **catching low-H confabulation in research / 
 
 The third use is **role-profile fit triage.** Some agents have low-O for a reason (regulated-workflow agents shouldn't be exploratory). Some have high-A for a reason (customer support agents should be accommodating). HEXACO doesn't blindly flag deviations from a universal target — it scores against the *task-class-specific target*. The diagnostic returns the gaps, and the intervention list respects role-appropriateness.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #07 — the thirty-third pattern shipped. It composes naturally with:
 
@@ -90,7 +90,7 @@ HEXACO also composes with **#27 Bias-Stack Detector**. Bias-Stack catches reason
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -102,4 +102,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

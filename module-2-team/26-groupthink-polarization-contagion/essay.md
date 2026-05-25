@@ -1,6 +1,6 @@
 # Your multi-agent debate has three classic dysfunctions. Janis, Stoner, and Hatfield mapped them.
 
-*A fourteenth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A fourteenth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -32,7 +32,7 @@ Three classic dysfunctional dynamics show up in group decision-making, all with 
 
 These three are distinct mechanisms with distinct interventions. A debate can have any one of them, any two, or all three at once. The ship-decision scenario above has at least groupthink + contagion: safety's withdrawal is groupthink; ops shifting from "neutral" to "Sounds great! Let's go!" with no new information is contagion.
 
-## What `agentcity.debate_pathology` does
+## What `vstack.debate_pathology` does
 
 The library takes a `MultiAgentDebateTrace` — task, agents, the messages each agent produced (each tagged with round number, optional position summary, emotional tone, content), final decision, outcome, success — and produces a `DebatePathologyDetection` with:
 
@@ -43,7 +43,7 @@ The library takes a `MultiAgentDebateTrace` — task, agents, the messages each 
 5. **Per-pathology evidence** with specific quoted excerpts (including round numbers)
 6. **A ranked list of interventions** targeting the dominant pathology: assign-devils-advocate, require-silent-vote, round-robin-dissent, diverse-seed-positions, anchor-to-base-rates, tone-normalization, cool-down-pause, external-arbiter, smaller-panel, secret-ballot
 
-Two LLM passes: one to score the three pathologies, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes: one to score the three pathologies, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -53,9 +53,9 @@ The highest-impact interventions are mostly structural changes to how the orches
 
 **Diverse seed positions** is the cleanest polarization fix: instead of giving every agent the same neutral system prompt and letting positions drift toward an extreme, deliberately seed agents with diverse priors. Anchor agents to known base rates (industry-standard sunset timelines, market-comparable prices) before the debate opens. The polarization literature consistently finds that diverse priors collapse the polarization drift.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #26 of 34 — the fourteenth pattern shipped. AgentCity now ships **four** distinct patterns that diagnose different aspects of multi-agent decision-making:
+This is pattern #26 of 34 — the fourteenth pattern shipped. vstack now ships **four** distinct patterns that diagnose different aspects of multi-agent decision-making:
 
 - **#17 Lencioni Five Dysfunctions** — high-level team taxonomy (trust → conflict → commitment → accountability → results)
 - **#28 Devil's Advocate Role Separator** — is the critic role *structurally present*?
@@ -67,7 +67,7 @@ The four compose into a layered diagnostic stack: Lencioni for the team-shape, D
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -79,4 +79,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

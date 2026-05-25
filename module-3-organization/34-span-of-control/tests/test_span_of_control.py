@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.span_of_control import (
+from vstack.span_of_control import (
     AgentNode,
     CrewLoadTrace,
     SpanIntervention,

@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.motivation_traps import (
+from vstack.motivation_traps import (
     MOTIVATION_TRAPS,
     AgentMotivationTrace,
     MotivationDetection,

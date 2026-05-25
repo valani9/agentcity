@@ -1,4 +1,4 @@
-"""agentcity.lencioni -- Patrick Lencioni's Five Dysfunctions of a Team,
+"""vstack.lencioni -- Patrick Lencioni's Five Dysfunctions of a Team,
 applied to multi-agent AI systems.
 
 Anchored in Lencioni (2002), Lencioni (2005), Edmondson (1999),
@@ -9,12 +9,12 @@ Backward-compatible: ``LencioniDiagnostic`` is aliased to ``LencioniAnalyzer``.
 
 Quick start::
 
-    from agentcity.lencioni import (
+    from vstack.lencioni import (
         LencioniAnalyzer,
         MultiAgentTrace,
         AgentMessage,
     )
-    from agentcity.aar.clients import AnthropicClient
+    from vstack.aar.clients import AnthropicClient
 
     trace = MultiAgentTrace(
         goal="Generate a marketing campaign",

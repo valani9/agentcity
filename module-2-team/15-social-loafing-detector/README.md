@@ -35,7 +35,7 @@ All three look identical from a contribution-share perspective: the loafing agen
 
 ## What this pattern does
 
-The `agentcity.social_loafing` library takes a multi-agent execution trace and produces:
+The `vstack.social_loafing` library takes a multi-agent execution trace and produces:
 
 1. **Per-agent contribution metrics** for each agent listed on the team:
    - `contribution_share` (0.0-1.0)
@@ -47,7 +47,7 @@ The `agentcity.social_loafing` library takes a multi-agent execution trace and p
 3. **A loafing-quality bucket**: `no-loafing` / `mild-loafing` / `severe-loafing`.
 4. **Concrete interventions** targeting loafing agents: `assign_subgoals`, `individual_accountability`, `decompose_task`, `smaller_team`, `rotate_roles`, `explicit_critic_assignment`, `remove_loafer`, `per_agent_evaluation`, `new_eval`, `human_review`.
 
-Two LLM passes under the hood: one to score per-agent contribution, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score per-agent contribution, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -59,12 +59,12 @@ Two LLM passes under the hood: one to score per-agent contribution, one to propo
 ## Design
 
 ```python
-from agentcity.social_loafing import (
+from vstack.social_loafing import (
     SocialLoafingDetector,
     MultiAgentTaskTrace,
     AgentMessage,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = MultiAgentTaskTrace(
     team_id="research-crew-001",

@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.feedback_triggers import (
+from vstack.feedback_triggers import (
     TRIGGERS,
     FeedbackInteractionTrace,
     FeedbackMessage,

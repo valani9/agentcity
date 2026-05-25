@@ -37,7 +37,7 @@ The fix is structural: **add a distinct critic-agent role.** Lower-impact substi
 
 ## What this pattern does
 
-The `agentcity.devils_advocate` library takes a single-agent trace and produces:
+The `vstack.devils_advocate` library takes a single-agent trace and produces:
 
 1. **Per-phase evidence** for the four phases (plan / execute / self-evaluate / external-critique). For each: present?, which actor performed it, how substantive was it.
 2. **A role-separation score** in [0.0, 1.0] — 0 = same actor did everything, 1 = critique fully separated and substantive.
@@ -46,7 +46,7 @@ The `agentcity.devils_advocate` library takes a single-agent trace and produces:
 5. **A role-separation quality bucket** — `well-separated`, `partially-conflated`, or `fully-conflated`.
 6. **Concrete interventions** ranked by impact: `add_critic_agent` (highest), `red_team_loop`, `external_review_gate`, `pre_mortem_step`, `alternative_hypothesis_step`, `devils_advocate_prompt`, `structured_self_critique`, `human_review`.
 
-Two LLM passes under the hood: one to score the four phases, one to propose interventions. Same retry / graceful-degradation / structured-logging infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the four phases, one to propose interventions. Same retry / graceful-degradation / structured-logging infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -58,12 +58,12 @@ Two LLM passes under the hood: one to score the four phases, one to propose inte
 ## Design
 
 ```python
-from agentcity.devils_advocate import (
+from vstack.devils_advocate import (
     RoleSeparationDetector,
     SingleAgentTrace,
     RoleStep,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = SingleAgentTrace(
     agent_id="architect-001",

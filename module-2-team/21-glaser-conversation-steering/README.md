@@ -2,7 +2,7 @@
 
 **Layer:** Module 2 — Team
 **Status:** Shipped
-**Package:** `agentcity.glaser_conversation`
+**Package:** `vstack.glaser_conversation`
 
 Judith Glaser's *Conversational Intelligence* (C-IQ) applied to agent
 conversations. Every conversational turn moves a participant toward one
@@ -63,12 +63,12 @@ toward oxytocin.
 ## Quick start
 
 ```python
-from agentcity.glaser_conversation import (
+from vstack.glaser_conversation import (
     ConversationSteeringDetector,
     ConversationTrace,
     ConversationTurn,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = ConversationTrace(
     conversation_id="support-001",

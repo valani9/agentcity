@@ -1,4 +1,4 @@
-"""Structured logging with run-id correlation for AgentCity patterns.
+"""Structured logging with run-id correlation for vstack patterns.
 
 Every diagnostic run produces multiple log lines (validation, metric
 computation, one or two LLM passes, intervention parsing). When you
@@ -40,10 +40,10 @@ from contextlib import contextmanager
 from typing import Any, Iterator
 
 _RUN_ID: contextvars.ContextVar[str | None] = contextvars.ContextVar(
-    "agentcity_run_id", default=None
+    "vstack_run_id", default=None
 )
 _PATTERN: contextvars.ContextVar[str | None] = contextvars.ContextVar(
-    "agentcity_pattern", default=None
+    "vstack_pattern", default=None
 )
 
 
@@ -184,7 +184,7 @@ class JsonFormatter(logging.Formatter):
 
 
 def configure_json_logging(level: int = logging.INFO) -> None:
-    """Configure the root agentcity logger for JSON output.
+    """Configure the root vstack logger for JSON output.
 
     Call once at process start in production deployments that ship
     logs to a structured backend (Datadog, Loki, CloudWatch, etc.).
@@ -193,7 +193,7 @@ def configure_json_logging(level: int = logging.INFO) -> None:
     handler = logging.StreamHandler()
     handler.setFormatter(JsonFormatter())
     handler.addFilter(_filter_singleton)
-    root = logging.getLogger("agentcity")
+    root = logging.getLogger("vstack")
     root.handlers = [handler]
     root.setLevel(level)
     root.propagate = False

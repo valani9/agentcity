@@ -20,7 +20,7 @@ import asyncio
 import json
 from datetime import datetime, timezone
 
-from agentcity.aar import (
+from vstack.aar import (
     AARGenerator,
     AgentTrace,
     StubClient,
@@ -28,8 +28,8 @@ from agentcity.aar import (
     new_run_id,
     run_context,
 )
-from agentcity.lewin import AgentFailureTrace, FailureStep, LewinAttributionDetector
-from agentcity.vroom_expectancy import AgentExpectancyTrace, VroomExpectancyCalculator
+from vstack.lewin import AgentFailureTrace, FailureStep, LewinAttributionDetector
+from vstack.vroom_expectancy import AgentExpectancyTrace, VroomExpectancyCalculator
 
 
 def _aar_stub() -> StubClient:

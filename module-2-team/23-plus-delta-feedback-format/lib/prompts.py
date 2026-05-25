@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 PLUS_DELTA_SYSTEM_PROMPT = """You are a structured-feedback generator working in the
@@ -101,8 +101,8 @@ Return only a JSON object representing the BehavioralVsGenericAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 quality-improvement
 interventions for a plus/delta artifact.
 
-Composition targets: agentcity.aar, agentcity.smart_goal, agentcity.glaser_conversation,
-agentcity.feedback_triggers
+Composition targets: vstack.aar, vstack.smart_goal, vstack.glaser_conversation,
+vstack.feedback_triggers
 
 Artifact:
 {artifact}

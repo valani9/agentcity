@@ -1,6 +1,6 @@
 # Your research agent is acting like a compliance officer. Robbins & Judge profiled this.
 
-*A twenty-second essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-second essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -39,7 +39,7 @@ The framework maps cleanly onto AI agents, because the same decomposition is hid
 
 The agent isn't bad at research. It's been *culturally configured* for a different job. The fix isn't to swap the model; it's to rewrite the system prompt to shift innovation up and stability down. *That intervention closes the gap.*
 
-## What `agentcity.robbins_culture` does
+## What `vstack.robbins_culture` does
 
 The library takes an `AgentCultureTrace` containing:
 
@@ -55,7 +55,7 @@ and produces a `CultureProfileDetection` with:
 4. **Biggest gap** — which characteristic has the largest observed-vs-target delta
 5. **A ranked list of interventions** targeting the biggest gap: rewrite system prompt, adjust temperature, add guardrail, swap model, add team scaffold, remove solo path, add kill criterion, new eval, human review
 
-Two LLM passes under the hood. The intervention pass is skipped when fit quality is `well-fit`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when fit quality is `well-fit`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -65,19 +65,19 @@ The most valuable verdict the diagnostic produces is the *inverted-profile* case
 
 The framework also composes with Pattern #31 Schein's Iceberg in a tight way: Schein measures *coherence* (do the layers agree?); Robbins/Judge measures *shape* (does the profile fit?). An agent can be coherent across its three Schein layers (artifacts, espoused values, underlying assumptions) and still be misfit on the Robbins/Judge profile for its task — coherent but pointing the wrong way. The two patterns together cover both kinds of culture failure.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #32 of 34 — the twenty-second pattern shipped, and the **second Module 3 (Organizational) pattern.** Module 3 now covers:
 
 - **#31 Schein Iceberg Culture Audit** — layer-alignment diagnostic
 - **#32 Robbins & Judge 7-Characteristics (this pattern)** — multi-dim profile fit diagnostic
 
-The two compose: Schein for coherence, Robbins/Judge for shape. Together they form the organizational-culture layer of the AgentCity diagnostic stack.
+The two compose: Schein for coherence, Robbins/Judge for shape. Together they form the organizational-culture layer of the vstack diagnostic stack.
 
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -89,4 +89,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

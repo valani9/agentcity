@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.vroom_expectancy import (
+from vstack.vroom_expectancy import (
     VROOM_TERMS,
     AgentExpectancyTrace,
     VroomDetection,

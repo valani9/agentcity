@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-AgentCity is in active development. Security fixes are issued for the
+vstack is in active development. Security fixes are issued for the
 latest minor release on the `0.x` series. Once the project reaches
 `1.0.0`, the supported window will extend to the prior minor as well.
 
@@ -13,20 +13,20 @@ latest minor release on the `0.x` series. Once the project reaches
 
 ## Reporting a Vulnerability
 
-If you find a security issue in AgentCity — anything that allows an
+If you find a security issue in vstack — anything that allows an
 attacker to bypass intended diagnostic boundaries, exfiltrate prompts,
 poison telemetry, or execute untrusted code via library APIs — please
 report it privately rather than opening a public GitHub issue.
 
 **Preferred channel**: GitHub Security Advisories.
 
-  1. Go to <https://github.com/valani9/AgentCity/security/advisories>.
+  1. Go to <https://github.com/valani9/vstack/security/advisories>.
   2. Click **Report a vulnerability**.
   3. Describe the issue with enough detail to reproduce
      (commit hash, code snippet, expected vs observed behavior).
 
 **Fallback**: email `valani@bu.edu` with the subject line
-`AgentCity Security: <short description>`.
+`vstack Security: <short description>`.
 
 You should receive an acknowledgement within 72 hours.
 
@@ -50,7 +50,7 @@ before any deadline passes.
 ## What is in scope
 
   - Code execution via library APIs that should never execute code.
-  - Prompt-injection paths through `agentcity.aar._guards` that bypass
+  - Prompt-injection paths through `vstack.aar._guards` that bypass
     the documented sanitization promises.
   - Authentication / token leakage from any of the shipped LLM client
     adapters.
@@ -60,7 +60,7 @@ before any deadline passes.
 
 ## What is out of scope
 
-  - The LLM provider's own behavior. AgentCity does not control the
+  - The LLM provider's own behavior. vstack does not control the
     upstream provider's safety or refusal policies; report those to
     the provider directly.
   - Denial of service by sending oversized inputs to your own
@@ -68,7 +68,7 @@ before any deadline passes.
     application boundary.
   - Social-engineering attacks against the maintainer.
   - Issues in dependencies — please report those upstream first; if
-    AgentCity exposes a vulnerable transitive dependency in a way
+    vstack exposes a vulnerable transitive dependency in a way
     that the upstream library cannot mitigate, that *is* in scope.
 
 ## Hardening Notes
@@ -83,7 +83,7 @@ Production deployments should:
   - Set explicit timeouts (`timeout=` constructor argument) on every
     LLM client; the default of 120s is a sane upper bound but
     application-specific values may be lower.
-  - Pin `agentcity` to a specific minor version in production
+  - Pin `vstack` to a specific minor version in production
     requirements files until 1.0.0.
   - Verify the wheel signature (PyPI trusted publisher provenance)
     before deploying.

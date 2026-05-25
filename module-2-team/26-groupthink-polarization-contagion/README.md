@@ -36,7 +36,7 @@ Production failures from all three are well-documented in postmortem write-ups: 
 
 ## What this pattern does
 
-The `agentcity.debate_pathology` library takes a multi-agent debate trace — task, the list of agents, the messages each agent produced (each tagged with round number, optional `position` summary, `emotional_tone`, and content), final decision, outcome, success — and produces a `DebatePathologyDetection` with:
+The `vstack.debate_pathology` library takes a multi-agent debate trace — task, the list of agents, the messages each agent produced (each tagged with round number, optional `position` summary, `emotional_tone`, and content), final decision, outcome, success — and produces a `DebatePathologyDetection` with:
 
 1. **Per-pathology scores** in [0.0, 1.0] for groupthink, polarization, and contagion
 2. **A dominant-pathology diagnosis** (groupthink breaks ties — it's the pathology with the cleanest, most-replicated intervention literature)
@@ -45,7 +45,7 @@ The `agentcity.debate_pathology` library takes a multi-agent debate trace — ta
 5. **A convergence-round estimate** — the round at which all agents shared the same `position` value (useful as a fast groupthink signal)
 6. **Concrete interventions** ranked by impact: `assign_devils_advocate`, `require_silent_vote`, `round_robin_dissent`, `diverse_seed_positions`, `anchor_to_base_rates`, `tone_normalization`, `cool_down_pause`, `external_arbiter`, `smaller_panel`, `secret_ballot`, `new_eval`, `human_review`
 
-Two LLM passes under the hood: one to score the three pathologies, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the three pathologies, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -57,12 +57,12 @@ Two LLM passes under the hood: one to score the three pathologies, one to propos
 ## Design
 
 ```python
-from agentcity.debate_pathology import (
+from vstack.debate_pathology import (
     DebatePathologyDetector,
     MultiAgentDebateTrace,
     DebateMessage,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = MultiAgentDebateTrace(
     debate_id="ship-decision-2026-05-22",

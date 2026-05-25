@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.plus_delta import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.plus_delta import (  # noqa: E402
     PLAYBOOKS,
     PLUS_DELTA_COMPOSITION,
     PLUS_DELTA_MODES,
@@ -258,11 +258,11 @@ class TestComposition:
         )
         fb = PlusDeltaFeedbackAnalyzer(stub).run(_request())
         recs, _ = recommended_downstream(fb)
-        assert "agentcity.smart_goal" in recs
+        assert "vstack.smart_goal" in recs
 
     def test_upstream_includes_feedback_triggers(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.feedback_triggers" in up
+        assert "vstack.feedback_triggers" in up
 
 
 class TestPlaybooks:

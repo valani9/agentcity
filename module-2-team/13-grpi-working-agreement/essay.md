@@ -1,10 +1,10 @@
 # Most multi-agent failures are missing one letter of GRPI.
 
-*A fifth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A fifth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
-The first four patterns AgentCity shipped (AAR, Lencioni, Trust Triangle, Johari) all run *after* something has gone wrong. They consume a trace and produce a diagnosis. That's useful work — but the more useful work is preventing the failure in the first place. The diagnostic patterns are an X-ray; what we've been missing is the pre-flight checklist.
+The first four patterns vstack shipped (AAR, Lencioni, Trust Triangle, Johari) all run *after* something has gone wrong. They consume a trace and produce a diagnosis. That's useful work — but the more useful work is preventing the failure in the first place. The diagnostic patterns are an X-ray; what we've been missing is the pre-flight checklist.
 
 In 1972, Richard Beckhard published a four-page article in the *Journal of Contemporary Business* called *Optimizing Team Building Effort*. The article distilled a decade of OD consulting into a four-letter checklist: **GRPI**. Goals, Roles, Processes, Interactions. Beckhard's claim was that every team failure he had ever consulted on traced back to one of these four dimensions being missing or vague. Not lack of skill. Not lack of effort. A missing letter.
 
@@ -14,7 +14,7 @@ Multi-agent AI systems are teams. The mapping is direct.
 
 ## Every multi-agent failure traces to a missing letter
 
-The four diagnostic patterns AgentCity already ships make this concrete:
+The four diagnostic patterns vstack already ships make this concrete:
 
 **Missing G — Goals.** Sub-agents optimize their own metrics over the user's actual goal. The customer-support pipeline that closes the ticket with green dashboards while the customer churns: Lencioni *inattention-to-results*. Local-metric optimization. The team had no shared, measurable success criterion. Add a clear G and this failure becomes harder.
 
@@ -26,7 +26,7 @@ The four diagnostic patterns AgentCity already ships make this concrete:
 
 This isn't a metaphor. Every Lencioni dysfunction, every Trust Triangle wobble, every Johari blind spot — they all reduce to a missing dimension of GRPI on the team's setup contract. The diagnostic patterns find the failure after the fact. GRPI prevents it.
 
-## What `agentcity.grpi` actually does
+## What `vstack.grpi` actually does
 
 The library takes a `TeamSetupRequest` — task, agent roster, constraints, success criteria, kill criteria — and produces a `WorkingAgreement` covering all four GRPI dimensions:
 
@@ -39,7 +39,7 @@ The output is dual-format: markdown for humans (Confluence pages, Notion docs, G
 
 Unlike the four diagnostic patterns, GRPI is **generative**: one LLM pass, structured JSON output, dropped into a schema with safe-default fallbacks if the LLM produces partial output. Validation requires at least 2 agents (single-agent setups don't need a team contract — they need a system prompt) and rejects duplicate agent names.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #13 of 34 planned. With this pattern shipped, the library now has five patterns across four diagnostic shapes plus one generative shape:
 
@@ -55,4 +55,4 @@ Twenty-nine patterns to come.
 
 ---
 
-*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/agentcity](https://github.com/valani9/agentcity). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*
+*Ilhan Valani is a builder shipping vstack in public. The repo lives at [github.com/valani9/vstack](https://github.com/valani9/vstack). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*

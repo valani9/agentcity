@@ -1,6 +1,6 @@
 # Lencioni Five Dysfunctions Diagnostic -- Citations
 
-The Lencioni Five Dysfunctions diagnostic in `agentcity.lencioni`
+The Lencioni Five Dysfunctions diagnostic in `vstack.lencioni`
 is grounded in seven literature anchors. Each prompt, severity
 band, profile pattern, and playbook step traces back to one of
 the entries below.
@@ -45,7 +45,7 @@ the entries below.
 
 6. **Schein, E. H. (1990)** *Organizational Culture and
    Leadership.* Jossey-Bass.
-   Source for upstream composition with `agentcity.schein_culture`
+   Source for upstream composition with `vstack.schein_culture`
    -- artifacts, espoused values, and underlying assumptions
    layer below team dynamics.
 
@@ -67,7 +67,7 @@ the entries below.
 ## License & attribution
 
 Citations point to published works owned by their respective
-authors and publishers. The `agentcity.lencioni` implementation
+authors and publishers. The `vstack.lencioni` implementation
 is a derivative work that applies the Lencioni pyramid to
 multi-agent LLM teams; no Lencioni text or Jossey-Bass content
 is reproduced here.

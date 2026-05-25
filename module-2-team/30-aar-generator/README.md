@@ -46,7 +46,7 @@ The class of failure that AAR is *exactly* designed to address.
 
 ## What this pattern does
 
-The `agentcity.aar` library takes a structured agent trace and produces:
+The `vstack.aar` library takes a structured agent trace and produces:
 
 1. **A written AAR document** following the Wharton 4-step structure (Goal / Results / Lessons / Next Steps).
 2. **A specific prompt-patch suggestion** — concrete edit to the system prompt or instructions that, if applied, would prevent the failure on the next run.
@@ -57,8 +57,8 @@ The library is *not* an observability platform. It consumes traces from existing
 
 ## Why this is different from existing agent post-mortem patterns
 
-- **Claude Agent SDK's site-reliability-agent cookbook** (Anthropic, 2026) ships post-mortem templates via PagerDuty/Confluence MCP tools. Those are SRE-flavored: an incident fires, the agent investigates, writes a Confluence page. AgentCity's AAR Generator is **OB-flavored**: every agent failure (not just paged incidents) gets the 4-step structure, and the output includes interventions (prompt patches, eval tests, lesson records) — not just documentation.
-- **Sattyam Jain's $4,200 postmortem** is a *human writing about an agent's failure*. AgentCity's AAR Generator is *an automated AAR runnable after every agent run*, designed to be consumed by the agent itself.
+- **Claude Agent SDK's site-reliability-agent cookbook** (Anthropic, 2026) ships post-mortem templates via PagerDuty/Confluence MCP tools. Those are SRE-flavored: an incident fires, the agent investigates, writes a Confluence page. vstack's AAR Generator is **OB-flavored**: every agent failure (not just paged incidents) gets the 4-step structure, and the output includes interventions (prompt patches, eval tests, lesson records) — not just documentation.
+- **Sattyam Jain's $4,200 postmortem** is a *human writing about an agent's failure*. vstack's AAR Generator is *an automated AAR runnable after every agent run*, designed to be consumed by the agent itself.
 - **Existing observability tools** (Phoenix, AgentOps, Braintrust, Latitude) capture traces and let humans dig through them. AAR Generator builds on top — it consumes their output and produces the *organizational learning artifact* the human team (or the agent itself) needs.
 
 ## Design (working draft)
@@ -66,7 +66,7 @@ The library is *not* an observability platform. It consumes traces from existing
 The library exposes a single high-level call:
 
 ```python
-from agentcity.aar import AARGenerator, AgentTrace
+from vstack.aar import AARGenerator, AgentTrace
 
 trace = AgentTrace(
     goal="Refactor the auth module to use JWTs",
@@ -110,7 +110,7 @@ Benchmark methodology: run agent → fail → generate AAR → apply prompt patc
 
 ## How to contribute
 
-This pattern is the anchor pattern for AgentCity and the first community signal. Contributions especially welcome from:
+This pattern is the anchor pattern for vstack and the first community signal. Contributions especially welcome from:
 
 - AI engineers shipping production agents who can validate the AAR output against real failures.
 - OB researchers willing to review the framework anchoring for fidelity.

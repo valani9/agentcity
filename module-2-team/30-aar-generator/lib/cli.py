@@ -4,16 +4,16 @@ Command-line interface for the AAR Generator.
 Examples:
 
     # Read a JSON trace from a file and write the AAR markdown to stdout
-    agentcity aar --trace trace.json --client stub
+    vstack aar --trace trace.json --client stub
 
     # Same, but pipe instead
-    cat trace.json | agentcity aar --client anthropic > aar.md
+    cat trace.json | vstack aar --client anthropic > aar.md
 
     # Run the synthetic-failure benchmark
-    agentcity bench --client anthropic
+    vstack bench --client anthropic
 
     # Show version
-    agentcity --version
+    vstack --version
 
 The CLI does not require any LLM API key in --client stub mode; useful
 for trying the pipeline before deciding which provider to commit to.
@@ -99,7 +99,7 @@ def _read_trace_input(path: str | None) -> AgentTrace:
 
 
 def cmd_aar(args: argparse.Namespace) -> int:
-    """`agentcity aar` — produce an AAR from a JSON trace."""
+    """`vstack aar` — produce an AAR from a JSON trace."""
     trace = _read_trace_input(args.trace)
     client = _make_client(args.client, args.model)
     generator = AARGenerator(
@@ -118,12 +118,12 @@ def cmd_aar(args: argparse.Namespace) -> int:
 
 
 def cmd_bench(args: argparse.Namespace) -> int:
-    """`agentcity bench` — run the synthetic-failure benchmark."""
+    """`vstack bench` — run the synthetic-failure benchmark."""
     # The benchmark runner lives next to the YAML corpus, not in the
     # library. We re-implement the invocation here to keep the dependency
     # surface clean (no PyYAML in the library itself).
     sys.stderr.write(
-        "Run the synthetic-failure benchmark by cloning the AgentCity "
+        "Run the synthetic-failure benchmark by cloning the vstack "
         "repository and running\n"
         "  python module-2-team/30-aar-generator/eval/run_benchmark.py "
         "--client " + args.client + "\n"
@@ -134,15 +134,15 @@ def cmd_bench(args: argparse.Namespace) -> int:
 def cmd_version(_: argparse.Namespace) -> int:
     from . import __version__
 
-    sys.stdout.write(f"agentcity {__version__}\n")
+    sys.stdout.write(f"vstack {__version__}\n")
     return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="agentcity",
+        prog="vstack",
         description=(
-            "AgentCity CLI — organizational behavior patterns for AI agents. "
+            "vstack CLI — organizational behavior patterns for AI agents. "
             "Currently ships pattern #30 (AAR Generator)."
         ),
     )
@@ -203,7 +203,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     bench.set_defaults(func=cmd_bench)
 
-    ver = sub.add_parser("version", help="Print the installed agentcity version.")
+    ver = sub.add_parser("version", help="Print the installed vstack version.")
     ver.set_defaults(func=cmd_version)
 
     return parser

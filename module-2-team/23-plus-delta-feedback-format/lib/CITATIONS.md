@@ -17,7 +17,7 @@
 4. **Doran, G. T. (1981)** "There's a S.M.A.R.T. way to write
    management's goals and objectives." *Management Review*, 70(11).
    The keep-doing and alternative fields lean on SMART goal
-   specificity -- composes naturally with `agentcity.smart_goal`
+   specificity -- composes naturally with `vstack.smart_goal`
    downstream.
 
 ## How citations are surfaced
@@ -28,5 +28,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.plus_delta` is a derivative implementation;
+and publishers. `vstack.plus_delta` is a derivative implementation;
 no copyrighted text is reproduced here.

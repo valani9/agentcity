@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: confident factual claims not in tool/context.",
             "Add `retrieval_augmentation` (RAG over a vetted corpus).",
-            "Compose with `agentcity.aar` for post-hoc grounding review.",
+            "Compose with `vstack.aar` for post-hoc grounding review.",
         ],
         "1w",
         "Frei & Morriss 2020; Lewis 2020 RAG",
@@ -54,7 +54,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: conclusions don't follow from premises.",
             "Add `scaffold_change` requiring step-by-step justification.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Frei & Morriss 2020",
@@ -66,7 +66,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: high-confidence claims that are wrong.",
             "Add `uncertainty_calibration` to system prompt.",
-            "Compose with `agentcity.psych_safety` upstream.",
+            "Compose with `vstack.psych_safety` upstream.",
         ],
         "1d",
         "Frei & Morriss 2020; Edmondson 1999",
@@ -78,7 +78,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agreement-without-evidence on user assertions.",
             "Add `sycophancy_filter` requiring at least one substantive pushback.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Sharma 2023 sycophancy; Frei & Morriss 2020",
@@ -101,7 +101,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: template responses that ignore user specifics.",
             "Add `context_window_expansion` (load user history/profile).",
-            "Compose with `agentcity.glaser_conversation` for tone steering.",
+            "Compose with `vstack.glaser_conversation` for tone steering.",
         ],
         "1d",
         "Frei & Morriss 2020",

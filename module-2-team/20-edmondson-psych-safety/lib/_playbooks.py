@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agreement messages dominate, no challenges.",
             "Add `dissent_round` requiring one mandatory dissent per decision.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Edmondson 1999; Janis 1972 groupthink",
@@ -76,7 +76,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: errors visible in tool outputs but not surfaced in agent prose.",
             "Add `error_amnesty_policy` rewarding error admission.",
-            "Compose with `agentcity.aar`.",
+            "Compose with `vstack.aar`.",
         ],
         "1w",
         "Edmondson 1999, 2018",
@@ -88,7 +88,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: post-failure messages blame other agents rather than process.",
             "Add `norms_in_working_agreement` requiring blameless-postmortem framing.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1d",
         "Edmondson 2018",
@@ -122,7 +122,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: voice score < 0.2 across multiple traces.",
             "Add `new_eval` tracking challenge-to-agreement ratio.",
-            "Compose with `agentcity.lencioni`.",
+            "Compose with `vstack.lencioni`.",
         ],
         "1w",
         "Edmondson 2018",

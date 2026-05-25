@@ -21,7 +21,7 @@ import logging
 import sys
 from datetime import datetime, timezone
 
-from agentcity.aar import (
+from vstack.aar import (
     AARGenerator,
     AgentTrace,
     InMemoryTelemetrySink,
@@ -69,7 +69,7 @@ def _stub_responses() -> list[str]:
 
 
 def main() -> None:
-    # 1. Configure JSON structured logging for the agentcity root logger.
+    # 1. Configure JSON structured logging for the vstack root logger.
     # Every log line emitted by any pattern will now be one JSON object
     # per line, with `run_id` + `pattern` fields stitched in by the
     # context filter.
@@ -89,7 +89,7 @@ def main() -> None:
         "We shipped 5 of 10 fixes."
     )
     if hits := detect_injection(raw_user_outcome):
-        logging.getLogger("agentcity.cookbook").warning(
+        logging.getLogger("vstack.cookbook").warning(
             "input contained suspicious patterns",
             extra={"pattern_hits": hits, "field": "outcome"},
         )

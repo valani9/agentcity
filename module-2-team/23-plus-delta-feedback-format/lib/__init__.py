@@ -1,4 +1,4 @@
-"""agentcity.plus_delta -- structured plus/delta inter-agent feedback
+"""vstack.plus_delta -- structured plus/delta inter-agent feedback
 format generator.
 
 From the facilitator canon (Joiner Associates 1990s; Brown "Dare to

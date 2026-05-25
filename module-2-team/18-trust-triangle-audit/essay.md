@@ -1,6 +1,6 @@
 # Your agent wobbles on exactly one leg. Frei & Morriss called it.
 
-*A third essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A third essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -28,7 +28,7 @@ In the Frei & Morriss model, when trust breaks, it almost always traces back to 
 
 These are not the same failure mode dressed up three times. They are three orthogonal failures with three different mechanisms, and they call for three different interventions. Bundling them into "agent quality" loses the diagnostic.
 
-## What `agentcity.trust_triangle` does
+## What `vstack.trust_triangle` does
 
 The library takes an agent interaction trace — task, turns, outcome, success signal — and produces a `TrustTriangleAudit` with:
 
@@ -57,7 +57,7 @@ This is the matrix every agent builder needs and no one has. The category leader
 
 That's what *practical* agent selection looks like. One-dimensional aggregate scores can't deliver it.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #18 of 34 planned. With this pattern, the library now ships three orthogonal diagnostics:
 
@@ -73,7 +73,7 @@ Thirty patterns left after that. Each anchored in named OB literature. Each ship
 
 ## The invitation
 
-If you build agents and you've noticed that your model-selection process is based on aggregate benchmark scores that don't actually predict user experience, the Trust Triangle Audit is for you. Install via `pip install git+https://github.com/valani9/agentcity.git`, import as `agentcity.trust_triangle`, run the audit on a conversation export.
+If you build agents and you've noticed that your model-selection process is based on aggregate benchmark scores that don't actually predict user experience, the Trust Triangle Audit is for you. Install via `pip install git+https://github.com/valani9/vstack.git`, import as `vstack.trust_triangle`, run the audit on a conversation export.
 
 If you build cross-model benchmarks and you'd like to add Trust Triangle scoring to your suite, open an issue. The audit is designed exactly for batched cross-model use.
 
@@ -83,4 +83,4 @@ Three patterns shipped. Thirty-one to come.
 
 ---
 
-*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/agentcity](https://github.com/valani9/agentcity). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*
+*Ilhan Valani is a builder shipping vstack in public. The repo lives at [github.com/valani9/vstack](https://github.com/valani9/vstack). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*

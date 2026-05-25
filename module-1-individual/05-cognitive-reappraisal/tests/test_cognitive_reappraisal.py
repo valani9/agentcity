@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.cognitive_reappraisal import (
+from vstack.cognitive_reappraisal import (
     REGULATION_STRATEGIES,
     AgentRegulationTrace,
     ReappraisalDetector,

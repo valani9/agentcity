@@ -40,13 +40,13 @@ Diagnoses whether an orchestrator (LangGraph state machine / CrewAI crew / AutoG
 ## Quick start
 
 ```python
-from agentcity.mcgregor import (
+from vstack.mcgregor import (
     McGregorOrchestratorAnalyzer,
     OrchestratorTrace,
     OrchestratorStep,
     TaskProperties,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = OrchestratorTrace(
     trace_id="ci-runner-001",
@@ -73,43 +73,43 @@ print(detection.to_markdown())
 # observed_mode: theory_x
 # optimal_mode: theory_y
 # profile_pattern: theory_x_on_proven_agent
-# Composition handoff: agentcity.sdt_reward, agentcity.aar
+# Composition handoff: vstack.sdt_reward, vstack.aar
 ```
 
 ## CLI
 
 ```bash
-agentcity-mcgregor analyze --trace trace.json --mode forensic
-agentcity-mcgregor batch --corpus corpus.yaml --out detections/
-agentcity-mcgregor replay --detection detection.json
-agentcity-mcgregor validate --trace trace.json
-agentcity-mcgregor schema --target trace
-agentcity-mcgregor playbooks
-agentcity-mcgregor compose
+vstack-mcgregor analyze --trace trace.json --mode forensic
+vstack-mcgregor batch --corpus corpus.yaml --out detections/
+vstack-mcgregor replay --detection detection.json
+vstack-mcgregor validate --trace trace.json
+vstack-mcgregor schema --target trace
+vstack-mcgregor playbooks
+vstack-mcgregor compose
 ```
 
 ## Composition
 
 **Upstream patterns:**
-- `agentcity.lewin` -- attribute the mode mismatch to person/environment locus.
-- `agentcity.aar` -- after-action review the trace comes from.
-- `agentcity.schein_culture` -- Theory-X/Y as an organizational culture artifact.
-- `agentcity.hexaco` -- agent personality interacts with optimal oversight.
+- `vstack.lewin` -- attribute the mode mismatch to person/environment locus.
+- `vstack.aar` -- after-action review the trace comes from.
+- `vstack.schein_culture` -- Theory-X/Y as an organizational culture artifact.
+- `vstack.hexaco` -- agent personality interacts with optimal oversight.
 
 **Downstream patterns** (chosen by profile pattern):
-- `irreversible_action_under_supervision` -> `agentcity.hexaco` + `agentcity.devils_advocate` + `agentcity.lewin`
-- `theory_y_on_high_risk` -> `agentcity.devils_advocate` + `agentcity.bias_stack` + `agentcity.hexaco`
-- `theory_x_on_proven_agent` -> `agentcity.sdt_reward` + `agentcity.aar`
-- `regulated_workflow_under_supervision` -> `agentcity.devils_advocate` + `agentcity.schein_culture`
-- `creative_task_over_supervised` -> `agentcity.sdt_reward` + `agentcity.grant_strengths`
-- `hybrid_misapplied` -> `agentcity.bias_stack` + `agentcity.smart_goal`
+- `irreversible_action_under_supervision` -> `vstack.hexaco` + `vstack.devils_advocate` + `vstack.lewin`
+- `theory_y_on_high_risk` -> `vstack.devils_advocate` + `vstack.bias_stack` + `vstack.hexaco`
+- `theory_x_on_proven_agent` -> `vstack.sdt_reward` + `vstack.aar`
+- `regulated_workflow_under_supervision` -> `vstack.devils_advocate` + `vstack.schein_culture`
+- `creative_task_over_supervised` -> `vstack.sdt_reward` + `vstack.grant_strengths`
+- `hybrid_misapplied` -> `vstack.bias_stack` + `vstack.smart_goal`
 
 ## Failure-mode playbooks
 
-12 curated `(mode, failure_mode)` playbooks. Inspect with `agentcity-mcgregor playbooks` or:
+12 curated `(mode, failure_mode)` playbooks. Inspect with `vstack-mcgregor playbooks` or:
 
 ```python
-from agentcity.mcgregor import find_playbook_for_intervention
+from vstack.mcgregor import find_playbook_for_intervention
 
 pb = find_playbook_for_intervention("theory_y", "elevate_to_human_on_irreversible")
 print(pb.title)
@@ -134,7 +134,7 @@ Plus Anthropic Computer Use 2024 and Likert (1967) System-4 cross-references.
 
 ## Production infrastructure
 
-Wired into the shared `agentcity.aar` infra:
+Wired into the shared `vstack.aar` infra:
 
 - **Structured logging** with `run_id` correlation.
 - **Token + cost telemetry**.
@@ -146,7 +146,7 @@ Wired into the shared `agentcity.aar` infra:
 ## Backward compatibility
 
 ```python
-from agentcity.mcgregor import OrchestratorModeDetector  # alias of McGregorOrchestratorAnalyzer
+from vstack.mcgregor import OrchestratorModeDetector  # alias of McGregorOrchestratorAnalyzer
 ```
 
 The v0.0.x `OrchestratorModeDetector(...)` call still works -- defaults to `mode="standard"`. The legacy `_mode_quality(mismatch, raw)` helper is preserved.

@@ -1,4 +1,4 @@
-"""agentcity.bias_stack -- Kahneman/Tversky's four classic cognitive biases
+"""vstack.bias_stack -- Kahneman/Tversky's four classic cognitive biases
 (anchoring, overconfidence, confirmation, escalation-of-commitment)
 applied to AI agent reasoning traces.
 

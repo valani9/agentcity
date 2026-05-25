@@ -97,7 +97,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agent always accommodates (sycophancy adjacent).",
             "Add `style_router` + `calibrate_assertiveness`.",
-            "Compose with `agentcity.trust_triangle`.",
+            "Compose with `vstack.trust_triangle`.",
         ],
         "1w",
         "Thomas & Kilmann 1974; Sharma 2023",

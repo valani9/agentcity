@@ -9,63 +9,63 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.schein_culture",
-    "agentcity.robbins_culture",
-    "agentcity.aar",
+    "vstack.schein_culture",
+    "vstack.robbins_culture",
+    "vstack.aar",
 )
 
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "well_fit": ("agentcity.aar",),
+    "well_fit": ("vstack.aar",),
     "too_flat_for_critical_task": (
-        "agentcity.span_of_control",
-        "agentcity.aar",
+        "vstack.span_of_control",
+        "vstack.aar",
     ),
     "too_hierarchical_for_creative": (
-        "agentcity.span_of_control",
-        "agentcity.devils_advocate",
+        "vstack.span_of_control",
+        "vstack.devils_advocate",
     ),
     "decision_bottleneck": (
-        "agentcity.span_of_control",
-        "agentcity.group_decision",
+        "vstack.span_of_control",
+        "vstack.group_decision",
     ),
     "no_clear_authority": (
-        "agentcity.group_decision",
-        "agentcity.aar",
+        "vstack.group_decision",
+        "vstack.aar",
     ),
     "over_specialized": (
-        "agentcity.aar",
-        "agentcity.grpi",
+        "vstack.aar",
+        "vstack.grpi",
     ),
     "under_specialized": (
-        "agentcity.grpi",
-        "agentcity.aar",
+        "vstack.grpi",
+        "vstack.aar",
     ),
     "matrix_overhead": (
-        "agentcity.aar",
-        "agentcity.grpi",
+        "vstack.aar",
+        "vstack.grpi",
     ),
     "broadly_misfit": (
-        "agentcity.aar",
-        "agentcity.schein_culture",
-        "agentcity.lewin",
+        "vstack.aar",
+        "vstack.schein_culture",
+        "vstack.lewin",
     ),
     "indeterminate": (),
 }
 
 
 _DOWNSTREAM_BY_TASK_CLASS: dict[str, tuple[str, ...]] = {
-    "incident_response": ("agentcity.aar",),
-    "regulated_workflow": ("agentcity.bias_stack",),
-    "code_review": ("agentcity.devils_advocate",),
-    "creative_brainstorm": ("agentcity.debate_pathology",),
+    "incident_response": ("vstack.aar",),
+    "regulated_workflow": ("vstack.bias_stack",),
+    "code_review": ("vstack.devils_advocate",),
+    "creative_brainstorm": ("vstack.debate_pathology",),
 }
 
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

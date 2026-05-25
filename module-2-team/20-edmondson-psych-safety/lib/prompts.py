@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 SAFETY_SYSTEM_PROMPT = """You are an Edmondson psychological-safety diagnostician for multi-
@@ -110,8 +110,8 @@ Return only a JSON object representing the ErrorReportingAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with
 composition targets.
 
-Composition targets: agentcity.lencioni, agentcity.grpi, agentcity.aar,
-agentcity.devils_advocate, agentcity.bias_stack, agentcity.glaser
+Composition targets: vstack.lencioni, vstack.grpi, vstack.aar,
+vstack.devils_advocate, vstack.bias_stack, vstack.glaser
 
 Lowest-presence behavior: {lowest_behavior}
 Behavior evidence: {evidence}

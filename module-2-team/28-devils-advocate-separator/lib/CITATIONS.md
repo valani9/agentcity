@@ -28,5 +28,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.devils_advocate` is a derivative
+and publishers. `vstack.devils_advocate` is a derivative
 implementation; no copyrighted text is reproduced here.

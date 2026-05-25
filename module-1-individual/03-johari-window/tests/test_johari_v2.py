@@ -9,13 +9,13 @@ import logging
 from pathlib import Path
 
 
-from agentcity.aar import (
+from vstack.aar import (
     InMemoryTelemetrySink,
     JsonFormatter,
     get_logger,
     set_default_sink,
 )
-from agentcity.johari import (
+from vstack.johari import (
     JOHARI_COMPOSITION,
     JOHARI_MODES,
     JOHARI_PROFILE_PATTERNS,
@@ -39,7 +39,7 @@ from agentcity.johari import (
     recommended_upstream,
     severity_from_self_awareness,
 )
-from agentcity.johari.prompts import STANDARD_QUADRANT_ANALYSIS_PROMPT, assemble_prompt
+from vstack.johari.prompts import STANDARD_QUADRANT_ANALYSIS_PROMPT, assemble_prompt
 
 
 def _trace(
@@ -139,7 +139,7 @@ def _interventions_payload() -> str:
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -410,7 +410,7 @@ class TestRunContext:
         stream = io.StringIO()
         handler = logging.StreamHandler(stream)
         handler.setFormatter(JsonFormatter())
-        logger = get_logger("agentcity.johari.generator")
+        logger = get_logger("vstack.johari.generator")
         prev_handlers = list(logger.handlers)
         prev_propagate = logger.propagate
         prev_level = logger.level
@@ -445,7 +445,7 @@ class TestComposition:
             self_awareness_score=0.3,
         )
         recs, _ = recommended_downstream(audit)
-        assert "agentcity.aar" in recs
+        assert "vstack.aar" in recs
 
     def test_hidden_recommends_schein(self) -> None:
         audit = JohariSelfAudit(
@@ -455,7 +455,7 @@ class TestComposition:
             self_awareness_score=0.5,
         )
         recs, _ = recommended_downstream(audit)
-        assert "agentcity.schein_culture" in recs
+        assert "vstack.schein_culture" in recs
 
     def test_framework_overlay(self) -> None:
         trace = _trace(framework="crewai")
@@ -466,12 +466,12 @@ class TestComposition:
             self_awareness_score=0.3,
         )
         recs, _ = recommended_downstream(audit, trace)
-        assert "agentcity.lencioni" in recs
+        assert "vstack.lencioni" in recs
 
     def test_upstream_includes_lewin(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.lewin" in up
-        assert "agentcity.goleman_ei" in up
+        assert "vstack.lewin" in up
+        assert "vstack.goleman_ei" in up
 
 
 class TestCalibration:

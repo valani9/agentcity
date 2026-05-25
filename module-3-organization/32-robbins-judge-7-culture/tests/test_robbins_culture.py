@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.robbins_culture import (
+from vstack.robbins_culture import (
     CULTURE_CHARACTERISTICS,
     AgentCultureTrace,
     CharacteristicScore,

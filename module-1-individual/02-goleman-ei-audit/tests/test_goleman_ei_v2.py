@@ -16,13 +16,13 @@ from pathlib import Path
 
 import pytest
 
-from agentcity.aar import (
+from vstack.aar import (
     InMemoryTelemetrySink,
     JsonFormatter,
     get_logger,
     set_default_sink,
 )
-from agentcity.goleman_ei import (
+from vstack.goleman_ei import (
     EI_DOMAINS,
     EI_MODES,
     EI_PROFILE_PATTERNS,
@@ -49,7 +49,7 @@ from agentcity.goleman_ei import (
     recommended_upstream,
     severity_from_score,
 )
-from agentcity.goleman_ei.prompts import (
+from vstack.goleman_ei.prompts import (
     STANDARD_DOMAINS_PROMPT,
     assemble_prompt,
 )
@@ -155,7 +155,7 @@ def _interventions_payload() -> str:
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -522,7 +522,7 @@ class TestRunContext:
         stream = io.StringIO()
         handler = logging.StreamHandler(stream)
         handler.setFormatter(JsonFormatter())
-        logger = get_logger("agentcity.goleman_ei.generator")
+        logger = get_logger("vstack.goleman_ei.generator")
         prev_handlers = list(logger.handlers)
         prev_propagate = logger.propagate
         prev_level = logger.level
@@ -567,7 +567,7 @@ class TestComposition:
             interventions=[],
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.danva_emotion" in recs
+        assert "vstack.danva_emotion" in recs
 
     def test_self_management_weakest_recommends_cognitive_reappraisal(self) -> None:
         det = EIDetection(
@@ -578,7 +578,7 @@ class TestComposition:
             interventions=[],
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.cognitive_reappraisal" in recs
+        assert "vstack.cognitive_reappraisal" in recs
 
     def test_framework_overlay_crewai(self) -> None:
         trace = _trace(framework="crewai")
@@ -590,17 +590,17 @@ class TestComposition:
             interventions=[],
         )
         recs, _ = recommended_downstream(det, trace)
-        assert "agentcity.lencioni" in recs
+        assert "vstack.lencioni" in recs
 
     def test_recommended_upstream_includes_danva(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.danva_emotion" in up
+        assert "vstack.danva_emotion" in up
 
     def test_handoff_present_on_detection(self) -> None:
         stub = _stub([_standard_payload(), _interventions_payload()])
         det = EIAuditDetector(stub).run(_trace())  # type: ignore[arg-type]
         assert det.composition_handoff is not None
-        assert "agentcity.danva_emotion" in det.composition_handoff.downstream_patterns
+        assert "vstack.danva_emotion" in det.composition_handoff.downstream_patterns
 
 
 # ---------------------------------------------------------------------------

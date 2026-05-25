@@ -1,6 +1,6 @@
 # Citations — Pattern #01 Lewin Formula
 
-A per-pattern bibliography for `agentcity.lewin`. Each citation lists
+A per-pattern bibliography for `vstack.lewin`. Each citation lists
 the work, why it appears in the diagnostic, and which schema field or
 prompt section uses it.
 

@@ -9,56 +9,56 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.org_structure",
-    "agentcity.robbins_culture",
-    "agentcity.schein_culture",
-    "agentcity.aar",
+    "vstack.org_structure",
+    "vstack.robbins_culture",
+    "vstack.schein_culture",
+    "vstack.aar",
 )
 
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "well_balanced": ("agentcity.aar",),
+    "well_balanced": ("vstack.aar",),
     "wide_span_orchestrator": (
-        "agentcity.org_structure",
-        "agentcity.group_decision",
+        "vstack.org_structure",
+        "vstack.group_decision",
     ),
     "deep_hierarchy": (
-        "agentcity.org_structure",
-        "agentcity.aar",
+        "vstack.org_structure",
+        "vstack.aar",
     ),
     "single_bottleneck": (
-        "agentcity.org_structure",
-        "agentcity.group_decision",
+        "vstack.org_structure",
+        "vstack.group_decision",
     ),
     "load_amplified_bottleneck": (
-        "agentcity.org_structure",
-        "agentcity.aar",
+        "vstack.org_structure",
+        "vstack.aar",
     ),
     "imbalanced_supervisors": (
-        "agentcity.org_structure",
-        "agentcity.social_loafing",
+        "vstack.org_structure",
+        "vstack.social_loafing",
     ),
     "over_centralized": (
-        "agentcity.group_decision",
-        "agentcity.devils_advocate",
+        "vstack.group_decision",
+        "vstack.devils_advocate",
     ),
     "under_centralized": (
-        "agentcity.group_decision",
-        "agentcity.org_structure",
+        "vstack.group_decision",
+        "vstack.org_structure",
     ),
     "broadly_overloaded": (
-        "agentcity.org_structure",
-        "agentcity.lewin",
-        "agentcity.aar",
+        "vstack.org_structure",
+        "vstack.lewin",
+        "vstack.aar",
     ),
     "indeterminate": (),
 }
 
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

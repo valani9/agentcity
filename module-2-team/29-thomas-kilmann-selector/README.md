@@ -48,7 +48,7 @@ Most production AI agents have a single, fixed conflict style hard-coded into th
 
 ## What this pattern does
 
-The `agentcity.thomas_kilmann` library takes an agent interaction trace and produces:
+The `vstack.thomas_kilmann` library takes an agent interaction trace and produces:
 
 1. **The observed conflict style** — which of the five styles the agent used (with score on Assertiveness/Cooperativeness axes).
 2. **The optimal style** — which style would have been right for this specific task and situation.
@@ -65,12 +65,12 @@ The `agentcity.thomas_kilmann` library takes an agent interaction trace and prod
 ## Design
 
 ```python
-from agentcity.thomas_kilmann import (
+from vstack.thomas_kilmann import (
     ConflictStyleSelector,
     AgentInteractionTrace,
     InteractionTurn,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = AgentInteractionTrace(
     agent_id="customer-support-v3",

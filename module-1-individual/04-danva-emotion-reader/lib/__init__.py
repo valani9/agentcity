@@ -1,4 +1,4 @@
-"""agentcity.danva_emotion -- DANVA-style emotion-recognition accuracy
+"""vstack.danva_emotion -- DANVA-style emotion-recognition accuracy
 diagnostic for AI agents.
 
 Seven canonical Ekman emotion categories: happy, sad, angry, fearful,
@@ -34,12 +34,12 @@ weakest_emotion + profile_pattern + framework + intervention shape.
 Quick start
 -----------
 
-    from agentcity.danva_emotion import (
+    from vstack.danva_emotion import (
         EmotionRecognitionAnalyzer,
         AgentEmotionTrace,
         EmotionItem,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentEmotionTrace(
         agent_id="support-agent",
@@ -61,10 +61,10 @@ Quick start
 CLI
 ---
 
-    agentcity-danva analyze --trace trace.json --mode forensic
-    agentcity-danva playbooks
-    agentcity-danva compose
-    agentcity-danva schema --target trace
+    vstack-danva analyze --trace trace.json --mode forensic
+    vstack-danva playbooks
+    vstack-danva compose
+    vstack-danva schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

@@ -9,50 +9,50 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.grpi",
-    "agentcity.lencioni",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.grpi",
+    "vstack.lencioni",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "safe_team": ("agentcity.aar",),
+    "safe_team": ("vstack.aar",),
     "silenced_team": (
-        "agentcity.devils_advocate",
-        "agentcity.lencioni",
+        "vstack.devils_advocate",
+        "vstack.lencioni",
     ),
     "cautious_team": (
-        "agentcity.devils_advocate",
-        "agentcity.grpi",
+        "vstack.devils_advocate",
+        "vstack.grpi",
     ),
     "voice_absent": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
+        "vstack.devils_advocate",
+        "vstack.bias_stack",
     ),
     "error_concealment": (
-        "agentcity.aar",
-        "agentcity.grpi",
+        "vstack.aar",
+        "vstack.grpi",
     ),
     "help_seeking_blocked": (
-        "agentcity.grpi",
-        "agentcity.aar",
+        "vstack.grpi",
+        "vstack.aar",
     ),
     "siloed_no_boundary_spanning": (
-        "agentcity.superflocks",
-        "agentcity.grpi",
+        "vstack.superflocks",
+        "vstack.grpi",
     ),
     "all_four_suppressed": (
-        "agentcity.lencioni",
-        "agentcity.grpi",
-        "agentcity.aar",
+        "vstack.lencioni",
+        "vstack.grpi",
+        "vstack.aar",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

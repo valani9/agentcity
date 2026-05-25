@@ -16,7 +16,7 @@ from .schema import ConversationSteeringDetection, ConversationTrace
 
 
 def _make_stub_client(stub_path: str | None) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     responses: list[str] = []
     if stub_path:
@@ -33,17 +33,17 @@ def _make_client(name: str, model: str | None, stub_path: str | None) -> object:
     if name == "stub":
         return _make_stub_client(stub_path)
     if name == "anthropic":
-        from agentcity.aar import AnthropicClient
+        from vstack.aar import AnthropicClient
 
         return AnthropicClient(
             model=model or os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
         )
     if name == "openai":
-        from agentcity.aar import OpenAIClient
+        from vstack.aar import OpenAIClient
 
         return OpenAIClient(model=model or os.environ.get("OPENAI_MODEL", "gpt-5"))
     if name == "ollama":
-        from agentcity.aar import OllamaClient
+        from vstack.aar import OllamaClient
 
         return OllamaClient(model=model or os.environ.get("OLLAMA_MODEL", "llama3.1:8b"))
     raise SystemExit(f"unknown client: {name!r}. Choose stub|anthropic|openai|ollama.")
@@ -188,7 +188,7 @@ def _cmd_compose(args: argparse.Namespace) -> int:
 
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="agentcity-glaser",
+        prog="vstack-glaser",
         description="Glaser Cortisol/Oxytocin Conversation Steering diagnostic.",
     )
     sub = p.add_subparsers(dest="cmd", required=True)

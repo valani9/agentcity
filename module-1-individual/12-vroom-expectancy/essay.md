@@ -1,6 +1,6 @@
 # Your agent quit after 5 files of 200. Vroom's E × I × V multiplied through to zero.
 
-*A thirty-third essay from AgentCity — organizational behavior, practiced on AI agents. The thirty-fourth and final pattern. The 34-pattern roadmap is complete.*
+*A thirty-third essay from vstack — organizational behavior, practiced on AI agents. The thirty-fourth and final pattern. The 34-pattern roadmap is complete.*
 
 ---
 
@@ -44,7 +44,7 @@ After all three: 0.7 × 0.8 × 0.7 = **0.39.** The product has gone from 0.009 t
 
 The Vroom framework's diagnostic value is that it tells you *which* of the three terms is the bottleneck. Without that decomposition, you'd be guessing — add more scaffolding when the real problem is Instrumentality, add purpose framing when the real problem is Expectancy. Generic *"improve the prompt"* fails because it doesn't tell you which lever to pull.
 
-## What `agentcity.vroom_expectancy` does
+## What `vstack.vroom_expectancy` does
 
 The library takes an `AgentExpectancyTrace` containing:
 
@@ -71,7 +71,7 @@ The second-highest-leverage use is **catching quota-driven valence collapse.** M
 
 The third use is **identifying tasks that genuinely can't be motivated.** If E, I, V are all locked at their floor for structural reasons, Vroom returns motivation_quality=`collapsed` and the diagnostic surfaces it. Sometimes the right response isn't to improve the prompt; it's to recognize that the task as scoped is structurally unmotivatable for an LLM and needs to be redesigned at the task level, not the prompt level.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #12 — the thirty-fourth pattern shipped, **completing the 34-pattern roadmap.** It composes with the rest of the Module 1 motivation stack:
 
@@ -88,7 +88,7 @@ Run all three on a recurring failure pattern: SDT might say *"autonomy is underm
 
 ## The 34-pattern roadmap is complete
 
-AgentCity v0.0.14 ships with all 34 patterns at the 5-layer quality bar (docs + lib + demo + benchmark + essay). The library now covers:
+vstack v0.0.14 ships with all 34 patterns at the 5-layer quality bar (docs + lib + demo + benchmark + essay). The library now covers:
 
 - **Module 1 — Individual** (12 patterns): Lewin, Goleman EI, Johari, DANVA, Cognitive Reappraisal, Yerkes-Dodson, HEXACO, Grant Strengths-as-Weaknesses, Saxberg Motivation Traps, SDT, McGregor, Vroom.
 - **Module 2 — Team** (18 patterns): GRPI, Process Gain/Loss, Social Loafing, Heffernan Superflocks, Lencioni, Frei/Morriss Trust Triangle, McAllister Trust Dimensions, Edmondson Psych Safety, Glaser Conversation Steering, Stone-Heen Feedback Triggers, Plus/Delta, SMART Goals, Group Decision Models, Groupthink/Polarization/Contagion, Bias Stack, Devil's Advocate, Thomas-Kilmann, AAR Generator.
@@ -97,7 +97,7 @@ AgentCity v0.0.14 ships with all 34 patterns at the 5-layer quality bar (docs + 
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -109,4 +109,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public. With this essay, the 34-pattern AgentCity library is complete.*
+*Ilhan Valani is a builder shipping vstack in public. With this essay, the 34-pattern vstack library is complete.*

@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agent attempts task without needed capability.",
             "Add `tool_addition` step.",
-            "Compose with `agentcity.grpi` for ongoing role definition.",
+            "Compose with `vstack.grpi` for ongoing role definition.",
         ],
         "1d",
         "Wharton@Work AAR; US Army TC 25-20",
@@ -53,7 +53,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Missing completion criteria -- compose with SMART",
         [
             "Detect signature: agent unsure when done.",
-            "Add `compose_pattern` linking to `agentcity.smart_goal`.",
+            "Add `compose_pattern` linking to `vstack.smart_goal`.",
         ],
         "1d",
         "Doran 1981; Wharton@Work",
@@ -64,7 +64,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Unclear goal -- compose with SMART",
         [
             "Detect signature: agent solved a different problem.",
-            "Add `compose_pattern` to `agentcity.smart_goal` upstream.",
+            "Add `compose_pattern` to `vstack.smart_goal` upstream.",
         ],
         "1d",
         "Doran 1981",
@@ -76,7 +76,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agent retries same approach 5+ times.",
             "Add `new_eval` catching loop pattern.",
-            "Compose with `agentcity.bias_stack` (escalation-of-commitment).",
+            "Compose with `vstack.bias_stack` (escalation-of-commitment).",
         ],
         "1w",
         "Staw 1976",
@@ -98,7 +98,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "No budget -- compose with SMART kill criteria",
         [
             "Detect signature: cost exceeded reasonable bound.",
-            "Add `compose_pattern` linking to `agentcity.smart_goal`.",
+            "Add `compose_pattern` linking to `vstack.smart_goal`.",
         ],
         "1d",
         "Doran 1981",
@@ -120,7 +120,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "No time budget -- compose with SMART",
         [
             "Detect signature: latency exceeded reasonable bound.",
-            "Add `compose_pattern` to `agentcity.smart_goal` for time-bound.",
+            "Add `compose_pattern` to `vstack.smart_goal` for time-bound.",
         ],
         "1d",
         "Doran 1981",

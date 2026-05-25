@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: one agent receives >80% of decisions.",
             "Run `introduce_routing_jitter` + `load_balancing_floor`.",
-            "Compose with `agentcity.bias_stack`.",
+            "Compose with `vstack.bias_stack`.",
         ],
         "1d",
         "Heffernan 2014; Page 2007",
@@ -55,7 +55,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agents have complementary capabilities that go unused.",
             "Run `add_capability_complement_check` before routing.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1d",
         "Page 2007; Heffernan 2014",
@@ -133,7 +133,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Severe superflocks -- escalate to human",
         [
             "Run `human_review` to redesign the routing strategy.",
-            "Compose with `agentcity.lewin` for environment-locus attribution.",
+            "Compose with `vstack.lewin` for environment-locus attribution.",
         ],
         "1w",
         "Heffernan 2014",

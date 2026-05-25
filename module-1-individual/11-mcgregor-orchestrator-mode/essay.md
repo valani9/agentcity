@@ -1,6 +1,6 @@
 # Your orchestrator approves every step. McGregor diagnosed this in 1960.
 
-*A seventeenth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A seventeenth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -27,7 +27,7 @@ The empirical finding from the situational-leadership research is brutal in its 
 
 Most production multi-agent systems default to one mode or the other. The one that defaults to Theory-X pays the overhead. The one that defaults to Theory-Y pays the incidents. The one that picks per-task is the rarest — and the most expensive to build, because it requires explicit risk classification on each agent action.
 
-## What `agentcity.mcgregor` does
+## What `vstack.mcgregor` does
 
 The library takes an `OrchestratorTrace` containing:
 
@@ -46,7 +46,7 @@ and produces an `OrchestratorModeDetection` with:
 6. **Rationale** — why this mismatch matters for this specific task
 7. **A ranked list of interventions**: tighten / loosen oversight, add / remove pre-approval gates, add a risk classifier, change check-in cadence, redefine agent boundaries
 
-Two LLM passes under the hood. The intervention pass is skipped when the mode is well-matched (nothing to fix). Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when the mode is well-matched (nothing to fix). Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -56,9 +56,9 @@ The McGregor diagnostic is most valuable when it produces the OVERTURNS-style ve
 
 It's also where the *risk classifier* recommendation does its highest-impact work: rather than picking one mode at config time and living with it, the orchestrator gets a per-action classifier that decides mode on the fly. This is what Anthropic's own internal tooling does for high-stakes operations (deletions, large refunds, schema migrations), and it's what the diagnostic recommends for most teams whose current mode is wrong for their task mix.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #11 of 34 — the seventeenth pattern shipped. AgentCity now opens the **orchestration-design** axis with this pattern, which sits alongside:
+This is pattern #11 of 34 — the seventeenth pattern shipped. vstack now opens the **orchestration-design** axis with this pattern, which sits alongside:
 
 - **#28 Devil's Advocate Role Separator** — does a critic role exist *within* the agent's reasoning?
 - **#11 McGregor Orchestrator Mode** (this pattern) — does the orchestrator's *oversight cadence* match the task's risk profile?
@@ -70,7 +70,7 @@ The four cover the orchestration-design surface: critic structure (28), oversigh
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -82,4 +82,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.superflocks import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.superflocks import (
     PLAYBOOKS,
     SEVERITY_ORDER,
     SUPERFLOCKS_COMPOSITION,
@@ -65,7 +65,7 @@ def _trace(top_share: float = 0.9, framework: str | None = None) -> RoutingTrace
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -256,11 +256,11 @@ class TestComposition:
             profile_pattern="top_agent_monopoly",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.bias_stack" in recs
+        assert "vstack.bias_stack" in recs
 
     def test_upstream_includes_grpi(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.grpi" in up
+        assert "vstack.grpi" in up
 
 
 class TestPlaybooks:

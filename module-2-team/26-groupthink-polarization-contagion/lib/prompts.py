@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 DEBATE_SYSTEM_PROMPT = """You are a debate-pathology diagnostician for multi-agent systems,
@@ -101,8 +101,8 @@ Return only a JSON object representing the ToneCascadeAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 interventions with
 composition targets.
 
-Composition targets: agentcity.devils_advocate, agentcity.bias_stack,
-agentcity.psych_safety, agentcity.aar, agentcity.group_decision
+Composition targets: vstack.devils_advocate, vstack.bias_stack,
+vstack.psych_safety, vstack.aar, vstack.group_decision
 
 Dominant pathology: {dominant}
 Quality: {quality}

@@ -48,11 +48,11 @@ Identifies WHICH term is the bottleneck (the term closest to zero, since the pro
 ## Quick start
 
 ```python
-from agentcity.vroom_expectancy import (
+from vstack.vroom_expectancy import (
     VroomExpectancyAnalyzer,
     AgentExpectancyTrace,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentExpectancyTrace(
     agent_id="research-agent",
@@ -72,44 +72,44 @@ detection = VroomExpectancyAnalyzer(
 print(detection.to_markdown())
 # bottleneck_term: expectancy
 # profile_pattern: expectancy_bottleneck
-# Composition handoff: agentcity.smart_goal, agentcity.motivation_traps
+# Composition handoff: vstack.smart_goal, vstack.motivation_traps
 ```
 
 ## CLI
 
 ```bash
-agentcity-vroom analyze --trace trace.json --mode forensic
-agentcity-vroom batch --corpus corpus.yaml --out detections/
-agentcity-vroom replay --detection detection.json
-agentcity-vroom validate --trace trace.json
-agentcity-vroom schema --target trace
-agentcity-vroom playbooks
-agentcity-vroom compose
+vstack-vroom analyze --trace trace.json --mode forensic
+vstack-vroom batch --corpus corpus.yaml --out detections/
+vstack-vroom replay --detection detection.json
+vstack-vroom validate --trace trace.json
+vstack-vroom schema --target trace
+vstack-vroom playbooks
+vstack-vroom compose
 ```
 
 ## Composition
 
 **Upstream patterns:**
-- `agentcity.lewin` -- attribute the bottleneck to person/environment locus.
-- `agentcity.aar` -- after-action review the trace comes from.
-- `agentcity.sdt_reward` -- complementary motivational lens (autonomy/competence/relatedness).
-- `agentcity.motivation_traps` -- broader 4-trap diagnostic.
-- `agentcity.hexaco` -- personality interacts with all three EIV terms.
+- `vstack.lewin` -- attribute the bottleneck to person/environment locus.
+- `vstack.aar` -- after-action review the trace comes from.
+- `vstack.sdt_reward` -- complementary motivational lens (autonomy/competence/relatedness).
+- `vstack.motivation_traps` -- broader 4-trap diagnostic.
+- `vstack.hexaco` -- personality interacts with all three EIV terms.
 
 **Downstream patterns** (chosen by profile pattern):
-- `expectancy_bottleneck` -> `agentcity.smart_goal` + `agentcity.motivation_traps`
-- `instrumentality_bottleneck` -> `agentcity.sdt_reward` + `agentcity.smart_goal`
-- `valence_bottleneck` -> `agentcity.hexaco` + `agentcity.schein_culture`
-- `valence_negative_active_avoidance` -> `agentcity.hexaco` + `agentcity.cognitive_reappraisal` + `agentcity.bias_stack`
-- `multi_term_collapse` -> `agentcity.hexaco` + `agentcity.cognitive_reappraisal` + `agentcity.lewin`
-- `high_E_low_I_pointless_work` -> `agentcity.sdt_reward` + `agentcity.smart_goal`
+- `expectancy_bottleneck` -> `vstack.smart_goal` + `vstack.motivation_traps`
+- `instrumentality_bottleneck` -> `vstack.sdt_reward` + `vstack.smart_goal`
+- `valence_bottleneck` -> `vstack.hexaco` + `vstack.schein_culture`
+- `valence_negative_active_avoidance` -> `vstack.hexaco` + `vstack.cognitive_reappraisal` + `vstack.bias_stack`
+- `multi_term_collapse` -> `vstack.hexaco` + `vstack.cognitive_reappraisal` + `vstack.lewin`
+- `high_E_low_I_pointless_work` -> `vstack.sdt_reward` + `vstack.smart_goal`
 
 ## Failure-mode playbooks
 
-12 curated `(term, failure_mode)` playbooks. Inspect with `agentcity-vroom playbooks` or:
+12 curated `(term, failure_mode)` playbooks. Inspect with `vstack-vroom playbooks` or:
 
 ```python
-from agentcity.vroom_expectancy import find_playbook_for_intervention
+from vstack.vroom_expectancy import find_playbook_for_intervention
 
 pb = find_playbook_for_intervention("expectancy", "scaffold_subtasks")
 print(pb.title)
@@ -134,7 +134,7 @@ Plus Bai 2022 Constitutional AI and Bandura 1997 Self-Efficacy cross-references.
 
 ## Production infrastructure
 
-Wired into the shared `agentcity.aar` infra:
+Wired into the shared `vstack.aar` infra:
 
 - **Structured logging** with `run_id` correlation.
 - **Token + cost telemetry**.
@@ -146,7 +146,7 @@ Wired into the shared `agentcity.aar` infra:
 ## Backward compatibility
 
 ```python
-from agentcity.vroom_expectancy import VroomExpectancyCalculator  # alias of VroomExpectancyAnalyzer
+from vstack.vroom_expectancy import VroomExpectancyCalculator  # alias of VroomExpectancyAnalyzer
 ```
 
 The v0.0.x `VroomExpectancyCalculator(...)` call still works -- defaults to `mode="standard"`. The legacy `_compute_motivation` and `_motivation_quality(score, raw)` helpers are preserved.

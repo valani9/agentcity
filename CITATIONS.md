@@ -1,8 +1,8 @@
-# AgentCity Citations
+# vstack Citations
 
-Every pattern in AgentCity is anchored in a named OB framework with traceable academic provenance. This file is the citation index.
+Every pattern in vstack is anchored in a named OB framework with traceable academic provenance. This file is the citation index.
 
-If you adapt an AgentCity pattern in your own research, please cite both the underlying OB work AND AgentCity (see [README.md](README.md)).
+If you adapt an vstack pattern in your own research, please cite both the underlying OB work AND vstack (see [README.md](README.md)).
 
 ---
 
@@ -64,7 +64,7 @@ The repository's three-module architecture mirrors a standard organizational-beh
 
 ## Adjacent literature in AI agents
 
-Cited in AgentCity essays where relevant; not the primary anchor:
+Cited in vstack essays where relevant; not the primary anchor:
 
 - **arXiv:2506.06366** (2025). "AI Agent Behavioral Science." (Systematization of behavioral approaches to AI agents.)
 - **arXiv:2602.23279** (2026). "Safety First: Psychological Safety as the Key to AI Transformation." (Applies Edmondson to *human* adoption of AI, not agent-to-agent.)

@@ -50,7 +50,7 @@ intervention catalog (`add_purpose_framing`, `show_mastery_path`,
 > Development, and Wellness.* Guilford.
 
 The 2017 comprehensive statement. Adds workplace + cross-cultural
-evidence. Important for AgentCity: extends SDT to contexts (like AI
+evidence. Important for vstack: extends SDT to contexts (like AI
 agents) where the "self" is a software agent and the "environment"
 is the system prompt + reward function.
 

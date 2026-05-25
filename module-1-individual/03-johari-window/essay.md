@@ -1,6 +1,6 @@
 # Your agent doesn't know what it just did.
 
-*A fourth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A fourth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -49,7 +49,7 @@ Capabilities or behaviors that neither the agent nor the observer have noticed y
 
 UNKNOWN is the hardest quadrant to engineer against, because by definition it's the quadrant nobody is looking at. The Johari fix is capability probes — deliberate exploration at the edges of the agent's known behavior. AI safety research already does this under the names "red-teaming" and "adversarial evaluation"; the Johari Window names it as part of a broader self-awareness diagnostic.
 
-## What `agentcity.johari` does
+## What `vstack.johari` does
 
 The library takes an `AgentSelfReportTrace` — task, turns, self-report, outcome, success signal — and produces a `JohariSelfAudit` with:
 
@@ -79,4 +79,4 @@ Thirty patterns left. Each anchored. Each shipped at the 5-layer bar.
 
 ---
 
-*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/agentcity](https://github.com/valani9/agentcity). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*
+*Ilhan Valani is a builder shipping vstack in public. The repo lives at [github.com/valani9/vstack](https://github.com/valani9/vstack). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*

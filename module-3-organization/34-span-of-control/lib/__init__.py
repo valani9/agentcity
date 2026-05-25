@@ -1,4 +1,4 @@
-"""agentcity.span_of_control -- Deterministic Span-of-Control /
+"""vstack.span_of_control -- Deterministic Span-of-Control /
 Centralization calculator for AI agent crews. Module 3 (organizational)
 pattern.
 
@@ -18,7 +18,7 @@ v0.2.0 features:
   - Cross-pattern composition manifest
   - 12 (metric, failure_mode) playbooks anchored to Galbraith /
     Mintzberg
-  - Production infra via agentcity.aar shared module
+  - Production infra via vstack.aar shared module
 
 Pairs with Pattern #33: where #33 is the LLM-driven qualitative
 structural-fit diagnostic across six dimensions, #34 is the
@@ -28,12 +28,12 @@ load.
 
 Quick start:
 
-    from agentcity.span_of_control import (
+    from vstack.span_of_control import (
         SpanLoadCalculator,
         CrewLoadTrace,
         AgentNode,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = CrewLoadTrace(
         crew_id="customer-support",

@@ -14,7 +14,7 @@ import logging
 import re
 from typing import Any
 
-log = logging.getLogger("agentcity.aar.json")
+log = logging.getLogger("vstack.aar.json")
 
 
 _FENCE_RE = re.compile(

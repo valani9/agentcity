@@ -35,7 +35,7 @@ The Bias-Stack Detector measures all four biases against a single agent trace. T
 
 ## What this pattern does
 
-The `agentcity.bias_stack` library takes a structured agent trace and produces:
+The `vstack.bias_stack` library takes a structured agent trace and produces:
 
 1. **A per-bias score** in [0.0, 1.0] for anchoring, overconfidence, confirmation, and escalation of commitment.
 2. **A dominant-bias diagnosis** — the bias with the highest score (with anchoring breaking ties because it's the foundational bias from which the others compound).
@@ -43,7 +43,7 @@ The `agentcity.bias_stack` library takes a structured agent trace and produces:
 4. **An overall reasoning-quality label** — `well-calibrated`, `bias-prone`, or `severely-biased`.
 5. **Concrete interventions** ranked by impact on the dominant bias: prompt patches, scaffold changes (e.g., add a "reset to first principles" step), new evals, retry caps, uncertainty calibration.
 
-The library reuses the same LLMClient protocol and retry/JSON infrastructure as the other AgentCity patterns.
+The library reuses the same LLMClient protocol and retry/JSON infrastructure as the other vstack patterns.
 
 ## How this differs from existing tools
 
@@ -55,12 +55,12 @@ The library reuses the same LLMClient protocol and retry/JSON infrastructure as 
 ## Design
 
 ```python
-from agentcity.bias_stack import (
+from vstack.bias_stack import (
     BiasStackDetector,
     AgentReasoningTrace,
     ReasoningStep,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = AgentReasoningTrace(
     agent_id="diagnostic-agent-001",

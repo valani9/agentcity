@@ -1,4 +1,4 @@
-"""agentcity.grpi -- Beckhard's GRPI (Goals/Roles/Processes/Interactions)
+"""vstack.grpi -- Beckhard's GRPI (Goals/Roles/Processes/Interactions)
 applied to multi-agent setup.
 
 Generates a Working Agreement document from a team setup request.
@@ -21,12 +21,12 @@ as alias of ``GRPIWorkingAgreementAnalyzer``.
 Quick start
 -----------
 
-    from agentcity.grpi import (
+    from vstack.grpi import (
         GRPIWorkingAgreementAnalyzer,
         TeamSetupRequest,
         AgentRole,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     request = TeamSetupRequest(
         task="Design and launch a Q3 marketing campaign within 14 days.",
@@ -45,10 +45,10 @@ Quick start
 CLI
 ---
 
-    agentcity-grpi generate --request request.json --mode forensic
-    agentcity-grpi playbooks
-    agentcity-grpi compose
-    agentcity-grpi schema --target request
+    vstack-grpi generate --request request.json --mode forensic
+    vstack-grpi playbooks
+    vstack-grpi compose
+    vstack-grpi schema --target request
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

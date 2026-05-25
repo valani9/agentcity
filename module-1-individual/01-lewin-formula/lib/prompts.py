@@ -7,8 +7,8 @@ same OB tradition the schema models.
 
 Templates expose ``{placeholder}`` slots that the generator fills via
 :func:`assemble_prompt`, which sanitizes free-text fields with
-``agentcity.aar.sanitize_for_prompt`` and fences them inside structural
-delimiters using ``agentcity.aar.fence`` to limit the leverage of
+``vstack.aar.sanitize_for_prompt`` and fences them inside structural
+delimiters using ``vstack.aar.fence`` to limit the leverage of
 prompt-injection-shaped content.
 
 Why six templates instead of two
@@ -32,7 +32,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 # ---------------------------------------------------------------------------
@@ -171,9 +171,9 @@ Each intervention must have:
   - reversibility ("two-way-door" if easily reverted, "one-way-door" if hard to undo)
   - rationale (why this works — connect to the target locus and the cited evidence)
 
-If an intervention's natural next step is to run another AgentCity pattern, set:
+If an intervention's natural next step is to run another vstack pattern, set:
   - intervention_type = "compose_pattern"
-  - composition_target_pattern = the import path (e.g. "agentcity.aar", "agentcity.grpi")
+  - composition_target_pattern = the import path (e.g. "vstack.aar", "vstack.grpi")
 
 Dominant locus: {dominant}
 All locus evidence:
@@ -297,7 +297,7 @@ Intervention types available:
   "change_model", "change_prompt", "change_tools", "change_context", "change_rag_index", "change_orchestration", "change_pipeline", "new_eval", "human_review", "change_sampling", "change_memory", "add_verification_step", "change_topology", "change_safety_filter", "compose_pattern"
 
 Composition targets available (when intervention_type == "compose_pattern"):
-  "agentcity.aar", "agentcity.bias_stack", "agentcity.hexaco", "agentcity.goleman_ei", "agentcity.smart_goal", "agentcity.grpi", "agentcity.lencioni", "agentcity.schein_culture", "agentcity.psych_safety", "agentcity.trust_triangle", "agentcity.vroom_expectancy", "agentcity.devils_advocate", "agentcity.plus_delta"
+  "vstack.aar", "vstack.bias_stack", "vstack.hexaco", "vstack.goleman_ei", "vstack.smart_goal", "vstack.grpi", "vstack.lencioni", "vstack.schein_culture", "vstack.psych_safety", "vstack.trust_triangle", "vstack.vroom_expectancy", "vstack.devils_advocate", "vstack.plus_delta"
 
 Dominant locus: {dominant}
 All locus evidence (with counterfactuals):

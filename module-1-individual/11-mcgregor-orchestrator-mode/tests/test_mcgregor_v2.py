@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.mcgregor import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.mcgregor import (
     MCGREGOR_COMPOSITION,
     MCGREGOR_MODES,
     MCGREGOR_PROFILE_PATTERNS,
@@ -71,7 +71,7 @@ def _trace(
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -343,11 +343,11 @@ class TestComposition:
             profile_pattern="theory_x_on_proven_agent",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.sdt_reward" in recs
+        assert "vstack.sdt_reward" in recs
 
     def test_upstream_includes_lewin(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.lewin" in up
+        assert "vstack.lewin" in up
 
 
 # ---------------------------------------------------------------------------

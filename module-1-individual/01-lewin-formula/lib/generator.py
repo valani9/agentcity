@@ -34,7 +34,7 @@ from collections.abc import Callable, Coroutine, Iterable, Iterator
 from pathlib import Path
 from typing import Any, Literal, Protocol, cast
 
-from agentcity.aar import (
+from vstack.aar import (
     LLMUsage,
     detect_injection,
     extract_json_array,
@@ -74,7 +74,7 @@ from .schema import (
     severity_from_score,
 )
 
-log = get_logger("agentcity.lewin.generator")
+log = get_logger("vstack.lewin.generator")
 
 
 # Provider-agnostic per-1k-token rough cost table for telemetry's cost
@@ -108,7 +108,7 @@ class LewinAttributionDetector:
     Construction is cheap; the LLM client is held but not exercised
     until :meth:`run` is called. Detectors are thread-safe for read-only
     access to the underlying client; the in-process telemetry sink
-    (``agentcity.aar.set_default_sink``) is itself thread-safe.
+    (``vstack.aar.set_default_sink``) is itself thread-safe.
     """
 
     def __init__(
@@ -1050,5 +1050,5 @@ def _severity_rank(s: str) -> int:
 # ---------------------------------------------------------------------------
 
 
-_legacy_log = logging.getLogger("agentcity.lewin.generator")
+_legacy_log = logging.getLogger("vstack.lewin.generator")
 _legacy_log.addHandler(logging.NullHandler())

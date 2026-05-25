@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.grant_strengths import (
+from vstack.grant_strengths import (
     STRENGTHS,
     AgentBehaviorStep,
     AgentBehaviorTrace,

@@ -12,7 +12,7 @@ Run with the stub client (no API key required):
 
 Run with a real LLM:
 
-    AGENTCITY_LLM=anthropic python demo/01_self_contained_demo.py
+    vstack_LLM=anthropic python demo/01_self_contained_demo.py
 """
 
 from __future__ import annotations
@@ -21,19 +21,19 @@ import json
 import os
 
 try:
-    from agentcity.aar.clients import (
+    from vstack.aar.clients import (
         AnthropicClient,
         OllamaClient,
         OpenAIClient,
         StubClient,
     )
-    from agentcity.cognitive_reappraisal import (
+    from vstack.cognitive_reappraisal import (
         AgentRegulationTrace,
         ReappraisalDetector,
     )
 except ImportError as exc:
     raise SystemExit(
-        "agentcity not installed. Run: pip install -e . from the repo root.\n"
+        "vstack not installed. Run: pip install -e . from the repo root.\n"
         f"(Original import error: {exc})"
     ) from exc
 
@@ -208,7 +208,7 @@ def stub_responses() -> list[str]:
 
 
 def pick_client() -> object:
-    choice = os.environ.get("AGENTCITY_LLM", "stub").lower()
+    choice = os.environ.get("vstack_LLM", "stub").lower()
     if choice == "anthropic":
         return AnthropicClient(model=os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"))
     if choice == "openai":

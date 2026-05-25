@@ -1,4 +1,4 @@
-"""agentcity.yerkes_dodson -- the inverted-U workload-performance curve
+"""vstack.yerkes_dodson -- the inverted-U workload-performance curve
 applied to AI agents.
 
 Anchored in:
@@ -20,12 +20,12 @@ for ``YerkesDodsonAnalyzer``.
 Quick start
 -----------
 
-    from agentcity.yerkes_dodson import (
+    from vstack.yerkes_dodson import (
         YerkesDodsonAnalyzer,
         AgentPerformanceTrace,
         PressureInputs,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentPerformanceTrace(
         agent_id="research-agent-001",
@@ -48,10 +48,10 @@ Quick start
 CLI
 ---
 
-    agentcity-yerkes analyze --trace trace.json --mode forensic
-    agentcity-yerkes playbooks
-    agentcity-yerkes compose
-    agentcity-yerkes schema --target trace
+    vstack-yerkes analyze --trace trace.json --mode forensic
+    vstack-yerkes playbooks
+    vstack-yerkes compose
+    vstack-yerkes schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

@@ -9,46 +9,46 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.grpi",
-    "agentcity.smart_goal",
-    "agentcity.lencioni",
+    "vstack.lewin",
+    "vstack.grpi",
+    "vstack.smart_goal",
+    "vstack.lencioni",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
     "success_aligned": (),
     "partial_success": (
-        "agentcity.smart_goal",
-        "agentcity.plus_delta",
+        "vstack.smart_goal",
+        "vstack.plus_delta",
     ),
     "total_failure": (
-        "agentcity.grpi",
-        "agentcity.lewin",
+        "vstack.grpi",
+        "vstack.lewin",
     ),
     "scope_mismatch": (
-        "agentcity.smart_goal",
-        "agentcity.grpi",
+        "vstack.smart_goal",
+        "vstack.grpi",
     ),
     "retry_thrashing": (
-        "agentcity.bias_stack",
-        "agentcity.devils_advocate",
+        "vstack.bias_stack",
+        "vstack.devils_advocate",
     ),
     "cost_overrun": (
-        "agentcity.smart_goal",
-        "agentcity.yerkes_dodson",
+        "vstack.smart_goal",
+        "vstack.yerkes_dodson",
     ),
     "deadline_missed": (
-        "agentcity.smart_goal",
-        "agentcity.grpi",
+        "vstack.smart_goal",
+        "vstack.grpi",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
     "langgraph": (),
-    "crewai": ("agentcity.lencioni",),
+    "crewai": ("vstack.lencioni",),
     "autogen": (),
-    "claude-agent-sdk": ("agentcity.grpi",),
+    "claude-agent-sdk": ("vstack.grpi",),
 }
 
 

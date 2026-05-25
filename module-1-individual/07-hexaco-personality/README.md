@@ -41,11 +41,11 @@ The Big Five model conflates honesty / sincerity / modesty into Agreeableness. H
 ## Quick start
 
 ```python
-from agentcity.hexaco import (
+from vstack.hexaco import (
     HEXACOPersonalityAnalyzer,
     AgentPersonalityTrace,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentPersonalityTrace(
     agent_id="research-agent-001",
@@ -69,58 +69,58 @@ detection = HEXACOPersonalityAnalyzer(
 print(detection.to_markdown())
 # h_factor_risk: high
 # profile_pattern: h_factor_with_high_a
-# Composition handoff: agentcity.devils_advocate, agentcity.bias_stack
+# Composition handoff: vstack.devils_advocate, vstack.bias_stack
 ```
 
 ## CLI
 
 ```bash
 # Single trace
-agentcity-hexaco analyze --trace trace.json --mode forensic
+vstack-hexaco analyze --trace trace.json --mode forensic
 
 # Batch over a YAML corpus
-agentcity-hexaco batch --corpus corpus.yaml --out detections/ --mode standard
+vstack-hexaco batch --corpus corpus.yaml --out detections/ --mode standard
 
 # Re-render an existing detection JSON
-agentcity-hexaco replay --detection detection.json
+vstack-hexaco replay --detection detection.json
 
 # Validate a trace schema
-agentcity-hexaco validate --trace trace.json
+vstack-hexaco validate --trace trace.json
 
 # Dump JSON schemas
-agentcity-hexaco schema --target trace
-agentcity-hexaco schema --target detection
+vstack-hexaco schema --target trace
+vstack-hexaco schema --target detection
 
 # Inspect the 12 playbooks
-agentcity-hexaco playbooks
+vstack-hexaco playbooks
 
 # Inspect the composition graph
-agentcity-hexaco compose
+vstack-hexaco compose
 ```
 
 ## Composition
 
 **Upstream patterns:**
-- `agentcity.lewin` -- attribute personality expression to person vs environment.
-- `agentcity.aar` -- run after the after-action review that produced the trace.
-- `agentcity.cognitive_reappraisal` -- detect emotion-regulation pressure.
-- `agentcity.goleman_ei` -- audit emotional-intelligence components.
-- `agentcity.johari` -- detect self-other awareness gaps.
+- `vstack.lewin` -- attribute personality expression to person vs environment.
+- `vstack.aar` -- run after the after-action review that produced the trace.
+- `vstack.cognitive_reappraisal` -- detect emotion-regulation pressure.
+- `vstack.goleman_ei` -- audit emotional-intelligence components.
+- `vstack.johari` -- detect self-other awareness gaps.
 
 **Downstream patterns** (chosen by `profile_pattern`):
-- `low_h_low_c_low_a_dark_triad` -> `agentcity.devils_advocate` + `agentcity.bias_stack` + `agentcity.lewin` + `agentcity.schein_culture`
-- `h_factor_with_high_a` -> `agentcity.cognitive_reappraisal` + `agentcity.devils_advocate`
-- `h_factor_dominant_risk` -> `agentcity.devils_advocate` + `agentcity.bias_stack` + `agentcity.lewin`
-- `low_c_code_review_misfit` -> `agentcity.smart_goal` + `agentcity.devils_advocate`
-- `low_o_creative_misfit` -> `agentcity.devils_advocate`
-- `low_a_customer_facing` -> `agentcity.goleman_ei` + `agentcity.cognitive_reappraisal`
+- `low_h_low_c_low_a_dark_triad` -> `vstack.devils_advocate` + `vstack.bias_stack` + `vstack.lewin` + `vstack.schein_culture`
+- `h_factor_with_high_a` -> `vstack.cognitive_reappraisal` + `vstack.devils_advocate`
+- `h_factor_dominant_risk` -> `vstack.devils_advocate` + `vstack.bias_stack` + `vstack.lewin`
+- `low_c_code_review_misfit` -> `vstack.smart_goal` + `vstack.devils_advocate`
+- `low_o_creative_misfit` -> `vstack.devils_advocate`
+- `low_a_customer_facing` -> `vstack.goleman_ei` + `vstack.cognitive_reappraisal`
 
 ## Failure-mode playbooks
 
-12 curated `(factor, failure_mode)` playbooks. Each carries a literature anchor. Inspect them with `agentcity-hexaco playbooks` or programmatically:
+12 curated `(factor, failure_mode)` playbooks. Each carries a literature anchor. Inspect them with `vstack-hexaco playbooks` or programmatically:
 
 ```python
-from agentcity.hexaco import find_playbook_for_intervention
+from vstack.hexaco import find_playbook_for_intervention
 
 pb = find_playbook_for_intervention(
     "honesty_humility", "add_h_factor_guardrail"
@@ -147,7 +147,7 @@ Plus the Paulhus-Williams Dark Triad cross-reference and Anthropic's HHH constit
 
 ## Production infrastructure
 
-Wired into the shared `agentcity.aar` infra:
+Wired into the shared `vstack.aar` infra:
 
 - **Structured logging** with `run_id` correlation across LLM calls.
 - **Token + cost telemetry** via `record_llm_call`.
@@ -161,7 +161,7 @@ Wired into the shared `agentcity.aar` infra:
 The v0.0.x interface is preserved:
 
 ```python
-from agentcity.hexaco import HEXACOPersonalityDetector  # alias of HEXACOPersonalityAnalyzer
+from vstack.hexaco import HEXACOPersonalityDetector  # alias of HEXACOPersonalityAnalyzer
 ```
 
 The v0.0.x `HEXACOPersonalityDetector(...)` call still works -- defaults to `mode="standard"` which keeps the 2-call cost profile.

@@ -9,35 +9,35 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.grpi",
-    "agentcity.mcgregor",
-    "agentcity.process_gain_loss",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.grpi",
+    "vstack.mcgregor",
+    "vstack.process_gain_loss",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "balanced_team": ("agentcity.aar",),
-    "single_dominant_contributor": ("agentcity.grpi", "agentcity.mcgregor"),
-    "two_contributors_n_loafers": ("agentcity.grpi",),
+    "balanced_team": ("vstack.aar",),
+    "single_dominant_contributor": ("vstack.grpi", "vstack.mcgregor"),
+    "two_contributors_n_loafers": ("vstack.grpi",),
     "all_loafers": (
-        "agentcity.grpi",
-        "agentcity.process_gain_loss",
-        "agentcity.lencioni",
+        "vstack.grpi",
+        "vstack.process_gain_loss",
+        "vstack.lencioni",
     ),
-    "ringelmann_dilution": ("agentcity.process_gain_loss", "agentcity.grpi"),
-    "rubber_stamp_pattern": ("agentcity.devils_advocate", "agentcity.bias_stack"),
-    "absent_agent": ("agentcity.grpi",),
-    "anonymous_evaluation_signal": ("agentcity.aar",),
+    "ringelmann_dilution": ("vstack.process_gain_loss", "vstack.grpi"),
+    "rubber_stamp_pattern": ("vstack.devils_advocate", "vstack.bias_stack"),
+    "absent_agent": ("vstack.grpi",),
+    "anonymous_evaluation_signal": ("vstack.aar",),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.grpi",),
-    "autogen": ("agentcity.grpi",),
-    "claude-agent-sdk": ("agentcity.mcgregor",),
-    "openai-agents-sdk": ("agentcity.mcgregor",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.grpi",),
+    "autogen": ("vstack.grpi",),
+    "claude-agent-sdk": ("vstack.mcgregor",),
+    "openai-agents-sdk": ("vstack.mcgregor",),
 }
 
 

@@ -9,46 +9,46 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.aar",
-    "agentcity.feedback_triggers",
-    "agentcity.grpi",
-    "agentcity.psych_safety",
+    "vstack.aar",
+    "vstack.feedback_triggers",
+    "vstack.grpi",
+    "vstack.psych_safety",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "balanced_specific": ("agentcity.aar",),
+    "balanced_specific": ("vstack.aar",),
     "plus_heavy_morale": (
-        "agentcity.aar",
-        "agentcity.feedback_triggers",
+        "vstack.aar",
+        "vstack.feedback_triggers",
     ),
     "delta_heavy_rework": (
-        "agentcity.smart_goal",
-        "agentcity.grpi",
+        "vstack.smart_goal",
+        "vstack.grpi",
     ),
     "generic_noise": (
-        "agentcity.aar",
-        "agentcity.glaser_conversation",
+        "vstack.aar",
+        "vstack.glaser_conversation",
     ),
     "no_evidence_cited": (
-        "agentcity.aar",
-        "agentcity.devils_advocate",
+        "vstack.aar",
+        "vstack.devils_advocate",
     ),
     "no_alternatives_named": (
-        "agentcity.smart_goal",
-        "agentcity.aar",
+        "vstack.smart_goal",
+        "vstack.aar",
     ),
     "critical_findings": (
-        "agentcity.aar",
-        "agentcity.lencioni",
-        "agentcity.smart_goal",
+        "vstack.aar",
+        "vstack.lencioni",
+        "vstack.smart_goal",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

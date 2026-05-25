@@ -9,80 +9,80 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.schein_culture",
-    "agentcity.hexaco",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.schein_culture",
+    "vstack.hexaco",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "well_matched_theory_x": ("agentcity.aar",),
-    "well_matched_theory_y": ("agentcity.aar",),
-    "well_matched_hybrid": ("agentcity.aar",),
+    "well_matched_theory_x": ("vstack.aar",),
+    "well_matched_theory_y": ("vstack.aar",),
+    "well_matched_hybrid": ("vstack.aar",),
     "theory_x_on_low_risk": (
-        "agentcity.sdt_reward",
-        "agentcity.smart_goal",
+        "vstack.sdt_reward",
+        "vstack.smart_goal",
     ),
     "theory_y_on_high_risk": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
-        "agentcity.hexaco",
+        "vstack.devils_advocate",
+        "vstack.bias_stack",
+        "vstack.hexaco",
     ),
     "theory_x_on_proven_agent": (
-        "agentcity.sdt_reward",
-        "agentcity.aar",
+        "vstack.sdt_reward",
+        "vstack.aar",
     ),
     "theory_y_on_unproven_agent": (
-        "agentcity.aar",
-        "agentcity.smart_goal",
+        "vstack.aar",
+        "vstack.smart_goal",
     ),
     "hybrid_misapplied": (
-        "agentcity.bias_stack",
-        "agentcity.smart_goal",
+        "vstack.bias_stack",
+        "vstack.smart_goal",
     ),
     "regulated_workflow_under_supervision": (
-        "agentcity.devils_advocate",
-        "agentcity.schein_culture",
+        "vstack.devils_advocate",
+        "vstack.schein_culture",
     ),
     "creative_task_over_supervised": (
-        "agentcity.sdt_reward",
-        "agentcity.grant_strengths",
+        "vstack.sdt_reward",
+        "vstack.grant_strengths",
     ),
     "irreversible_action_under_supervision": (
-        "agentcity.hexaco",
-        "agentcity.devils_advocate",
-        "agentcity.lewin",
+        "vstack.hexaco",
+        "vstack.devils_advocate",
+        "vstack.lewin",
     ),
     "indeterminate": (),
 }
 
 _DOWNSTREAM_BY_OBSERVED_MODE: dict[str, tuple[str, ...]] = {
-    "theory_x": ("agentcity.sdt_reward",),
-    "theory_y": ("agentcity.aar",),
-    "hybrid": ("agentcity.bias_stack",),
+    "theory_x": ("vstack.sdt_reward",),
+    "theory_y": ("vstack.aar",),
+    "hybrid": ("vstack.bias_stack",),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.grpi", "agentcity.social_loafing"),
-    "autogen": ("agentcity.grpi", "agentcity.social_loafing"),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
-    "mastra": ("agentcity.grpi",),
-    "strands": ("agentcity.grpi",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.grpi", "vstack.social_loafing"),
+    "autogen": ("vstack.grpi", "vstack.social_loafing"),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
+    "mastra": ("vstack.grpi",),
+    "strands": ("vstack.grpi",),
 }
 
 _INTERVENTION_OVERLAYS: dict[str, str] = {
-    "tighten_oversight": "agentcity.devils_advocate",
-    "add_pre_approval_gates": "agentcity.devils_advocate",
-    "elevate_to_human_on_irreversible": "agentcity.hexaco",
-    "add_authorization_scope": "agentcity.hexaco",
-    "rotate_to_hybrid": "agentcity.bias_stack",
-    "add_step_classifier": "agentcity.bias_stack",
-    "add_risk_classifier": "agentcity.bias_stack",
-    "loosen_oversight": "agentcity.sdt_reward",
-    "remove_pre_approval_gates": "agentcity.sdt_reward",
-    "human_review": "agentcity.plus_delta",
+    "tighten_oversight": "vstack.devils_advocate",
+    "add_pre_approval_gates": "vstack.devils_advocate",
+    "elevate_to_human_on_irreversible": "vstack.hexaco",
+    "add_authorization_scope": "vstack.hexaco",
+    "rotate_to_hybrid": "vstack.bias_stack",
+    "add_step_classifier": "vstack.bias_stack",
+    "add_risk_classifier": "vstack.bias_stack",
+    "loosen_oversight": "vstack.sdt_reward",
+    "remove_pre_approval_gates": "vstack.sdt_reward",
+    "human_review": "vstack.plus_delta",
 }
 
 

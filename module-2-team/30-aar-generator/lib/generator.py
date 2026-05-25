@@ -31,7 +31,7 @@ from .prompts import (
 )
 from .schema import AAR, AgentTrace, Lesson, NextStep
 
-log = logging.getLogger("agentcity.aar.generator")
+log = logging.getLogger("vstack.aar.generator")
 
 
 class LLMClient(Protocol):
@@ -45,7 +45,7 @@ class AARGenerator:
 
     The generator runs four passes — one per step of the AAR. Each pass is
     LLM-driven and produces a structured output. Lessons cross-link to
-    other AgentCity patterns (e.g., a "stuck-in-loop" lesson links to
+    other vstack patterns (e.g., a "stuck-in-loop" lesson links to
     pattern #27 Bias-Stack Detector / escalation-of-commitment).
     """
 
@@ -170,7 +170,7 @@ class AARGenerator:
 
         This is the heart of the AAR. The LLM is asked to identify named
         failure patterns in the gap between goal and results, anchor each
-        in OB literature where possible (via the AgentCity pattern
+        in OB literature where possible (via the vstack pattern
         library), and propose a root cause for each.
 
         Skips Lessons that cannot be validated as the schema's `Lesson`

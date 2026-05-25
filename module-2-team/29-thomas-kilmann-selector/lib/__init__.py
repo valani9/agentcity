@@ -1,4 +1,4 @@
-"""agentcity.thomas_kilmann -- Thomas-Kilmann's five conflict styles
+"""vstack.thomas_kilmann -- Thomas-Kilmann's five conflict styles
 applied to AI agent interactions.
 
 Anchored in Thomas & Kilmann 1974.

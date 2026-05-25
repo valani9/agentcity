@@ -1,4 +1,4 @@
-"""agentcity.robbins_culture -- Robbins & Judge 7-Characteristics culture
+"""vstack.robbins_culture -- Robbins & Judge 7-Characteristics culture
 profile applied to AI agents. Module 3 (organizational) pattern.
 
 The seven dimensions: innovation, attention_to_detail, outcome, people,
@@ -17,15 +17,15 @@ v0.2.0 features:
   - Cross-pattern composition manifest
   - 13 (characteristic, failure_mode) playbooks anchored to
     Robbins & Judge 2017
-  - Production infra via agentcity.aar shared module
+  - Production infra via vstack.aar shared module
 
 Quick start:
 
-    from agentcity.robbins_culture import (
+    from vstack.robbins_culture import (
         CultureProfileAnalyzer,
         AgentCultureTrace,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentCultureTrace(
         agent_id="research-agent-001",

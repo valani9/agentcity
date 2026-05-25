@@ -1,5 +1,5 @@
 [project]
-name = "agentcity"
+name = "vstack"
 version = "0.1.0"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
@@ -83,7 +83,7 @@ dependencies = [
 anthropic = ["anthropic>=0.40.0"]
 openai = ["openai>=1.50.0"]
 ollama = ["httpx>=0.27.0"]
-all = ["agentcity[anthropic,openai,ollama]"]
+all = ["vstack[anthropic,openai,ollama]"]
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=5.0.0",
@@ -96,98 +96,98 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/valani9/AgentCity"
-Repository = "https://github.com/valani9/AgentCity"
-Issues = "https://github.com/valani9/AgentCity/issues"
-Changelog = "https://github.com/valani9/AgentCity/blob/main/CHANGELOG.md"
-"Bug Tracker" = "https://github.com/valani9/AgentCity/issues"
-"Security" = "https://github.com/valani9/AgentCity/security/policy"
+Homepage = "https://github.com/valani9/vstack"
+Repository = "https://github.com/valani9/vstack"
+Issues = "https://github.com/valani9/vstack/issues"
+Changelog = "https://github.com/valani9/vstack/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/valani9/vstack/issues"
+"Security" = "https://github.com/valani9/vstack/security/policy"
 
 [project.scripts]
-agentcity = "agentcity.aar.cli:main"
-agentcity-lewin = "agentcity.lewin.cli:main"
-agentcity-goleman = "agentcity.goleman_ei.cli:main"
-agentcity-johari = "agentcity.johari.cli:main"
-agentcity-danva = "agentcity.danva_emotion.cli:main"
-agentcity-reappraisal = "agentcity.cognitive_reappraisal.cli:main"
-agentcity-yerkes = "agentcity.yerkes_dodson.cli:main"
-agentcity-hexaco = "agentcity.hexaco.cli:main"
-agentcity-grant = "agentcity.grant_strengths.cli:main"
-agentcity-motivation = "agentcity.motivation_traps.cli:main"
-agentcity-sdt = "agentcity.sdt_reward.cli:main"
-agentcity-mcgregor = "agentcity.mcgregor.cli:main"
-agentcity-vroom = "agentcity.vroom_expectancy.cli:main"
-agentcity-grpi = "agentcity.grpi.cli:main"
-agentcity-process = "agentcity.process_gain_loss.cli:main"
-agentcity-loafing = "agentcity.social_loafing.cli:main"
-agentcity-superflocks = "agentcity.superflocks.cli:main"
-agentcity-lencioni = "agentcity.lencioni.cli:main"
-agentcity-trust-triangle = "agentcity.trust_triangle.cli:main"
-agentcity-mcallister = "agentcity.mcallister_trust.cli:main"
-agentcity-psych-safety = "agentcity.psych_safety.cli:main"
-agentcity-glaser = "agentcity.glaser_conversation.cli:main"
-agentcity-feedback-triggers = "agentcity.feedback_triggers.cli:main"
-agentcity-plus-delta = "agentcity.plus_delta.cli:main"
-agentcity-smart-goal = "agentcity.smart_goal.cli:main"
-agentcity-group-decision = "agentcity.group_decision.cli:main"
-agentcity-debate-pathology = "agentcity.debate_pathology.cli:main"
-agentcity-bias-stack = "agentcity.bias_stack.cli:main"
-agentcity-devils-advocate = "agentcity.devils_advocate.cli:main"
-agentcity-thomas-kilmann = "agentcity.thomas_kilmann.cli:main"
-agentcity-schein-culture = "agentcity.schein_culture.cli:main"
-agentcity-robbins-culture = "agentcity.robbins_culture.cli:main"
-agentcity-org-structure = "agentcity.org_structure.cli:main"
-agentcity-span-of-control = "agentcity.span_of_control.cli:main"
+vstack = "vstack.aar.cli:main"
+vstack-lewin = "vstack.lewin.cli:main"
+vstack-goleman = "vstack.goleman_ei.cli:main"
+vstack-johari = "vstack.johari.cli:main"
+vstack-danva = "vstack.danva_emotion.cli:main"
+vstack-reappraisal = "vstack.cognitive_reappraisal.cli:main"
+vstack-yerkes = "vstack.yerkes_dodson.cli:main"
+vstack-hexaco = "vstack.hexaco.cli:main"
+vstack-grant = "vstack.grant_strengths.cli:main"
+vstack-motivation = "vstack.motivation_traps.cli:main"
+vstack-sdt = "vstack.sdt_reward.cli:main"
+vstack-mcgregor = "vstack.mcgregor.cli:main"
+vstack-vroom = "vstack.vroom_expectancy.cli:main"
+vstack-grpi = "vstack.grpi.cli:main"
+vstack-process = "vstack.process_gain_loss.cli:main"
+vstack-loafing = "vstack.social_loafing.cli:main"
+vstack-superflocks = "vstack.superflocks.cli:main"
+vstack-lencioni = "vstack.lencioni.cli:main"
+vstack-trust-triangle = "vstack.trust_triangle.cli:main"
+vstack-mcallister = "vstack.mcallister_trust.cli:main"
+vstack-psych-safety = "vstack.psych_safety.cli:main"
+vstack-glaser = "vstack.glaser_conversation.cli:main"
+vstack-feedback-triggers = "vstack.feedback_triggers.cli:main"
+vstack-plus-delta = "vstack.plus_delta.cli:main"
+vstack-smart-goal = "vstack.smart_goal.cli:main"
+vstack-group-decision = "vstack.group_decision.cli:main"
+vstack-debate-pathology = "vstack.debate_pathology.cli:main"
+vstack-bias-stack = "vstack.bias_stack.cli:main"
+vstack-devils-advocate = "vstack.devils_advocate.cli:main"
+vstack-thomas-kilmann = "vstack.thomas_kilmann.cli:main"
+vstack-schein-culture = "vstack.schein_culture.cli:main"
+vstack-robbins-culture = "vstack.robbins_culture.cli:main"
+vstack-org-structure = "vstack.org_structure.cli:main"
+vstack-span-of-control = "vstack.span_of_control.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 # The repo is organized by module + pattern number (module-2-team/30-...)
-# but the published Python package presents the conventional `agentcity.*`
+# but the published Python package presents the conventional `vstack.*`
 # import surface. `force-include` rewrites the paths at build time so the
-# wheel ships `agentcity/aar/...` even though the source lives elsewhere.
+# wheel ships `vstack/aar/...` even though the source lives elsewhere.
 # New patterns add another entry here on the same pattern.
 [tool.hatch.build.targets.wheel]
 only-include = []
 
 [tool.hatch.build.targets.wheel.force-include]
-"_packaging/agentcity/__init__.py" = "agentcity/__init__.py"
-"_packaging/agentcity/py.typed" = "agentcity/py.typed"
-"module-2-team/30-aar-generator/lib" = "agentcity/aar"
-"module-2-team/17-lencioni-diagnostic/lib" = "agentcity/lencioni"
-"module-2-team/18-trust-triangle-audit/lib" = "agentcity/trust_triangle"
-"module-1-individual/03-johari-window/lib" = "agentcity/johari"
-"module-2-team/13-grpi-working-agreement/lib" = "agentcity/grpi"
-"module-2-team/27-bias-stack-detector/lib" = "agentcity/bias_stack"
-"module-2-team/20-edmondson-psych-safety/lib" = "agentcity/psych_safety"
-"module-2-team/29-thomas-kilmann-selector/lib" = "agentcity/thomas_kilmann"
-"module-2-team/22-stone-heen-feedback-triggers/lib" = "agentcity/feedback_triggers"
-"module-2-team/28-devils-advocate-separator/lib" = "agentcity/devils_advocate"
-"module-1-individual/01-lewin-formula/lib" = "agentcity/lewin"
-"module-2-team/19-mcallister-trust-dimensions/lib" = "agentcity/mcallister_trust"
-"module-2-team/15-social-loafing-detector/lib" = "agentcity/social_loafing"
-"module-2-team/26-groupthink-polarization-contagion/lib" = "agentcity/debate_pathology"
-"module-2-team/14-process-gain-loss-detector/lib" = "agentcity/process_gain_loss"
-"module-2-team/24-smart-goal-generator/lib" = "agentcity/smart_goal"
-"module-1-individual/11-mcgregor-orchestrator-mode/lib" = "agentcity/mcgregor"
-"module-2-team/25-group-decision-models/lib" = "agentcity/group_decision"
-"module-3-organization/31-schein-iceberg-culture/lib" = "agentcity/schein_culture"
-"module-1-individual/08-grant-strengths-as-weaknesses/lib" = "agentcity/grant_strengths"
-"module-2-team/23-plus-delta-feedback-format/lib" = "agentcity/plus_delta"
-"module-3-organization/32-robbins-judge-7-culture/lib" = "agentcity/robbins_culture"
-"module-2-team/16-heffernan-superflocks-detector/lib" = "agentcity/superflocks"
-"module-1-individual/06-yerkes-dodson-workload/lib" = "agentcity/yerkes_dodson"
-"module-3-organization/33-org-structure-matrix/lib" = "agentcity/org_structure"
-"module-1-individual/09-motivation-traps/lib" = "agentcity/motivation_traps"
-"module-2-team/21-glaser-conversation-steering/lib" = "agentcity/glaser_conversation"
-"module-1-individual/02-goleman-ei-audit/lib" = "agentcity/goleman_ei"
-"module-1-individual/10-sdt-intrinsic-reward/lib" = "agentcity/sdt_reward"
-"module-3-organization/34-span-of-control/lib" = "agentcity/span_of_control"
-"module-1-individual/04-danva-emotion-reader/lib" = "agentcity/danva_emotion"
-"module-1-individual/05-cognitive-reappraisal/lib" = "agentcity/cognitive_reappraisal"
-"module-1-individual/07-hexaco-personality/lib" = "agentcity/hexaco"
-"module-1-individual/12-vroom-expectancy/lib" = "agentcity/vroom_expectancy"
+"_packaging/vstack/__init__.py" = "vstack/__init__.py"
+"_packaging/vstack/py.typed" = "vstack/py.typed"
+"module-2-team/30-aar-generator/lib" = "vstack/aar"
+"module-2-team/17-lencioni-diagnostic/lib" = "vstack/lencioni"
+"module-2-team/18-trust-triangle-audit/lib" = "vstack/trust_triangle"
+"module-1-individual/03-johari-window/lib" = "vstack/johari"
+"module-2-team/13-grpi-working-agreement/lib" = "vstack/grpi"
+"module-2-team/27-bias-stack-detector/lib" = "vstack/bias_stack"
+"module-2-team/20-edmondson-psych-safety/lib" = "vstack/psych_safety"
+"module-2-team/29-thomas-kilmann-selector/lib" = "vstack/thomas_kilmann"
+"module-2-team/22-stone-heen-feedback-triggers/lib" = "vstack/feedback_triggers"
+"module-2-team/28-devils-advocate-separator/lib" = "vstack/devils_advocate"
+"module-1-individual/01-lewin-formula/lib" = "vstack/lewin"
+"module-2-team/19-mcallister-trust-dimensions/lib" = "vstack/mcallister_trust"
+"module-2-team/15-social-loafing-detector/lib" = "vstack/social_loafing"
+"module-2-team/26-groupthink-polarization-contagion/lib" = "vstack/debate_pathology"
+"module-2-team/14-process-gain-loss-detector/lib" = "vstack/process_gain_loss"
+"module-2-team/24-smart-goal-generator/lib" = "vstack/smart_goal"
+"module-1-individual/11-mcgregor-orchestrator-mode/lib" = "vstack/mcgregor"
+"module-2-team/25-group-decision-models/lib" = "vstack/group_decision"
+"module-3-organization/31-schein-iceberg-culture/lib" = "vstack/schein_culture"
+"module-1-individual/08-grant-strengths-as-weaknesses/lib" = "vstack/grant_strengths"
+"module-2-team/23-plus-delta-feedback-format/lib" = "vstack/plus_delta"
+"module-3-organization/32-robbins-judge-7-culture/lib" = "vstack/robbins_culture"
+"module-2-team/16-heffernan-superflocks-detector/lib" = "vstack/superflocks"
+"module-1-individual/06-yerkes-dodson-workload/lib" = "vstack/yerkes_dodson"
+"module-3-organization/33-org-structure-matrix/lib" = "vstack/org_structure"
+"module-1-individual/09-motivation-traps/lib" = "vstack/motivation_traps"
+"module-2-team/21-glaser-conversation-steering/lib" = "vstack/glaser_conversation"
+"module-1-individual/02-goleman-ei-audit/lib" = "vstack/goleman_ei"
+"module-1-individual/10-sdt-intrinsic-reward/lib" = "vstack/sdt_reward"
+"module-3-organization/34-span-of-control/lib" = "vstack/span_of_control"
+"module-1-individual/04-danva-emotion-reader/lib" = "vstack/danva_emotion"
+"module-1-individual/05-cognitive-reappraisal/lib" = "vstack/cognitive_reappraisal"
+"module-1-individual/07-hexaco-personality/lib" = "vstack/hexaco"
+"module-1-individual/12-vroom-expectancy/lib" = "vstack/vroom_expectancy"
 
 [tool.ruff]
 line-length = 100
@@ -216,7 +216,7 @@ filterwarnings = [
 ]
 
 [tool.coverage.run]
-source = ["agentcity"]
+source = ["vstack"]
 omit = [
     "*/tests/*",
     "*/demo/*",

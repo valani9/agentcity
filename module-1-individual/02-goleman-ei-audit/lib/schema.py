@@ -46,7 +46,7 @@ Modern LLM-EI literature anchored:
     sycophantic mimicry" via the ``EIProfilePattern`` classifier.
 
 The 11+ academic citations are listed with full bibliographic detail
-in :mod:`agentcity.goleman_ei.CITATIONS` (lib/CITATIONS.md).
+in :mod:`vstack.goleman_ei.CITATIONS` (lib/CITATIONS.md).
 """
 
 from __future__ import annotations
@@ -486,7 +486,7 @@ class EIBaselineComparison(BaseModel):
 
 
 class ComposedPatternHandoff(BaseModel):
-    """Where this detection feeds into the rest of the AgentCity library."""
+    """Where this detection feeds into the rest of the vstack library."""
 
     upstream_patterns: list[str] = Field(default_factory=list)
     downstream_patterns: list[str] = Field(default_factory=list)

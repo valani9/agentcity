@@ -9,50 +9,50 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.bias_stack",
-    "agentcity.psych_safety",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.bias_stack",
+    "vstack.psych_safety",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "well_separated_critique": ("agentcity.aar",),
+    "well_separated_critique": ("vstack.aar",),
     "self_review_only": (
-        "agentcity.bias_stack",
-        "agentcity.debate_pathology",
+        "vstack.bias_stack",
+        "vstack.debate_pathology",
     ),
     "rubber_stamping": (
-        "agentcity.bias_stack",
-        "agentcity.aar",
+        "vstack.bias_stack",
+        "vstack.aar",
     ),
     "missing_critic_phase": (
-        "agentcity.debate_pathology",
-        "agentcity.bias_stack",
+        "vstack.debate_pathology",
+        "vstack.bias_stack",
     ),
     "fully_conflated_roles": (
-        "agentcity.aar",
-        "agentcity.bias_stack",
-        "agentcity.debate_pathology",
+        "vstack.aar",
+        "vstack.bias_stack",
+        "vstack.debate_pathology",
     ),
     "external_critic_present_weak": (
-        "agentcity.psych_safety",
-        "agentcity.glaser_conversation",
+        "vstack.psych_safety",
+        "vstack.glaser_conversation",
     ),
     "no_pre_mortem": (
-        "agentcity.bias_stack",
-        "agentcity.aar",
+        "vstack.bias_stack",
+        "vstack.aar",
     ),
     "no_alternative_hypothesis": (
-        "agentcity.bias_stack",
-        "agentcity.debate_pathology",
+        "vstack.bias_stack",
+        "vstack.debate_pathology",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

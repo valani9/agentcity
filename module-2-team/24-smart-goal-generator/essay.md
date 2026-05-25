@@ -1,6 +1,6 @@
 # Your agent ran for 63 hours because nobody wrote a kill criterion. Doran fixed this in 1981.
 
-*A sixteenth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A sixteenth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -16,7 +16,7 @@ The interesting part of Doran's framework, applied to AI agents, isn't the acron
 
 In particular: **Time-bound includes both deadlines and budgets.** This is the field that prevents the $4,200/63-hour incident. The agent's task should have read: *"Get the integration test suite passing OR exhaust 10,000 tokens trying, whichever comes first. If you hit 10,000 tokens, surface the most plausible diagnosis and stop."* No agent that received that goal would burn $4,200.
 
-## What `agentcity.smart_goal` does
+## What `vstack.smart_goal` does
 
 The library takes a `GoalRequest` containing:
 
@@ -39,7 +39,7 @@ and produces a `SMARTGoal` with:
 
 The output exposes `to_agent_preamble()` which renders a condensed block of text to *prepend to the working agent's system prompt* — so the agent executes the SMART version, not the vague original. This is the operational payoff: the SMART goal becomes the actual context the agent operates against.
 
-Single LLM pass under the hood. The generator post-processes the response: fills any missing SMART criteria with placeholder entries, recomputes the overall score if the LLM left it out, and reconciles the quality bucket with the score so the output is internally consistent. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Single LLM pass under the hood. The generator post-processes the response: fills any missing SMART criteria with placeholder entries, recomputes the overall score if the LLM left it out, and reconciles the quality bucket with the score so the output is internally consistent. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -49,9 +49,9 @@ The SMART Goal Generator is the place to install kill criteria. It treats them a
 
 The second-most-important field is `open_questions`. The natural failure mode of a goal-generator is to manufacture confidence — "Here's your SMART goal!" — when the actual situation has missing context. The Doran framework's *Achievable* criterion is the explicit guard against this: if the goal isn't achievable given the resources, the generator marks it as such and surfaces the gap. Don't paper over.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #24 of 34 — the sixteenth pattern shipped. AgentCity now has **two** generative patterns (alongside the diagnostics):
+This is pattern #24 of 34 — the sixteenth pattern shipped. vstack now has **two** generative patterns (alongside the diagnostics):
 
 - **#13 GRPI Working Agreement Generator** — operates at the *team* level: goals + roles + processes + interactions for a multi-agent crew
 - **#24 SMART Goal Generator (this pattern)** — operates at the *individual goal* level: the SMART spec each team member or solo agent executes against
@@ -61,7 +61,7 @@ The two compose. GRPI sets up the team's shared context; SMART specs the individ
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -73,4 +73,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

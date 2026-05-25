@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.social_loafing import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.social_loafing import (
     PLAYBOOKS,
     SEVERITY_ORDER,
     SOCIAL_LOAFING_COMPOSITION,
@@ -48,7 +48,7 @@ def _trace(framework: str | None = None) -> MultiAgentTaskTrace:
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -226,11 +226,11 @@ class TestComposition:
             profile_pattern="single_dominant_contributor",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.grpi" in recs
+        assert "vstack.grpi" in recs
 
     def test_upstream_includes_grpi(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.grpi" in up
+        assert "vstack.grpi" in up
 
 
 class TestPlaybooks:

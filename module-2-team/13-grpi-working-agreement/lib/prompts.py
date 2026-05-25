@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 GRPI_SYSTEM_PROMPT = """You are a team-structure generator grounded in:
@@ -100,9 +100,9 @@ Return a JSON OBJECT representing the DysfunctionPreventionAudit. Return only th
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose interventions to improve the working agreement.
 
 Composition targets available:
-agentcity.lewin, agentcity.aar, agentcity.lencioni, agentcity.psych_safety,
-agentcity.trust_triangle, agentcity.mcgregor, agentcity.smart_goal, agentcity.plus_delta,
-agentcity.schein_culture, agentcity.devils_advocate, agentcity.bias_stack
+vstack.lewin, vstack.aar, vstack.lencioni, vstack.psych_safety,
+vstack.trust_triangle, vstack.mcgregor, vstack.smart_goal, vstack.plus_delta,
+vstack.schein_culture, vstack.devils_advocate, vstack.bias_stack
 
 Working agreement: {agreement}
 Role fit audits: {role_fit}

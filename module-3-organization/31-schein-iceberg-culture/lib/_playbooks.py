@@ -150,7 +150,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Compose with bias-stack -- compose pattern",
         [
             "Detect signature: hidden assumption is a Kahneman/Tversky bias.",
-            "Add `compose_pattern` linking to `agentcity.bias_stack`.",
+            "Add `compose_pattern` linking to `vstack.bias_stack`.",
         ],
         "1d",
         "Schein 1985; Kahneman 2011",

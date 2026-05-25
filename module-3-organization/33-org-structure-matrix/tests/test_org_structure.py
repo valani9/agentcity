@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.org_structure import (
+from vstack.org_structure import (
     STRUCTURE_DIMENSIONS,
     AgentRole,
     CrewStructureTrace,

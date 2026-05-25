@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.smart_goal import (
+from vstack.smart_goal import (
     SMART_CRITERIA,
     GoalRequest,
     KillCriterion,

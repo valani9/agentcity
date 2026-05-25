@@ -1,4 +1,4 @@
-"""Production-readiness tests for the shared agentcity.aar infrastructure.
+"""Production-readiness tests for the shared vstack.aar infrastructure.
 
 Covers:
   - _retry: retryable vs fatal classification, backoff, exhaustion behavior.
@@ -23,7 +23,7 @@ import time
 
 import pytest
 
-from agentcity.aar import (
+from vstack.aar import (
     DEFAULT_TIMEOUT_SECONDS,
     InMemoryTelemetrySink,
     JsonFormatter,
@@ -167,17 +167,17 @@ class TestLogging:
         assert current_pattern() is None
 
     def test_logger_filter_idempotent(self) -> None:
-        logger = get_logger("agentcity.aar.test_idempotence")
+        logger = get_logger("vstack.aar.test_idempotence")
         n_filters_before = len(logger.filters)
         for _ in range(5):
-            get_logger("agentcity.aar.test_idempotence")
+            get_logger("vstack.aar.test_idempotence")
         assert len(logger.filters) == n_filters_before
 
     def test_run_id_appears_on_log_record(self) -> None:
         stream = io.StringIO()
         handler = logging.StreamHandler(stream)
         handler.setFormatter(JsonFormatter())
-        logger = get_logger("agentcity.aar.test_record")
+        logger = get_logger("vstack.aar.test_record")
         logger.handlers = [handler]
         logger.propagate = False
         logger.setLevel(logging.INFO)
@@ -192,7 +192,7 @@ class TestLogging:
         stream = io.StringIO()
         handler = logging.StreamHandler(stream)
         handler.setFormatter(JsonFormatter())
-        logger = get_logger("agentcity.aar.test_extras")
+        logger = get_logger("vstack.aar.test_extras")
         logger.handlers = [handler]
         logger.propagate = False
         logger.setLevel(logging.INFO)
@@ -203,12 +203,12 @@ class TestLogging:
 
     def test_configure_json_logging_idempotent_replaces_handlers(self) -> None:
         configure_json_logging(level=logging.WARNING)
-        agentcity_root = logging.getLogger("agentcity")
-        first_handlers = list(agentcity_root.handlers)
+        vstack_root = logging.getLogger("vstack")
+        first_handlers = list(vstack_root.handlers)
         configure_json_logging(level=logging.INFO)
         # configure should *replace* (not append) handlers
-        assert len(agentcity_root.handlers) == 1
-        assert agentcity_root.handlers != first_handlers or len(first_handlers) == 1
+        assert len(vstack_root.handlers) == 1
+        assert vstack_root.handlers != first_handlers or len(first_handlers) == 1
 
 
 # -------- _telemetry --------------------------------------------------

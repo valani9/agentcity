@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 SCHEIN_SYSTEM_PROMPT = """You are an Edgar Schein culture diagnostician (1985, 2010, 2017)
@@ -110,8 +110,8 @@ Return only a JSON object representing the HiddenAssumptionAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 interventions with
 composition targets.
 
-Composition targets: agentcity.lewin, agentcity.aar, agentcity.lencioni,
-agentcity.bias_stack, agentcity.psych_safety
+Composition targets: vstack.lewin, vstack.aar, vstack.lencioni,
+vstack.bias_stack, vstack.psych_safety
 
 Dominant drift: {dominant_drift}
 Culture quality: {culture_quality}

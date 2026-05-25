@@ -11,7 +11,7 @@
 
 ## What this pattern does
 
-Diagnoses **where an AI agent sits on the inverted-U workload curve**: under-pressure (wandering / drifting), optimal (focused), or over-pressure (corner-cutting / freezing / hallucinating / refusing). Then proposes ranked interventions, attaches failure-mode playbooks, and hands off to downstream AgentCity patterns.
+Diagnoses **where an AI agent sits on the inverted-U workload curve**: under-pressure (wandering / drifting), optimal (focused), or over-pressure (corner-cutting / freezing / hallucinating / refusing). Then proposes ranked interventions, attaches failure-mode playbooks, and hands off to downstream vstack patterns.
 
 ```
   performance
@@ -48,12 +48,12 @@ Diagnoses **where an AI agent sits on the inverted-U workload curve**: under-pre
 ## Quick start
 
 ```python
-from agentcity.yerkes_dodson import (
+from vstack.yerkes_dodson import (
     YerkesDodsonAnalyzer,
     AgentPerformanceTrace,
     PressureInputs,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentPerformanceTrace(
     agent_id="research-agent-001",
@@ -77,61 +77,61 @@ detection = YerkesDodsonAnalyzer(AnthropicClient(), mode="forensic").run(trace)
 print(detection.to_markdown())
 # observed_zone: over_pressure
 # profile_pattern: context_saturation
-# Composition handoff: agentcity.lewin, agentcity.johari
+# Composition handoff: vstack.lewin, vstack.johari
 ```
 
 ## CLI
 
 ```bash
 # Single trace
-agentcity-yerkes analyze --trace trace.json --mode forensic
+vstack-yerkes analyze --trace trace.json --mode forensic
 
 # Batch over a YAML corpus
-agentcity-yerkes batch --corpus corpus.yaml --out detections/ --mode standard
+vstack-yerkes batch --corpus corpus.yaml --out detections/ --mode standard
 
 # Re-render an existing detection JSON
-agentcity-yerkes replay --detection detection.json
+vstack-yerkes replay --detection detection.json
 
 # Validate a trace schema
-agentcity-yerkes validate --trace trace.json
+vstack-yerkes validate --trace trace.json
 
 # Dump JSON schemas
-agentcity-yerkes schema --target trace
-agentcity-yerkes schema --target detection
+vstack-yerkes schema --target trace
+vstack-yerkes schema --target detection
 
 # Inspect the 12 playbooks
-agentcity-yerkes playbooks
+vstack-yerkes playbooks
 
 # Inspect the composition graph
-agentcity-yerkes compose
+vstack-yerkes compose
 ```
 
 ## Composition
 
 **Upstream patterns** (run these before Yerkes-Dodson):
-- `agentcity.lewin` -- attribute the workload pressure to person/environment locus.
-- `agentcity.aar` -- generate the after-action review the trace comes from.
-- `agentcity.cognitive_reappraisal` -- detect emotion-regulation pressure on the agent.
-- `agentcity.goleman_ei` -- audit the agent's emotional intelligence under load.
+- `vstack.lewin` -- attribute the workload pressure to person/environment locus.
+- `vstack.aar` -- generate the after-action review the trace comes from.
+- `vstack.cognitive_reappraisal` -- detect emotion-regulation pressure on the agent.
+- `vstack.goleman_ei` -- audit the agent's emotional intelligence under load.
 
 **Downstream patterns** (chosen by profile_pattern):
-- `over_pressure_hallucinating` -> `agentcity.johari` + `agentcity.lewin`
-- `over_pressure_corner_cutting` -> `agentcity.devils_advocate` + `agentcity.bias_stack`
-- `over_pressure_freezing` -> `agentcity.cognitive_reappraisal` + `agentcity.mcgregor`
-- `over_pressure_refusing` -> `agentcity.cognitive_reappraisal` + `agentcity.grant_strengths`
-- `context_saturation` -> `agentcity.lewin`
-- `optimal_zone` -> `agentcity.aar` (record the baseline)
+- `over_pressure_hallucinating` -> `vstack.johari` + `vstack.lewin`
+- `over_pressure_corner_cutting` -> `vstack.devils_advocate` + `vstack.bias_stack`
+- `over_pressure_freezing` -> `vstack.cognitive_reappraisal` + `vstack.mcgregor`
+- `over_pressure_refusing` -> `vstack.cognitive_reappraisal` + `vstack.grant_strengths`
+- `context_saturation` -> `vstack.lewin`
+- `optimal_zone` -> `vstack.aar` (record the baseline)
 
 **Framework overlays** (added if `trace.framework` is set):
-- `langgraph` / `crewai` / `autogen` / `mastra` / `strands` -> `agentcity.grpi`
-- `claude-agent-sdk` / `openai-agents-sdk` -> `agentcity.process_gain_loss`
+- `langgraph` / `crewai` / `autogen` / `mastra` / `strands` -> `vstack.grpi`
+- `claude-agent-sdk` / `openai-agents-sdk` -> `vstack.process_gain_loss`
 
 ## Failure-mode playbooks
 
-12 curated `(zone, failure_mode)` playbooks anchored in the literature. Inspect them with `agentcity-yerkes playbooks` or programmatically:
+12 curated `(zone, failure_mode)` playbooks anchored in the literature. Inspect them with `vstack-yerkes playbooks` or programmatically:
 
 ```python
-from agentcity.yerkes_dodson import find_playbook_for_intervention
+from vstack.yerkes_dodson import find_playbook_for_intervention
 
 pb = find_playbook_for_intervention("over_pressure", "chunk_context")
 print(pb.title)
@@ -154,7 +154,7 @@ Full citations in [lib/CITATIONS.md](lib/CITATIONS.md). Seven primary anchors:
 
 ## Production infrastructure
 
-Wired into the shared `agentcity.aar` infra:
+Wired into the shared `vstack.aar` infra:
 
 - **Structured logging** with `run_id` correlation across all LLM calls in a detection.
 - **Token + cost telemetry** via `record_llm_call` to the configured sink.
@@ -168,7 +168,7 @@ Wired into the shared `agentcity.aar` infra:
 The v0.0.x interface is preserved:
 
 ```python
-from agentcity.yerkes_dodson import WorkloadDetector  # alias of YerkesDodsonAnalyzer
+from vstack.yerkes_dodson import WorkloadDetector  # alias of YerkesDodsonAnalyzer
 ```
 
 The v0.0.x `WorkloadDetector(...)` call still works -- defaults to `mode="standard"` which keeps the 1-call cost profile.

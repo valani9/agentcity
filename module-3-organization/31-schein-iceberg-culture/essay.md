@@ -1,6 +1,6 @@
 # Your system prompt lost to your model's training. Schein explained this in 1985.
 
-*A nineteenth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A nineteenth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -40,7 +40,7 @@ Schein's finding holds for agents with full force. The refund-policy scenario ab
 
 The strategic implication is uncomfortable for AI builders: **prompt-engineering alone cannot fix a model whose underlying assumptions conflict with the desired behavior.** Better prompts close some of the gap, but they cannot move the underlying-assumptions layer. To genuinely change agent behavior on a Schein-incoherent case, you have to operate at the right layer — either fine-tune against the assumption (expensive, often impossible on closed models), route around it via scaffolding (the most pragmatic fix), or pick a different base model whose assumptions match your espoused values.
 
-## What `agentcity.schein_culture` does
+## What `vstack.schein_culture` does
 
 The library takes an `AgentCultureTrace` with the agent's task, system prompt, observed behaviors, optional pre-supplied hypotheses about the deep layer, outcome and success signal — and produces a `CultureAuditDetection` with:
 
@@ -50,7 +50,7 @@ The library takes an `AgentCultureTrace` with the agent's task, system prompt, o
 4. **A culture-quality bucket**: `aligned`, `drifting`, or `incoherent`.
 5. **A ranked list of interventions** targeting the dominant drift: `rewrite_system_prompt`, `fine_tune_against_assumption`, `add_guardrail`, `add_eval_for_drift`, `swap_model`, `scaffold_around_assumption`, `explicit_values_check`, `human_review`.
 
-Two LLM passes under the hood; the intervention pass is skipped when the audit reports `aligned`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood; the intervention pass is skipped when the audit reports `aligned`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -60,9 +60,9 @@ The recommended intervention on the refund-policy case is `scaffold_around_assum
 
 For closed models where fine-tuning isn't available, this is often the only intervention that works.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #31 of 34 — the nineteenth pattern shipped, and the **first Module 3 (Organizational) pattern.** AgentCity now spans all three levels of the canonical OB curriculum:
+This is pattern #31 of 34 — the nineteenth pattern shipped, and the **first Module 3 (Organizational) pattern.** vstack now spans all three levels of the canonical OB curriculum:
 
 - **Module 1 (Individual)**: #01 Lewin, #03 Johari, #08 — wait, #08 ships in this batch too. So Module 1 has #01, #03, #11, plus #08 incoming.
 - **Module 2 (Team)**: 13 patterns covering team dysfunction, debate dynamics, decision aggregation, individual goal-setting
@@ -73,7 +73,7 @@ The Schein audit sits at the system-design layer above the team / individual pat
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -85,4 +85,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

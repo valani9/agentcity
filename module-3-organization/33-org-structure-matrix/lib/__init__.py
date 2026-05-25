@@ -1,4 +1,4 @@
-"""agentcity.org_structure -- Org-Structure Matrix diagnostic for AI agent
+"""vstack.org_structure -- Org-Structure Matrix diagnostic for AI agent
 crews. Module 3 (organizational) pattern.
 
 Six dimensions: specialization, formalization, centralization, hierarchy,
@@ -19,16 +19,16 @@ v0.2.0 features:
   - Cross-pattern composition manifest
   - 12 (dimension, failure_mode) playbooks anchored to Galbraith /
     Mintzberg
-  - Production infra via agentcity.aar shared module
+  - Production infra via vstack.aar shared module
 
 Quick start:
 
-    from agentcity.org_structure import (
+    from vstack.org_structure import (
         StructureMatrixAnalyzer,
         CrewStructureTrace,
         AgentRole,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = CrewStructureTrace(
         crew_id="incident-001",

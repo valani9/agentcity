@@ -1,6 +1,6 @@
 # Your multi-agent system has trust issues. Patrick Lencioni called it.
 
-*A second essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A second essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -56,7 +56,7 @@ The Lencioni Diagnostic is the missing layer. It consumes the same trace data, r
 
 That second framing is what gets the multi-agent system fixed. It is the framing managers use when human teams have the same problem. The vocabulary is portable. The interventions are concrete. The dysfunction is named.
 
-## What `agentcity.lencioni` actually does
+## What `vstack.lencioni` actually does
 
 The library takes a `MultiAgentTrace` — the goal, the team roster, the message log, the outcome, the success signal — and produces a `LencioniDiagnosis` with:
 
@@ -70,7 +70,7 @@ The library is framework-agnostic. It accepts traces serialized from CrewAI, Aut
 
 Two LLM passes under the hood: one to score the pyramid against the trace, one to propose interventions targeting the dominant dysfunction. Both passes ship with retry-on-rate-limit, graceful degradation when the LLM returns malformed JSON, and the same `LLMClient` interface as the AAR Generator — bring your own Anthropic, OpenAI, Ollama, or stub client.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #17 of 34 planned. The first pattern shipped — pattern #30, the After-Action Review Generator — diagnoses *one agent's* failure as a learning event. The Lencioni Diagnostic diagnoses *the team's* failure as a system. They are complementary tools for complementary jobs:
 
@@ -78,13 +78,13 @@ This is pattern #17 of 34 planned. The first pattern shipped — pattern #30, th
 - A multi-agent crew fails a job → run the Lencioni Diagnostic on the team's trace
 - A multi-agent crew fails repeatedly with the same dysfunction → run the Lencioni Diagnostic across multiple traces and look for which dysfunction is structurally embedded
 
-Pattern #18 (next) is the Trust Triangle Audit (Frei & Morriss), a cross-model benchmark that diagnoses *which leg* a specific model wobbles on — Logic, Authenticity, or Empathy. With AAR + Lencioni + Trust Triangle, AgentCity covers the three orthogonal axes: time (postmortem), team (Lencioni), and identity (Trust Triangle).
+Pattern #18 (next) is the Trust Triangle Audit (Frei & Morriss), a cross-model benchmark that diagnoses *which leg* a specific model wobbles on — Logic, Authenticity, or Empathy. With AAR + Lencioni + Trust Triangle, vstack covers the three orthogonal axes: time (postmortem), team (Lencioni), and identity (Trust Triangle).
 
 Thirty-one more patterns to ship after that. Each anchored in named OB literature. Each shipping with all five layers: documented framework, working library, runnable demo, public benchmark, Substack-ready essay.
 
 ## The invitation
 
-If you ship multi-agent systems in production and you have noticed that the failures rhyme — that the same kinds of failures keep happening across different deployments — the Lencioni Diagnostic is for you. Start there. The library is part of [AgentCity](https://github.com/valani9/AgentCity); install via `pip install git+https://github.com/valani9/AgentCity.git` and import as `agentcity.lencioni`. First integration target is CrewAI; LangGraph, AutoGen, and OpenAI Agents SDK follow.
+If you ship multi-agent systems in production and you have noticed that the failures rhyme — that the same kinds of failures keep happening across different deployments — the Lencioni Diagnostic is for you. Start there. The library is part of [vstack](https://github.com/valani9/vstack); install via `pip install git+https://github.com/valani9/vstack.git` and import as `vstack.lencioni`. First integration target is CrewAI; LangGraph, AutoGen, and OpenAI Agents SDK follow.
 
 If you are an OB researcher and the application of Lencioni's pyramid to AI teams intrigues you, please open an issue. The mapping is anchored in the public framework but the verifier-trust-summarizer-trust-planner chain is an agent-specific instantiation that deserves academic critique.
 
@@ -94,4 +94,4 @@ Two patterns shipped. Thirty-two to come.
 
 ---
 
-*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/AgentCity](https://github.com/valani9/AgentCity). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*
+*Ilhan Valani is a builder shipping vstack in public. The repo lives at [github.com/valani9/vstack](https://github.com/valani9/vstack). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*

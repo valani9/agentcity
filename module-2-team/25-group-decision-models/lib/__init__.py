@@ -1,4 +1,4 @@
-"""agentcity.group_decision -- facilitator-canon decision-aggregation
+"""vstack.group_decision -- facilitator-canon decision-aggregation
 methods (concurring / majority / consensus / fist-to-five / unanimous)
 applied to multi-agent decision-making.
 

@@ -9,47 +9,47 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.psych_safety",
-    "agentcity.glaser_conversation",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.psych_safety",
+    "vstack.glaser_conversation",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "absorbing_baseline": ("agentcity.aar",),
+    "absorbing_baseline": ("vstack.aar",),
     "truth_triggered_defensive": (
-        "agentcity.devils_advocate",
-        "agentcity.plus_delta",
+        "vstack.devils_advocate",
+        "vstack.plus_delta",
     ),
     "relationship_triggered_rejection": (
-        "agentcity.mcallister_trust",
-        "agentcity.trust_triangle",
-        "agentcity.psych_safety",
+        "vstack.mcallister_trust",
+        "vstack.trust_triangle",
+        "vstack.psych_safety",
     ),
     "identity_triggered_collapse": (
-        "agentcity.hexaco",
-        "agentcity.psych_safety",
+        "vstack.hexaco",
+        "vstack.psych_safety",
     ),
     "multi_triggered_resistant": (
-        "agentcity.aar",
-        "agentcity.psych_safety",
-        "agentcity.glaser_conversation",
+        "vstack.aar",
+        "vstack.psych_safety",
+        "vstack.glaser_conversation",
     ),
     "deflection_pattern": (
-        "agentcity.aar",
-        "agentcity.glaser_conversation",
+        "vstack.aar",
+        "vstack.glaser_conversation",
     ),
     "performative_acknowledgement": (
-        "agentcity.aar",
-        "agentcity.plus_delta",
+        "vstack.aar",
+        "vstack.plus_delta",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

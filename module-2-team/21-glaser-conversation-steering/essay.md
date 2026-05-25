@@ -1,6 +1,6 @@
 # Your support agent said "obviously" and lost the account. Glaser predicted it.
 
-*A twenty-sixth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-sixth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -32,7 +32,7 @@ The diagnostic value of identifying which neurochemical state a conversation pro
 
 4. Grant agency explicitly. *"You have the call here on what we do next"* is more trust-building than any amount of helpful tone.
 
-## What `agentcity.glaser_conversation` does
+## What `vstack.glaser_conversation` does
 
 The library takes a `ConversationTrace` containing:
 
@@ -48,7 +48,7 @@ and produces a `ConversationSteeringDetection` with:
 4. **Steering-quality bucket**: `trust-building`, `neutral`, or `trust-eroding`
 5. **A ranked list of phrasing-level interventions** with `original_phrasing` → `suggested_phrasing` pairs: replace_telling_with_asking, replace_judging_with_curiosity, acknowledge_before_advocating, soften_correction, add_open_question, remove_loaded_term, add_agency_grant, explicit_recovery_prompt, rewrite_system_prompt, new_eval, human_review
 
-Two LLM passes under the hood. The intervention pass is skipped when steering quality is `trust-building`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when steering quality is `trust-building`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -58,7 +58,7 @@ The second-highest-impact deployment is **orchestrator-to-sub-agent conversation
 
 The third deployment is **post-rejection recovery**. When a user pushes back on an agent's output, the next 1-2 turns are where the agent either recovers (oxytocin-triggering acknowledgment + revision) or cascades (cortisol-triggering defense). The diagnostic identifies which pattern occurred and proposes a phrasing-level reset prompt.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #21 of 34 — the twenty-sixth pattern shipped. It sits in Module 2 (team-level patterns) and composes with several other diagnostics:
 
@@ -72,7 +72,7 @@ Glaser's framework is the highest-leverage diagnostic in the conversation-qualit
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -84,4 +84,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

@@ -1,4 +1,4 @@
-"""Input sanitization + prompt-injection guards for AgentCity patterns.
+"""Input sanitization + prompt-injection guards for vstack patterns.
 
 Patterns ingest user-facing text — system prompts, user inputs, agent
 outputs — and inject it into LLM prompts for diagnosis. That creates a
@@ -37,7 +37,7 @@ import logging
 import re
 from typing import Final
 
-log = logging.getLogger("agentcity.aar.guards")
+log = logging.getLogger("vstack.aar.guards")
 
 # Hard cap on a single sanitized field. 64 KB is well past anything a
 # diagnostic genuinely needs to see, but small enough to bound the

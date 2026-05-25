@@ -1,4 +1,4 @@
-"""agentcity.hexaco -- Lee & Ashton's HEXACO personality model applied
+"""vstack.hexaco -- Lee & Ashton's HEXACO personality model applied
 to AI agents. The H-factor (Honesty-Humility) is the safety dimension.
 
 Anchored in:
@@ -19,11 +19,11 @@ an alias for ``HEXACOPersonalityAnalyzer``.
 Quick start
 -----------
 
-    from agentcity.hexaco import (
+    from vstack.hexaco import (
         HEXACOPersonalityAnalyzer,
         AgentPersonalityTrace,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentPersonalityTrace(
         agent_id="research-agent-001",
@@ -42,10 +42,10 @@ Quick start
 CLI
 ---
 
-    agentcity-hexaco analyze --trace trace.json --mode forensic
-    agentcity-hexaco playbooks
-    agentcity-hexaco compose
-    agentcity-hexaco schema --target trace
+    vstack-hexaco analyze --trace trace.json --mode forensic
+    vstack-hexaco playbooks
+    vstack-hexaco compose
+    vstack-hexaco schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

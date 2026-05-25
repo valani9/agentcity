@@ -1,4 +1,4 @@
-"""agentcity.superflocks -- Heffernan's superflocks fragility pattern for
+"""vstack.superflocks -- Heffernan's superflocks fragility pattern for
 multi-agent orchestrator routing.
 
 Anchored in Heffernan 2014/2015, Muir 1996, Hackman 2002, Page 2007,

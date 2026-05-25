@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: long handoff chains; >50% of cost in coordination.",
             "Run `smaller_team` or `decompose_task`.",
-            "Compose with `agentcity.grpi` for tighter role definition.",
+            "Compose with `vstack.grpi` for tighter role definition.",
         ],
         "1d",
         "Steiner 1972; Hackman-Vidmar 1970",
@@ -43,7 +43,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: 2+ agents contribute <20% of total output.",
             "Add explicit individual accountability checkpoints.",
-            "Compose with `agentcity.social_loafing` for deeper diagnosis.",
+            "Compose with `vstack.social_loafing` for deeper diagnosis.",
         ],
         "1d",
         "Diehl-Stroebe 1987",
@@ -55,7 +55,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: convergence in <2 rounds; no dissent surfaced.",
             "Add `explicit_critic` + `add_dissent_round`.",
-            "Compose with `agentcity.devils_advocate` + `agentcity.bias_stack`.",
+            "Compose with `vstack.devils_advocate` + `vstack.bias_stack`.",
         ],
         "1d",
         "Steiner 1972; Janis 1972 groupthink",
@@ -67,7 +67,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: receiving agent restarts work; context lost.",
             "Add `structured_handoff` with explicit state transfer schema.",
-            "Compose with `agentcity.grpi` (process dimension).",
+            "Compose with `vstack.grpi` (process dimension).",
         ],
         "1d",
         "Salas 2018",
@@ -79,7 +79,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: late agents miss early constraints.",
             "Add `context_summarization` at each handoff.",
-            "Compose with `agentcity.yerkes_dodson` (context saturation).",
+            "Compose with `vstack.yerkes_dodson` (context saturation).",
         ],
         "1d",
         "Steiner 1972; Liu 2024 lost-in-the-middle",
@@ -91,7 +91,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: team picked the average answer, not the best.",
             "Run `nominal_group_aggregation` or `fixed_vote_aggregation`.",
-            "Compose with `agentcity.bias_stack`.",
+            "Compose with `vstack.bias_stack`.",
         ],
         "1d",
         "Diehl-Stroebe 1987; Hill 1982",
@@ -126,7 +126,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agents share the same training/persona.",
             "Add a structurally dissenting role.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Janis 1972; Steiner 1972",
@@ -138,7 +138,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: every agent does every step.",
             "Run `increase_role_specialization`.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1d",
         "Steiner 1972",
@@ -162,7 +162,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Identify 2+ factors with score >= 0.5.",
             "Run a GRPI rewrite to address structural causes.",
-            "Compose with `agentcity.grpi` + `agentcity.lencioni`.",
+            "Compose with `vstack.grpi` + `vstack.lencioni`.",
         ],
         "1w",
         "Steiner 1972; Lencioni 2002",

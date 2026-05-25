@@ -1,4 +1,4 @@
-"""agentcity.glaser_conversation -- Glaser's Conversational Intelligence
+"""vstack.glaser_conversation -- Glaser's Conversational Intelligence
 (C-IQ) cortisol/oxytocin steering diagnostic applied to AI agent
 conversations.
 

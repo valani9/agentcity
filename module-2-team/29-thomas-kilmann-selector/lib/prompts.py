@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 TK_SYSTEM_PROMPT = """You are a Thomas-Kilmann (1974) conflict-style diagnostician for
@@ -109,8 +109,8 @@ Return only a JSON object representing the PatternConsistencyAudit."""
 
 FORENSIC_RECOMMENDATIONS_PROMPT = """FORENSIC mode -- propose 3-6 recommendations.
 
-Composition targets: agentcity.glaser_conversation, agentcity.aar,
-agentcity.devils_advocate, agentcity.mcallister_trust
+Composition targets: vstack.glaser_conversation, vstack.aar,
+vstack.devils_advocate, vstack.mcallister_trust
 
 Observed style: {observed_style}
 Optimal style: {optimal_style}

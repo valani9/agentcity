@@ -1,4 +1,4 @@
-"""agentcity.psych_safety -- Edmondson Psychological Safety diagnostic
+"""vstack.psych_safety -- Edmondson Psychological Safety diagnostic
 for multi-agent AI systems.
 
 Anchored in Edmondson 1999, Edmondson 2018, Janis 1972 groupthink,

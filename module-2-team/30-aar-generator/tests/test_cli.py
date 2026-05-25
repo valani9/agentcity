@@ -2,9 +2,9 @@
 Unit tests for the AAR Generator's command-line interface.
 
 Verifies:
-  - `agentcity --version` prints a version string
-  - `agentcity aar` reads a trace from a file and produces markdown output
-  - `agentcity aar` reads from stdin when --trace is - or omitted
+  - `vstack --version` prints a version string
+  - `vstack aar` reads a trace from a file and produces markdown output
+  - `vstack aar` reads from stdin when --trace is - or omitted
   - The CLI rejects invalid client names cleanly (non-zero exit code)
   - JSON output mode is selectable via --format
 """
@@ -22,7 +22,7 @@ import pytest
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import cli  # noqa: E402
+from vstack.aar import cli  # noqa: E402
 
 
 def _trace_dict() -> dict[str, object]:
@@ -45,7 +45,7 @@ class TestCLI:
         rc = cli.main(["version"])
         captured = capsys.readouterr()
         assert rc == 0
-        assert "agentcity" in captured.out
+        assert "vstack" in captured.out
         # Version follows semver-ish pattern: starts with digit.
         version_tail = captured.out.strip().split()[-1]
         assert version_tail[0].isdigit()

@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.yerkes_dodson import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.yerkes_dodson import (
     PLAYBOOKS,
     SEVERITY_ORDER,
     WORKLOAD_PROFILE_PATTERNS,
@@ -54,7 +54,7 @@ def _trace(
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -364,12 +364,12 @@ class TestComposition:
             profile_pattern="over_pressure_hallucinating",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.johari" in recs
+        assert "vstack.johari" in recs
 
     def test_upstream_includes_lewin(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.lewin" in up
-        assert "agentcity.aar" in up
+        assert "vstack.lewin" in up
+        assert "vstack.aar" in up
 
 
 # ---------------------------------------------------------------------------

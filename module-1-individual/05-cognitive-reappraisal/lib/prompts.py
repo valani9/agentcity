@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 GROSS_SYSTEM_PROMPT = """You are a Cognitive Reappraisal diagnostic for AI agents, grounded in James Gross's process model of emotion regulation and 12 anchor literatures:
@@ -180,9 +180,9 @@ Each intervention:
   - composition_target_pattern (when intervention_type == compose_pattern)
 
 Composition targets available:
-  agentcity.glaser_conversation, agentcity.devils_advocate, agentcity.yerkes_dodson,
-  agentcity.goleman_ei, agentcity.hexaco, agentcity.bias_stack, agentcity.aar,
-  agentcity.lewin, agentcity.danva_emotion, agentcity.schein_culture, agentcity.plus_delta
+  vstack.glaser_conversation, vstack.devils_advocate, vstack.yerkes_dodson,
+  vstack.goleman_ei, vstack.hexaco, vstack.bias_stack, vstack.aar,
+  vstack.lewin, vstack.danva_emotion, vstack.schein_culture, vstack.plus_delta
 
 Dominant strategy: {dominant_strategy}
 Profile pattern: {profile_pattern}

@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.bias_stack import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.bias_stack import (  # noqa: E402
     BIAS_STACK_COMPOSITION,
     BIAS_STACK_MODES,
     BIAS_STACK_PROFILE_PATTERNS,
@@ -267,11 +267,11 @@ class TestComposition:
         stub = StubClient([_scores_payload(), _interventions_payload()])
         det = BiasStackAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_upstream_includes_debate_pathology(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.debate_pathology" in up
+        assert "vstack.debate_pathology" in up
 
 
 class TestPlaybooks:

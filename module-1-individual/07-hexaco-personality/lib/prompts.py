@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 HEXACO_SYSTEM_PROMPT = """You are a personality-profile diagnostic grounded in:
@@ -231,10 +231,10 @@ Return a JSON ARRAY of SafetyEventAudit objects. Return only the JSON array."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
 Composition targets available:
-agentcity.lewin, agentcity.cognitive_reappraisal, agentcity.goleman_ei,
-agentcity.devils_advocate, agentcity.bias_stack, agentcity.johari,
-agentcity.schein_culture, agentcity.mcgregor, agentcity.smart_goal,
-agentcity.plus_delta, agentcity.grant_strengths
+vstack.lewin, vstack.cognitive_reappraisal, vstack.goleman_ei,
+vstack.devils_advocate, vstack.bias_stack, vstack.johari,
+vstack.schein_culture, vstack.mcgregor, vstack.smart_goal,
+vstack.plus_delta, vstack.grant_strengths
 
 Task class: {task_class}
 Deployment authority scope: {deployment_authority_scope}

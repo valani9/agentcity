@@ -1,6 +1,6 @@
 # Silent agents are dangerous agents. Edmondson's 25 years explain why.
 
-*A seventh essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A seventh essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -27,7 +27,7 @@ Edmondson identified four observable behaviors that mark high-safety teams. Each
 
 The Detector measures all four against a trace and produces a single safety score plus a register of blocking behaviors observed in the trace itself.
 
-## What `agentcity.psych_safety` does
+## What `vstack.psych_safety` does
 
 The library takes a `MultiAgentSafetyTrace` and produces:
 
@@ -37,9 +37,9 @@ The library takes a `MultiAgentSafetyTrace` and produces:
 4. **A blocking-behavior register** — concrete patterns in the trace that suppressed safety (e.g. "orchestrator overrode dissent without acknowledging it", "verifier approved without inspection")
 5. **A ranked list of interventions** — prompt patches, scaffold changes (dissent rounds, role assignments), uncertainty-surfacing protocols, GRPI working-agreement norms (Pattern #13)
 
-Two LLM passes: scoring + interventions. Same retry/JSON/logging infrastructure as the rest of AgentCity.
+Two LLM passes: scoring + interventions. Same retry/JSON/logging infrastructure as the rest of vstack.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #20 of 34 planned. With this pattern, the library now ships seven patterns:
 
@@ -57,4 +57,4 @@ Twenty-seven patterns to come.
 
 ---
 
-*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/agentcity](https://github.com/valani9/agentcity).*
+*Ilhan Valani is a builder shipping vstack in public. The repo lives at [github.com/valani9/vstack](https://github.com/valani9/vstack).*

@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.plus_delta import (
+from vstack.plus_delta import (
     Commitment,
     DeltaItem,
     FeedbackRequest,

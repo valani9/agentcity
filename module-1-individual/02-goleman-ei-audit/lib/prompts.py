@@ -3,8 +3,8 @@
 The system prompt names the full literature thread so the LLM's
 diagnostic frame is anchored. Templates expose ``{placeholder}`` slots
 that :func:`assemble_prompt` fills, sanitizing free-text fields via
-``agentcity.aar.sanitize_for_prompt`` and fencing them via
-``agentcity.aar.fence``.
+``vstack.aar.sanitize_for_prompt`` and fencing them via
+``vstack.aar.fence``.
 
 Modes:
   - quick: single combined call (1 call, ~2s, ~$0.005)
@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 GOLEMAN_SYSTEM_PROMPT = """You are an Emotional Intelligence diagnostic for AI agents, grounded in the EI literature:
@@ -230,11 +230,11 @@ Each intervention:
   - composition_target_pattern (when intervention_type == "compose_pattern")
 
 Composition targets available:
-  agentcity.lewin, agentcity.aar, agentcity.danva_emotion, agentcity.cognitive_reappraisal,
-  agentcity.johari, agentcity.grant_strengths, agentcity.bias_stack, agentcity.yerkes_dodson,
-  agentcity.motivation_traps, agentcity.glaser_conversation, agentcity.trust_triangle,
-  agentcity.mcgregor, agentcity.lencioni, agentcity.grpi, agentcity.devils_advocate,
-  agentcity.schein_culture, agentcity.plus_delta
+  vstack.lewin, vstack.aar, vstack.danva_emotion, vstack.cognitive_reappraisal,
+  vstack.johari, vstack.grant_strengths, vstack.bias_stack, vstack.yerkes_dodson,
+  vstack.motivation_traps, vstack.glaser_conversation, vstack.trust_triangle,
+  vstack.mcgregor, vstack.lencioni, vstack.grpi, vstack.devils_advocate,
+  vstack.schein_culture, vstack.plus_delta
 
 Weakest domain: {weakest_domain}
 Profile pattern: {profile_pattern}

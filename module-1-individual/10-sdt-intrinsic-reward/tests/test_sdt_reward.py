@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.sdt_reward import (
+from vstack.sdt_reward import (
     SDT_NEEDS,
     AgentSDTTrace,
     NeedScore,

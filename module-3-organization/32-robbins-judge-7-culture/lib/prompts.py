@@ -4,12 +4,12 @@ v0.2.0 prompts:
   - PROFILE_PROMPT (legacy) and QUICK_PROFILE_PROMPT (mode=quick)
   - FORENSIC_PROVENANCE_PROMPT, FORENSIC_RISK_PROMPT, FORENSIC_INTERVENTIONS_PROMPT
   - INTERVENTIONS_PROMPT (legacy + standard mode)
-  - assemble_prompt(): fence + sanitize evidence using agentcity.aar helpers
+  - assemble_prompt(): fence + sanitize evidence using vstack.aar helpers
 """
 
 from __future__ import annotations
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 ROBBINS_SYSTEM_PROMPT = """You are a culture-profile diagnostic working in the tradition
 of Stephen P. Robbins and Timothy A. Judge, "Organizational Behavior" (Pearson, 17th ed.,
@@ -146,7 +146,7 @@ Each intervention must have:
       "add_kill_criterion"      - bound stability / aggressiveness by hard limit
       "new_eval"                - regression test
       "human_review"            - human checkpoint
-      "compose_pattern"         - hand off to another agentcity pattern
+      "compose_pattern"         - hand off to another vstack pattern
   - description (what the intervention does)
   - suggested_implementation (concrete code, prompt-text, or spec)
   - estimated_impact ("high", "medium", "low")

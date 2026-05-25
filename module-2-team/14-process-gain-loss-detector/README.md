@@ -38,7 +38,7 @@ The diagnostic identifies which of the six factors is doing the damage, so the f
 
 ## What this pattern does
 
-The `agentcity.process_gain_loss` library takes a `ProcessTrace` with:
+The `vstack.process_gain_loss` library takes a `ProcessTrace` with:
 
 - One or more **individual baselines** — single-agent attempts at the same task, each scored on quality (and optionally cost)
 - A **team result** — the multi-agent crew's combined output, also scored
@@ -52,7 +52,7 @@ and produces a `ProcessGainLossDetection` with:
 4. **Per-factor evidence** for the six canonical loss factors
 5. **Concrete interventions** ranked by impact: `smaller_team`, `use_single_best_agent`, `decompose_task`, `nominal_group_aggregation`, `explicit_critic`, `structured_handoff`, `context_summarization`, `fixed_vote_aggregation`, `new_eval`, `human_review`
 
-Two LLM passes under the hood: one to score the six factors, one to propose interventions. **Skipped entirely on process gain** — when the team beat the best single agent, there's nothing to fix. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the six factors, one to propose interventions. **Skipped entirely on process gain** — when the team beat the best single agent, there's nothing to fix. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -70,13 +70,13 @@ It also differs from generic multi-agent observability tools (token-counting, la
 ## Design
 
 ```python
-from agentcity.process_gain_loss import (
+from vstack.process_gain_loss import (
     ProcessGainLossDetector,
     ProcessTrace,
     IndividualBaseline,
     TeamResult,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = ProcessTrace(
     task="Write a 1-page research summary on prompt-injection defenses.",

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 SDT_SYSTEM_PROMPT = """You are an intrinsic-motivation reward-shaping diagnostic grounded in:
@@ -196,11 +196,11 @@ Return only the JSON object."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
 Composition targets available:
-agentcity.lewin, agentcity.cognitive_reappraisal, agentcity.goleman_ei,
-agentcity.devils_advocate, agentcity.bias_stack, agentcity.johari,
-agentcity.smart_goal, agentcity.plus_delta, agentcity.schein_culture,
-agentcity.mcgregor, agentcity.hexaco, agentcity.grant_strengths,
-agentcity.motivation_traps, agentcity.vroom_expectancy
+vstack.lewin, vstack.cognitive_reappraisal, vstack.goleman_ei,
+vstack.devils_advocate, vstack.bias_stack, vstack.johari,
+vstack.smart_goal, vstack.plus_delta, vstack.schein_culture,
+vstack.mcgregor, vstack.hexaco, vstack.grant_strengths,
+vstack.motivation_traps, vstack.vroom_expectancy
 
 Most undermined need: {most_undermined_need}
 Profile pattern: {profile_pattern}

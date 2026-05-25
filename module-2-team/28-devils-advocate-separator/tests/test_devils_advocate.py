@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.devils_advocate import (
+from vstack.devils_advocate import (
     PHASES,
     PhaseEvidence,
     RoleSeparationDetection,

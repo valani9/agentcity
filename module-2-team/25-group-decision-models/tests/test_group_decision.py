@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.group_decision import (
+from vstack.group_decision import (
     DECISION_MODELS,
     AgentVote,
     AggregationResult,

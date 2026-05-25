@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 SEPARATOR_SYSTEM_PROMPT = """You are a role-separation diagnostician for AI agents,
@@ -103,8 +103,8 @@ Return only a JSON object representing the CriticVoiceAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 interventions with
 composition targets.
 
-Composition targets: agentcity.bias_stack, agentcity.debate_pathology,
-agentcity.psych_safety, agentcity.aar
+Composition targets: vstack.bias_stack, vstack.debate_pathology,
+vstack.psych_safety, vstack.aar
 
 Role-separation quality: {quality}
 Phase evidence: {evidence}

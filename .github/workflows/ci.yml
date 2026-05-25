@@ -42,7 +42,7 @@ jobs:
         run: |
           pytest module-1-individual/ module-2-team/ module-3-organization/ \
             -v --tb=short \
-            --cov=agentcity \
+            --cov=vstack \
             --cov-report=term-missing \
             --cov-report=xml
 
@@ -194,49 +194,49 @@ jobs:
 
       - name: Verify wheel ships all 34 namespaces + py.typed marker
         run: |
-          python -m pip install dist/agentcity-*-py3-none-any.whl
+          python -m pip install dist/vstack-*-py3-none-any.whl
           python -c "
           import importlib, os
-          import agentcity
-          assert agentcity.__version__, 'top-level __version__ missing'
-          print(f'agentcity v{agentcity.__version__}')
-          assert os.path.exists(os.path.join(os.path.dirname(agentcity.__file__), 'py.typed')), 'py.typed marker missing from wheel'
+          import vstack
+          assert vstack.__version__, 'top-level __version__ missing'
+          print(f'vstack v{vstack.__version__}')
+          assert os.path.exists(os.path.join(os.path.dirname(vstack.__file__), 'py.typed')), 'py.typed marker missing from wheel'
           print('py.typed marker present')
           namespaces = [
-              'agentcity.aar',
-              'agentcity.lencioni',
-              'agentcity.trust_triangle',
-              'agentcity.johari',
-              'agentcity.grpi',
-              'agentcity.bias_stack',
-              'agentcity.psych_safety',
-              'agentcity.thomas_kilmann',
-              'agentcity.feedback_triggers',
-              'agentcity.devils_advocate',
-              'agentcity.lewin',
-              'agentcity.mcallister_trust',
-              'agentcity.social_loafing',
-              'agentcity.debate_pathology',
-              'agentcity.process_gain_loss',
-              'agentcity.smart_goal',
-              'agentcity.mcgregor',
-              'agentcity.group_decision',
-              'agentcity.schein_culture',
-              'agentcity.grant_strengths',
-              'agentcity.plus_delta',
-              'agentcity.robbins_culture',
-              'agentcity.superflocks',
-              'agentcity.yerkes_dodson',
-              'agentcity.org_structure',
-              'agentcity.motivation_traps',
-              'agentcity.glaser_conversation',
-              'agentcity.goleman_ei',
-              'agentcity.sdt_reward',
-              'agentcity.span_of_control',
-              'agentcity.danva_emotion',
-              'agentcity.cognitive_reappraisal',
-              'agentcity.hexaco',
-              'agentcity.vroom_expectancy',
+              'vstack.aar',
+              'vstack.lencioni',
+              'vstack.trust_triangle',
+              'vstack.johari',
+              'vstack.grpi',
+              'vstack.bias_stack',
+              'vstack.psych_safety',
+              'vstack.thomas_kilmann',
+              'vstack.feedback_triggers',
+              'vstack.devils_advocate',
+              'vstack.lewin',
+              'vstack.mcallister_trust',
+              'vstack.social_loafing',
+              'vstack.debate_pathology',
+              'vstack.process_gain_loss',
+              'vstack.smart_goal',
+              'vstack.mcgregor',
+              'vstack.group_decision',
+              'vstack.schein_culture',
+              'vstack.grant_strengths',
+              'vstack.plus_delta',
+              'vstack.robbins_culture',
+              'vstack.superflocks',
+              'vstack.yerkes_dodson',
+              'vstack.org_structure',
+              'vstack.motivation_traps',
+              'vstack.glaser_conversation',
+              'vstack.goleman_ei',
+              'vstack.sdt_reward',
+              'vstack.span_of_control',
+              'vstack.danva_emotion',
+              'vstack.cognitive_reappraisal',
+              'vstack.hexaco',
+              'vstack.vroom_expectancy',
           ]
           for ns in namespaces:
               mod = importlib.import_module(ns)

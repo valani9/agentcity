@@ -39,7 +39,7 @@ The diagnostic finding: **multi-agent systems with low psychological safety prod
 
 ## What this pattern does
 
-The `agentcity.psych_safety` library takes a multi-agent trace and produces:
+The `vstack.psych_safety` library takes a multi-agent trace and produces:
 
 1. **A psychological-safety score** in [0.0, 1.0] derived from the four observable behaviors.
 2. **Per-behavior evidence** — specific message exchanges that demonstrate voice/help-seeking/error-reporting/boundary-spanning, or their absence.
@@ -57,12 +57,12 @@ The `agentcity.psych_safety` library takes a multi-agent trace and produces:
 ## Design
 
 ```python
-from agentcity.psych_safety import (
+from vstack.psych_safety import (
     PsychologicalSafetyDetector,
     MultiAgentSafetyTrace,
     AgentMessage,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = MultiAgentSafetyTrace(
     team_id="research-crew-v2",

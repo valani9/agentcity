@@ -26,5 +26,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.smart_goal` is a derivative implementation;
+and publishers. `vstack.smart_goal` is a derivative implementation;
 no copyrighted text is reproduced here.

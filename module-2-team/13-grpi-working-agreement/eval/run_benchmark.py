@@ -27,13 +27,13 @@ except ImportError as e:
     raise SystemExit("PyYAML required. Install: pip install pyyaml") from e
 
 try:
-    from agentcity.aar.clients import (
+    from vstack.aar.clients import (
         AnthropicClient,
         OllamaClient,
         OpenAIClient,
         StubClient,
     )
-    from agentcity.grpi import (
+    from vstack.grpi import (
         AgentRole,
         GRPIWorkingAgreementGenerator,
         TeamSetupRequest,
@@ -41,7 +41,7 @@ try:
     )
 except ImportError as exc:
     raise SystemExit(
-        "agentcity not installed. Run: pip install -e . from the repo root.\n"
+        "vstack not installed. Run: pip install -e . from the repo root.\n"
         f"(Original import error: {exc})"
     ) from exc
 

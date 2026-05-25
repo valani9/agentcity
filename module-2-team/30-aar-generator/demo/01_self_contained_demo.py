@@ -8,9 +8,9 @@ the same retry without escalating) and runs the AAR Generator on it.
 Two ways to run:
 
     # With a real LLM:
-    AGENTCITY_LLM=anthropic python demo/01_self_contained_demo.py
-    AGENTCITY_LLM=openai    python demo/01_self_contained_demo.py
-    AGENTCITY_LLM=ollama    python demo/01_self_contained_demo.py
+    vstack_LLM=anthropic python demo/01_self_contained_demo.py
+    vstack_LLM=openai    python demo/01_self_contained_demo.py
+    vstack_LLM=ollama    python demo/01_self_contained_demo.py
 
     # With the stub client (no API key required, returns canned responses):
     python demo/01_self_contained_demo.py
@@ -26,7 +26,7 @@ from pathlib import Path
 
 # Add the pattern's root to path so the `lib` package can be imported
 # without installing the project. After `pip install -e .` from the repo
-# root, switch to `from agentcity.aar import ...` instead.
+# root, switch to `from vstack.aar import ...` instead.
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
@@ -238,7 +238,7 @@ def stub_canned_responses() -> list[str]:
 
 
 def pick_client() -> object:
-    choice = os.environ.get("AGENTCITY_LLM", "stub").lower()
+    choice = os.environ.get("vstack_LLM", "stub").lower()
     if choice == "anthropic":
         return AnthropicClient(model=os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"))
     if choice == "openai":

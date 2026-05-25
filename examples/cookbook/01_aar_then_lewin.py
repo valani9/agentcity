@@ -16,7 +16,7 @@ import json
 import os
 from datetime import datetime, timezone
 
-from agentcity.aar import (
+from vstack.aar import (
     AARGenerator,
     AgentTrace,
     StubClient,
@@ -24,7 +24,7 @@ from agentcity.aar import (
     new_run_id,
     run_context,
 )
-from agentcity.lewin import AgentFailureTrace, FailureStep, LewinAttributionDetector
+from vstack.lewin import AgentFailureTrace, FailureStep, LewinAttributionDetector
 
 
 def _aar_stub() -> StubClient:
@@ -105,7 +105,7 @@ def _lewin_stub() -> StubClient:
 
 
 def main() -> None:
-    if os.environ.get("AGENTCITY_LLM", "stub").lower() != "stub":
+    if os.environ.get("vstack_LLM", "stub").lower() != "stub":
         raise SystemExit(
             "This cookbook recipe is stub-only by design. For a real-LLM run, "
             "see each pattern's demo/ directory."

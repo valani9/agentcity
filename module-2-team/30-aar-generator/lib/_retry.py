@@ -18,7 +18,7 @@ import time
 from functools import wraps
 from typing import Any, Callable, TypeVar
 
-log = logging.getLogger("agentcity.aar.retry")
+log = logging.getLogger("vstack.aar.retry")
 
 T = TypeVar("T")
 

@@ -10,25 +10,25 @@ Subcommands:
   playbooks — list available (locus, factor) playbook keys.
   compose   — show the composition graph (upstream / downstream / overlays).
 
-The CLI mirrors the shape of ``agentcity aar`` (pattern #30's CLI) so
+The CLI mirrors the shape of ``vstack aar`` (pattern #30's CLI) so
 the user experience is consistent across patterns.
 
 Examples
 --------
 
     # Stub-backed analyze, markdown output.
-    agentcity-lewin analyze --trace fixtures/stale_rag.json --client stub
+    vstack-lewin analyze --trace fixtures/stale_rag.json --client stub
 
     # Anthropic-backed forensic analyze, JSON output piped into jq.
-    agentcity-lewin analyze --trace fail.json --client anthropic \\
+    vstack-lewin analyze --trace fail.json --client anthropic \\
         --mode forensic --format json | jq '.dominant_locus'
 
     # Batch a corpus and write detections to a dir.
-    agentcity-lewin batch --corpus eval/synthetic_lewin_failures.yaml \\
+    vstack-lewin batch --corpus eval/synthetic_lewin_failures.yaml \\
         --out detections/ --mode standard --client stub
 
     # Compare a fresh detection to a stored baseline.
-    agentcity-lewin analyze --trace fail.json --baseline detections/baseline.json
+    vstack-lewin analyze --trace fail.json --baseline detections/baseline.json
 """
 
 from __future__ import annotations
@@ -56,7 +56,7 @@ def _make_stub_client(stub_path: str | None) -> object:
     responses from that JSON file (a list of strings). Otherwise build a
     minimal stub with empty responses (only valid for ``schema``/``validate``).
     """
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     responses: list[str] = []
     if stub_path:
@@ -76,17 +76,17 @@ def _make_client(name: str, model: str | None, stub_path: str | None) -> object:
     if name == "stub":
         return _make_stub_client(stub_path)
     if name == "anthropic":
-        from agentcity.aar import AnthropicClient
+        from vstack.aar import AnthropicClient
 
         return AnthropicClient(
             model=model or os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
         )
     if name == "openai":
-        from agentcity.aar import OpenAIClient
+        from vstack.aar import OpenAIClient
 
         return OpenAIClient(model=model or os.environ.get("OPENAI_MODEL", "gpt-5"))
     if name == "ollama":
-        from agentcity.aar import OllamaClient
+        from vstack.aar import OllamaClient
 
         return OllamaClient(model=model or os.environ.get("OLLAMA_MODEL", "llama3.1:8b"))
     raise SystemExit(f"unknown client: {name!r}. Choose stub|anthropic|openai|ollama.")
@@ -269,7 +269,7 @@ def _cmd_compose(args: argparse.Namespace) -> int:
 
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="agentcity-lewin",
+        prog="vstack-lewin",
         description="Lewin B = f(P, E) failure-attribution diagnostic.",
     )
     sub = p.add_subparsers(dest="cmd", required=True)

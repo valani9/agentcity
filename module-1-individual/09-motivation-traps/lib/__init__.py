@@ -1,4 +1,4 @@
-"""agentcity.motivation_traps -- Saxberg's 4 Motivation Traps applied
+"""vstack.motivation_traps -- Saxberg's 4 Motivation Traps applied
 to AI agents.
 
 Anchored in:
@@ -22,11 +22,11 @@ an alias for ``MotivationTrapsAnalyzer``.
 Quick start
 -----------
 
-    from agentcity.motivation_traps import (
+    from vstack.motivation_traps import (
         MotivationTrapsAnalyzer,
         AgentMotivationTrace,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentMotivationTrace(
         agent_id="research-agent",
@@ -52,10 +52,10 @@ Quick start
 CLI
 ---
 
-    agentcity-motivation analyze --trace trace.json --mode forensic
-    agentcity-motivation playbooks
-    agentcity-motivation compose
-    agentcity-motivation schema --target trace
+    vstack-motivation analyze --trace trace.json --mode forensic
+    vstack-motivation playbooks
+    vstack-motivation compose
+    vstack-motivation schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

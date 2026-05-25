@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: no challenges across 3+ rounds.",
             "Add `assign_devils_advocate`.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Janis 1972",
@@ -54,7 +54,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: dissent introduced but rapidly dismissed.",
             "Add `round_robin_dissent` requiring each agent to surface one objection.",
-            "Compose with `agentcity.psych_safety`.",
+            "Compose with `vstack.psych_safety`.",
         ],
         "1d",
         "Janis 1972; Edmondson 1999",
@@ -66,7 +66,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: each round pushes toward higher risk.",
             "Add `anchor_to_base_rates` injecting external comparison.",
-            "Compose with `agentcity.bias_stack`.",
+            "Compose with `vstack.bias_stack`.",
         ],
         "1d",
         "Stoner 1968; Kahneman 2011",
@@ -111,7 +111,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: tone drives convergence more than argument quality.",
             "Add `tone_normalization` requiring neutral framing of each turn.",
-            "Compose with `agentcity.glaser_conversation`.",
+            "Compose with `vstack.glaser_conversation`.",
         ],
         "1d",
         "Hatfield/Cacioppo/Rapson 1993; Glaser 2014",

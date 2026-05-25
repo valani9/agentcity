@@ -1,14 +1,14 @@
 """
-agentcity.aar — Wharton 4-step After-Action Review generator for AI agents.
+vstack.aar — Wharton 4-step After-Action Review generator for AI agents.
 
-This package implements pattern #30 of the AgentCity library: After-Action
+This package implements pattern #30 of the vstack library: After-Action
 Reviews applied to AI agent runs, anchored in the Wharton@Work AAR doctrine
 and US Army TC 25-20.
 
 Quick start:
 
-    from agentcity.aar import AARGenerator, AgentTrace, TraceStep
-    from agentcity.aar.clients import AnthropicClient
+    from vstack.aar import AARGenerator, AgentTrace, TraceStep
+    from vstack.aar.clients import AnthropicClient
 
     trace = AgentTrace(
         goal="Refactor the auth module to use JWTs",

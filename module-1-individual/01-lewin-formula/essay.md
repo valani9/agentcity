@@ -1,6 +1,6 @@
 # Your agent isn't bad at math. Lewin had this debugged in 1936.
 
-*An eleventh essay from AgentCity — organizational behavior, practiced on AI agents.*
+*An eleventh essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -37,7 +37,7 @@ When an agent fails, the cause sits in one of three places:
 
 The systematic bias in AI engineering teams — at least the ones I've seen up close — is over-attribution to Internal. Every failure becomes "the model is bad." Every fix becomes "we need a better model." Half the time, the environment swap would have been a one-line change.
 
-## What `agentcity.lewin` does
+## What `vstack.lewin` does
 
 The library takes an `AgentFailureTrace` — task, reasoning steps, outcome, plus any **individual factors** and **environmental factors** the team has identified, plus an optional **initial team attribution** — and produces a `LewinDetection` with:
 
@@ -48,7 +48,7 @@ The library takes an `AgentFailureTrace` — task, reasoning steps, outcome, plu
 5. **A check on the initial team attribution** — does the diagnostic AGREE or OVERTURN where the team initially pointed the finger?
 6. **A ranked list of interventions**: `change_model`, `change_prompt`, `change_tools`, `change_context`, `change_rag_index`, `change_orchestration`, `change_pipeline`, `new_eval`, `human_review`
 
-Two LLM passes under the hood: one to score the three loci, one to propose interventions. Same retry / graceful-degradation / structured-logging infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the three loci, one to propose interventions. Same retry / graceful-degradation / structured-logging infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -56,11 +56,11 @@ Most agent eval frameworks measure the *output* of the agent. They tell you it's
 
 The Lewin diagnostic answers the prior question. It tells you whether the failure is in the model or in the scaffolding *before* you spend the engineering cycles. The OVERTURNS verdict in particular — the diagnostic disagrees with the team's initial attribution — is the operationally valuable output. That's the moment you stop fine-tuning and start fixing your RAG index.
 
-If you only adopt one diagnostic from AgentCity, this is a strong candidate. Most teams already know how to fix prompts and rebuild RAG indices. They just need a structured way to be told that's where the work actually is.
+If you only adopt one diagnostic from vstack, this is a strong candidate. Most teams already know how to fix prompts and rebuild RAG indices. They just need a structured way to be told that's where the work actually is.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #01 of 34 — and the eleventh patterns shipped. AgentCity now ships across multiple diagnostic axes:
+This is pattern #01 of 34 — and the eleventh patterns shipped. vstack now ships across multiple diagnostic axes:
 
 - **Generative**: #13 GRPI Working Agreement
 - **Event-shaped**: #30 AAR Generator
@@ -78,7 +78,7 @@ The Lewin pattern sits *upstream* of the others. Before you reach for Bias-Stack
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -90,4 +90,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

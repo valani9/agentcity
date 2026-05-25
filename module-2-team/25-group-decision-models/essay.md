@@ -1,6 +1,6 @@
 # Your multi-agent vote is hiding a blocker. The facilitator canon fixed this.
 
-*An eighteenth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*An eighteenth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -33,7 +33,7 @@ Multi-agent AI crews have the same default. Most production systems use one of:
 
 None of these are wrong universally; all of them are wrong on some non-trivial subset of decisions. **Picking the right method is itself a decision-quality lever** — separate from the substance of the decision being made.
 
-## What `agentcity.group_decision` does
+## What `vstack.group_decision` does
 
 The library takes a `DecisionRequest` with:
 
@@ -53,7 +53,7 @@ and produces a `DecisionProtocol` with:
 7. **Fallback model** — what to use if the primary doesn't converge
 8. **Tally result** (optional) — when votes are supplied in the request, a deterministic local tally runs without a second LLM call
 
-Single LLM pass for the protocol generation; the tally is pure Python with one function per method. Same retry / graceful-degradation infrastructure as the rest of AgentCity. Output exposes `to_orchestrator_preamble()` for prepending to the orchestrator's system prompt — the orchestrator literally executes the recommended method, not a default.
+Single LLM pass for the protocol generation; the tally is pure Python with one function per method. Same retry / graceful-degradation infrastructure as the rest of vstack. Output exposes `to_orchestrator_preamble()` for prepending to the orchestrator's system prompt — the orchestrator literally executes the recommended method, not a default.
 
 ## Why this matters operationally
 
@@ -65,9 +65,9 @@ The forced_model override lets teams who've already chosen their method skip the
 
 The third under-appreciated feature is `to_orchestrator_preamble()`. The orchestrator gets a condensed text block that's literally prepended to its system prompt. So the orchestrator doesn't *interpret* a decision-making policy; it *executes* one. This is the operational analog of the SMART Goal Generator's `to_agent_preamble()` — the generated artifact becomes the runtime context.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #25 of 34 — the eighteenth pattern shipped. AgentCity now has **three generative patterns**:
+This is pattern #25 of 34 — the eighteenth pattern shipped. vstack now has **three generative patterns**:
 
 - **#13 GRPI Working Agreement Generator** — team-level: goals + roles + processes + interactions
 - **#24 SMART Goal Generator** — individual-goal level: Specific, Measurable, Achievable, Relevant, Time-bound (with kill criteria)
@@ -80,7 +80,7 @@ Pattern #25 also closes the multi-agent diagnostic loop: where #14 (Process Gain
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -92,4 +92,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

@@ -1,6 +1,6 @@
 # Your agent can't take feedback. Stone & Heen explained why in 2014.
 
-*A ninth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A ninth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -28,7 +28,7 @@ The three triggers:
 
 All three are visible in production agent traces. All three look different on the surface but produce the same outcome: feedback fails to land.
 
-## What `agentcity.feedback_triggers` does
+## What `vstack.feedback_triggers` does
 
 The library takes a `FeedbackInteractionTrace` — task, user-agent message exchange (with feedback messages flagged), outcome, whether the agent ultimately incorporated the feedback — and produces a `FeedbackTriggerDetection` with:
 
@@ -38,7 +38,7 @@ The library takes a `FeedbackInteractionTrace` — task, user-agent message exch
 4. **An intake-quality label** (`absorbs-feedback` / `trigger-prone` / `feedback-rejecting`) for at-a-glance dashboards
 5. **A ranked list of interventions** — acknowledge-first templates, concede-then-clarify scripts, separate-data-from-source prompts, recast-identity language, regression tests, human-review escalation
 
-Two LLM passes under the hood: one to score the three triggers, one to propose interventions for the dominant trigger. Same retry / graceful-degradation / structured-logging infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the three triggers, one to propose interventions for the dominant trigger. Same retry / graceful-degradation / structured-logging infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -48,7 +48,7 @@ The Apollo 11 date case in the corpus is the canonical version: agent says "July
 
 A coding assistant that argues with a senior dev about regex behavior is a relationship trigger. A marketing-copy agent that collapses into apology rather than engaging the actual critique is an identity trigger. None of these failures show up in single-turn evals because they only manifest at the *second* user message — the one that contains the correction.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #22 of 34. With it, the library now ships nine patterns across three diagnostic axes:
 
@@ -67,7 +67,7 @@ The 3-Trigger Diagnostic specifically sits next to the Bias-Stack Detector. Bias
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -79,4 +79,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

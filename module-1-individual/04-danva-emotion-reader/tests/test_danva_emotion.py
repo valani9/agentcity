@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.danva_emotion import (
+from vstack.danva_emotion import (
     EMOTION_CATEGORIES,
     AgentEmotionTrace,
     EmotionIntervention,

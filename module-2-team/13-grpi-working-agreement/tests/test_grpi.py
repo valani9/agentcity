@@ -15,7 +15,7 @@ import json
 
 import pytest
 
-from agentcity.grpi import (
+from vstack.grpi import (
     AgentRole,
     GRPIWorkingAgreementGenerator,
     GoalsSection,

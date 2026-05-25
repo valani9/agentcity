@@ -12,7 +12,7 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import (  # noqa: E402
+from vstack.aar import (  # noqa: E402
     AAR,
     AAR_COMPOSITION,
     AAR_MODES,
@@ -210,11 +210,11 @@ class TestComposition:
         stub = StubClient(_aar_payloads(lessons_text="agent got stuck in retry loop"))
         aar = AARAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(aar)
-        assert "agentcity.bias_stack" in recs
+        assert "vstack.bias_stack" in recs
 
     def test_upstream_includes_grpi(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.grpi" in up
+        assert "vstack.grpi" in up
 
 
 class TestPlaybooks:

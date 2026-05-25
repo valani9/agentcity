@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.span_of_control import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.span_of_control import (  # noqa: E402
     PLAYBOOKS,
     SEVERITY_ORDER,
     SPAN_COMPOSITION,
@@ -216,11 +216,11 @@ class TestComposition:
             _trace(agents=_hub_spoke(6), incoming_request_rate=500.0)
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.org_structure" in recs
+        assert "vstack.org_structure" in recs
 
     def test_upstream_includes_org_structure(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.org_structure" in up
+        assert "vstack.org_structure" in up
 
 
 class TestPlaybooks:

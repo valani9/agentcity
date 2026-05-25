@@ -33,7 +33,7 @@ All three are visible in production agent traces. All three block feedback intak
 
 ## What this pattern does
 
-The `agentcity.feedback_triggers` library takes a structured feedback exchange and produces:
+The `vstack.feedback_triggers` library takes a structured feedback exchange and produces:
 
 1. **A per-trigger score** in [0.0, 1.0] for truth, relationship, and identity
 2. **A dominant-trigger diagnosis** — the trigger with the highest score (truth breaks ties, since it's the most common and has the cleanest interventions)
@@ -41,7 +41,7 @@ The `agentcity.feedback_triggers` library takes a structured feedback exchange a
 4. **An overall feedback-intake-quality label** — `absorbs-feedback`, `trigger-prone`, or `feedback-rejecting`
 5. **Concrete interventions** ranked by impact on the dominant trigger: acknowledge-first templates, concede-then-clarify scripts, separate-data-from-source prompts, recast-identity language, regression tests, human-review escalation
 
-Two LLM passes under the hood: one to score the three triggers against the exchange, one to propose interventions for the dominant trigger. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the three triggers against the exchange, one to propose interventions for the dominant trigger. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -53,12 +53,12 @@ Two LLM passes under the hood: one to score the three triggers against the excha
 ## Design
 
 ```python
-from agentcity.feedback_triggers import (
+from vstack.feedback_triggers import (
     FeedbackTriggerDetector,
     FeedbackInteractionTrace,
     FeedbackMessage,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = FeedbackInteractionTrace(
     agent_id="coding-agent-001",

@@ -3,7 +3,7 @@
 > *"The hardest thing about giving feedback is keeping it specific and behavioral. 'Good work' is not feedback. 'You did a great job' is not feedback. Feedback is: 'When you opened the meeting by restating last week's commitments, the team got to the substance in five minutes instead of twenty. Keep doing that.'"*
 > — Brené Brown, *Dare to Lead* (Random House, 2018), riffing on the plus/delta format from the facilitator canon
 
-**Status:** 🟢 shipped — fourth generative pattern in AgentCity
+**Status:** 🟢 shipped — fourth generative pattern in vstack
 **Module:** 2 (Team) — multi-agent crews
 **Anchor framework:** The plus/delta format originated in Joiner Associates training materials in the 1990s and became the dominant retrospective protocol across agile, lean, and design-thinking communities. Re-popularized by Brené Brown's *Dare to Lead* (2018) and Esther Derby & Diana Larsen's *Agile Retrospectives* (Pragmatic, 2006). Variants include "start/stop/continue" and "what worked / what to change."
 
@@ -51,7 +51,7 @@ This is what a productive agent-on-agent review looks like. The format enforces 
 
 ## What this pattern does
 
-The `agentcity.plus_delta` library takes a `FeedbackRequest` with:
+The `vstack.plus_delta` library takes a `FeedbackRequest` with:
 
 - **Reviewer agent** and **subject agent** names
 - **Task context** — what the team is working on overall
@@ -68,7 +68,7 @@ and produces a `PlusDeltaFeedback` artifact with:
 4. **Overall assessment**: `keep-going` / `iterate` / `rework`
 5. **Feedback quality score** in [0.0, 1.0] (self-reported specificity)
 
-Single LLM pass. The generator enforces max-items caps, infers the overall assessment from delta severities if the LLM omitted it, and reconciles the quality score. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Single LLM pass. The generator enforces max-items caps, infers the overall assessment from delta severities if the LLM omitted it, and reconciles the quality score. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 Two output formats:
 - `to_markdown()` — full structured artifact for storage / display
@@ -84,11 +84,11 @@ Two output formats:
 ## Design
 
 ```python
-from agentcity.plus_delta import (
+from vstack.plus_delta import (
     PlusDeltaFeedbackGenerator,
     FeedbackRequest,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 request = FeedbackRequest(
     reviewer_agent="senior-eng",

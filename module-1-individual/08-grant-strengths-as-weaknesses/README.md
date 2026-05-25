@@ -46,12 +46,12 @@ Diagnoses which of seven canonical strength-overuse failure modes is dominant in
 ## Quick start
 
 ```python
-from agentcity.grant_strengths import (
+from vstack.grant_strengths import (
     GrantStrengthsAnalyzer,
     AgentBehaviorTrace,
     AgentBehaviorStep,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentBehaviorTrace(
     agent_id="db-admin-001",
@@ -73,58 +73,58 @@ detection = GrantStrengthsAnalyzer(
 print(detection.to_markdown())
 # dominant_overuse: helpfulness
 # profile_pattern: harm_realized_dominant_overuse
-# Composition handoff: agentcity.devils_advocate, agentcity.hexaco, agentcity.lewin
+# Composition handoff: vstack.devils_advocate, vstack.hexaco, vstack.lewin
 ```
 
 ## CLI
 
 ```bash
 # Single trace
-agentcity-grant analyze --trace trace.json --mode forensic
+vstack-grant analyze --trace trace.json --mode forensic
 
 # Batch over a YAML corpus
-agentcity-grant batch --corpus corpus.yaml --out detections/ --mode standard
+vstack-grant batch --corpus corpus.yaml --out detections/ --mode standard
 
 # Re-render an existing detection JSON
-agentcity-grant replay --detection detection.json
+vstack-grant replay --detection detection.json
 
 # Validate a trace schema
-agentcity-grant validate --trace trace.json
+vstack-grant validate --trace trace.json
 
 # Dump JSON schemas
-agentcity-grant schema --target trace
-agentcity-grant schema --target detection
+vstack-grant schema --target trace
+vstack-grant schema --target detection
 
 # Inspect the 12 playbooks
-agentcity-grant playbooks
+vstack-grant playbooks
 
 # Inspect the composition graph
-agentcity-grant compose
+vstack-grant compose
 ```
 
 ## Composition
 
 **Upstream patterns:**
-- `agentcity.lewin` -- attribute the overuse to person/environment locus.
-- `agentcity.aar` -- the after-action review the trace comes from.
-- `agentcity.hexaco` -- HEXACO personality + safety dimension.
-- `agentcity.cognitive_reappraisal` -- emotion-regulation under pushback.
-- `agentcity.goleman_ei` -- emotional intelligence components.
+- `vstack.lewin` -- attribute the overuse to person/environment locus.
+- `vstack.aar` -- the after-action review the trace comes from.
+- `vstack.hexaco` -- HEXACO personality + safety dimension.
+- `vstack.cognitive_reappraisal` -- emotion-regulation under pushback.
+- `vstack.goleman_ei` -- emotional intelligence components.
 
 **Downstream patterns** (chosen by profile pattern):
-- `helpfulness_overuse_destructive_action` -> `agentcity.devils_advocate` + `agentcity.hexaco` + `agentcity.lewin`
-- `agreeableness_overuse_sycophancy` -> `agentcity.devils_advocate` + `agentcity.cognitive_reappraisal` + `agentcity.bias_stack`
-- `thoroughness_overuse_analysis_paralysis` -> `agentcity.yerkes_dodson` + `agentcity.smart_goal`
-- `confidence_overuse_under_hedging` -> `agentcity.hexaco` + `agentcity.bias_stack`
-- `multi_overuse_compounded` -> `agentcity.hexaco` + `agentcity.devils_advocate` + `agentcity.bias_stack`
-- `harm_realized_dominant_overuse` -> `agentcity.aar` + `agentcity.lewin` + `agentcity.devils_advocate`
+- `helpfulness_overuse_destructive_action` -> `vstack.devils_advocate` + `vstack.hexaco` + `vstack.lewin`
+- `agreeableness_overuse_sycophancy` -> `vstack.devils_advocate` + `vstack.cognitive_reappraisal` + `vstack.bias_stack`
+- `thoroughness_overuse_analysis_paralysis` -> `vstack.yerkes_dodson` + `vstack.smart_goal`
+- `confidence_overuse_under_hedging` -> `vstack.hexaco` + `vstack.bias_stack`
+- `multi_overuse_compounded` -> `vstack.hexaco` + `vstack.devils_advocate` + `vstack.bias_stack`
+- `harm_realized_dominant_overuse` -> `vstack.aar` + `vstack.lewin` + `vstack.devils_advocate`
 
 ## Failure-mode playbooks
 
-12 curated `(strength, failure_mode)` playbooks. Each carries a literature anchor. Inspect them with `agentcity-grant playbooks` or programmatically:
+12 curated `(strength, failure_mode)` playbooks. Each carries a literature anchor. Inspect them with `vstack-grant playbooks` or programmatically:
 
 ```python
-from agentcity.grant_strengths import find_playbook_for_intervention
+from vstack.grant_strengths import find_playbook_for_intervention
 
 pb = find_playbook_for_intervention(
     "helpfulness", "add_destructive_action_gate"
@@ -151,7 +151,7 @@ Plus the Bai 2022 Constitutional AI and Casper 2023 reward-hacking cross-referen
 
 ## Production infrastructure
 
-Wired into the shared `agentcity.aar` infra:
+Wired into the shared `vstack.aar` infra:
 
 - **Structured logging** with `run_id` correlation across LLM calls.
 - **Token + cost telemetry** via `record_llm_call`.
@@ -165,7 +165,7 @@ Wired into the shared `agentcity.aar` infra:
 The v0.0.x interface is preserved:
 
 ```python
-from agentcity.grant_strengths import StrengthsOveruseDetector  # alias of GrantStrengthsAnalyzer
+from vstack.grant_strengths import StrengthsOveruseDetector  # alias of GrantStrengthsAnalyzer
 ```
 
 The v0.0.x `StrengthsOveruseDetector(...)` call still works -- defaults to `mode="standard"` which keeps the 2-call cost profile.

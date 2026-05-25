@@ -17,7 +17,7 @@
 
 4. **Kahneman, D. (2011)** *Thinking, Fast and Slow.* FSG. The
    underlying-assumption layer in AI agents is partly the bias stack;
-   composes downstream with `agentcity.bias_stack`.
+   composes downstream with `vstack.bias_stack`.
 
 ## How citations are surfaced
 
@@ -27,5 +27,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.schein_culture` is a derivative
+and publishers. `vstack.schein_culture` is a derivative
 implementation; no copyrighted text is reproduced here.

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 GLASER_SYSTEM_PROMPT = """You are a conversation-quality diagnostic working in the
@@ -114,8 +114,8 @@ Return only a JSON object representing the LevelTransitionAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked phrasing
 interventions with composition targets.
 
-Composition targets: agentcity.danva_emotion, agentcity.goleman_ei,
-agentcity.mcallister_trust, agentcity.psych_safety, agentcity.aar
+Composition targets: vstack.danva_emotion, vstack.goleman_ei,
+vstack.mcallister_trust, vstack.psych_safety, vstack.aar
 
 Dominant state: {dominant_state}
 Conversation level: {conversation_level}

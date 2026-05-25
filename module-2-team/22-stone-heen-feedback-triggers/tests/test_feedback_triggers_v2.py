@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.feedback_triggers import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.feedback_triggers import (  # noqa: E402
     FEEDBACK_PROFILE_PATTERNS,
     FEEDBACK_TRIGGERS_COMPOSITION,
     FEEDBACK_TRIGGERS_MODES,
@@ -253,11 +253,11 @@ class TestComposition:
         stub = StubClient([_scores_payload(), _interventions_payload()])
         det = FeedbackTriggerAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_upstream_includes_psych_safety(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.psych_safety" in up
+        assert "vstack.psych_safety" in up
 
 
 class TestPlaybooks:

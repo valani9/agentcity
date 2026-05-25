@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.schein_culture import (
+from vstack.schein_culture import (
     CULTURE_LAYERS,
     AgentCultureTrace,
     CultureAuditDetection,

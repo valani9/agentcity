@@ -4,7 +4,7 @@ Tests verify each subcommand returns exit 0 on a canned trace + canned
 LLM responses, and that the output contains the expected structural
 markers (dominant locus name, mode label, etc.).
 
-The CLI is invoked via :func:`agentcity.lewin.cli.main` directly (not
+The CLI is invoked via :func:`vstack.lewin.cli.main` directly (not
 via subprocess) so the tests don't depend on entry-point registration
 being live in the current venv.
 """
@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from agentcity.lewin.cli import main as cli_main
+from vstack.lewin.cli import main as cli_main
 
 
 def _write_trace(tmp_path: Path, name: str = "trace.json") -> Path:

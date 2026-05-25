@@ -42,11 +42,11 @@ Diagnoses which of Saxberg's four motivation traps is dominant in an AI agent's 
 ## Quick start
 
 ```python
-from agentcity.motivation_traps import (
+from vstack.motivation_traps import (
     MotivationTrapsAnalyzer,
     AgentMotivationTrace,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentMotivationTrace(
     agent_id="research-agent",
@@ -72,43 +72,43 @@ detection = MotivationTrapsAnalyzer(
 print(detection.to_markdown())
 # dominant_trap: self_efficacy
 # profile_pattern: self_efficacy_collapse_uncertainty
-# Composition handoff: agentcity.cognitive_reappraisal, agentcity.smart_goal
+# Composition handoff: vstack.cognitive_reappraisal, vstack.smart_goal
 ```
 
 ## CLI
 
 ```bash
-agentcity-motivation analyze --trace trace.json --mode forensic
-agentcity-motivation batch --corpus corpus.yaml --out detections/
-agentcity-motivation replay --detection detection.json
-agentcity-motivation validate --trace trace.json
-agentcity-motivation schema --target trace
-agentcity-motivation playbooks
-agentcity-motivation compose
+vstack-motivation analyze --trace trace.json --mode forensic
+vstack-motivation batch --corpus corpus.yaml --out detections/
+vstack-motivation replay --detection detection.json
+vstack-motivation validate --trace trace.json
+vstack-motivation schema --target trace
+vstack-motivation playbooks
+vstack-motivation compose
 ```
 
 ## Composition
 
 **Upstream patterns:**
-- `agentcity.lewin` -- attribute the trap signal to person/environment locus.
-- `agentcity.aar` -- the after-action review the trace comes from.
-- `agentcity.cognitive_reappraisal` -- emotion-regulation pressure.
-- `agentcity.goleman_ei` -- emotional intelligence components.
-- `agentcity.hexaco` -- HEXACO personality (low-C correlates with attribution trap).
+- `vstack.lewin` -- attribute the trap signal to person/environment locus.
+- `vstack.aar` -- the after-action review the trace comes from.
+- `vstack.cognitive_reappraisal` -- emotion-regulation pressure.
+- `vstack.goleman_ei` -- emotional intelligence components.
+- `vstack.hexaco` -- HEXACO personality (low-C correlates with attribution trap).
 
 **Downstream patterns** (chosen by profile pattern):
-- `values_dominant_irrelevance` -> `agentcity.smart_goal` + `agentcity.schein_culture`
-- `self_efficacy_collapse_uncertainty` -> `agentcity.cognitive_reappraisal` + `agentcity.smart_goal`
-- `emotions_post_rejection_cascade` -> `agentcity.cognitive_reappraisal` + `agentcity.goleman_ei`
-- `attribution_loop_wrong_cause` -> `agentcity.bias_stack` + `agentcity.johari`
-- `multi_trap_compounded` -> `agentcity.hexaco` + `agentcity.cognitive_reappraisal` + `agentcity.lewin`
+- `values_dominant_irrelevance` -> `vstack.smart_goal` + `vstack.schein_culture`
+- `self_efficacy_collapse_uncertainty` -> `vstack.cognitive_reappraisal` + `vstack.smart_goal`
+- `emotions_post_rejection_cascade` -> `vstack.cognitive_reappraisal` + `vstack.goleman_ei`
+- `attribution_loop_wrong_cause` -> `vstack.bias_stack` + `vstack.johari`
+- `multi_trap_compounded` -> `vstack.hexaco` + `vstack.cognitive_reappraisal` + `vstack.lewin`
 
 ## Failure-mode playbooks
 
-12 curated `(trap, failure_mode)` playbooks anchored in the literature. Inspect with `agentcity-motivation playbooks` or:
+12 curated `(trap, failure_mode)` playbooks anchored in the literature. Inspect with `vstack-motivation playbooks` or:
 
 ```python
-from agentcity.motivation_traps import find_playbook_for_intervention
+from vstack.motivation_traps import find_playbook_for_intervention
 
 pb = find_playbook_for_intervention("self_efficacy", "scaffold_subtasks")
 print(pb.title)
@@ -133,7 +133,7 @@ Plus Dweck (2006) mindset and Lepper-Henderlong (2000) praise cross-references.
 
 ## Production infrastructure
 
-Wired into the shared `agentcity.aar` infra:
+Wired into the shared `vstack.aar` infra:
 
 - **Structured logging** with `run_id` correlation.
 - **Token + cost telemetry**.
@@ -145,7 +145,7 @@ Wired into the shared `agentcity.aar` infra:
 ## Backward compatibility
 
 ```python
-from agentcity.motivation_traps import MotivationTrapsDetector  # alias of MotivationTrapsAnalyzer
+from vstack.motivation_traps import MotivationTrapsDetector  # alias of MotivationTrapsAnalyzer
 ```
 
 The v0.0.x `MotivationTrapsDetector(...)` call still works -- defaults to `mode="standard"`.

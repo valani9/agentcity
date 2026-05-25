@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: no external_critique phase in the trace.",
             "Add `add_critic_agent` for a distinct critic role.",
-            "Compose with `agentcity.debate_pathology`.",
+            "Compose with `vstack.debate_pathology`.",
         ],
         "1d",
         "Janis 1972; Schwenk 1990",
@@ -54,7 +54,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: plan considers only one approach.",
             "Add `alternative_hypothesis_step` requiring 2+ alternatives.",
-            "Compose with `agentcity.bias_stack`.",
+            "Compose with `vstack.bias_stack`.",
         ],
         "1d",
         "Schwenk 1990",

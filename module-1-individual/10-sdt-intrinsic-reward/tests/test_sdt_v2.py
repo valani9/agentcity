@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.sdt_reward import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.sdt_reward import (
     PLAYBOOKS,
     SDT_COMPOSITION,
     SDT_MODES,
@@ -59,7 +59,7 @@ def _trace(
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -345,11 +345,11 @@ class TestComposition:
             profile_pattern="autonomy_undermined_dominant",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.schein_culture" in recs
+        assert "vstack.schein_culture" in recs
 
     def test_upstream_includes_motivation_traps(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.motivation_traps" in up
+        assert "vstack.motivation_traps" in up
 
 
 # ---------------------------------------------------------------------------

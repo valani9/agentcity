@@ -9,36 +9,36 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.mcgregor",
-    "agentcity.schein_culture",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.mcgregor",
+    "vstack.schein_culture",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "complete_balanced": ("agentcity.aar",),
-    "weak_goals": ("agentcity.smart_goal",),
-    "weak_roles": ("agentcity.mcgregor",),
-    "weak_processes": ("agentcity.aar", "agentcity.plus_delta"),
+    "complete_balanced": ("vstack.aar",),
+    "weak_goals": ("vstack.smart_goal",),
+    "weak_roles": ("vstack.mcgregor",),
+    "weak_processes": ("vstack.aar", "vstack.plus_delta"),
     "weak_interactions": (
-        "agentcity.psych_safety",
-        "agentcity.lencioni",
-        "agentcity.devils_advocate",
+        "vstack.psych_safety",
+        "vstack.lencioni",
+        "vstack.devils_advocate",
     ),
-    "missing_kill_criteria": ("agentcity.smart_goal",),
-    "missing_escalation_path": ("agentcity.mcgregor",),
-    "ambiguous_decision_rights": ("agentcity.mcgregor",),
-    "single_agent_team": ("agentcity.aar",),
-    "framework_misfit": ("agentcity.mcgregor",),
+    "missing_kill_criteria": ("vstack.smart_goal",),
+    "missing_escalation_path": ("vstack.mcgregor",),
+    "ambiguous_decision_rights": ("vstack.mcgregor",),
+    "single_agent_team": ("vstack.aar",),
+    "framework_misfit": ("vstack.mcgregor",),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.mcgregor",),
-    "crewai": ("agentcity.mcgregor", "agentcity.social_loafing"),
-    "autogen": ("agentcity.mcgregor", "agentcity.social_loafing"),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
+    "langgraph": ("vstack.mcgregor",),
+    "crewai": ("vstack.mcgregor", "vstack.social_loafing"),
+    "autogen": ("vstack.mcgregor", "vstack.social_loafing"),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
 }
 
 

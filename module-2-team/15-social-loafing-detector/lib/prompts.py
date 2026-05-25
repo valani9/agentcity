@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 SOCIAL_LOAFING_SYSTEM_PROMPT = """You are a social-loafing diagnostic grounded in:
@@ -94,9 +94,9 @@ Return a JSON ARRAY of FreeRidingChain objects. Return only the JSON array."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
 Composition targets:
-agentcity.grpi, agentcity.aar, agentcity.lewin, agentcity.process_gain_loss,
-agentcity.mcgregor, agentcity.lencioni, agentcity.smart_goal, agentcity.plus_delta,
-agentcity.devils_advocate, agentcity.bias_stack
+vstack.grpi, vstack.aar, vstack.lewin, vstack.process_gain_loss,
+vstack.mcgregor, vstack.lencioni, vstack.smart_goal, vstack.plus_delta,
+vstack.devils_advocate, vstack.bias_stack
 
 Contributions: {agent_contributions}
 Anonymity audit: {anonymity_audit}

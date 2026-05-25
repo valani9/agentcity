@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: 80%+ of agent's messages are 'approval'/'paraphrase'.",
             "Run `assign_subgoals` + `individual_accountability`.",
-            "Compose with `agentcity.grpi` (clarify role).",
+            "Compose with `vstack.grpi` (clarify role).",
         ],
         "1d",
         "Latané-Williams-Harkins 1979; Williams-Harkins-Latané 1981",
@@ -43,7 +43,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: 0-2 messages despite N-agent team.",
             "Run `decompose_task` + `per_agent_evaluation`.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1d",
         "Karau-Williams 1993",
@@ -55,7 +55,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: 0 messages.",
             "Run `remove_loafer` if persistent.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1d",
         "Latané-Williams-Harkins 1979",
@@ -67,7 +67,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: team size >= 5 with Gini > 0.5.",
             "Run `smaller_team`.",
-            "Compose with `agentcity.process_gain_loss`.",
+            "Compose with `vstack.process_gain_loss`.",
         ],
         "1d",
         "Hackman-Vidmar 1970; Ingham et al 1974 Ringelmann",
@@ -79,7 +79,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: no per-agent evaluation in pipeline.",
             "Run `add_identifiability_signal` + `add_per_agent_metrics`.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1d",
         "Williams-Harkins-Latané 1981",
@@ -91,7 +91,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agent paraphrases predecessor without adding signal.",
             "Run `explicit_critic_assignment` for that agent.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Comer 1995",
@@ -114,7 +114,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: every agent has loafing_score > 0.5.",
             "Reassess team design (`smaller_team`, decompose, or use single best).",
-            "Compose with `agentcity.process_gain_loss`.",
+            "Compose with `vstack.process_gain_loss`.",
         ],
         "1w",
         "Steiner 1972; Karau-Williams 1993",
@@ -137,7 +137,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: 1 agent does >70% of work.",
             "Run `assign_subgoals` for the other agents.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1d",
         "Latané-Williams-Harkins 1979",

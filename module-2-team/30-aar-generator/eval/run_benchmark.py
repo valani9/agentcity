@@ -15,8 +15,8 @@ Run with:
     python eval/run_benchmark.py --client stub
 
     # Using a real LLM:
-    AGENTCITY_LLM=anthropic python eval/run_benchmark.py --client anthropic
-    AGENTCITY_LLM=openai    python eval/run_benchmark.py --client openai
+    vstack_LLM=anthropic python eval/run_benchmark.py --client anthropic
+    vstack_LLM=openai    python eval/run_benchmark.py --client openai
 
 Output: per-scenario scores + corpus-level summary in eval/results/<run_id>/.
 

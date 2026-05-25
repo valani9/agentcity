@@ -2,13 +2,13 @@
 
 For common (locus, factor) combinations, the diagnostic ships a concrete
 playbook: a short, ordered list of steps the team should take. The
-playbooks are curated against AgentCity's failure-mode corpus and the
+playbooks are curated against vstack's failure-mode corpus and the
 MAST taxonomy (Cemri et al. 2025, *Why do multi-agent LLM systems fail?*).
 
 Playbooks are auto-attached to a :class:`LewinDetection` when an
 intervention's target_locus + factor match a key in :data:`PLAYBOOKS`.
 They're also exposed via the README's "Failure-mode playbooks" section
-and the CLI's ``agentcity lewin playbooks`` view.
+and the CLI's ``vstack lewin playbooks`` view.
 
 Playbook design contract
 ------------------------
@@ -62,7 +62,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
             "Confirm via token-count audit that the failing prompt exceeds the model's context window (not merely *near* it).",
             "Implement a chunk-and-map-reduce pipeline: split input into chunks below 60% of the window; summarize each; synthesize summaries.",
             "Add a precondition check at the application boundary that rejects inputs > 90% of window size with a structured error.",
-            "Re-run the failure trace; record the new run as a baseline via `agentcity lewin baseline record`.",
+            "Re-run the failure trace; record the new run as a baseline via `vstack lewin baseline record`.",
             "Only swap the model (to a longer-window version) when the chunk-map-reduce path is operationally infeasible.",
         ],
         "1d",
@@ -133,7 +133,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
             "Diff the retrieved chunk's last-modified timestamp vs the task's required recency. If stale: schedule a re-index.",
             "Add a freshness filter at the retrieval boundary that rejects chunks older than the task's recency budget.",
             "Inject the source-date of every retrieved chunk into the prompt so the model can reason about staleness.",
-            "Add a poisoning check: filter chunks containing system-prompt impersonation patterns via `agentcity.aar.detect_injection`.",
+            "Add a poisoning check: filter chunks containing system-prompt impersonation patterns via `vstack.aar.detect_injection`.",
             "Add an eval that runs the failing query against the live index and asserts the *expected source* is in the top-k.",
         ],
         "1d",
@@ -161,8 +161,8 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
             "Audit the orchestration graph for missing termination conditions (MAST FM-1.5).",
             "Add a hard max-iter cap (typically 5–10) above the soft termination logic.",
             "Add a verification step that gates 'task complete' on an explicit boolean from the agent (not just absence of error).",
-            "Log every orchestration transition with run_id (via `agentcity.aar.run_context`) so the loop is auditable.",
-            "If multi-agent, run `agentcity.grpi` to audit the working agreement; route via `composition_target_pattern='agentcity.grpi'`.",
+            "Log every orchestration transition with run_id (via `vstack.aar.run_context`) so the loop is auditable.",
+            "If multi-agent, run `vstack.grpi` to audit the working agreement; route via `composition_target_pattern='vstack.grpi'`.",
         ],
         "1d",
         "MAST FM-1.5 (unaware of termination conditions); FM-3.1 (premature termination)",
@@ -188,7 +188,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Apply a SMART rewrite to the task statement (specific, measurable, achievable, relevant, time-bound).",
             "Inject the SMART task into the system prompt's `<task>` block so the model sees the framed version, not the user's raw input.",
-            "Compose with `agentcity.smart_goal` to mechanize this for future task definitions.",
+            "Compose with `vstack.smart_goal` to mechanize this for future task definitions.",
             "Add an eval that runs the same SMART-framed task against a deliberately-ambiguous reframing and asserts the agent disambiguates.",
             "Document the framing convention in the team's agent-prompt style guide.",
         ],
@@ -217,7 +217,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
             "Define a verification rubric for this task class (3–6 criteria).",
             "Add a critic agent that scores outputs against the rubric.",
             "Gate 'task complete' on the critic's pass.",
-            "If multi-agent: compose with `agentcity.devils_advocate` to ensure the critic and executor are structurally separated.",
+            "If multi-agent: compose with `vstack.devils_advocate` to ensure the critic and executor are structurally separated.",
             "Add an eval that asserts the critic catches deliberately-broken outputs ≥ 90% of the time.",
         ],
         "1w",
@@ -228,7 +228,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "user_inputs",
         "User-input hostile or under-specified — sanitize, fence, clarify",
         [
-            "Apply `agentcity.aar.sanitize_for_prompt` + `fence(...)` to user inputs before interpolation.",
+            "Apply `vstack.aar.sanitize_for_prompt` + `fence(...)` to user inputs before interpolation.",
             "Run `detect_injection` and log hits structurally (not blocking — just observable).",
             "Add a clarification-request step: when the agent's confidence on next action is low, surface a question to the user rather than guessing.",
             "Add an input-validation gate at the application boundary (length, encoding, charset).",
@@ -247,7 +247,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
             "Re-run the trace. If now passing: the locus was actually environmental — record the corrected baseline.",
             "If still failing: the interactional locus is real. Swap the model only as the second move.",
             "Document the interactional pattern in the team's runbook so future debugging starts at E, not at P.",
-            "Compose with `agentcity.trust_triangle` to characterize the model-in-context's competence × character × care.",
+            "Compose with `vstack.trust_triangle` to characterize the model-in-context's competence × character × care.",
         ],
         "1d",
         "Funder 2006 personality triad: persons, situations, and behaviors as the joint unit",

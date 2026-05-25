@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.debate_pathology import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.debate_pathology import (  # noqa: E402
     DEBATE_PATHOLOGY_COMPOSITION,
     DEBATE_PATHOLOGY_MODES,
     DEBATE_PATHOLOGY_PROFILE_PATTERNS,
@@ -251,11 +251,11 @@ class TestComposition:
         stub = StubClient([_scores_payload(), _interventions_payload()])
         det = DebatePathologyAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_upstream_includes_psych_safety(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.psych_safety" in up
+        assert "vstack.psych_safety" in up
 
 
 class TestPlaybooks:

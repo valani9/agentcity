@@ -17,7 +17,7 @@ Anchored in:
 
 GRPI = Goals + Roles + Processes + Interactions.
 
-Unlike most AgentCity patterns (DIAGNOSTIC, consume traces), GRPI is
+Unlike most vstack patterns (DIAGNOSTIC, consume traces), GRPI is
 GENERATIVE: it consumes a team-setup request and produces a structured
 Working Agreement document.
 

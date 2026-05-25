@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.thomas_kilmann import (
+from vstack.thomas_kilmann import (
     STYLES,
     AgentInteractionTrace,
     ConflictStyleSelection,

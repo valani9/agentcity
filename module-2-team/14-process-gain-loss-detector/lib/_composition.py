@@ -9,37 +9,37 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.grpi",
-    "agentcity.mcgregor",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.grpi",
+    "vstack.mcgregor",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "process_gain_balanced": ("agentcity.aar",),
-    "neutral_team": ("agentcity.aar",),
-    "coordination_dominant_loss": ("agentcity.grpi", "agentcity.mcgregor"),
-    "social_loafing_dominant_loss": ("agentcity.social_loafing", "agentcity.grpi"),
+    "process_gain_balanced": ("vstack.aar",),
+    "neutral_team": ("vstack.aar",),
+    "coordination_dominant_loss": ("vstack.grpi", "vstack.mcgregor"),
+    "social_loafing_dominant_loss": ("vstack.social_loafing", "vstack.grpi"),
     "groupthink_dominant_loss": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
-        "agentcity.groupthink_polarization_contagion",
+        "vstack.devils_advocate",
+        "vstack.bias_stack",
+        "vstack.groupthink_polarization_contagion",
     ),
-    "handoff_dominant_loss": ("agentcity.grpi",),
-    "context_dilution_dominant_loss": ("agentcity.yerkes_dodson",),
-    "consensus_dilution_dominant_loss": ("agentcity.bias_stack", "agentcity.devils_advocate"),
-    "multi_factor_loss": ("agentcity.grpi", "agentcity.lencioni"),
-    "cost_overhead_with_loss": ("agentcity.grpi",),
-    "team_too_large": ("agentcity.grpi",),
+    "handoff_dominant_loss": ("vstack.grpi",),
+    "context_dilution_dominant_loss": ("vstack.yerkes_dodson",),
+    "consensus_dilution_dominant_loss": ("vstack.bias_stack", "vstack.devils_advocate"),
+    "multi_factor_loss": ("vstack.grpi", "vstack.lencioni"),
+    "cost_overhead_with_loss": ("vstack.grpi",),
+    "team_too_large": ("vstack.grpi",),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.grpi", "agentcity.social_loafing"),
-    "autogen": ("agentcity.grpi", "agentcity.social_loafing"),
-    "claude-agent-sdk": ("agentcity.mcgregor",),
-    "openai-agents-sdk": ("agentcity.mcgregor",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.grpi", "vstack.social_loafing"),
+    "autogen": ("vstack.grpi", "vstack.social_loafing"),
+    "claude-agent-sdk": ("vstack.mcgregor",),
+    "openai-agents-sdk": ("vstack.mcgregor",),
 }
 
 

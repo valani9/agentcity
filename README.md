@@ -1,24 +1,24 @@
-# AgentCity
+# vstack
 
-[![CI](https://github.com/valani9/AgentCity/actions/workflows/ci.yml/badge.svg)](https://github.com/valani9/AgentCity/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/agentcity.svg)](https://pypi.org/project/agentcity/)
-[![Python versions](https://img.shields.io/pypi/pyversions/agentcity.svg)](https://pypi.org/project/agentcity/)
+[![CI](https://github.com/valani9/vstack/actions/workflows/ci.yml/badge.svg)](https://github.com/valani9/vstack/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/vstack.svg)](https://pypi.org/project/vstack/)
+[![Python versions](https://img.shields.io/pypi/pyversions/vstack.svg)](https://pypi.org/project/vstack/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Patterns shipped](https://img.shields.io/badge/patterns-34%2F34-brightgreen.svg)](PATTERNS.md)
 
 **Organizational behavior, practiced on AI agents.**
 
-AgentCity is a curated library of design patterns for AI agents and multi-agent systems, anchored in named organizational-behavior (OB) literature — Wharton's After-Action Review, Lencioni's Five Dysfunctions, Edmondson's Psychological Safety, Frei & Morriss's Trust Triangle, Stone & Heen's "Thanks for the Feedback" — translated into runnable code, public benchmarks, and Substack-ready essays.
+vstack is a curated library of design patterns for AI agents and multi-agent systems, anchored in named organizational-behavior (OB) literature — Wharton's After-Action Review, Lencioni's Five Dysfunctions, Edmondson's Psychological Safety, Frei & Morriss's Trust Triangle, Stone & Heen's "Thanks for the Feedback" — translated into runnable code, public benchmarks, and Substack-ready essays.
 
-Most agent observability tools capture *what happened* (traces). Most incident-response tools handle *single events* (a postmortem per alert). AgentCity ships a curated library of *organizational practices* — the same frameworks human teams use to learn, debate, escalate, and improve — implemented as patterns AI agents can run themselves.
+Most agent observability tools capture *what happened* (traces). Most incident-response tools handle *single events* (a postmortem per alert). vstack ships a curated library of *organizational practices* — the same frameworks human teams use to learn, debate, escalate, and improve — implemented as patterns AI agents can run themselves.
 
-Where the existing agent ecosystem treats failures as bugs to debug, AgentCity treats them as learning events to organize around.
+Where the existing agent ecosystem treats failures as bugs to debug, vstack treats them as learning events to organize around.
 
 ---
 
 ## Disambiguation
 
-You may have seen ["AgentCity: Constitutional Governance for Autonomous Agent Economies via Separation of Power"](https://arxiv.org/abs/2604.07007) (NetX Foundation, April 2026). That paper is about blockchain-based governance for agent economies. **This is a different project.** AgentCity-the-library is an open-source pattern library for applying organizational-behavior frameworks to AI agent design — no blockchain, no governance protocols, no agent economies. Same name, different domain.
+You may have seen ["vstack: Constitutional Governance for Autonomous Agent Economies via Separation of Power"](https://arxiv.org/abs/2604.07007) (NetX Foundation, April 2026). That paper is about blockchain-based governance for agent economies. **This is a different project.** vstack-the-library is an open-source pattern library for applying organizational-behavior frameworks to AI agent design — no blockchain, no governance protocols, no agent economies. Same name, different domain.
 
 ---
 
@@ -34,7 +34,7 @@ A full index is in [PATTERNS.md](PATTERNS.md). Academic citations are in [CITATI
 
 ## How each pattern is shipped
 
-Every pattern in AgentCity ships five layers:
+Every pattern in vstack ships five layers:
 
 1. **Documented.** A README explaining the OB framework, the agent failure mode it addresses, the academic citation, and the proposed intervention.
 2. **Implemented.** A working Python (and optionally TypeScript) library.
@@ -47,26 +47,26 @@ Patterns ship one at a time, fully completed. Quantity loses to quality. **All 3
 ## Install
 
 ```bash
-pip install agentcity
+pip install vstack
 ```
 
 Optional extras (per LLM backend):
 
 ```bash
-pip install "agentcity[anthropic]"   # Anthropic
-pip install "agentcity[openai]"      # OpenAI
-pip install "agentcity[all]"         # both
+pip install "vstack[anthropic]"   # Anthropic
+pip install "vstack[openai]"      # OpenAI
+pip install "vstack[all]"         # both
 ```
 
-Python 3.11+ required (3.11, 3.12, 3.13 tested in CI). For the absolute latest pre-release, install from source: `pip install git+https://github.com/valani9/AgentCity.git`.
+Python 3.11+ required (3.11, 3.12, 3.13 tested in CI). For the absolute latest pre-release, install from source: `pip install git+https://github.com/valani9/vstack.git`.
 
 ## Quick start
 
 ```python
 from datetime import datetime, timezone
 
-from agentcity.aar import AARGenerator, AgentTrace, TraceStep
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar import AARGenerator, AgentTrace, TraceStep
+from vstack.aar.clients import AnthropicClient
 
 # Build (or import from your observability tool) a structured trace of a
 # failed agent run.
@@ -96,26 +96,26 @@ See [`module-2-team/30-aar-generator/demo/`](module-2-team/30-aar-generator/demo
 
 ## Command-line interface
 
-Installing the package also installs an `agentcity` CLI binary:
+Installing the package also installs an `vstack` CLI binary:
 
 ```bash
 # Generate an AAR from a JSON trace, read from a file, write markdown to stdout
-agentcity aar --trace path/to/trace.json --client anthropic
+vstack aar --trace path/to/trace.json --client anthropic
 
 # Pipe a trace from stdin (useful in shell pipelines)
-cat trace.json | agentcity aar --client openai
+cat trace.json | vstack aar --client openai
 
 # Get JSON output instead of markdown
-agentcity aar --trace trace.json --client anthropic --format json > aar.json
+vstack aar --trace trace.json --client anthropic --format json > aar.json
 
 # Try the pipeline without an API key (deterministic stub responses)
-echo '{"goal":"x","outcome":"y","success":false,"steps":[]}' | agentcity aar --client stub
+echo '{"goal":"x","outcome":"y","success":false,"steps":[]}' | vstack aar --client stub
 
 # Verbose mode (-v INFO, -vv DEBUG)
-agentcity aar -vv --trace trace.json --client anthropic
+vstack aar -vv --trace trace.json --client anthropic
 
 # Print version
-agentcity version
+vstack version
 ```
 
 The `--client` flag accepts `stub`, `anthropic`, `openai`, or `ollama`. The `stub` client is deterministic and requires no API key, useful for trying the pipeline before committing to a provider. The Anthropic and OpenAI clients read API keys from `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` environment variables.
@@ -127,7 +127,7 @@ The library is built to ship:
 - **Retry with exponential backoff** on rate limits, transient network errors, and provider 5xx — configurable via `max_retries`.
 - **Graceful degradation** on malformed LLM JSON output — bad lessons/next-steps are dropped with a warning log, not raised; a partial AAR is more useful than no AAR.
 - **Trace truncation** for inputs larger than `max_trace_chars` (default 200K characters) — middle-truncated to keep the most informative head and tail of the agent run.
-- **Structured logging** via Python `logging` under the `agentcity.aar` namespace.
+- **Structured logging** via Python `logging` under the `vstack.aar` namespace.
 - **Type-safe** — `mypy --strict` clean across the library.
 - **CI** — GitHub Actions runs tests, ruff lint, ruff format check, mypy strict, and a wheel-build sanity check on every push and pull request, across Python 3.11 / 3.12 / 3.13 on Linux and macOS.
 
@@ -142,40 +142,40 @@ The library is built to ship:
 
 **Complete.** All 34 patterns shipped at the 5-layer quality bar (docs + lib + demo + benchmark + essay):
 
-- `agentcity.aar` (#30) — After-Action Review generator
-- `agentcity.lencioni` (#17) — Five-Dysfunctions diagnostic
-- `agentcity.trust_triangle` (#18) — Frei & Morriss Trust Triangle audit
-- `agentcity.johari` (#03) — Johari Window self-audit
-- `agentcity.grpi` (#13) — GRPI Working Agreement generator
-- `agentcity.bias_stack` (#27) — Kahneman/Tversky Bias-Stack detector
-- `agentcity.psych_safety` (#20) — Edmondson Psychological Safety score
-- `agentcity.thomas_kilmann` (#29) — Thomas-Kilmann Conflict Style selector
-- `agentcity.feedback_triggers` (#22) — Stone & Heen 3-Trigger feedback diagnostic
-- `agentcity.devils_advocate` (#28) — Critical-Evaluator / Devil's Advocate role separator
-- `agentcity.lewin` (#01) — Lewin Formula B = f(I, E) attribution diagnostic
-- `agentcity.mcallister_trust` (#19) — McAllister Cognitive vs Affective Trust dimensions
-- `agentcity.social_loafing` (#15) — Latané Social Loafing detector
-- `agentcity.debate_pathology` (#26) — Groupthink / Polarization / Emotional Contagion detector
-- `agentcity.process_gain_loss` (#14) — Steiner / Robbins & Judge Process Gain/Loss detector
-- `agentcity.smart_goal` (#24) — Doran SMART Goal generator
-- `agentcity.mcgregor` (#11) — McGregor Theory X/Y Orchestrator Mode detector
-- `agentcity.group_decision` (#25) — Stewart / Kaner Group Decision Models generator (fist-to-five + 4 others)
-- `agentcity.schein_culture` (#31) — Schein Iceberg Culture Audit (first Module 3 pattern)
-- `agentcity.grant_strengths` (#08) — Adam Grant Strengths-as-Weaknesses detector
-- `agentcity.plus_delta` (#23) — Brené Brown Plus/Delta inter-agent feedback format generator
-- `agentcity.robbins_culture` (#32) — Robbins & Judge 7-Characteristics Culture profile diagnostic
-- `agentcity.superflocks` (#16) — Heffernan/Muir Superflocks routing-fragility detector
-- `agentcity.yerkes_dodson` (#06) — Yerkes-Dodson Optimal Workload pressure-curve diagnostic
-- `agentcity.org_structure` (#33) — Galbraith/Mintzberg Org-Structure Matrix analyzer (third Module 3 pattern)
-- `agentcity.motivation_traps` (#09) — Saxberg 4 Motivation Traps diagnostic (Values / Self-Efficacy / Emotions / Attribution)
-- `agentcity.glaser_conversation` (#21) — Glaser Cortisol/Oxytocin Conversation Steering diagnostic
-- `agentcity.goleman_ei` (#02) — Goleman/Boyatzis 4-Domain Emotional Intelligence audit (SELF/OTHER × RECOGNITION/REGULATION)
-- `agentcity.sdt_reward` (#10) — Deci & Ryan Self-Determination Theory intrinsic reward shaping (autonomy / competence / relatedness)
-- `agentcity.span_of_control` (#34) — deterministic Span-of-Control / Centralization calculator (fourth Module 3 pattern)
-- `agentcity.danva_emotion` (#04) — Nowicki/Duke DANVA-style emotion recognition (deterministic per-emotion accuracy + confusion + intensity)
-- `agentcity.cognitive_reappraisal` (#05) — Gross emotion-regulation strategy diagnostic (reappraisal vs suppression vs rumination vs avoidance)
-- `agentcity.hexaco` (#07) — Lee & Ashton 6-factor personality + H-factor safety risk
-- `agentcity.vroom_expectancy` (#12) — Vroom E × I × V motivation calculus with bottleneck-term diagnostic
+- `vstack.aar` (#30) — After-Action Review generator
+- `vstack.lencioni` (#17) — Five-Dysfunctions diagnostic
+- `vstack.trust_triangle` (#18) — Frei & Morriss Trust Triangle audit
+- `vstack.johari` (#03) — Johari Window self-audit
+- `vstack.grpi` (#13) — GRPI Working Agreement generator
+- `vstack.bias_stack` (#27) — Kahneman/Tversky Bias-Stack detector
+- `vstack.psych_safety` (#20) — Edmondson Psychological Safety score
+- `vstack.thomas_kilmann` (#29) — Thomas-Kilmann Conflict Style selector
+- `vstack.feedback_triggers` (#22) — Stone & Heen 3-Trigger feedback diagnostic
+- `vstack.devils_advocate` (#28) — Critical-Evaluator / Devil's Advocate role separator
+- `vstack.lewin` (#01) — Lewin Formula B = f(I, E) attribution diagnostic
+- `vstack.mcallister_trust` (#19) — McAllister Cognitive vs Affective Trust dimensions
+- `vstack.social_loafing` (#15) — Latané Social Loafing detector
+- `vstack.debate_pathology` (#26) — Groupthink / Polarization / Emotional Contagion detector
+- `vstack.process_gain_loss` (#14) — Steiner / Robbins & Judge Process Gain/Loss detector
+- `vstack.smart_goal` (#24) — Doran SMART Goal generator
+- `vstack.mcgregor` (#11) — McGregor Theory X/Y Orchestrator Mode detector
+- `vstack.group_decision` (#25) — Stewart / Kaner Group Decision Models generator (fist-to-five + 4 others)
+- `vstack.schein_culture` (#31) — Schein Iceberg Culture Audit (first Module 3 pattern)
+- `vstack.grant_strengths` (#08) — Adam Grant Strengths-as-Weaknesses detector
+- `vstack.plus_delta` (#23) — Brené Brown Plus/Delta inter-agent feedback format generator
+- `vstack.robbins_culture` (#32) — Robbins & Judge 7-Characteristics Culture profile diagnostic
+- `vstack.superflocks` (#16) — Heffernan/Muir Superflocks routing-fragility detector
+- `vstack.yerkes_dodson` (#06) — Yerkes-Dodson Optimal Workload pressure-curve diagnostic
+- `vstack.org_structure` (#33) — Galbraith/Mintzberg Org-Structure Matrix analyzer (third Module 3 pattern)
+- `vstack.motivation_traps` (#09) — Saxberg 4 Motivation Traps diagnostic (Values / Self-Efficacy / Emotions / Attribution)
+- `vstack.glaser_conversation` (#21) — Glaser Cortisol/Oxytocin Conversation Steering diagnostic
+- `vstack.goleman_ei` (#02) — Goleman/Boyatzis 4-Domain Emotional Intelligence audit (SELF/OTHER × RECOGNITION/REGULATION)
+- `vstack.sdt_reward` (#10) — Deci & Ryan Self-Determination Theory intrinsic reward shaping (autonomy / competence / relatedness)
+- `vstack.span_of_control` (#34) — deterministic Span-of-Control / Centralization calculator (fourth Module 3 pattern)
+- `vstack.danva_emotion` (#04) — Nowicki/Duke DANVA-style emotion recognition (deterministic per-emotion accuracy + confusion + intensity)
+- `vstack.cognitive_reappraisal` (#05) — Gross emotion-regulation strategy diagnostic (reappraisal vs suppression vs rumination vs avoidance)
+- `vstack.hexaco` (#07) — Lee & Ashton 6-factor personality + H-factor safety risk
+- `vstack.vroom_expectancy` (#12) — Vroom E × I × V motivation calculus with bottleneck-term diagnostic
 
 **The 34-pattern roadmap is complete.** See [PATTERNS.md](PATTERNS.md) for the full list.
 

@@ -1,4 +1,4 @@
-"""agentcity.lewin — Kurt Lewin's behavior formula B = f(P, E) applied
+"""vstack.lewin — Kurt Lewin's behavior formula B = f(P, E) applied
 to AI agent failure attribution.
 
 When an agent fails, the cause is either INTERNAL (P) (model: training,
@@ -24,7 +24,7 @@ Production wiring (v0.1.0 infra):
 
   - Structured logging with run-id correlation (every log line carries
     ``run_id`` + ``pattern="lewin"``).
-  - Token / cost telemetry via :func:`agentcity.aar.record_llm_call`.
+  - Token / cost telemetry via :func:`vstack.aar.record_llm_call`.
   - Prompt-injection input guards on every free-text field.
   - Async mirror :class:`LewinAttributionDetectorAsync` for parallel
     pattern fan-out under server traffic.
@@ -32,19 +32,19 @@ Production wiring (v0.1.0 infra):
 Composition:
 
   - The pattern auto-attaches a :class:`ComposedPatternHandoff` to
-    every detection naming the next AgentCity pattern(s) to run.
+    every detection naming the next vstack pattern(s) to run.
   - Playbooks for common (locus, factor) failure modes are auto-attached.
 
 Quick start
 -----------
 
-    from agentcity.lewin import (
+    from vstack.lewin import (
         LewinAttributionDetector,
         AgentFailureTrace,
         FailureStep,
         CovarianceSignal,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentFailureTrace(
         agent_id="qa-bot-001",
@@ -71,10 +71,10 @@ Quick start
 CLI
 ---
 
-    agentcity-lewin analyze --trace trace.json --mode forensic
-    agentcity-lewin playbooks
-    agentcity-lewin compose
-    agentcity-lewin schema --target trace
+    vstack-lewin analyze --trace trace.json --mode forensic
+    vstack-lewin playbooks
+    vstack-lewin compose
+    vstack-lewin schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

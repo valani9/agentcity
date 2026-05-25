@@ -47,7 +47,7 @@ can track per-deploy. The two compose: #02's `social_awareness`
 weakest -> #04 drills in.
 
 The 14-source literature thread with per-citation usage notes is in
-:mod:`agentcity.danva_emotion.CITATIONS` (``lib/CITATIONS.md``).
+:mod:`vstack.danva_emotion.CITATIONS` (``lib/CITATIONS.md``).
 """
 
 from __future__ import annotations
@@ -122,7 +122,7 @@ def severity_from_accuracy(accuracy: float) -> Severity:
     """Map a [0,1] accuracy score to a 7-point severity bucket.
 
     Inverse polarity: low accuracy -> high severity. 0.0 -> critical;
-    1.0 -> none. Mirrors :func:`agentcity.goleman_ei.severity_from_score`.
+    1.0 -> none. Mirrors :func:`vstack.goleman_ei.severity_from_score`.
     """
     s = max(0.0, min(1.0, float(accuracy)))
     if s < 0.15:
@@ -519,7 +519,7 @@ class BaselineComparison(BaseModel):
 
 
 class ComposedPatternHandoff(BaseModel):
-    """Where this analysis feeds into the rest of the AgentCity library."""
+    """Where this analysis feeds into the rest of the vstack library."""
 
     upstream_patterns: list[str] = Field(default_factory=list)
     downstream_patterns: list[str] = Field(default_factory=list)

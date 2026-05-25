@@ -9,49 +9,49 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.glaser_conversation",
-    "agentcity.mcallister_trust",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.glaser_conversation",
+    "vstack.mcallister_trust",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "well_matched": ("agentcity.aar",),
+    "well_matched": ("vstack.aar",),
     "competing_when_collaborating": (
-        "agentcity.glaser_conversation",
-        "agentcity.psych_safety",
+        "vstack.glaser_conversation",
+        "vstack.psych_safety",
     ),
     "accommodating_when_competing": (
-        "agentcity.trust_triangle",
-        "agentcity.devils_advocate",
+        "vstack.trust_triangle",
+        "vstack.devils_advocate",
     ),
     "avoiding_when_collaborating": (
-        "agentcity.aar",
-        "agentcity.grpi",
+        "vstack.aar",
+        "vstack.grpi",
     ),
     "default_compromising": (
-        "agentcity.aar",
-        "agentcity.devils_advocate",
+        "vstack.aar",
+        "vstack.devils_advocate",
     ),
     "rigid_single_style": (
-        "agentcity.aar",
-        "agentcity.hexaco",
+        "vstack.aar",
+        "vstack.hexaco",
     ),
     "context_blind": (
-        "agentcity.aar",
-        "agentcity.glaser_conversation",
+        "vstack.aar",
+        "vstack.glaser_conversation",
     ),
     "mixed_inconsistent": (
-        "agentcity.aar",
-        "agentcity.lencioni",
+        "vstack.aar",
+        "vstack.lencioni",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

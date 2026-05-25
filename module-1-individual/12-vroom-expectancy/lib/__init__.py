@@ -1,4 +1,4 @@
-"""agentcity.vroom_expectancy -- Victor Vroom's E*I*V motivation
+"""vstack.vroom_expectancy -- Victor Vroom's E*I*V motivation
 calculus applied to AI agents.
 
 Anchored in:
@@ -20,11 +20,11 @@ an alias for ``VroomExpectancyAnalyzer``.
 Quick start
 -----------
 
-    from agentcity.vroom_expectancy import (
+    from vstack.vroom_expectancy import (
         VroomExpectancyAnalyzer,
         AgentExpectancyTrace,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentExpectancyTrace(
         agent_id="research-agent",
@@ -44,10 +44,10 @@ Quick start
 CLI
 ---
 
-    agentcity-vroom analyze --trace trace.json --mode forensic
-    agentcity-vroom playbooks
-    agentcity-vroom compose
-    agentcity-vroom schema --target trace
+    vstack-vroom analyze --trace trace.json --mode forensic
+    vstack-vroom playbooks
+    vstack-vroom compose
+    vstack-vroom schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

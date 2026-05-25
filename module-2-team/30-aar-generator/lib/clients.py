@@ -1,4 +1,4 @@
-"""LLM client adapters for the AgentCity diagnostic patterns.
+"""LLM client adapters for the vstack diagnostic patterns.
 
 Every pattern's generator depends on an ``LLMClient`` that exposes a
 single synchronous method::
@@ -28,7 +28,7 @@ Production-readiness notes
   tracking can read this after each ``complete`` call without changing
   the return signature.
 - Install LLM SDKs with the relevant extra
-  (``pip install agentcity[anthropic]`` / ``[openai]`` / ``[all]``).
+  (``pip install vstack[anthropic]`` / ``[openai]`` / ``[all]``).
   The Ollama adapters only need ``httpx``.
 """
 
@@ -59,7 +59,7 @@ class LLMUsage:
 class AnthropicClient:
     """LLMClient adapter for the Anthropic Messages API.
 
-    Install with ``pip install agentcity[anthropic]`` (or pin
+    Install with ``pip install vstack[anthropic]`` (or pin
     ``anthropic>=0.40.0`` yourself).
     """
 
@@ -75,7 +75,7 @@ class AnthropicClient:
         except ImportError as e:
             raise ImportError(
                 "The 'anthropic' package is required for AnthropicClient. "
-                "Install with: pip install agentcity[anthropic]"
+                "Install with: pip install vstack[anthropic]"
             ) from e
         self._client = anthropic.Anthropic(api_key=api_key, timeout=timeout)
         self.model = model
@@ -107,7 +107,7 @@ class AnthropicClient:
 class OpenAIClient:
     """LLMClient adapter for the OpenAI Chat Completions API.
 
-    Install with ``pip install agentcity[openai]`` (or pin
+    Install with ``pip install vstack[openai]`` (or pin
     ``openai>=1.50.0`` yourself).
     """
 
@@ -123,7 +123,7 @@ class OpenAIClient:
         except ImportError as e:
             raise ImportError(
                 "The 'openai' package is required for OpenAIClient. "
-                "Install with: pip install agentcity[openai]"
+                "Install with: pip install vstack[openai]"
             ) from e
         self._client = openai.OpenAI(api_key=api_key, timeout=timeout)
         self.model = model
@@ -207,7 +207,7 @@ class AnthropicAsyncClient:
     """Async LLMClient adapter for the Anthropic Messages API.
 
     Same constructor surface as :class:`AnthropicClient`; expose
-    ``async def complete``. Install with ``pip install agentcity[anthropic]``.
+    ``async def complete``. Install with ``pip install vstack[anthropic]``.
     """
 
     def __init__(
@@ -222,7 +222,7 @@ class AnthropicAsyncClient:
         except ImportError as e:
             raise ImportError(
                 "The 'anthropic' package is required for AnthropicAsyncClient. "
-                "Install with: pip install agentcity[anthropic]"
+                "Install with: pip install vstack[anthropic]"
             ) from e
         self._client = anthropic.AsyncAnthropic(api_key=api_key, timeout=timeout)
         self.model = model
@@ -266,7 +266,7 @@ class OpenAIAsyncClient:
         except ImportError as e:
             raise ImportError(
                 "The 'openai' package is required for OpenAIAsyncClient. "
-                "Install with: pip install agentcity[openai]"
+                "Install with: pip install vstack[openai]"
             ) from e
         self._client = openai.AsyncOpenAI(api_key=api_key, timeout=timeout)
         self.model = model

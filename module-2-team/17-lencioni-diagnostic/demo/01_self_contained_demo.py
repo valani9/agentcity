@@ -17,7 +17,7 @@ Run with the stub client (no API key required) for plumbing-only test:
 
 Run with a real LLM to get a meaningful diagnostic:
 
-    AGENTCITY_LLM=anthropic python demo/01_self_contained_demo.py
+    vstack_LLM=anthropic python demo/01_self_contained_demo.py
 """
 
 from __future__ import annotations
@@ -31,13 +31,13 @@ from datetime import datetime, timedelta, timezone
 # fallback below adds the relevant directories to sys.path so the import
 # works while developing locally.
 try:
-    from agentcity.aar.clients import (
+    from vstack.aar.clients import (
         AnthropicClient,
         OllamaClient,
         OpenAIClient,
         StubClient,
     )
-    from agentcity.lencioni import (
+    from vstack.lencioni import (
         AgentMessage,
         LencioniDiagnostic,
         MultiAgentTrace,
@@ -50,24 +50,24 @@ except ImportError:
     _AAR_LIB = _Path(__file__).resolve().parents[2] / "30-aar-generator" / "lib"
     _LENCIONI_LIB = _Path(__file__).resolve().parents[1] / "lib"
 
-    # Build a minimal agentcity package namespace pointing at the source dirs.
-    _agentcity = _types.ModuleType("agentcity")
-    _agentcity.__path__ = []  # type: ignore[attr-defined]
-    _sys.modules.setdefault("agentcity", _agentcity)
-    _aar_pkg = _types.ModuleType("agentcity.aar")
+    # Build a minimal vstack package namespace pointing at the source dirs.
+    _vstack = _types.ModuleType("vstack")
+    _vstack.__path__ = []  # type: ignore[attr-defined]
+    _sys.modules.setdefault("vstack", _vstack)
+    _aar_pkg = _types.ModuleType("vstack.aar")
     _aar_pkg.__path__ = [str(_AAR_LIB)]  # type: ignore[attr-defined]
-    _sys.modules.setdefault("agentcity.aar", _aar_pkg)
-    _lencioni_pkg = _types.ModuleType("agentcity.lencioni")
+    _sys.modules.setdefault("vstack.aar", _aar_pkg)
+    _lencioni_pkg = _types.ModuleType("vstack.lencioni")
     _lencioni_pkg.__path__ = [str(_LENCIONI_LIB)]  # type: ignore[attr-defined]
-    _sys.modules.setdefault("agentcity.lencioni", _lencioni_pkg)
+    _sys.modules.setdefault("vstack.lencioni", _lencioni_pkg)
 
-    from agentcity.aar.clients import (  # noqa: E402,F401
+    from vstack.aar.clients import (  # noqa: E402,F401
         AnthropicClient,
         OllamaClient,
         OpenAIClient,
         StubClient,
     )
-    from agentcity.lencioni import (  # noqa: E402,F401
+    from vstack.lencioni import (  # noqa: E402,F401
         AgentMessage,
         LencioniDiagnostic,
         MultiAgentTrace,
@@ -237,7 +237,7 @@ def stub_responses() -> list[str]:
 
 
 def pick_client() -> object:
-    choice = os.environ.get("AGENTCITY_LLM", "stub").lower()
+    choice = os.environ.get("vstack_LLM", "stub").lower()
     if choice == "anthropic":
         return AnthropicClient(model=os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"))
     if choice == "openai":

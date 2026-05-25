@@ -31,7 +31,7 @@ It reads an agent failure trace and outputs:
   - **Ranked interventions** — what to change, in what order, with
     effort estimates, risk, reversibility (one-way vs two-way door),
     and success metrics.
-  - **Composition handoffs** — names the next AgentCity pattern(s) to
+  - **Composition handoffs** — names the next vstack pattern(s) to
     run based on dominant locus + framework + intervention shape.
   - **Failure-mode playbooks** — concrete 3–6 step recipes for the
     most common (locus, factor) combinations.
@@ -48,11 +48,11 @@ It reads an agent failure trace and outputs:
 ## Install
 
 ```bash
-pip install agentcity                # Stub-only — no API key needed for demos and CI.
-pip install "agentcity[anthropic]"   # Add the Anthropic client.
-pip install "agentcity[openai]"      # Add the OpenAI client.
-pip install "agentcity[ollama]"      # Add the local-Ollama client.
-pip install "agentcity[all]"         # All three.
+pip install vstack                # Stub-only — no API key needed for demos and CI.
+pip install "vstack[anthropic]"   # Add the Anthropic client.
+pip install "vstack[openai]"      # Add the OpenAI client.
+pip install "vstack[ollama]"      # Add the local-Ollama client.
+pip install "vstack[all]"         # All three.
 ```
 
 The diagnostic itself has no LLM-provider dependencies beyond
@@ -100,7 +100,7 @@ detector.run(trace, mode="quick")    # override per-call
 ## Python quick start
 
 ```python
-from agentcity.lewin import (
+from vstack.lewin import (
     LewinAttributionDetector,
     AgentFailureTrace,
     FailureStep,
@@ -108,7 +108,7 @@ from agentcity.lewin import (
     EnvironmentalFactor,
     CovarianceSignal,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentFailureTrace(
     agent_id="qa-bot-001",
@@ -143,7 +143,7 @@ print(detection.to_markdown())
 # Dominant locus: ENVIRONMENTAL (score 0.85)
 # Initial attribution: OVERTURNS
 # Correspondence-bias mechanism: unaware
-# Recommended downstream: agentcity.smart_goal, agentcity.schein_culture
+# Recommended downstream: vstack.smart_goal, vstack.schein_culture
 # Playbook attached: "Stale / poisoned RAG — reindex, add freshness filter, source-date the prompt"
 ```
 
@@ -153,27 +153,27 @@ print(detection.to_markdown())
 
 ```bash
 # Analyze a single trace, standard mode, markdown output.
-agentcity-lewin analyze --trace fixtures/stale_rag.json --client stub
+vstack-lewin analyze --trace fixtures/stale_rag.json --client stub
 
 # Forensic + JSON, piped into jq.
-agentcity-lewin analyze --trace fail.json --client anthropic \
+vstack-lewin analyze --trace fail.json --client anthropic \
     --mode forensic --format json | jq '.dominant_locus'
 
 # Batch a corpus.
-agentcity-lewin batch --corpus eval/synthetic_lewin_failures.yaml \
+vstack-lewin batch --corpus eval/synthetic_lewin_failures.yaml \
     --out detections/ --mode standard
 
 # Re-render an existing detection JSON to markdown.
-agentcity-lewin replay --detection detections/scenario-1.json
+vstack-lewin replay --detection detections/scenario-1.json
 
 # List all available failure-mode playbooks.
-agentcity-lewin playbooks
+vstack-lewin playbooks
 
 # Show the cross-pattern composition graph.
-agentcity-lewin compose
+vstack-lewin compose
 
 # Dump the JSON schema for the input trace (for client SDKs).
-agentcity-lewin schema --target trace --out schemas/trace.json
+vstack-lewin schema --target trace --out schemas/trace.json
 ```
 
 CLI auth is via standard env vars (`ANTHROPIC_API_KEY`,
@@ -349,14 +349,14 @@ shape)` are surfaced.
 
 **Per-locus downstream recommendations:**
 
-  - `internal` → `agentcity.bias_stack`, `agentcity.hexaco`,
-    `agentcity.goleman_ei`
-  - `environmental` → `agentcity.smart_goal`, `agentcity.grpi`,
-    `agentcity.lencioni`, `agentcity.schein_culture`,
-    `agentcity.psych_safety`
-  - `interactional` → `agentcity.aar`, `agentcity.trust_triangle`,
-    `agentcity.vroom_expectancy`
-  - `indeterminate` → `agentcity.aar` (human-led postmortem)
+  - `internal` → `vstack.bias_stack`, `vstack.hexaco`,
+    `vstack.goleman_ei`
+  - `environmental` → `vstack.smart_goal`, `vstack.grpi`,
+    `vstack.lencioni`, `vstack.schein_culture`,
+    `vstack.psych_safety`
+  - `interactional` → `vstack.aar`, `vstack.trust_triangle`,
+    `vstack.vroom_expectancy`
+  - `indeterminate` → `vstack.aar` (human-led postmortem)
 
 **Framework overlays** (additive):
 
@@ -371,12 +371,12 @@ shape)` are surfaced.
 points so directly at another pattern that we surface it regardless of
 locus:
 
-  - `change_prompt` → `agentcity.schein_culture`
-  - `add_verification_step` → `agentcity.devils_advocate`
-  - `change_topology` → `agentcity.grpi`
-  - `change_memory` → `agentcity.johari`
-  - `new_eval` → `agentcity.smart_goal`
-  - `human_review` → `agentcity.plus_delta`
+  - `change_prompt` → `vstack.schein_culture`
+  - `add_verification_step` → `vstack.devils_advocate`
+  - `change_topology` → `vstack.grpi`
+  - `change_memory` → `vstack.johari`
+  - `new_eval` → `vstack.smart_goal`
+  - `human_review` → `vstack.plus_delta`
 
 ### Composition recipes
 
@@ -399,7 +399,7 @@ in the repo root for a runnable composition demo.
 
 Every `(locus, factor)` combination with a curated playbook is
 auto-attached to detections when an intervention targets that key.
-Run `agentcity-lewin playbooks` to see the full list.
+Run `vstack-lewin playbooks` to see the full list.
 
 **Internal:**
 
@@ -441,7 +441,7 @@ Run `agentcity-lewin playbooks` to see the full list.
     chunk + summarize first.
 
 Each playbook is 3–6 ordered steps with an OB or MAST citation. View
-the full text via `agentcity-lewin playbooks --format markdown`.
+the full text via `vstack-lewin playbooks --format markdown`.
 
 ---
 
@@ -479,8 +479,8 @@ the full text via `agentcity-lewin playbooks --format markdown`.
 | **MAST + Who&When (Cemri 2025)** | Taxonomy + benchmark of multi-agent failure modes. | Lewin uses MAST's findings to ground its env-locus tie-break; consumes a single trace, not a corpus. |
 | **AgenTracer / AgentRx** | Automated multi-agent trajectory diagnosis. | Adjacent. They identify the failure step; Lewin attributes locus across `P × E` and proposes interventions. Often used together. |
 | **LangSmith / Phoenix / Langfuse** | Agent trace observability. | They give you the trace; Lewin reads it. |
-| **AgentCity AAR (#30)** | Wharton 4-step postmortem. | AAR finds the *lesson*; Lewin attributes the *cause*. The cookbook recipe chains them. |
-| **AgentCity Bias-Stack (#27)** | Detect specific reasoning biases. | When Lewin says `internal`, route to Bias-Stack to name the bias. |
+| **vstack AAR (#30)** | Wharton 4-step postmortem. | AAR finds the *lesson*; Lewin attributes the *cause*. The cookbook recipe chains them. |
+| **vstack Bias-Stack (#27)** | Detect specific reasoning biases. | When Lewin says `internal`, route to Bias-Stack to name the bias. |
 | **OWASP LLM Top 10** | Vulnerability checklist for LLM apps. | Lewin's playbooks reference LLM07 + LLM08 directly. Different scope; complementary. |
 
 ---
@@ -491,7 +491,7 @@ Production deployments often want to detect when a regression has
 shifted the dominant locus. Two operations:
 
 ```python
-from agentcity.lewin import record_baseline, load_baseline, compare_to_baseline
+from vstack.lewin import record_baseline, load_baseline, compare_to_baseline
 
 # After running the diagnostic, record the detection as a baseline.
 record_baseline(detection, "baselines/qa-bot.json")
@@ -521,7 +521,7 @@ includes the comparison in the rendered output.
 ## Telemetry
 
 Every LLM call in every mode is reported to the
-`agentcity.aar.set_default_sink(...)` sink with:
+`vstack.aar.set_default_sink(...)` sink with:
 
   - `pattern="lewin"`, `run_id=<stable id>` (from `run_context`),
   - `pass=<quick|standard_loci|standard_interventions|forensic_loci|forensic_counterfactuals|forensic_bias_mechanism|forensic_interventions>`,
@@ -554,7 +554,7 @@ Real cost is recorded in `detection.cost_usd` after every run.
 | `lib/_composition.py` | ~140 | Composition manifest + recommended_downstream. |
 | `lib/_calibration.py` | ~115 | Baseline record / load / compare + drift bucket. |
 | `lib/_playbooks.py` | ~280 | `(locus, factor)` → playbook table. |
-| `lib/cli.py` | ~360 | `agentcity-lewin` CLI entry point. |
+| `lib/cli.py` | ~360 | `vstack-lewin` CLI entry point. |
 | `lib/__init__.py` | ~190 | Public API surface (`__all__`). |
 | `lib/CITATIONS.md` | ~200 | Full bibliography (11 academic sources). |
 | `tests/test_lewin.py` | ~270 | v0.0.x test suite (kept for backward compatibility). |

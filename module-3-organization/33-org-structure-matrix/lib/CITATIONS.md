@@ -31,5 +31,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.org_structure` is a derivative
+and publishers. `vstack.org_structure` is a derivative
 implementation; no copyrighted text is reproduced here.

@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.robbins_culture import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.robbins_culture import (  # noqa: E402
     CULTURE_CHARACTERISTICS,
     PLAYBOOKS,
     ROBBINS_COMPOSITION,
@@ -273,11 +273,11 @@ class TestComposition:
         stub = StubClient([_profile_payload(), _interventions_payload()])
         det = CultureProfileAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_upstream_includes_schein(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.schein_culture" in up
+        assert "vstack.schein_culture" in up
 
 
 class TestPlaybooks:

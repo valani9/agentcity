@@ -1,4 +1,4 @@
-"""agentcity.sdt_reward -- Deci & Ryan's Self-Determination Theory
+"""vstack.sdt_reward -- Deci & Ryan's Self-Determination Theory
 applied to AI agent reward shaping.
 
 Anchored in:
@@ -21,11 +21,11 @@ of ``SDTRewardAnalyzer``.
 Quick start
 -----------
 
-    from agentcity.sdt_reward import (
+    from vstack.sdt_reward import (
         SDTRewardAnalyzer,
         AgentSDTTrace,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentSDTTrace(
         agent_id="research-agent",
@@ -48,10 +48,10 @@ Quick start
 CLI
 ---
 
-    agentcity-sdt analyze --trace trace.json --mode forensic
-    agentcity-sdt playbooks
-    agentcity-sdt compose
-    agentcity-sdt schema --target trace
+    vstack-sdt analyze --trace trace.json --mode forensic
+    vstack-sdt playbooks
+    vstack-sdt compose
+    vstack-sdt schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

@@ -9,43 +9,43 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.danva_emotion",
-    "agentcity.goleman_ei",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.danva_emotion",
+    "vstack.goleman_ei",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "trust_building_oxytocin": ("agentcity.aar",),
-    "neutral_transactional": ("agentcity.mcallister_trust",),
+    "trust_building_oxytocin": ("vstack.aar",),
+    "neutral_transactional": ("vstack.mcallister_trust",),
     "cortisol_cascade": (
-        "agentcity.psych_safety",
-        "agentcity.aar",
+        "vstack.psych_safety",
+        "vstack.aar",
     ),
     "advocate_only_no_inquire": (
-        "agentcity.mcallister_trust",
-        "agentcity.devils_advocate",
+        "vstack.mcallister_trust",
+        "vstack.devils_advocate",
     ),
     "blame_loaded_language": (
-        "agentcity.psych_safety",
-        "agentcity.lencioni",
+        "vstack.psych_safety",
+        "vstack.lencioni",
     ),
     "agency_stripped": (
-        "agentcity.sdt_reward",
-        "agentcity.mcgregor",
+        "vstack.sdt_reward",
+        "vstack.mcgregor",
     ),
     "level_i_stuck": (
-        "agentcity.mcallister_trust",
-        "agentcity.glaser_conversation",
+        "vstack.mcallister_trust",
+        "vstack.glaser_conversation",
     ),
-    "level_iii_collaborative": ("agentcity.aar",),
+    "level_iii_collaborative": ("vstack.aar",),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

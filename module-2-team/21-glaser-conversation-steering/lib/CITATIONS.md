@@ -16,7 +16,7 @@
 
 3. **Stone, D., & Heen, S. (2014)** *Thanks for the Feedback.*
    Penguin. Pairs with Glaser for difficult-conversation work; the
-   `agentcity.stone_heen_feedback` triggers compose downstream when
+   `vstack.stone_heen_feedback` triggers compose downstream when
    cortisol is feedback-driven.
 
 ## How citations are surfaced
@@ -27,5 +27,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.glaser_conversation` is a derivative
+and publishers. `vstack.glaser_conversation` is a derivative
 implementation; no copyrighted text is reproduced here.

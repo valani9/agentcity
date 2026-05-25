@@ -17,7 +17,7 @@ import json
 
 import pytest
 
-from agentcity.johari import (
+from vstack.johari import (
     QUADRANTS,
     AgentSelfReportTrace,
     InteractionTurn,

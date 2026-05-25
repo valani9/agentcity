@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.glaser_conversation import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.glaser_conversation import (  # noqa: E402
     GLASER_COMPOSITION,
     GLASER_MODES,
     GLASER_PROFILE_PATTERNS,
@@ -256,11 +256,11 @@ class TestComposition:
         stub = StubClient([_state_payload(), _interventions_payload()])
         det = ConversationSteeringAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.psych_safety" in recs
+        assert "vstack.psych_safety" in recs
 
     def test_upstream_includes_aar(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.aar" in up
+        assert "vstack.aar" in up
 
 
 class TestPlaybooks:

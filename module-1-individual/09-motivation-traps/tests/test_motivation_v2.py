@@ -6,8 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from agentcity.aar import InMemoryTelemetrySink, set_default_sink
-from agentcity.motivation_traps import (
+from vstack.aar import InMemoryTelemetrySink, set_default_sink
+from vstack.motivation_traps import (
     MOTIVATION_COMPOSITION,
     MOTIVATION_MODES,
     MOTIVATION_PROFILE_PATTERNS,
@@ -61,7 +61,7 @@ def _trace(
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -331,11 +331,11 @@ class TestComposition:
             profile_pattern="self_efficacy_collapse_uncertainty",
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.cognitive_reappraisal" in recs
+        assert "vstack.cognitive_reappraisal" in recs
 
     def test_upstream_includes_hexaco(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.hexaco" in up
+        assert "vstack.hexaco" in up
 
 
 # ---------------------------------------------------------------------------

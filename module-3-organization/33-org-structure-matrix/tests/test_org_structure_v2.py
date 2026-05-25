@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.org_structure import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.org_structure import (  # noqa: E402
     PLAYBOOKS,
     SEVERITY_ORDER,
     STRUCTURE_COMPOSITION,
@@ -273,11 +273,11 @@ class TestComposition:
         stub = StubClient([_profile_payload(), _interventions_payload()])
         det = StructureMatrixAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.span_of_control" in recs
+        assert "vstack.span_of_control" in recs
 
     def test_upstream_includes_schein(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.schein_culture" in up
+        assert "vstack.schein_culture" in up
 
 
 class TestPlaybooks:

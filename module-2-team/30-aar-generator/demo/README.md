@@ -17,7 +17,7 @@ Each demo shows the AAR Generator running on a real agent failure trace from one
 Every demo follows the same shape so the AAR output across frameworks is comparable:
 
 1. **Trace capture** — run the agent on the scenario, capture the trace via the framework's native tracing.
-2. **Trace conversion** — convert the framework-native trace to `AgentTrace` using the adapter in `agentcity.aar.adapters.<framework>`.
+2. **Trace conversion** — convert the framework-native trace to `AgentTrace` using the adapter in `vstack.aar.adapters.<framework>`.
 3. **AAR generation** — run `AARGenerator(...).generate(trace)`.
 4. **Output** — markdown AAR + prompt patch + new eval test + lesson record, written to `demo/<framework>/output/`.
 

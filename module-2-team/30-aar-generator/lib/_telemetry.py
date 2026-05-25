@@ -1,4 +1,4 @@
-"""Optional token / cost telemetry for AgentCity diagnostic runs.
+"""Optional token / cost telemetry for vstack diagnostic runs.
 
 LLM-driven diagnostics cost money. In production deployments you want
 to know which patterns are expensive, which agent flows trigger the
@@ -26,7 +26,7 @@ Design notes
 
 Example::
 
-    from agentcity.aar._telemetry import (
+    from vstack.aar._telemetry import (
         InMemoryTelemetrySink,
         set_default_sink,
         record_llm_call,
@@ -52,7 +52,7 @@ from typing import Any, Iterator, Protocol
 
 from ._logging import current_pattern, current_run_id
 
-log = logging.getLogger("agentcity.aar.telemetry")
+log = logging.getLogger("vstack.aar.telemetry")
 
 
 @dataclass
@@ -135,7 +135,7 @@ def record_llm_call(
     """Emit a telemetry event for a completed LLM call.
 
     Pattern / run_id are auto-populated from the current logging
-    context (set by :func:`agentcity.aar._logging.run_context`) when
+    context (set by :func:`vstack.aar._logging.run_context`) when
     not explicitly passed.
     """
     event = TelemetryEvent(

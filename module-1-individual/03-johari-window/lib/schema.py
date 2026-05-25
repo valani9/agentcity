@@ -60,7 +60,7 @@ Three pipeline modes are exposed:
     diagnosis + ranked interventions with composition targets.
 
 The full 15-source literature thread with per-citation usage notes is
-in :mod:`agentcity.johari.CITATIONS` (``lib/CITATIONS.md``).
+in :mod:`vstack.johari.CITATIONS` (``lib/CITATIONS.md``).
 """
 
 from __future__ import annotations
@@ -109,7 +109,7 @@ def severity_from_self_awareness(score: float) -> Severity:
     """Map a [0,1] self-awareness score to a 7-point severity bucket.
 
     Inverse polarity: low score -> high severity. 0.0 -> critical;
-    1.0 -> none. Mirrors :func:`agentcity.goleman_ei.severity_from_score`.
+    1.0 -> none. Mirrors :func:`vstack.goleman_ei.severity_from_score`.
     """
     s = max(0.0, min(1.0, float(score)))
     if s < 0.15:
@@ -200,7 +200,7 @@ InterventionType = Literal[
     "negative_feedback_solicitation",  # Ashford-Tsui
     "tool_receipt_validator",  # Basu 2026
     "verbalized_confidence",  # Lin et al. 2022
-    "compose_pattern",  # delegate to another AgentCity pattern
+    "compose_pattern",  # delegate to another vstack pattern
     "red_team_probe",  # for UNKNOWN
     "external_audit_loop",  # human-in-the-loop verification
     "rewrite_system_prompt",
@@ -489,7 +489,7 @@ class BaselineComparison(BaseModel):
 
 
 class ComposedPatternHandoff(BaseModel):
-    """Where this audit feeds into the rest of the AgentCity library."""
+    """Where this audit feeds into the rest of the vstack library."""
 
     upstream_patterns: list[str] = Field(default_factory=list)
     downstream_patterns: list[str] = Field(default_factory=list)

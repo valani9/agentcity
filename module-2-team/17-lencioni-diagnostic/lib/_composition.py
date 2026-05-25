@@ -9,35 +9,35 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.grpi",
-    "agentcity.schein_culture",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.grpi",
+    "vstack.schein_culture",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "healthy_team": ("agentcity.aar",),
+    "healthy_team": ("vstack.aar",),
     "foundational_trust_collapse": (
-        "agentcity.psych_safety",
-        "agentcity.trust_triangle",
+        "vstack.psych_safety",
+        "vstack.trust_triangle",
     ),
-    "conflict_avoidance": ("agentcity.devils_advocate", "agentcity.bias_stack"),
-    "commitment_collapse": ("agentcity.smart_goal", "agentcity.grpi"),
-    "accountability_void": ("agentcity.plus_delta", "agentcity.grpi"),
-    "results_inattention": ("agentcity.aar", "agentcity.smart_goal"),
+    "conflict_avoidance": ("vstack.devils_advocate", "vstack.bias_stack"),
+    "commitment_collapse": ("vstack.smart_goal", "vstack.grpi"),
+    "accountability_void": ("vstack.plus_delta", "vstack.grpi"),
+    "results_inattention": ("vstack.aar", "vstack.smart_goal"),
     "full_pyramid_dysfunction": (
-        "agentcity.grpi",
-        "agentcity.psych_safety",
-        "agentcity.lewin",
+        "vstack.grpi",
+        "vstack.psych_safety",
+        "vstack.lewin",
     ),
-    "foundation_unstable_top_strong": ("agentcity.trust_triangle",),
+    "foundation_unstable_top_strong": ("vstack.trust_triangle",),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.grpi", "agentcity.social_loafing"),
-    "autogen": ("agentcity.grpi",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.grpi", "vstack.social_loafing"),
+    "autogen": ("vstack.grpi",),
 }
 
 

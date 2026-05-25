@@ -1,4 +1,4 @@
-"""agentcity.cognitive_reappraisal -- Gross's emotion-regulation process
+"""vstack.cognitive_reappraisal -- Gross's emotion-regulation process
 model applied to AI agents.
 
 Anchored in 14 academic sources: Gross 1998/2001/2002/2014, Gross-John
@@ -17,11 +17,11 @@ of `ReappraisalAnalyzer`.
 Quick start
 -----------
 
-    from agentcity.cognitive_reappraisal import (
+    from vstack.cognitive_reappraisal import (
         ReappraisalAnalyzer,
         AgentRegulationTrace,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentRegulationTrace(
         agent_id="support-agent",
@@ -39,10 +39,10 @@ Quick start
 CLI
 ---
 
-    agentcity-reappraisal analyze --trace trace.json --mode forensic
-    agentcity-reappraisal playbooks
-    agentcity-reappraisal compose
-    agentcity-reappraisal schema --target trace
+    vstack-reappraisal analyze --trace trace.json --mode forensic
+    vstack-reappraisal playbooks
+    vstack-reappraisal compose
+    vstack-reappraisal schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

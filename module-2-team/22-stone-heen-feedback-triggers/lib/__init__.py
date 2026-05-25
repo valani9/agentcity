@@ -1,4 +1,4 @@
-"""agentcity.feedback_triggers -- Stone & Heen's three feedback triggers
+"""vstack.feedback_triggers -- Stone & Heen's three feedback triggers
 (truth, relationship, identity) applied to user-agent feedback exchanges.
 
 Anchored in Stone & Heen (2014) and Edmondson (1999) psychological safety.

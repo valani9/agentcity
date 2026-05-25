@@ -1,6 +1,6 @@
 # Your agent has four classic biases. Kahneman named them in 1974.
 
-*A sixth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A sixth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -18,7 +18,7 @@ Four of those biases recur in AI agent reasoning traces with such regularity tha
 
 These four don't appear independently. They cluster. An anchored agent develops overconfidence in the anchor; confirmation bias amplifies the overconfidence; escalation of commitment kicks in when the original direction proves wrong. Most agent reasoning failures involve at least two of the four. Many involve all four.
 
-## What `agentcity.bias_stack` does
+## What `vstack.bias_stack` does
 
 The library takes an `AgentReasoningTrace` — task, reasoning steps (hypotheses, tool calls, observations, conclusions), outcome, success signal — and produces a `BiasStackDetection` with:
 
@@ -28,9 +28,9 @@ The library takes an `AgentReasoningTrace` — task, reasoning steps (hypotheses
 4. **A reasoning-quality label** (`well-calibrated` / `bias-prone` / `severely-biased`) for at-a-glance dashboards
 5. **A ranked list of interventions** — prompt patches, scaffold changes, retry caps, uncertainty calibration prompts, first-principles reset steps, devil's-advocate role insertions, new evals
 
-Two LLM passes under the hood: one to score the four biases against the trace, one to propose interventions for the dominant bias. Same retry-and-graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the four biases against the trace, one to propose interventions for the dominant bias. Same retry-and-graceful-degradation infrastructure as the rest of vstack.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #27 of 34 planned. With this pattern, the library now ships six patterns across multiple shapes:
 
@@ -47,4 +47,4 @@ Twenty-eight patterns to come.
 
 ---
 
-*Ilhan Valani is a builder shipping AgentCity in public. The repo lives at [github.com/valani9/agentcity](https://github.com/valani9/agentcity). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*
+*Ilhan Valani is a builder shipping vstack in public. The repo lives at [github.com/valani9/vstack](https://github.com/valani9/vstack). The pattern library is anchored entirely in public OB literature; no course-internal materials are redistributed.*

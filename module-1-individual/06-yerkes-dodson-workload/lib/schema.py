@@ -35,7 +35,7 @@ Three pipeline modes (consistent with patterns #01-#05):
     (Sweller CLT) + context-saturation analysis + ranked interventions
     with composition targets.
 
-Full literature thread in :mod:`agentcity.yerkes_dodson.CITATIONS`
+Full literature thread in :mod:`vstack.yerkes_dodson.CITATIONS`
 (``lib/CITATIONS.md``).
 """
 
@@ -306,7 +306,7 @@ class BaselineComparison(BaseModel):
 
 
 class ComposedPatternHandoff(BaseModel):
-    """Where this detection feeds into the rest of AgentCity."""
+    """Where this detection feeds into the rest of vstack."""
 
     upstream_patterns: list[str] = Field(default_factory=list)
     downstream_patterns: list[str] = Field(default_factory=list)

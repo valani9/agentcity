@@ -6,12 +6,12 @@ v0.2.0 prompts cover quick / standard / forensic modes:
   - INTERVENTIONS_PROMPT (legacy + standard)
   - FORENSIC_REPORTING_GRAPH_PROMPT, FORENSIC_BOTTLENECK_PROMPT,
     FORENSIC_INTERVENTIONS_PROMPT
-  - assemble_prompt(): fence + sanitize untrusted fields using agentcity.aar.
+  - assemble_prompt(): fence + sanitize untrusted fields using vstack.aar.
 """
 
 from __future__ import annotations
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 STRUCTURE_SYSTEM_PROMPT = """You are an org-structure diagnostic working in the tradition of
 Jay Galbraith's Star Model and Henry Mintzberg's structural configurations
@@ -149,7 +149,7 @@ Each intervention must have:
       "remove_routing_layer"     - direct peer access
       "new_eval"                 - regression test against the structural failure
       "human_review"             - human checkpoint
-      "compose_pattern"          - hand off to another agentcity pattern
+      "compose_pattern"          - hand off to another vstack pattern
   - description (what the intervention does)
   - suggested_implementation (concrete spec, role definition, or org-chart change)
   - estimated_impact ("high", "medium", "low")

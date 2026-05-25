@@ -9,87 +9,87 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.sdt_reward",
-    "agentcity.motivation_traps",
-    "agentcity.hexaco",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.sdt_reward",
+    "vstack.motivation_traps",
+    "vstack.hexaco",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "motivated_balanced": ("agentcity.aar",),
+    "motivated_balanced": ("vstack.aar",),
     "expectancy_bottleneck": (
-        "agentcity.smart_goal",
-        "agentcity.motivation_traps",
+        "vstack.smart_goal",
+        "vstack.motivation_traps",
     ),
     "instrumentality_bottleneck": (
-        "agentcity.sdt_reward",
-        "agentcity.smart_goal",
+        "vstack.sdt_reward",
+        "vstack.smart_goal",
     ),
     "valence_bottleneck": (
-        "agentcity.hexaco",
-        "agentcity.schein_culture",
+        "vstack.hexaco",
+        "vstack.schein_culture",
     ),
     "valence_negative_active_avoidance": (
-        "agentcity.hexaco",
-        "agentcity.cognitive_reappraisal",
-        "agentcity.bias_stack",
+        "vstack.hexaco",
+        "vstack.cognitive_reappraisal",
+        "vstack.bias_stack",
     ),
     "multi_term_collapse": (
-        "agentcity.hexaco",
-        "agentcity.cognitive_reappraisal",
-        "agentcity.lewin",
+        "vstack.hexaco",
+        "vstack.cognitive_reappraisal",
+        "vstack.lewin",
     ),
     "high_E_high_I_low_V_misaligned_task": (
-        "agentcity.hexaco",
-        "agentcity.schein_culture",
+        "vstack.hexaco",
+        "vstack.schein_culture",
     ),
     "high_E_low_I_pointless_work": (
-        "agentcity.sdt_reward",
-        "agentcity.smart_goal",
+        "vstack.sdt_reward",
+        "vstack.smart_goal",
     ),
     "low_E_creative_task_misfit": (
-        "agentcity.grant_strengths",
-        "agentcity.smart_goal",
+        "vstack.grant_strengths",
+        "vstack.smart_goal",
     ),
     "low_E_tool_use_capability_gap": (
-        "agentcity.hexaco",
-        "agentcity.smart_goal",
+        "vstack.hexaco",
+        "vstack.smart_goal",
     ),
-    "balanced_but_weak": ("agentcity.smart_goal",),
+    "balanced_but_weak": ("vstack.smart_goal",),
     "indeterminate": (),
 }
 
 _DOWNSTREAM_BY_BOTTLENECK: dict[str, tuple[str, ...]] = {
-    "expectancy": ("agentcity.smart_goal", "agentcity.motivation_traps"),
-    "instrumentality": ("agentcity.sdt_reward", "agentcity.smart_goal"),
-    "valence": ("agentcity.hexaco", "agentcity.schein_culture"),
-    "none": ("agentcity.aar",),
+    "expectancy": ("vstack.smart_goal", "vstack.motivation_traps"),
+    "instrumentality": ("vstack.sdt_reward", "vstack.smart_goal"),
+    "valence": ("vstack.hexaco", "vstack.schein_culture"),
+    "none": ("vstack.aar",),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.grpi", "agentcity.social_loafing"),
-    "autogen": ("agentcity.grpi", "agentcity.social_loafing"),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
-    "mastra": ("agentcity.grpi",),
-    "strands": ("agentcity.grpi",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.grpi", "vstack.social_loafing"),
+    "autogen": ("vstack.grpi", "vstack.social_loafing"),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
+    "mastra": ("vstack.grpi",),
+    "strands": ("vstack.grpi",),
 }
 
 _INTERVENTION_OVERLAYS: dict[str, str] = {
-    "scaffold_subtasks": "agentcity.smart_goal",
-    "tighten_goal_specificity": "agentcity.smart_goal",
-    "add_worked_example": "agentcity.smart_goal",
-    "show_capability_proof": "agentcity.johari",
-    "show_output_consumer": "agentcity.sdt_reward",
-    "add_outcome_link": "agentcity.smart_goal",
-    "add_progress_signal": "agentcity.smart_goal",
-    "remove_pointless_signal": "agentcity.sdt_reward",
-    "add_purpose_framing": "agentcity.schein_culture",
-    "rebalance_value_alignment": "agentcity.hexaco",
-    "remove_anti_value_signal": "agentcity.hexaco",
-    "human_review": "agentcity.plus_delta",
+    "scaffold_subtasks": "vstack.smart_goal",
+    "tighten_goal_specificity": "vstack.smart_goal",
+    "add_worked_example": "vstack.smart_goal",
+    "show_capability_proof": "vstack.johari",
+    "show_output_consumer": "vstack.sdt_reward",
+    "add_outcome_link": "vstack.smart_goal",
+    "add_progress_signal": "vstack.smart_goal",
+    "remove_pointless_signal": "vstack.sdt_reward",
+    "add_purpose_framing": "vstack.schein_culture",
+    "rebalance_value_alignment": "vstack.hexaco",
+    "remove_anti_value_signal": "vstack.hexaco",
+    "human_review": "vstack.plus_delta",
 }
 
 

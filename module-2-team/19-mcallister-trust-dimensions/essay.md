@@ -1,6 +1,6 @@
 # Your agent is competent but cold. McAllister mapped this in 1995.
 
-*A twelfth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twelfth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -28,7 +28,7 @@ Both are required for the relationship to feel fully trustworthy. Cognitive trus
 
 Production AI agents almost universally score high on cognitive and low on affective. Their training rewards being right. Their evals measure helpfulness, accuracy, harmlessness — all cognitive. Their default mode is to skip to information-gathering, solve the task, close the loop. Affective signals — *"I hear you. Money being tight makes this worse. Third time is too many; let me fix it now"* — cost the agent nothing to produce. They just don't get produced unless someone explicitly engineers them in.
 
-## What `agentcity.mcallister_trust` does
+## What `vstack.mcallister_trust` does
 
 The library takes a `TrustConversationTrace` — task, turns of user-agent exchange, outcome, and optionally a user-satisfaction score — and produces a `TrustBalanceDetection` with:
 
@@ -39,7 +39,7 @@ The library takes a `TrustConversationTrace` — task, turns of user-agent excha
 5. **Per-dimension evidence** with specific agent quotes
 6. **A ranked list of interventions** targeting the under-built dimension: restate-user-emotion, acknowledge-stakes, signal-care, show-reasoning, cite-sources, confidence-calibration, follow-up-check-in, personalize-response
 
-Two LLM passes: one to score the two dimensions, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes: one to score the two dimensions, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -52,9 +52,9 @@ CSAT alone can't tell these apart. NPS can't tell these apart. A general-purpose
 
 The interesting empirical result from McAllister's 1995 paper is that *cognitive trust is necessary for affective trust to form, but not sufficient* — you need cognitive competence first, then affective signals on top. This maps directly to the typical agent-development sequence: get the accuracy right first (Pattern #27 Bias-Stack, Pattern #18 Trust Triangle), THEN audit the affective dimension (Pattern #19). Patterns compose in the order they're shipped.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #19 of 34 — the twelfth pattern shipped. AgentCity now sits at three different *trust* patterns at three different levels of analysis:
+This is pattern #19 of 34 — the twelfth pattern shipped. vstack now sits at three different *trust* patterns at three different levels of analysis:
 
 - **#18 Trust Triangle Audit (Frei & Morriss)** — at the agent-character level, are the three trust signals (Logic / Authenticity / Empathy) wobbling? Cross-model benchmark.
 - **#19 McAllister Trust (this pattern)** — at the conversation level, which type of trust did the agent actually build (cognitive vs affective)?
@@ -65,7 +65,7 @@ The three compose. Trust Triangle measures the *static* trust signals the agent 
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -77,4 +77,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

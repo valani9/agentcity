@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 TRUST_SYSTEM_PROMPT = """You are a trust-dimension diagnostic working in the tradition of
@@ -115,8 +115,8 @@ Return only a JSON object representing the CareSignalsAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions
 with composition targets.
 
-Composition targets: agentcity.trust_triangle, agentcity.goleman_ei,
-agentcity.glaser_conversation, agentcity.danva_emotion, agentcity.aar
+Composition targets: vstack.trust_triangle, vstack.goleman_ei,
+vstack.glaser_conversation, vstack.danva_emotion, vstack.aar
 
 Under-built dimension: {target_dimension}
 Trust quality: {trust_quality}

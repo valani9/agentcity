@@ -2,7 +2,7 @@
 
 **Layer:** Module 3 — Organization
 **Status:** Shipped
-**Package:** `agentcity.span_of_control`
+**Package:** `vstack.span_of_control`
 
 Deterministic quantitative diagnostic of an AI agent crew's structural
 load. Six metrics, all computed locally in Python — the LLM is used
@@ -59,12 +59,12 @@ load score is weighted toward `decision_bottleneck` (0.30) and `span_gini`
 ## Quick start
 
 ```python
-from agentcity.span_of_control import (
+from vstack.span_of_control import (
     AgentNode,
     CrewLoadTrace,
     SpanLoadCalculator,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = CrewLoadTrace(
     crew_id="cs-crew",

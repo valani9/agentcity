@@ -9,68 +9,68 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.goleman_ei",
-    "agentcity.johari",
-    "agentcity.danva_emotion",
-    "agentcity.aar",
+    "vstack.lewin",
+    "vstack.goleman_ei",
+    "vstack.johari",
+    "vstack.danva_emotion",
+    "vstack.aar",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
     "suppression_dominant": (
-        "agentcity.glaser_conversation",
-        "agentcity.devils_advocate",
+        "vstack.glaser_conversation",
+        "vstack.devils_advocate",
     ),
     "suppression_under_pushback": (
-        "agentcity.devils_advocate",
-        "agentcity.schein_culture",
+        "vstack.devils_advocate",
+        "vstack.schein_culture",
     ),
-    "rumination_loop": ("agentcity.yerkes_dodson",),
+    "rumination_loop": ("vstack.yerkes_dodson",),
     "rumination_brooding": (
-        "agentcity.yerkes_dodson",
-        "agentcity.bias_stack",
+        "vstack.yerkes_dodson",
+        "vstack.bias_stack",
     ),
-    "rumination_reflective": ("agentcity.aar",),
+    "rumination_reflective": ("vstack.aar",),
     "avoidance_pivot": (
-        "agentcity.glaser_conversation",
-        "agentcity.goleman_ei",
+        "vstack.glaser_conversation",
+        "vstack.goleman_ei",
     ),
-    "expression_only": ("agentcity.hexaco",),
-    "reappraisal_developing": ("agentcity.aar",),
+    "expression_only": ("vstack.hexaco",),
+    "reappraisal_developing": ("vstack.aar",),
     "mixed_unstable": (
-        "agentcity.lewin",
-        "agentcity.aar",
+        "vstack.lewin",
+        "vstack.aar",
     ),
-    "no_regulation": ("agentcity.danva_emotion",),
+    "no_regulation": ("vstack.danva_emotion",),
 }
 
 _DOWNSTREAM_BY_DOMINANT_STRATEGY: dict[str, tuple[str, ...]] = {
-    "suppression": ("agentcity.devils_advocate", "agentcity.glaser_conversation"),
-    "rumination": ("agentcity.yerkes_dodson",),
-    "avoidance": ("agentcity.glaser_conversation",),
-    "expression": ("agentcity.hexaco",),
-    "reappraisal": ("agentcity.aar",),
-    "none": ("agentcity.danva_emotion",),
+    "suppression": ("vstack.devils_advocate", "vstack.glaser_conversation"),
+    "rumination": ("vstack.yerkes_dodson",),
+    "avoidance": ("vstack.glaser_conversation",),
+    "expression": ("vstack.hexaco",),
+    "reappraisal": ("vstack.aar",),
+    "none": ("vstack.danva_emotion",),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.lencioni", "agentcity.grpi"),
-    "crewai": ("agentcity.lencioni", "agentcity.grpi", "agentcity.social_loafing"),
-    "autogen": ("agentcity.grpi", "agentcity.social_loafing"),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
-    "mastra": ("agentcity.grpi",),
-    "strands": ("agentcity.grpi",),
+    "langgraph": ("vstack.lencioni", "vstack.grpi"),
+    "crewai": ("vstack.lencioni", "vstack.grpi", "vstack.social_loafing"),
+    "autogen": ("vstack.grpi", "vstack.social_loafing"),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
+    "mastra": ("vstack.grpi",),
+    "strands": ("vstack.grpi",),
 }
 
 _INTERVENTION_OVERLAYS: dict[str, str] = {
-    "remove_suppression_pattern": "agentcity.glaser_conversation",
-    "break_rumination_loop": "agentcity.yerkes_dodson",
-    "disengage_avoidance_pivot": "agentcity.glaser_conversation",
-    "add_anti_sycophancy_anchor": "agentcity.devils_advocate",
-    "swap_model": "agentcity.lewin",
-    "human_review": "agentcity.plus_delta",
-    "add_constitutional_principle": "agentcity.schein_culture",
+    "remove_suppression_pattern": "vstack.glaser_conversation",
+    "break_rumination_loop": "vstack.yerkes_dodson",
+    "disengage_avoidance_pivot": "vstack.glaser_conversation",
+    "add_anti_sycophancy_anchor": "vstack.devils_advocate",
+    "swap_model": "vstack.lewin",
+    "human_review": "vstack.plus_delta",
+    "add_constitutional_principle": "vstack.schein_culture",
 }
 
 

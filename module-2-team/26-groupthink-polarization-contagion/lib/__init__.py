@@ -1,4 +1,4 @@
-"""agentcity.debate_pathology -- three classic debate-dynamics pathologies
+"""vstack.debate_pathology -- three classic debate-dynamics pathologies
 (groupthink, polarization, contagion) applied to multi-agent AI debates.
 
 Anchored in Janis 1972, Stoner 1968, Sunstein 2002, Hatfield/Cacioppo/Rapson 1993.

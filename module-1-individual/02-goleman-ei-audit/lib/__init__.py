@@ -1,4 +1,4 @@
-"""agentcity.goleman_ei -- Goleman's 4-Domain Emotional Intelligence
+"""vstack.goleman_ei -- Goleman's 4-Domain Emotional Intelligence
 Audit applied to AI agents.
 
 The four domains arranged 2x2 (SELF/OTHER x RECOGNITION/REGULATION):
@@ -17,14 +17,14 @@ Production wiring (v0.1.0 infra):
 
   - Structured logging with run-id correlation (every log line carries
     ``run_id`` + ``pattern="goleman_ei"``).
-  - Token / cost telemetry via :func:`agentcity.aar.record_llm_call`.
+  - Token / cost telemetry via :func:`vstack.aar.record_llm_call`.
   - Prompt-injection input guards on every free-text field.
   - Async mirror :class:`EIAuditDetectorAsync`.
 
 Composition:
 
   - Auto-attaches a :class:`ComposedPatternHandoff` naming the next
-    AgentCity pattern(s) to run based on weakest_domain,
+    vstack pattern(s) to run based on weakest_domain,
     profile_pattern, framework, and intervention shape.
   - Playbooks for common (domain, failure_mode) failure modes are
     auto-attached.
@@ -32,13 +32,13 @@ Composition:
 Quick start
 -----------
 
-    from agentcity.goleman_ei import (
+    from vstack.goleman_ei import (
         EIAuditDetector,
         AgentEITrace,
         UserSignal,
         CovarianceOnUserState,
     )
-    from agentcity.aar import AnthropicClient
+    from vstack.aar import AnthropicClient
 
     trace = AgentEITrace(
         agent_id="support-agent",
@@ -64,10 +64,10 @@ Quick start
 CLI
 ---
 
-    agentcity-goleman analyze --trace trace.json --mode forensic
-    agentcity-goleman playbooks
-    agentcity-goleman compose
-    agentcity-goleman schema --target trace
+    vstack-goleman analyze --trace trace.json --mode forensic
+    vstack-goleman playbooks
+    vstack-goleman compose
+    vstack-goleman schema --target trace
 """
 
 from ._calibration import compare_to_baseline, load_baseline, record_baseline

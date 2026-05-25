@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: persist with initial hypothesis despite contradicting evidence.",
             "Add `first_principles_reset` step to restate the problem from scratch.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Tversky & Kahneman 1974",
@@ -65,7 +65,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: only seeks evidence that supports the conclusion.",
             "Add `search_disconfirming_evidence` step.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "Popper 1959; Kahneman 2011",

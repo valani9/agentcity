@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 MCGREGOR_SYSTEM_PROMPT = """You are an orchestrator-mode diagnostic grounded in:
@@ -189,10 +189,10 @@ Return a JSON OBJECT representing the OptimalityJustification. Return only the J
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
 Composition targets available:
-agentcity.lewin, agentcity.aar, agentcity.devils_advocate, agentcity.bias_stack,
-agentcity.smart_goal, agentcity.plus_delta, agentcity.schein_culture,
-agentcity.hexaco, agentcity.grpi, agentcity.lencioni, agentcity.process_gain_loss,
-agentcity.social_loafing
+vstack.lewin, vstack.aar, vstack.devils_advocate, vstack.bias_stack,
+vstack.smart_goal, vstack.plus_delta, vstack.schein_culture,
+vstack.hexaco, vstack.grpi, vstack.lencioni, vstack.process_gain_loss,
+vstack.social_loafing
 
 Observed mode: {observed_mode}
 Optimal mode: {optimal_mode}

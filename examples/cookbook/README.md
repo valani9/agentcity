@@ -1,4 +1,4 @@
-# AgentCity Cookbook
+# vstack Cookbook
 
 Cross-pattern composition examples. Each pattern's own `demo/`
 directory shows the pattern in isolation; this cookbook shows the
@@ -7,7 +7,7 @@ follow-on diagnosis, telemetry-aware deployment, async server traffic,
 structured-log shipping.
 
 All recipes use the `StubClient` by default so they run with `pip
-install agentcity` and no API key.
+install vstack` and no API key.
 
 ## Recipes
 
@@ -29,7 +29,7 @@ install agentcity` and no API key.
 python examples/cookbook/01_aar_then_lewin.py
 
 # Against Anthropic / OpenAI / Ollama:
-AGENTCITY_LLM=anthropic python examples/cookbook/01_aar_then_lewin.py
-AGENTCITY_LLM=openai    python examples/cookbook/01_aar_then_lewin.py
-AGENTCITY_LLM=ollama    python examples/cookbook/01_aar_then_lewin.py
+vstack_LLM=anthropic python examples/cookbook/01_aar_then_lewin.py
+vstack_LLM=openai    python examples/cookbook/01_aar_then_lewin.py
+vstack_LLM=ollama    python examples/cookbook/01_aar_then_lewin.py
 ```

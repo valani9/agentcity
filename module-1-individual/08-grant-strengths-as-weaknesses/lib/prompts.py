@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 GRANT_SYSTEM_PROMPT = """You are a strengths-overuse diagnostic grounded in:
@@ -205,10 +205,10 @@ Return a JSON ARRAY of HarmCausationLink objects. Return only the JSON array."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
 Composition targets available:
-agentcity.lewin, agentcity.cognitive_reappraisal, agentcity.goleman_ei,
-agentcity.devils_advocate, agentcity.bias_stack, agentcity.johari,
-agentcity.hexaco, agentcity.smart_goal, agentcity.plus_delta,
-agentcity.schein_culture, agentcity.mcgregor
+vstack.lewin, vstack.cognitive_reappraisal, vstack.goleman_ei,
+vstack.devils_advocate, vstack.bias_stack, vstack.johari,
+vstack.hexaco, vstack.smart_goal, vstack.plus_delta,
+vstack.schein_culture, vstack.mcgregor
 
 Dominant overuse: {dominant_overuse}
 Harm caused: {harm_caused}

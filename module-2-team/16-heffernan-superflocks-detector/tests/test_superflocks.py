@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.superflocks import (
+from vstack.superflocks import (
     AgentCapability,
     FragilityIntervention,
     RoutingDecision,

@@ -9,33 +9,33 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.grpi",
-    "agentcity.aar",
-    "agentcity.devils_advocate",
-    "agentcity.lencioni",
+    "vstack.grpi",
+    "vstack.aar",
+    "vstack.devils_advocate",
+    "vstack.lencioni",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "good_fit_protocol": ("agentcity.aar",),
-    "consensus_overused": ("agentcity.aar",),
+    "good_fit_protocol": ("vstack.aar",),
+    "consensus_overused": ("vstack.aar",),
     "majority_when_consensus_needed": (
-        "agentcity.lencioni",
-        "agentcity.psych_safety",
+        "vstack.lencioni",
+        "vstack.psych_safety",
     ),
     "concurring_when_buyin_needed": (
-        "agentcity.lencioni",
-        "agentcity.devils_advocate",
+        "vstack.lencioni",
+        "vstack.devils_advocate",
     ),
-    "fist_to_five_underused": ("agentcity.aar",),
-    "no_quorum_specified": ("agentcity.aar",),
-    "no_tie_breaker": ("agentcity.aar",),
+    "fist_to_five_underused": ("vstack.aar",),
+    "no_quorum_specified": ("vstack.aar",),
+    "no_tie_breaker": ("vstack.aar",),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

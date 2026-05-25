@@ -1,4 +1,4 @@
-# AgentCity Pattern Index
+# vstack Pattern Index
 
 Every pattern is mapped to (a) the OB framework, (b) the named author/researcher, (c) the agent failure mode it addresses, and (d) the shipping status.
 

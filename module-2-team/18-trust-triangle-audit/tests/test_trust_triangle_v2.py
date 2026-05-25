@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.trust_triangle import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.trust_triangle import (  # noqa: E402
     LEGS,
     PLAYBOOKS,
     SEVERITY_ORDER,
@@ -266,11 +266,11 @@ class TestComposition:
         stub = StubClient([_scores_payload(), _interventions_payload()])
         audit = TrustTriangleAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(audit)
-        assert "agentcity.glaser_conversation" in recs
+        assert "vstack.glaser_conversation" in recs
 
     def test_upstream_includes_lencioni(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.lencioni" in up
+        assert "vstack.lencioni" in up
 
     def test_framework_overlay_applied(self) -> None:
         stub = StubClient([_scores_payload(), _interventions_payload()])

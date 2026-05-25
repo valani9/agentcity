@@ -12,8 +12,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.psych_safety import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.psych_safety import (  # noqa: E402
     BEHAVIORS,
     PLAYBOOKS,
     PSYCH_SAFETY_COMPOSITION,
@@ -271,11 +271,11 @@ class TestComposition:
         det = PsychologicalSafetyAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
         # all_four_suppressed profile pattern recommends lencioni
-        assert "agentcity.lencioni" in recs
+        assert "vstack.lencioni" in recs
 
     def test_upstream_includes_grpi(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.grpi" in up
+        assert "vstack.grpi" in up
 
 
 class TestPlaybooks:

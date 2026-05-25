@@ -9,27 +9,27 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.grpi",
-    "agentcity.mcgregor",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.grpi",
+    "vstack.mcgregor",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "robust_diversified": ("agentcity.aar",),
-    "concentrated_routing": ("agentcity.bias_stack", "agentcity.mcgregor"),
-    "superflocks_canonical": ("agentcity.grpi", "agentcity.process_gain_loss"),
-    "top_agent_monopoly": ("agentcity.bias_stack", "agentcity.devils_advocate"),
-    "no_fallback_coverage": ("agentcity.aar",),
-    "complementarity_collapse": ("agentcity.grpi",),
-    "failure_clustering_risk": ("agentcity.process_gain_loss", "agentcity.grpi"),
+    "robust_diversified": ("vstack.aar",),
+    "concentrated_routing": ("vstack.bias_stack", "vstack.mcgregor"),
+    "superflocks_canonical": ("vstack.grpi", "vstack.process_gain_loss"),
+    "top_agent_monopoly": ("vstack.bias_stack", "vstack.devils_advocate"),
+    "no_fallback_coverage": ("vstack.aar",),
+    "complementarity_collapse": ("vstack.grpi",),
+    "failure_clustering_risk": ("vstack.process_gain_loss", "vstack.grpi"),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.grpi",),
-    "autogen": ("agentcity.grpi",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.grpi",),
+    "autogen": ("vstack.grpi",),
 }
 
 

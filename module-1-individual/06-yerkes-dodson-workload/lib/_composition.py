@@ -9,61 +9,61 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.cognitive_reappraisal",
-    "agentcity.goleman_ei",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.cognitive_reappraisal",
+    "vstack.goleman_ei",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "under_pressure_wandering": ("agentcity.smart_goal", "agentcity.mcgregor"),
-    "under_pressure_drift": ("agentcity.smart_goal", "agentcity.aar"),
+    "under_pressure_wandering": ("vstack.smart_goal", "vstack.mcgregor"),
+    "under_pressure_drift": ("vstack.smart_goal", "vstack.aar"),
     "over_pressure_corner_cutting": (
-        "agentcity.devils_advocate",
-        "agentcity.bias_stack",
+        "vstack.devils_advocate",
+        "vstack.bias_stack",
     ),
     "over_pressure_hallucinating": (
-        "agentcity.johari",
-        "agentcity.lewin",
+        "vstack.johari",
+        "vstack.lewin",
     ),
     "over_pressure_freezing": (
-        "agentcity.cognitive_reappraisal",
-        "agentcity.mcgregor",
+        "vstack.cognitive_reappraisal",
+        "vstack.mcgregor",
     ),
     "over_pressure_refusing": (
-        "agentcity.cognitive_reappraisal",
-        "agentcity.grant_strengths",
+        "vstack.cognitive_reappraisal",
+        "vstack.grant_strengths",
     ),
-    "context_saturation": ("agentcity.lewin",),
-    "extraneous_load_overload": ("agentcity.schein_culture",),
-    "intrinsic_load_overload": ("agentcity.smart_goal",),
-    "optimal_zone": ("agentcity.aar",),
+    "context_saturation": ("vstack.lewin",),
+    "extraneous_load_overload": ("vstack.schein_culture",),
+    "intrinsic_load_overload": ("vstack.smart_goal",),
+    "optimal_zone": ("vstack.aar",),
 }
 
 _DOWNSTREAM_BY_ZONE: dict[str, tuple[str, ...]] = {
-    "under_pressure": ("agentcity.smart_goal", "agentcity.mcgregor"),
-    "over_pressure": ("agentcity.cognitive_reappraisal", "agentcity.devils_advocate"),
-    "optimal": ("agentcity.aar",),
+    "under_pressure": ("vstack.smart_goal", "vstack.mcgregor"),
+    "over_pressure": ("vstack.cognitive_reappraisal", "vstack.devils_advocate"),
+    "optimal": ("vstack.aar",),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.grpi",),
-    "crewai": ("agentcity.grpi", "agentcity.social_loafing"),
-    "autogen": ("agentcity.grpi", "agentcity.social_loafing"),
-    "claude-agent-sdk": ("agentcity.process_gain_loss",),
-    "openai-agents-sdk": ("agentcity.process_gain_loss",),
-    "mastra": ("agentcity.grpi",),
-    "strands": ("agentcity.grpi",),
+    "langgraph": ("vstack.grpi",),
+    "crewai": ("vstack.grpi", "vstack.social_loafing"),
+    "autogen": ("vstack.grpi", "vstack.social_loafing"),
+    "claude-agent-sdk": ("vstack.process_gain_loss",),
+    "openai-agents-sdk": ("vstack.process_gain_loss",),
+    "mastra": ("vstack.grpi",),
+    "strands": ("vstack.grpi",),
 }
 
 _INTERVENTION_OVERLAYS: dict[str, str] = {
-    "chunk_context": "agentcity.lewin",
-    "context_compression": "agentcity.lewin",
-    "add_scaffolding": "agentcity.smart_goal",
-    "explicit_focus_prompt": "agentcity.smart_goal",
-    "human_review": "agentcity.plus_delta",
-    "add_kill_criterion": "agentcity.devils_advocate",
-    "reduce_extraneous_load": "agentcity.schein_culture",
+    "chunk_context": "vstack.lewin",
+    "context_compression": "vstack.lewin",
+    "add_scaffolding": "vstack.smart_goal",
+    "explicit_focus_prompt": "vstack.smart_goal",
+    "human_review": "vstack.plus_delta",
+    "add_kill_criterion": "vstack.devils_advocate",
+    "reduce_extraneous_load": "vstack.schein_culture",
 }
 
 

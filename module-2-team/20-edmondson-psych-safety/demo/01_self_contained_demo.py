@@ -12,20 +12,20 @@ import os
 from datetime import datetime, timedelta, timezone
 
 try:
-    from agentcity.aar.clients import (
+    from vstack.aar.clients import (
         AnthropicClient,
         OllamaClient,
         OpenAIClient,
         StubClient,
     )
-    from agentcity.psych_safety import (
+    from vstack.psych_safety import (
         AgentMessage,
         MultiAgentSafetyTrace,
         PsychologicalSafetyDetector,
     )
 except ImportError as exc:
     raise SystemExit(
-        "agentcity not installed. Run: pip install -e . from the repo root.\n"
+        "vstack not installed. Run: pip install -e . from the repo root.\n"
         f"(Original import error: {exc})"
     ) from exc
 
@@ -153,7 +153,7 @@ def stub_responses() -> list[str]:
 
 
 def pick_client() -> object:
-    choice = os.environ.get("AGENTCITY_LLM", "stub").lower()
+    choice = os.environ.get("vstack_LLM", "stub").lower()
     if choice == "anthropic":
         return AnthropicClient(model=os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"))
     if choice == "openai":

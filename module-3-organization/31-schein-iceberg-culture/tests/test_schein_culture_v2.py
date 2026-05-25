@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.schein_culture import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.schein_culture import (  # noqa: E402
     CULTURE_LAYERS,
     PLAYBOOKS,
     SCHEIN_COMPOSITION,
@@ -241,11 +241,11 @@ class TestComposition:
         stub = StubClient([_analysis_payload(), _interventions_payload()])
         det = CultureAuditAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.bias_stack" in recs
+        assert "vstack.bias_stack" in recs
 
     def test_upstream_includes_lewin(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.lewin" in up
+        assert "vstack.lewin" in up
 
 
 class TestPlaybooks:

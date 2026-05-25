@@ -30,7 +30,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Vague primary goal -- run SMART-rewrite",
         [
             "Identify the abstract verbs ('improve', 'optimize', 'support').",
-            "Compose with `agentcity.smart_goal` to rewrite as specific/measurable.",
+            "Compose with `vstack.smart_goal` to rewrite as specific/measurable.",
             "Add at least 3 measurable success criteria.",
         ],
         "1d",
@@ -54,7 +54,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Audit which decisions are owned by which agent.",
             "Use RACI: Responsible / Accountable / Consulted / Informed.",
-            "Compose with `agentcity.mcgregor` for orchestrator-mode review.",
+            "Compose with `vstack.mcgregor` for orchestrator-mode review.",
         ],
         "1d",
         "Rubin-Plovnick-Fry 1977",
@@ -78,7 +78,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Define 2-3 level escalation chain.",
             "Specify trigger conditions per level.",
-            "Compose with `agentcity.mcgregor` for human-elevation triggers.",
+            "Compose with `vstack.mcgregor` for human-elevation triggers.",
         ],
         "1h",
         "Hackman 2002",
@@ -100,7 +100,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "Weak disagreement norms -- codify productive disagreement",
         [
             "Add explicit disagreement protocol (e.g. devil's advocate; structured dissent).",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
             "Add psychological-safety commitments.",
         ],
         "1d",
@@ -113,7 +113,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Add Edmondson-style safety commitments.",
             "Define feedback format (plus/delta / SBI).",
-            "Compose with `agentcity.psych_safety`.",
+            "Compose with `vstack.psych_safety`.",
         ],
         "1d",
         "Edmondson 1999",
@@ -124,7 +124,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "No measurable criteria -- add observable success metrics",
         [
             "Translate qualitative criteria into observable metrics.",
-            "Compose with `agentcity.smart_goal`.",
+            "Compose with `vstack.smart_goal`.",
         ],
         "1d",
         "Beckhard 1972; Locke-Latham 1990",
@@ -136,7 +136,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: one agent owns >50% of decision rights.",
             "Decompose into sub-roles assigned to other agents.",
-            "Compose with `agentcity.yerkes_dodson` (workload review).",
+            "Compose with `vstack.yerkes_dodson` (workload review).",
         ],
         "1w",
         "Hackman 2002; Yerkes-Dodson 1908",
@@ -147,7 +147,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         "No review cadence -- add periodic AAR",
         [
             "Specify review cadence (e.g. after every milestone).",
-            "Compose with `agentcity.aar`.",
+            "Compose with `vstack.aar`.",
         ],
         "1h",
         "Salas et al 2018",
@@ -159,7 +159,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Match decision protocol to framework (e.g. CrewAI hierarchical vs sequential).",
             "Align escalation path with framework's agent topology.",
-            "Compose with `agentcity.mcgregor`.",
+            "Compose with `vstack.mcgregor`.",
         ],
         "1w",
         "Wang et al 2023 Cooperative LLM Agents",

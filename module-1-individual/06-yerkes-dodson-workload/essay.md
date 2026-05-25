@@ -1,6 +1,6 @@
 # Your agent hallucinated because the deadline was absurd. Yerkes and Dodson plotted this in 1908.
 
-*A twenty-fourth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-fourth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -40,7 +40,7 @@ The three Yerkes-Dodson zones manifest in agent traces as canonical failure mode
 
 The most operationally important property of the Yerkes-Dodson framework, applied to agents, is that **the fix is bidirectional.** Some agents need *more* pressure. Some need *less.* A wandering analyst given tight budget + tight deadline often snaps into focus. A hallucinating researcher given longer deadline + larger budget restores verification headroom. The naïve advice "give the agent more time" is wrong half the time.
 
-## What `agentcity.yerkes_dodson` does
+## What `vstack.yerkes_dodson` does
 
 The library takes an `AgentPerformanceTrace` containing the agent's task, pressure inputs, observed behaviors, outcome, and success signal — and produces a `WorkloadDetection` with:
 
@@ -50,7 +50,7 @@ The library takes an `AgentPerformanceTrace` containing the agent's task, pressu
 4. **Failure mode** — one of `wandering`, `focused`, `corner_cutting`, `freezing`, `hallucinating`, `refusing`, `unknown`
 5. **A ranked list of interventions** — each tagged with `increase_pressure` or `decrease_pressure` direction: tighten_deadline, add_budget_cap, loosen_deadline, loosen_budget, add_kill_criterion, raise_retry_cap, lower_retry_cap, explicit_focus_prompt, human_review, new_eval
 
-Single LLM pass under the hood. Interventions are skipped when the agent is in the optimal zone. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Single LLM pass under the hood. Interventions are skipped when the agent is in the optimal zone. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -58,9 +58,9 @@ The hallucinating-research-agent case at the top of this essay illustrates the s
 
 The diagnostic's most valuable verdict is the *task-complexity mismatch* case — when the pressure inputs are appropriate for a *simple* task but the actual task is complex. The Yerkes-Dodson Law is unambiguous: a 30-second deadline that is optimal for ticket triage is over-pressure for cited research. The diagnostic catches this mismatch and recommends the loosen_deadline / loosen_budget intervention with the rationale grounded in the 1908 finding.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
-This is pattern #06 of 34 — the twenty-fourth pattern shipped. AgentCity's Module 1 (Individual) now spans:
+This is pattern #06 of 34 — the twenty-fourth pattern shipped. vstack's Module 1 (Individual) now spans:
 
 - **#01 Lewin Formula (B = f(I, E))** — top-level: is the failure in the model or the environment?
 - **#03 Johari Window** — self-knowledge: what doesn't the agent know about itself?
@@ -73,7 +73,7 @@ The five compose into a multi-layered diagnostic stack for individual-agent fail
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -85,4 +85,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

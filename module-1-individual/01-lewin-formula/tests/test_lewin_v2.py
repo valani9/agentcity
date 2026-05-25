@@ -23,13 +23,13 @@ from pathlib import Path
 
 import pytest
 
-from agentcity.aar import (
+from vstack.aar import (
     InMemoryTelemetrySink,
     JsonFormatter,
     get_logger,
     set_default_sink,
 )
-from agentcity.lewin import (
+from vstack.lewin import (
     LEWIN_COMPOSITION,
     LEWIN_MODES,
     LOCI,
@@ -55,7 +55,7 @@ from agentcity.lewin import (
     recommended_upstream,
     severity_from_score,
 )
-from agentcity.lewin.prompts import assemble_prompt, STANDARD_LOCUS_SCORING_PROMPT
+from vstack.lewin.prompts import assemble_prompt, STANDARD_LOCUS_SCORING_PROMPT
 
 
 # ---------------------------------------------------------------------------
@@ -237,7 +237,7 @@ def _forensic_stub_responses() -> list[str]:
 
 
 def _stub(canned: list[str]) -> object:
-    from agentcity.aar import StubClient
+    from vstack.aar import StubClient
 
     return StubClient(canned)
 
@@ -353,10 +353,10 @@ class TestSchemaInvariants:
             target_locus="environmental",
             intervention_type="compose_pattern",
             description="run AAR",
-            suggested_implementation="agentcity.aar",
-            composition_target_pattern="agentcity.aar",
+            suggested_implementation="vstack.aar",
+            composition_target_pattern="vstack.aar",
         )
-        assert iv.composition_target_pattern == "agentcity.aar"
+        assert iv.composition_target_pattern == "vstack.aar"
 
 
 # ---------------------------------------------------------------------------
@@ -554,7 +554,7 @@ class TestRunContext:
         stream = io.StringIO()
         handler = logging.StreamHandler(stream)
         handler.setFormatter(JsonFormatter())
-        logger = get_logger("agentcity.lewin.generator")
+        logger = get_logger("vstack.lewin.generator")
         prev_handlers = list(logger.handlers)
         prev_propagate = logger.propagate
         logger.handlers = [handler]
@@ -601,7 +601,7 @@ class TestComposition:
             success=False,
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.bias_stack" in recs
+        assert "vstack.bias_stack" in recs
 
     def test_environmental_dominant_recommends_smart_goal(self) -> None:
         det = LewinDetection(
@@ -613,8 +613,8 @@ class TestComposition:
             success=False,
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.smart_goal" in recs
-        assert "agentcity.grpi" in recs
+        assert "vstack.smart_goal" in recs
+        assert "vstack.grpi" in recs
 
     def test_framework_overlay_crewai_adds_social_loafing(self) -> None:
         trace = _trace(framework="crewai")
@@ -627,7 +627,7 @@ class TestComposition:
             success=False,
         )
         recs, _ = recommended_downstream(det, trace)
-        assert "agentcity.social_loafing" in recs
+        assert "vstack.social_loafing" in recs
 
     def test_intervention_overlay_added(self) -> None:
         det = LewinDetection(
@@ -646,17 +646,17 @@ class TestComposition:
             success=False,
         )
         recs, _ = recommended_downstream(det)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_recommended_upstream_includes_aar(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.aar" in up
+        assert "vstack.aar" in up
 
     def test_handoff_present_on_detection(self) -> None:
         stub = _stub(_standard_stub_responses())
         det = LewinAttributionDetector(stub).run(_trace())  # type: ignore[arg-type]
         assert det.composition_handoff is not None
-        assert "agentcity.smart_goal" in det.composition_handoff.downstream_patterns
+        assert "vstack.smart_goal" in det.composition_handoff.downstream_patterns
 
 
 # ---------------------------------------------------------------------------

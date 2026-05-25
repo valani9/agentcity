@@ -1,6 +1,6 @@
 # Trust Triangle Audit -- Citations
 
-The Trust Triangle audit in `agentcity.trust_triangle` is grounded in
+The Trust Triangle audit in `vstack.trust_triangle` is grounded in
 five literature anchors.
 
 ## Primary anchor
@@ -23,7 +23,7 @@ five literature anchors.
 
 3. **Goleman, D. (1995)** *Emotional Intelligence.* Bantam Books.
    Source for the empathy-leg failure mode "missed_emotional_cues"
-   in `_playbooks.py` -- pairs with `agentcity.goleman_ei` downstream.
+   in `_playbooks.py` -- pairs with `vstack.goleman_ei` downstream.
 
 4. **Lewis, P., et al. (2020)** "Retrieval-Augmented Generation for
    Knowledge-Intensive NLP Tasks." *NeurIPS 2020*.
@@ -46,6 +46,6 @@ five literature anchors.
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. The `agentcity.trust_triangle` implementation is a
+and publishers. The `vstack.trust_triangle` implementation is a
 derivative work applying the Trust Triangle to AI agents; no
 copyrighted text is reproduced here.

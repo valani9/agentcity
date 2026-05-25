@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 DANVA_SYSTEM_PROMPT = """You are a DANVA-style emotion-recognition diagnostic for AI agents, grounded in:
@@ -137,9 +137,9 @@ Each intervention:
   - composition_target_pattern (when intervention_type == compose_pattern)
 
 Composition targets available:
-  agentcity.goleman_ei, agentcity.cognitive_reappraisal, agentcity.glaser_conversation,
-  agentcity.hexaco, agentcity.aar, agentcity.lewin, agentcity.johari,
-  agentcity.yerkes_dodson, agentcity.schein_culture, agentcity.plus_delta
+  vstack.goleman_ei, vstack.cognitive_reappraisal, vstack.glaser_conversation,
+  vstack.hexaco, vstack.aar, vstack.lewin, vstack.johari,
+  vstack.yerkes_dodson, vstack.schein_culture, vstack.plus_delta
 
 Profile pattern: {profile_pattern}
 Cascade break: {cascade_break_point}

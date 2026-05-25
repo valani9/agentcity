@@ -45,7 +45,7 @@ These are not metaphors. Each can be detected in a structured multi-agent trace.
 
 ## What this pattern does
 
-The `agentcity.lencioni` library takes a structured multi-agent trace (the messages exchanged between agents, the tools each used, the final outcome) and produces:
+The `vstack.lencioni` library takes a structured multi-agent trace (the messages exchanged between agents, the tools each used, the final outcome) and produces:
 
 1. **A pyramid score** — 0.0-1.0 severity per dysfunction, in pyramid order.
 2. **A dominant-dysfunction diagnosis** — the highest-impact dysfunction blocking the team.
@@ -64,8 +64,8 @@ The library reuses the same LLM-client interface as the AAR Generator (Anthropic
 ## Design
 
 ```python
-from agentcity.lencioni import LencioniDiagnostic, MultiAgentTrace, AgentMessage
-from agentcity.lencioni.clients import AnthropicClient
+from vstack.lencioni import LencioniDiagnostic, MultiAgentTrace, AgentMessage
+from vstack.lencioni.clients import AnthropicClient
 
 trace = MultiAgentTrace(
     goal="Generate a marketing campaign for SaaS launch",

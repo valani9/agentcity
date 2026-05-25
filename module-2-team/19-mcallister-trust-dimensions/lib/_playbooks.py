@@ -31,7 +31,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agent solves task without naming user emotion.",
             "Add `restate_user_emotion` step before task solving.",
-            "Compose with `agentcity.danva_emotion` upstream.",
+            "Compose with `vstack.danva_emotion` upstream.",
         ],
         "1d",
         "McAllister 1995; Goleman 1995",
@@ -43,7 +43,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: agent prose reads procedurally, no warmth.",
             "Add `signal_care` lexical patches in system prompt.",
-            "Compose with `agentcity.glaser_conversation`.",
+            "Compose with `vstack.glaser_conversation`.",
         ],
         "1d",
         "McAllister 1995",
@@ -99,7 +99,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: conclusions without visible derivation.",
             "Add `show_reasoning` step.",
-            "Compose with `agentcity.devils_advocate`.",
+            "Compose with `vstack.devils_advocate`.",
         ],
         "1d",
         "McAllister 1995",

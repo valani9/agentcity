@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.devils_advocate import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.devils_advocate import (  # noqa: E402
     DEVILS_ADVOCATE_COMPOSITION,
     DEVILS_ADVOCATE_MODES,
     DEVILS_ADVOCATE_PROFILE_PATTERNS,
@@ -304,11 +304,11 @@ class TestComposition:
         stub = StubClient([_phase_payload(), _interventions_payload()])
         det = RoleSeparationAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.bias_stack" in recs
+        assert "vstack.bias_stack" in recs
 
     def test_upstream_includes_psych_safety(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.psych_safety" in up
+        assert "vstack.psych_safety" in up
 
 
 class TestPlaybooks:

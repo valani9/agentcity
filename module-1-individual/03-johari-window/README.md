@@ -53,10 +53,10 @@ Audits output:
 ## Install
 
 ```bash
-pip install agentcity                # Stub-only.
-pip install "agentcity[anthropic]"   # + Anthropic.
-pip install "agentcity[openai]"      # + OpenAI.
-pip install "agentcity[ollama]"      # + local Ollama.
+pip install vstack                # Stub-only.
+pip install "vstack[anthropic]"   # + Anthropic.
+pip install "vstack[openai]"      # + OpenAI.
+pip install "vstack[ollama]"      # + local Ollama.
 ```
 
 ---
@@ -85,13 +85,13 @@ pip install "agentcity[ollama]"      # + local Ollama.
 ## Python quick start
 
 ```python
-from agentcity.johari import (
+from vstack.johari import (
     JohariSelfAuditor,
     AgentSelfReportTrace,
     InteractionTurn,
     ToolReceipt,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentSelfReportTrace(
     agent_id="research-agent-007",
@@ -119,13 +119,13 @@ print(audit.to_markdown())
 ## CLI
 
 ```bash
-agentcity-johari analyze --trace trace.json --client stub --stub-responses stub.json
-agentcity-johari analyze --trace fail.json --client anthropic --mode forensic
-agentcity-johari batch --corpus eval/synthetic_johari_failures.yaml --out audits/
-agentcity-johari replay --audit audits/scenario-1.json
-agentcity-johari playbooks
-agentcity-johari compose
-agentcity-johari schema --target trace
+vstack-johari analyze --trace trace.json --client stub --stub-responses stub.json
+vstack-johari analyze --trace fail.json --client anthropic --mode forensic
+vstack-johari batch --corpus eval/synthetic_johari_failures.yaml --out audits/
+vstack-johari replay --audit audits/scenario-1.json
+vstack-johari playbooks
+vstack-johari compose
+vstack-johari schema --target trace
 ```
 
 ---
@@ -228,7 +228,7 @@ DANVA).
 ## Calibration
 
 ```python
-from agentcity.johari import record_baseline, load_baseline, compare_to_baseline
+from vstack.johari import record_baseline, load_baseline, compare_to_baseline
 
 record_baseline(audit, "baselines/research-agent.json")
 fresh = JohariSelfAuditor(client).run(trace)

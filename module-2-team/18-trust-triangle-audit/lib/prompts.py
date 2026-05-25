@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 TRUST_SYSTEM_PROMPT = """You are a Trust Triangle diagnostician for AI agents, working in the
@@ -124,8 +124,8 @@ Return only a JSON object representing the ContextSensitivityAudit."""
 
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 ranked interventions with composition targets.
 
-Composition targets: agentcity.mcallister_trust, agentcity.psych_safety,
-agentcity.glaser_conversation, agentcity.bias_stack, agentcity.devils_advocate, agentcity.aar
+Composition targets: vstack.mcallister_trust, vstack.psych_safety,
+vstack.glaser_conversation, vstack.bias_stack, vstack.devils_advocate, vstack.aar
 
 Dominant: {dominant}
 Evidence: {evidence}

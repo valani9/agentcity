@@ -1,6 +1,6 @@
 # Your orchestrator has 12 workers and full commit authority. The math says you have effective parallelism of 1.
 
-*A twenty-ninth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-ninth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -36,13 +36,13 @@ Neither intervention is novel. Both are textbook org design. What's novel is hav
 
 ## The hard thing about this pattern
 
-Most diagnostic patterns in AgentCity rely on an LLM to do the diagnostic work. This one doesn't. The math is intentionally deterministic — six pure-Python functions that operate on the agent roster and reports_to graph. The LLM is involved only in *generating interventions* on top of the locked metric values. The math should not depend on model whim.
+Most diagnostic patterns in vstack rely on an LLM to do the diagnostic work. This one doesn't. The math is intentionally deterministic — six pure-Python functions that operate on the agent roster and reports_to graph. The LLM is involved only in *generating interventions* on top of the locked metric values. The math should not depend on model whim.
 
 This is the same architectural decision made by Pattern #16 (Heffernan Superflocks Detector), where the routing-distribution metrics are computed deterministically and the LLM only contributes intervention narratives. The reason is operational: numbers that change run-to-run because the LLM had a different mood aren't usable as a regression metric. You can't track *"is the crew's centralization_index trending up or down across deploys"* if the number itself is non-deterministic.
 
 The cost of this design is that the pattern can't surface things the math doesn't see. A crew with perfect math but bad culture (Pattern #31 Schein) or bad structural fit (Pattern #33 Org-Structure Matrix) will pass #34's check while still being broken. That's *intentional*. Each pattern has its job. #34's job is the numbers.
 
-## What `agentcity.span_of_control` does
+## What `vstack.span_of_control` does
 
 The library takes a `CrewLoadTrace` containing:
 
@@ -58,7 +58,7 @@ and produces a `SpanLoadAnalysis` with:
 4. **bottleneck_agent_ids** — agents flagged by the deterministic computation
 5. **A ranked list of interventions** targeting the worst metric: add_supervisor_layer, flatten_hierarchy, split_supervisor_load, delegate_decision_authority, consolidate_supervisors, redistribute_subordinates, add_redundant_path, remove_bottleneck_agent, new_eval, human_review
 
-ONE LLM pass under the hood (interventions only), skipped when load quality is `well-balanced`. Same retry / graceful-degradation infrastructure as the rest of AgentCity. Math is deterministic by design.
+ONE LLM pass under the hood (interventions only), skipped when load quality is `well-balanced`. Same retry / graceful-degradation infrastructure as the rest of vstack. Math is deterministic by design.
 
 ## Why this matters operationally
 
@@ -68,7 +68,7 @@ The second-highest-leverage use is **post-incident root-cause attribution**. Whe
 
 The third use is **comparative analysis across crews**. Because the metrics are deterministic, you can compute them across multiple crews and compare. A team running 5 different agent crews can see which ones have the highest bottleneck risk and prioritize structural refactoring. This is the kind of analysis that's impossible with LLM-driven diagnostics because the numbers change run-to-run.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #34 of 34 — the thirtieth pattern shipped, and the **fourth Module 3 (Organizational) pattern.** Module 3 now covers the full organizational diagnostic surface:
 
@@ -84,7 +84,7 @@ The four compose. Schein for culture coherence, Robbins/Judge for culture shape,
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -96,4 +96,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

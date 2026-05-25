@@ -1,4 +1,4 @@
-"""agentcity.devils_advocate -- Critical-Evaluator / Devil's Advocate
+"""vstack.devils_advocate -- Critical-Evaluator / Devil's Advocate
 role-separation diagnostic for single-agent traces.
 
 Anchored in Janis 1972 groupthink, Schwenk 1990 structured dissent,

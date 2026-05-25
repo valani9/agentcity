@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 BIAS_SYSTEM_PROMPT = """You are a cognitive-bias diagnostician for AI agents working in
@@ -102,8 +102,8 @@ Return only a JSON object representing the AnchoringTraceAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 4-8 interventions with
 composition targets.
 
-Composition targets: agentcity.devils_advocate, agentcity.aar, agentcity.grpi,
-agentcity.debate_pathology
+Composition targets: vstack.devils_advocate, vstack.aar, vstack.grpi,
+vstack.debate_pathology
 
 Dominant bias: {dominant}
 Evidence: {evidence}

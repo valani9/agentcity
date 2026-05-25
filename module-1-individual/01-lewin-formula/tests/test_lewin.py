@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.lewin import (
+from vstack.lewin import (
     LOCI,
     AgentFailureTrace,
     EnvironmentalFactor,

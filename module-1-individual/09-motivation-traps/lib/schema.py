@@ -358,7 +358,7 @@ class BaselineComparison(BaseModel):
 
 
 class ComposedPatternHandoff(BaseModel):
-    """Where this detection feeds into the rest of AgentCity."""
+    """Where this detection feeds into the rest of vstack."""
 
     upstream_patterns: list[str] = Field(default_factory=list)
     downstream_patterns: list[str] = Field(default_factory=list)

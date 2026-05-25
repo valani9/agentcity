@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.mcallister_trust import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.mcallister_trust import (  # noqa: E402
     MCALLISTER_COMPOSITION,
     MCALLISTER_MODES,
     MCALLISTER_PROFILE_PATTERNS,
@@ -253,11 +253,11 @@ class TestComposition:
         stub = StubClient([_scores_payload(), _interventions_payload()])
         det = TrustBalanceAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(det)
-        assert "agentcity.glaser_conversation" in recs
+        assert "vstack.glaser_conversation" in recs
 
     def test_upstream_includes_trust_triangle(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.trust_triangle" in up
+        assert "vstack.trust_triangle" in up
 
 
 class TestPlaybooks:

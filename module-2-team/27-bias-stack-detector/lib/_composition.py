@@ -9,50 +9,50 @@ if TYPE_CHECKING:
 
 
 _UPSTREAM: tuple[str, ...] = (
-    "agentcity.lewin",
-    "agentcity.aar",
-    "agentcity.devils_advocate",
-    "agentcity.debate_pathology",
+    "vstack.lewin",
+    "vstack.aar",
+    "vstack.devils_advocate",
+    "vstack.debate_pathology",
 )
 
 _DOWNSTREAM_BY_PROFILE_PATTERN: dict[str, tuple[str, ...]] = {
-    "well_calibrated": ("agentcity.aar",),
+    "well_calibrated": ("vstack.aar",),
     "anchoring_dominant": (
-        "agentcity.devils_advocate",
-        "agentcity.aar",
+        "vstack.devils_advocate",
+        "vstack.aar",
     ),
     "overconfidence_dominant": (
-        "agentcity.trust_triangle",
-        "agentcity.devils_advocate",
+        "vstack.trust_triangle",
+        "vstack.devils_advocate",
     ),
     "confirmation_dominant": (
-        "agentcity.devils_advocate",
-        "agentcity.debate_pathology",
+        "vstack.devils_advocate",
+        "vstack.debate_pathology",
     ),
     "escalation_dominant": (
-        "agentcity.aar",
-        "agentcity.grpi",
+        "vstack.aar",
+        "vstack.grpi",
     ),
     "full_stack_severe": (
-        "agentcity.aar",
-        "agentcity.devils_advocate",
-        "agentcity.lencioni",
+        "vstack.aar",
+        "vstack.devils_advocate",
+        "vstack.lencioni",
     ),
     "anchoring_overconfidence_pair": (
-        "agentcity.devils_advocate",
-        "agentcity.trust_triangle",
+        "vstack.devils_advocate",
+        "vstack.trust_triangle",
     ),
     "confirmation_escalation_pair": (
-        "agentcity.aar",
-        "agentcity.devils_advocate",
+        "vstack.aar",
+        "vstack.devils_advocate",
     ),
     "indeterminate": (),
 }
 
 _FRAMEWORK_OVERLAYS: dict[str, tuple[str, ...]] = {
-    "langgraph": ("agentcity.aar",),
-    "crewai": ("agentcity.lencioni",),
-    "autogen": ("agentcity.aar",),
+    "langgraph": ("vstack.aar",),
+    "crewai": ("vstack.lencioni",),
+    "autogen": ("vstack.aar",),
 }
 
 

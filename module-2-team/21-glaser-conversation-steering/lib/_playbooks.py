@@ -75,7 +75,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: 'this is your fault'.",
             "Add `replace_judging_with_curiosity` patch.",
-            "Compose with `agentcity.psych_safety`.",
+            "Compose with `vstack.psych_safety`.",
         ],
         "1d",
         "Glaser 2014; Edmondson 1999",
@@ -152,7 +152,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: cortisol > 0.7 for 3+ consecutive turns.",
             "Add `human_review` checkpoint for the thread.",
-            "Compose with `agentcity.aar`.",
+            "Compose with `vstack.aar`.",
         ],
         "1w",
         "Glaser 2014",

@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.social_loafing import (
+from vstack.social_loafing import (
     AgentContribution,
     AgentMessage,
     LoafingIntervention,

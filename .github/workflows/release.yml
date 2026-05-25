@@ -4,7 +4,7 @@ name: Release
 # Builds the wheel + sdist, attests the build, and publishes to PyPI via
 # PyPI's trusted publisher (OIDC) — no long-lived API token in repo secrets.
 #
-# To use this workflow you must first configure AgentCity as a trusted
+# To use this workflow you must first configure vstack as a trusted
 # publisher on PyPI:
 #   https://docs.pypi.org/trusted-publishers/
 #
@@ -64,27 +64,27 @@ jobs:
 
       - name: Smoke-test wheel imports all 34 namespaces
         run: |
-          python -m pip install dist/agentcity-*-py3-none-any.whl
+          python -m pip install dist/vstack-*-py3-none-any.whl
           python -c "
-          import importlib, agentcity
-          assert agentcity.__version__ == '${{ steps.version.outputs.version }}', f'version mismatch: {agentcity.__version__}'
+          import importlib, vstack
+          assert vstack.__version__ == '${{ steps.version.outputs.version }}', f'version mismatch: {vstack.__version__}'
           for ns in [
-              'agentcity.aar', 'agentcity.lencioni', 'agentcity.trust_triangle',
-              'agentcity.johari', 'agentcity.grpi', 'agentcity.bias_stack',
-              'agentcity.psych_safety', 'agentcity.thomas_kilmann',
-              'agentcity.feedback_triggers', 'agentcity.devils_advocate',
-              'agentcity.lewin', 'agentcity.mcallister_trust',
-              'agentcity.social_loafing', 'agentcity.debate_pathology',
-              'agentcity.process_gain_loss', 'agentcity.smart_goal',
-              'agentcity.mcgregor', 'agentcity.group_decision',
-              'agentcity.schein_culture', 'agentcity.grant_strengths',
-              'agentcity.plus_delta', 'agentcity.robbins_culture',
-              'agentcity.superflocks', 'agentcity.yerkes_dodson',
-              'agentcity.org_structure', 'agentcity.motivation_traps',
-              'agentcity.glaser_conversation', 'agentcity.goleman_ei',
-              'agentcity.sdt_reward', 'agentcity.span_of_control',
-              'agentcity.danva_emotion', 'agentcity.cognitive_reappraisal',
-              'agentcity.hexaco', 'agentcity.vroom_expectancy',
+              'vstack.aar', 'vstack.lencioni', 'vstack.trust_triangle',
+              'vstack.johari', 'vstack.grpi', 'vstack.bias_stack',
+              'vstack.psych_safety', 'vstack.thomas_kilmann',
+              'vstack.feedback_triggers', 'vstack.devils_advocate',
+              'vstack.lewin', 'vstack.mcallister_trust',
+              'vstack.social_loafing', 'vstack.debate_pathology',
+              'vstack.process_gain_loss', 'vstack.smart_goal',
+              'vstack.mcgregor', 'vstack.group_decision',
+              'vstack.schein_culture', 'vstack.grant_strengths',
+              'vstack.plus_delta', 'vstack.robbins_culture',
+              'vstack.superflocks', 'vstack.yerkes_dodson',
+              'vstack.org_structure', 'vstack.motivation_traps',
+              'vstack.glaser_conversation', 'vstack.goleman_ei',
+              'vstack.sdt_reward', 'vstack.span_of_control',
+              'vstack.danva_emotion', 'vstack.cognitive_reappraisal',
+              'vstack.hexaco', 'vstack.vroom_expectancy',
           ]:
               importlib.import_module(ns)
           print('Release smoke test passed')
@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/agentcity/${{ needs.build.outputs.version }}/
+      url: https://pypi.org/project/vstack/${{ needs.build.outputs.version }}/
     permissions:
       id-token: write
     steps:
@@ -135,18 +135,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: AgentCity ${{ needs.build.outputs.version }}
+          name: vstack ${{ needs.build.outputs.version }}
           body: |
-            AgentCity ${{ needs.build.outputs.version }}.
+            vstack ${{ needs.build.outputs.version }}.
 
             Install:
             ```
-            pip install agentcity==${{ needs.build.outputs.version }}
+            pip install vstack==${{ needs.build.outputs.version }}
             ```
 
-            See [CHANGELOG.md](https://github.com/valani9/AgentCity/blob/main/CHANGELOG.md) for the full release notes.
+            See [CHANGELOG.md](https://github.com/valani9/vstack/blob/main/CHANGELOG.md) for the full release notes.
           files: |
-            dist/agentcity-*.whl
-            dist/agentcity-*.tar.gz
+            dist/vstack-*.whl
+            dist/vstack-*.tar.gz
           draft: false
           prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}

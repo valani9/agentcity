@@ -135,8 +135,8 @@ augmentation.
 ### LangGraph / CrewAI / AutoGen orchestration patterns
 
 The `framework_overlays` in `_composition.py` link Yerkes-Dodson zone
-diagnostics to per-framework recommendations (e.g. `agentcity.grpi`
-for CrewAI / AutoGen; `agentcity.process_gain_loss` for SDK-style
+diagnostics to per-framework recommendations (e.g. `vstack.grpi`
+for CrewAI / AutoGen; `vstack.process_gain_loss` for SDK-style
 single-agent runs). Framework choice substantially changes the
 shape of the workload curve.
 

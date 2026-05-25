@@ -64,7 +64,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: goal exceeds available resources/constraints.",
             "Add `calibrate_achievability` requiring resource alignment.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1d",
         "Doran 1981",
@@ -142,7 +142,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: overall_smart_score < 0.5 across multiple criteria.",
             "Add `decompose_goal` splitting into 2-3 smaller goals.",
-            "Compose with `agentcity.grpi`.",
+            "Compose with `vstack.grpi`.",
         ],
         "1w",
         "Doran 1981",

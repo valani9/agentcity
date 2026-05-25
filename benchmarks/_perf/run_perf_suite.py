@@ -1,4 +1,4 @@
-"""Per-pattern micro-benchmark harness for AgentCity.
+"""Per-pattern micro-benchmark harness for vstack.
 
 Runs every pattern's full `.run(...)` pipeline against a deterministic
 ``StubClient`` over many iterations and reports latency statistics
@@ -111,7 +111,7 @@ def _run_pattern(
 def _builder_aar() -> Callable[[], Any]:
     from datetime import datetime, timezone
 
-    from agentcity.aar import AARGenerator, AgentTrace, StubClient, TraceStep
+    from vstack.aar import AARGenerator, AgentTrace, StubClient, TraceStep
 
     canned = [
         "Refactor module.",
@@ -159,8 +159,8 @@ def _builder_aar() -> Callable[[], Any]:
 
 
 def _builder_lewin() -> Callable[[], Any]:
-    from agentcity.aar import StubClient
-    from agentcity.lewin import AgentFailureTrace, FailureStep, LewinAttributionDetector
+    from vstack.aar import StubClient
+    from vstack.lewin import AgentFailureTrace, FailureStep, LewinAttributionDetector
 
     canned = [
         json.dumps(
@@ -221,8 +221,8 @@ def _builder_lewin() -> Callable[[], Any]:
 
 
 def _builder_vroom() -> Callable[[], Any]:
-    from agentcity.aar import StubClient
-    from agentcity.vroom_expectancy import AgentExpectancyTrace, VroomExpectancyCalculator
+    from vstack.aar import StubClient
+    from vstack.vroom_expectancy import AgentExpectancyTrace, VroomExpectancyCalculator
 
     canned = [
         json.dumps(
@@ -292,7 +292,7 @@ PATTERN_BUILDERS: dict[str, Callable[[], Callable[[], Any]]] = {
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="AgentCity per-pattern perf suite")
+    parser = argparse.ArgumentParser(description="vstack per-pattern perf suite")
     parser.add_argument(
         "--iterations", type=int, default=100, help="Iterations per pattern (default 100)"
     )

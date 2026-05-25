@@ -30,7 +30,7 @@ mode decision rules.
 
 Adds the cultural-layer dimension. Theory-X or Theory-Y becomes a
 cultural assumption that shapes how the organization (or, in our case,
-the multi-agent system) operates day to day. The `agentcity.schein_
+the multi-agent system) operates day to day. The `vstack.schein_
 culture` composition target relates to this layer.
 
 ### 4. Pfeffer, J., & Salancik, G. R. (1978)
@@ -90,7 +90,7 @@ sub-agent authorization. This is the implementation of the
 > *The Human Organization.* McGraw-Hill.
 
 Adjacent framework extending McGregor to a 4-system continuum. For
-the AgentCity diagnostic we collapse to Theory X / Y / Hybrid, but
+the vstack diagnostic we collapse to Theory X / Y / Hybrid, but
 the Likert work is relevant to the `rotate_to_hybrid` intervention.
 
 ## How the diagnostic uses these anchors
@@ -99,7 +99,7 @@ the Likert work is relevant to the `rotate_to_hybrid` intervention.
 | --- | --- |
 | McGregor 1960 | Theory X / Y / Hybrid taxonomy. |
 | McGregor 1966 | Contingent-optimal-mode framing. |
-| Schein 1990 | Composition target `agentcity.schein_culture`. |
+| Schein 1990 | Composition target `vstack.schein_culture`. |
 | Pfeffer-Salancik 1978 | Task-property -> optimal-mode rules. |
 | Argyris 1957 | over-supervision pathologies (proven_agent_overcontrol). |
 | Eisenhardt 1989 | Forensic OptimalityJustification structure. |

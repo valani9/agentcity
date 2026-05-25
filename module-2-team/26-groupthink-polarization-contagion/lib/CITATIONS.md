@@ -41,5 +41,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.debate_pathology` is a derivative
+and publishers. `vstack.debate_pathology` is a derivative
 implementation; no copyrighted text is reproduced here.

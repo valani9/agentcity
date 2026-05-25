@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.debate_pathology import (
+from vstack.debate_pathology import (
     PATHOLOGIES,
     DebateIntervention,
     DebateMessage,

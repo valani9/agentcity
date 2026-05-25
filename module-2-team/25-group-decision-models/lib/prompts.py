@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agentcity.aar import fence, sanitize_for_prompt
+from vstack.aar import fence, sanitize_for_prompt
 
 
 DECISION_SYSTEM_PROMPT = """You are a decision-protocol generator working in the
@@ -88,8 +88,8 @@ Return only a JSON object representing the TallyIntegrityAudit."""
 FORENSIC_INTERVENTIONS_PROMPT = """FORENSIC mode -- propose 3-6 protocol-improvement
 interventions.
 
-Composition targets: agentcity.devils_advocate, agentcity.bias_stack,
-agentcity.aar, agentcity.grpi, agentcity.lencioni
+Composition targets: vstack.devils_advocate, vstack.bias_stack,
+vstack.aar, vstack.grpi, vstack.lencioni
 
 intervention_type one of: switch_to_concurring, switch_to_majority,
 switch_to_consensus, switch_to_fist_to_five, switch_to_unanimous, add_quorum,

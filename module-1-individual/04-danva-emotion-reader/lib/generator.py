@@ -29,7 +29,7 @@ from pathlib import Path
 from statistics import correlation, mean, variance
 from typing import Any, Literal, Protocol, cast
 
-from agentcity.aar import (
+from vstack.aar import (
     LLMUsage,
     detect_injection,
     extract_json_array,
@@ -71,7 +71,7 @@ from .schema import (
     severity_from_accuracy,
 )
 
-log = get_logger("agentcity.danva_emotion.generator")
+log = get_logger("vstack.danva_emotion.generator")
 
 
 _DEFAULT_COST_PER_1K = {
@@ -986,5 +986,5 @@ def _try_json_object(raw: str) -> dict[str, Any] | None:
     return None
 
 
-_legacy_log = logging.getLogger("agentcity.danva_emotion.generator")
+_legacy_log = logging.getLogger("vstack.danva_emotion.generator")
 _legacy_log.addHandler(logging.NullHandler())

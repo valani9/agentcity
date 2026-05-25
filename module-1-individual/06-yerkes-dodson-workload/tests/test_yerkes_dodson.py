@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.yerkes_dodson import (
+from vstack.yerkes_dodson import (
     AgentPerformanceTrace,
     PressureInputs,
     WorkloadDetection,

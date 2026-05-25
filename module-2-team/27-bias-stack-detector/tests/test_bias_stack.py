@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.bias_stack import (
+from vstack.bias_stack import (
     BIASES,
     AgentReasoningTrace,
     BiasEvidence,

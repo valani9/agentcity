@@ -1,6 +1,6 @@
 # Your agent is reviewing its own work. Janis explained why this fails in 1972.
 
-*A tenth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A tenth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -22,7 +22,7 @@ In 1972, Irving Janis published *Victims of Groupthink* — a study of foreign-p
 
 Most production AI agent deployments today look like the trace above: one agent doing all four roles. The critic role disappears first. The agent declares its plan good and ships it.
 
-## What `agentcity.devils_advocate` does
+## What `vstack.devils_advocate` does
 
 The library takes a `SingleAgentTrace` — task, reasoning steps (each tagged with which actor produced it), outcome, success signal — and produces a `RoleSeparationDetection` with:
 
@@ -33,7 +33,7 @@ The library takes a `SingleAgentTrace` — task, reasoning steps (each tagged wi
 5. **A role-separation quality bucket** — `well-separated` / `partially-conflated` / `fully-conflated`.
 6. **A ranked list of interventions** — add a critic agent (highest impact), red-team loop, external review gate, pre-mortem step, alternative-hypothesis step, devil's-advocate prompt patch, structured self-critique, human review.
 
-Two LLM passes under the hood: one to score the four phases, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the four phases, one to propose interventions. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -43,7 +43,7 @@ The cheapest substitute — a structured self-critique prompt patch — gets you
 
 The Role-Separation detector measures which of these you have in your actual trace and tells you which is missing.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #28 of 34. With it, the library now ships ten patterns across multiple shapes:
 
@@ -63,7 +63,7 @@ The Role Separator sits next to Bias-Stack: Bias-Stack measures cognitive biases
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -75,4 +75,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

@@ -17,12 +17,12 @@ The schema is split into three layers:
   - **Output**: a :class:`LewinDetection` with per-locus scores,
     evidence with confidence intervals, recommended interventions
     annotated with effort + risk + reversibility, and composition
-    handoffs pointing to other AgentCity patterns that should run next.
+    handoffs pointing to other vstack patterns that should run next.
 
   - **Auxiliary**: :class:`CovarianceSignal` (Kelley 1967 covariation
     inputs), :class:`BaselineComparison` (drift versus a stored
     historical detection), :class:`ComposedPatternHandoff` (where this
-    detection feeds into the rest of the AgentCity library).
+    detection feeds into the rest of the vstack library).
 
 Three pipeline modes are exposed:
 
@@ -59,7 +59,7 @@ deserialize. New severity values are *added* (the 7-point scale) but
 the original four (``none``, ``low``, ``medium``, ``high``) remain
 valid for backward compatibility.
 
-Citations are tracked in :mod:`agentcity.lewin.CITATIONS`. The 11-source
+Citations are tracked in :mod:`vstack.lewin.CITATIONS`. The 11-source
 literature thread (Lewin 1936, 1939, 1947, 1951; Heider 1958;
 Jones & Harris 1967; Kelley 1967; Ross 1977; Mischel & Shoda 1995;
 Funder & Ozer 1983; Gilbert & Malone 1995; Bandura 1986;
@@ -552,7 +552,7 @@ INTERVENTION_TYPES: tuple[str, ...] = (
 )
 
 
-# Effort scale matches the SRE convention used elsewhere in AgentCity:
+# Effort scale matches the SRE convention used elsewhere in vstack:
 # "1h" / "1d" / "1w" / "1m" / "ongoing". Effort estimates are
 # coarse-grained on purpose — the LLM is poor at sub-hour estimation
 # but reliable on order-of-magnitude.
@@ -569,8 +569,8 @@ class LewinIntervention(BaseModel):
       - ``risk`` — operational risk if the intervention misfires.
       - ``reversibility`` — Bezos two-way / one-way door distinction.
       - ``composition_target_pattern`` — when the intervention is
-        "run another AgentCity pattern as the next step", names that
-        pattern (e.g. ``"agentcity.aar"``).
+        "run another vstack pattern as the next step", names that
+        pattern (e.g. ``"vstack.aar"``).
       - ``preconditions`` — what must be true before applying.
       - ``success_metric`` — measurable indicator of whether the
         intervention worked.
@@ -600,9 +600,9 @@ class LewinIntervention(BaseModel):
     )
     composition_target_pattern: str | None = Field(
         default=None,
-        description="If this intervention is 'run another AgentCity "
+        description="If this intervention is 'run another vstack "
         "pattern next', names that pattern's import path "
-        "(e.g. 'agentcity.aar').",
+        "(e.g. 'vstack.aar').",
     )
     preconditions: list[str] = Field(default_factory=list)
     success_metric: str = Field(
@@ -628,10 +628,10 @@ class BaselineComparison(BaseModel):
 
 
 class ComposedPatternHandoff(BaseModel):
-    """Where this detection feeds into the rest of the AgentCity library.
+    """Where this detection feeds into the rest of the vstack library.
 
     The composition graph is declared statically in
-    :mod:`agentcity.lewin._composition`. At detection time the generator
+    :mod:`vstack.lewin._composition`. At detection time the generator
     consults the graph and recommends concrete downstream patterns
     based on ``dominant_locus`` + the trace's ``framework`` +
     intervention shape.
@@ -647,7 +647,7 @@ class AttachedPlaybook(BaseModel):
     """A failure-mode playbook attached to the detection.
 
     Playbooks are statically declared in
-    :mod:`agentcity.lewin._playbooks` keyed by ``(locus, factor)``. When
+    :mod:`vstack.lewin._playbooks` keyed by ``(locus, factor)``. When
     an intervention targets a key with a known playbook, the playbook
     is attached so the consumer can act without leaving the detection.
     """

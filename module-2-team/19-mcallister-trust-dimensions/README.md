@@ -41,7 +41,7 @@ The classic enterprise-support-bot failure mode is `cognitive-only`. The classic
 
 ## What this pattern does
 
-The `agentcity.mcallister_trust` library takes a user-agent conversation and produces:
+The `vstack.mcallister_trust` library takes a user-agent conversation and produces:
 
 1. **Per-dimension scores** for cognitive and affective trust, each in [0.0, 1.0]
 2. **A trust-balance metric** (`cognitive_score - affective_score`) — positive means cognitive-heavy, negative means affective-heavy
@@ -50,7 +50,7 @@ The `agentcity.mcallister_trust` library takes a user-agent conversation and pro
 5. **Per-dimension evidence** with specific agent-turn quotes
 6. **Concrete interventions** ranked by impact on the under-built dimension: `acknowledge_stakes`, `restate_user_emotion`, `signal_care`, `show_reasoning`, `cite_sources`, `confidence_calibration`, `follow_up_check_in`, `personalize_response`, `new_eval`, `human_review`
 
-Two LLM passes under the hood: one to score the two dimensions, one to propose interventions for the under-built dimension. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood: one to score the two dimensions, one to propose interventions for the under-built dimension. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## How this differs from existing tools
 
@@ -62,12 +62,12 @@ Two LLM passes under the hood: one to score the two dimensions, one to propose i
 ## Design
 
 ```python
-from agentcity.mcallister_trust import (
+from vstack.mcallister_trust import (
     TrustBalanceDetector,
     TrustConversationTrace,
     ConversationTurn,
 )
-from agentcity.aar.clients import AnthropicClient
+from vstack.aar.clients import AnthropicClient
 
 trace = TrustConversationTrace(
     agent_id="support-agent-001",

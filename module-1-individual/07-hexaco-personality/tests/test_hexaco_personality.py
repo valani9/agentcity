@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.hexaco import (
+from vstack.hexaco import (
     HEXACO_FACTORS,
     AgentPersonalityTrace,
     FactorScore,

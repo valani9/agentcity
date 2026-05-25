@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.smart_goal import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.smart_goal import (  # noqa: E402
     PLAYBOOKS,
     SEVERITY_ORDER,
     SMART_CRITERIA,
@@ -265,11 +265,11 @@ class TestComposition:
         stub = StubClient([_goal_payload(quality=0.5, weak_criterion="specific")])
         goal = SMARTGoalAnalyzer(stub).run(_request())
         recs, _ = recommended_downstream(goal)
-        assert "agentcity.devils_advocate" in recs
+        assert "vstack.devils_advocate" in recs
 
     def test_upstream_includes_grpi(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.grpi" in up
+        assert "vstack.grpi" in up
 
 
 class TestPlaybooks:

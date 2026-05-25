@@ -11,8 +11,8 @@ from typing import cast
 _PATTERN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PATTERN_ROOT))
 
-from agentcity.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
-from agentcity.thomas_kilmann import (  # noqa: E402
+from vstack.aar import InMemoryTelemetrySink, StubClient, set_default_sink  # noqa: E402
+from vstack.thomas_kilmann import (  # noqa: E402
     PLAYBOOKS,
     SEVERITY_ORDER,
     STYLES,
@@ -264,11 +264,11 @@ class TestComposition:
         )
         sel = ConflictStyleAnalyzer(stub).run(_trace())
         recs, _ = recommended_downstream(sel)
-        assert "agentcity.trust_triangle" in recs
+        assert "vstack.trust_triangle" in recs
 
     def test_upstream_includes_glaser(self) -> None:
         up = recommended_upstream()
-        assert "agentcity.glaser_conversation" in up
+        assert "vstack.glaser_conversation" in up
 
 
 class TestPlaybooks:

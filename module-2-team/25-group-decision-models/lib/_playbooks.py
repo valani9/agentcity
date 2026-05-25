@@ -42,7 +42,7 @@ PLAYBOOKS: dict[tuple[str, str], AttachedPlaybook] = {
         [
             "Detect signature: 49% minority must act on the decision.",
             "Add `switch_to_consensus` or `switch_to_fist_to_five`.",
-            "Compose with `agentcity.lencioni`.",
+            "Compose with `vstack.lencioni`.",
         ],
         "1d",
         "Kaner 2014",

@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from agentcity.glaser_conversation import (
+from vstack.glaser_conversation import (
     NEUROCHEMICAL_STATES,
     ConversationSteeringDetection,
     ConversationSteeringDetector,

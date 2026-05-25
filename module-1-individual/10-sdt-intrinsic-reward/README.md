@@ -40,11 +40,11 @@ Diagnoses how well an AI agent's system prompt + extrinsic signals support its t
 ## Quick start
 
 ```python
-from agentcity.sdt_reward import (
+from vstack.sdt_reward import (
     SDTRewardAnalyzer,
     AgentSDTTrace,
 )
-from agentcity.aar import AnthropicClient
+from vstack.aar import AnthropicClient
 
 trace = AgentSDTTrace(
     agent_id="research-agent",
@@ -67,44 +67,44 @@ detection = SDTRewardAnalyzer(
 print(detection.to_markdown())
 # most_undermined_need: autonomy
 # profile_pattern: overjustification_active
-# Composition handoff: agentcity.bias_stack, agentcity.schein_culture
+# Composition handoff: vstack.bias_stack, vstack.schein_culture
 ```
 
 ## CLI
 
 ```bash
-agentcity-sdt analyze --trace trace.json --mode forensic
-agentcity-sdt batch --corpus corpus.yaml --out detections/
-agentcity-sdt replay --detection detection.json
-agentcity-sdt validate --trace trace.json
-agentcity-sdt schema --target trace
-agentcity-sdt playbooks
-agentcity-sdt compose
+vstack-sdt analyze --trace trace.json --mode forensic
+vstack-sdt batch --corpus corpus.yaml --out detections/
+vstack-sdt replay --detection detection.json
+vstack-sdt validate --trace trace.json
+vstack-sdt schema --target trace
+vstack-sdt playbooks
+vstack-sdt compose
 ```
 
 ## Composition
 
 **Upstream patterns:**
-- `agentcity.lewin` -- attribute the reward-shaping signal to environment locus.
-- `agentcity.aar` -- the after-action review the trace comes from.
-- `agentcity.motivation_traps` -- complementary motivational diagnostic (Saxberg).
-- `agentcity.hexaco` -- personality (C-factor + H-factor interact with reward shaping).
-- `agentcity.cognitive_reappraisal` -- emotion-regulation under reward pressure.
+- `vstack.lewin` -- attribute the reward-shaping signal to environment locus.
+- `vstack.aar` -- the after-action review the trace comes from.
+- `vstack.motivation_traps` -- complementary motivational diagnostic (Saxberg).
+- `vstack.hexaco` -- personality (C-factor + H-factor interact with reward shaping).
+- `vstack.cognitive_reappraisal` -- emotion-regulation under reward pressure.
 
 **Downstream patterns** (chosen by profile pattern):
-- `autonomy_undermined_dominant` -> `agentcity.schein_culture` + `agentcity.bias_stack`
-- `competence_undermined_dominant` -> `agentcity.smart_goal` + `agentcity.motivation_traps`
-- `relatedness_undermined_dominant` -> `agentcity.goleman_ei` + `agentcity.schein_culture`
-- `overjustification_active` -> `agentcity.bias_stack` + `agentcity.schein_culture`
-- `competence_collapse_under_deadline` -> `agentcity.yerkes_dodson` + `agentcity.smart_goal`
-- `creative_task_low_autonomy_misfit` -> `agentcity.grant_strengths` + `agentcity.devils_advocate`
+- `autonomy_undermined_dominant` -> `vstack.schein_culture` + `vstack.bias_stack`
+- `competence_undermined_dominant` -> `vstack.smart_goal` + `vstack.motivation_traps`
+- `relatedness_undermined_dominant` -> `vstack.goleman_ei` + `vstack.schein_culture`
+- `overjustification_active` -> `vstack.bias_stack` + `vstack.schein_culture`
+- `competence_collapse_under_deadline` -> `vstack.yerkes_dodson` + `vstack.smart_goal`
+- `creative_task_low_autonomy_misfit` -> `vstack.grant_strengths` + `vstack.devils_advocate`
 
 ## Failure-mode playbooks
 
-12 curated `(need, failure_mode)` playbooks anchored in the literature. Inspect with `agentcity-sdt playbooks` or:
+12 curated `(need, failure_mode)` playbooks anchored in the literature. Inspect with `vstack-sdt playbooks` or:
 
 ```python
-from agentcity.sdt_reward import find_playbook_for_intervention
+from vstack.sdt_reward import find_playbook_for_intervention
 
 pb = find_playbook_for_intervention("autonomy", "remove_external_reward_threat")
 print(pb.title)
@@ -129,7 +129,7 @@ Plus Bai 2022 Constitutional AI and Ryan-Connell 1989 internalization cross-refe
 
 ## Production infrastructure
 
-Wired into the shared `agentcity.aar` infra:
+Wired into the shared `vstack.aar` infra:
 
 - **Structured logging** with `run_id` correlation.
 - **Token + cost telemetry**.
@@ -141,7 +141,7 @@ Wired into the shared `agentcity.aar` infra:
 ## Backward compatibility
 
 ```python
-from agentcity.sdt_reward import SDTRewardDetector  # alias of SDTRewardAnalyzer
+from vstack.sdt_reward import SDTRewardDetector  # alias of SDTRewardAnalyzer
 ```
 
 The v0.0.x `SDTRewardDetector(...)` call still works -- defaults to `mode="standard"`. The legacy `_motivation_quality(score, raw)` helper is preserved for the threshold-test interface.

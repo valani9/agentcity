@@ -58,7 +58,7 @@ LESSONS_DERIVATION_PROMPT = """Identify the named failure patterns that explain 
 between goal and results. Where possible, anchor each lesson in organizational-behavior
 literature: Wharton AAR, Lencioni Five Dysfunctions, Edmondson psychological safety, Frei &
 Morriss Trust Triangle, Kahneman cognitive biases, Stone & Heen "Thanks for the Feedback,"
-Thomas-Kilmann conflict styles, etc. If a lesson connects to another AgentCity pattern, list
+Thomas-Kilmann conflict styles, etc. If a lesson connects to another vstack pattern, list
 that pattern in cross_pattern_links (format: "#NN pattern-slug").
 
 Goal:
@@ -75,7 +75,7 @@ Return a JSON array of Lesson objects, where each Lesson has the fields:
 - description (string): plain description of what happened
 - root_cause (string): the underlying mechanism — be specific, cite trace evidence
 - framework_anchor (string): which OB framework or paper explains this
-- cross_pattern_links (array of strings): related AgentCity patterns
+- cross_pattern_links (array of strings): related vstack patterns
 
 Do not invent root causes you cannot defend from the trace. If a lesson is speculative, say so
 in root_cause. Return only the JSON array."""

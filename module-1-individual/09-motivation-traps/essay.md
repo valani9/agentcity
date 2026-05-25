@@ -1,6 +1,6 @@
 # Your agent quit after one failed query. Saxberg has a precise diagnosis for that.
 
-*A twenty-fifth essay from AgentCity — organizational behavior, practiced on AI agents.*
+*A twenty-fifth essay from vstack — organizational behavior, practiced on AI agents.*
 
 ---
 
@@ -31,7 +31,7 @@ These are precise interventions. They work on this trap and not the others. Tell
 
 This is why generic "try harder" prompts fail at scale. A "try harder" instruction is a noun-less intervention pretending to address all four traps at once. It addresses none of them. The Saxberg framework's operational value is that it forces you to identify *which* trap before choosing *which* intervention.
 
-## What `agentcity.motivation_traps` does
+## What `vstack.motivation_traps` does
 
 The library takes an `AgentMotivationTrace` containing:
 
@@ -47,7 +47,7 @@ and produces a `MotivationDetection` with:
 3. **Motivation-quality bucket**: `motivated`, `at-risk`, or `abandoning`
 4. **A ranked list of interventions** targeted at the dominant trap: reframe_task_value, scaffold_subtasks, decompose_with_examples, lower_difficulty_step, emotional_reset_prompt, remove_punitive_signal, reattribute_to_effort, show_controllable_cause, explicit_recovery_prompt, rewrite_system_prompt, new_eval, human_review
 
-Two LLM passes under the hood. The intervention pass is skipped when motivation quality is `motivated`. Same retry / graceful-degradation infrastructure as the rest of AgentCity.
+Two LLM passes under the hood. The intervention pass is skipped when motivation quality is `motivated`. Same retry / graceful-degradation infrastructure as the rest of vstack.
 
 ## Why this matters operationally
 
@@ -57,7 +57,7 @@ The fix is structural: make the system prompt scaffold sub-tasks AND force alter
 
 The second-most-valuable use of the diagnostic is **distinguishing genuine capability failures from motivation failures**. The `motivated` quality bucket exists for this. An agent that tried three different approaches, documented each failure, and escalated with clear notes is not motivation-trapped. Its failure was capability- or context-driven. The right response is to give it more context, not to apply a motivation intervention. The diagnostic refuses to apply interventions when no trap is dominant — explicitly avoiding the failure mode where teams "fix" motivation when the actual issue is missing information.
 
-## How this fits with the rest of AgentCity
+## How this fits with the rest of vstack
 
 This is pattern #09 of 34 — the twenty-fifth pattern shipped, and it sits alongside other Module 1 (individual-agent) diagnostics:
 
@@ -72,7 +72,7 @@ The Module 1 patterns compose. Yerkes-Dodson identifies whether the agent is in 
 Install:
 
 ```bash
-pip install git+https://github.com/valani9/agentcity.git
+pip install git+https://github.com/valani9/vstack.git
 ```
 
 Run the demo without an API key:
@@ -84,4 +84,4 @@ python demo/01_self_contained_demo.py
 
 — *Ilhan Valani*
 
-*Ilhan Valani is a builder shipping AgentCity in public.*
+*Ilhan Valani is a builder shipping vstack in public.*

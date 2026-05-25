@@ -11,7 +11,7 @@
 
 2. **Janis, I. L. (1972)** *Victims of Groupthink.* Houghton Mifflin.
    Source for the dissent-recording requirement and the
-   `agentcity.devils_advocate` upstream composition.
+   `vstack.devils_advocate` upstream composition.
 
 3. **Surowiecki, J. (2004)** *The Wisdom of Crowds.* Doubleday.
    Source for the fist-to-five rationale: degree-of-agreement
@@ -25,5 +25,5 @@
 ## License & attribution
 
 Citations point to published works owned by their respective authors
-and publishers. `agentcity.group_decision` is a derivative
+and publishers. `vstack.group_decision` is a derivative
 implementation; no copyrighted text is reproduced here.

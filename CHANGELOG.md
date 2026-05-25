@@ -6,6 +6,67 @@ project adheres to [Semantic Versioning](https://semver.org/) from
 `1.0.0` onward. During the `0.x` series, minor bumps may include
 breaking changes (see API stability promise in `vstack/__init__.py`).
 
+## [0.2.0] — 2026-05-25
+
+First non-CLI invocation surface. vstack can now be driven from any
+MCP-compatible client (Claude Desktop, Cursor, Cline, Continue,
+ChatGPT, OpenAI Assistants, and the rest of the MCP ecosystem) in
+addition to direct Python imports and per-pattern CLIs.
+
+### Added — `vstack.mcp` (MCP server)
+
+- **`vstack-mcp` CLI** — `vstack-mcp serve` runs a local stdio MCP
+  server. Zero hosting cost: the user's MCP client spawns the server
+  as a subprocess, exchanges JSON-RPC over stdin/stdout, and never
+  reaches a network socket.
+- **34 tools, one per pattern** — `vstack_lewin`, `vstack_aar`,
+  `vstack_schein_culture`, `vstack_span_of_control`, etc. Each tool's
+  input schema is the pattern's Pydantic input model merged with two
+  optional top-level params (`mode`, `model`); each tool's output is
+  the pattern's detection model serialized to JSON.
+- **Resources** — `vstack://patterns/index` lists every registered
+  pattern; `vstack://patterns/<name>/citations` exposes the per-
+  pattern `CITATIONS.md`; `vstack://patterns/<name>/playbooks`
+  exposes the failure-mode playbooks dict;
+  `vstack://patterns/<name>/composition` exposes the cross-pattern
+  handoff manifest.
+- **Prompts** — `vstack_pick_pattern` is a meta routing prompt that
+  takes a free-form problem description and recommends the right
+  pattern + tool call. Each pattern also gets a
+  `vstack_<name>_invoke` template (35 prompts total).
+- **LLM client resolution** — env-var-driven: prefer Anthropic if
+  `ANTHROPIC_API_KEY` is set, else OpenAI, else Ollama. Override
+  via `VSTACK_MCP_LLM=anthropic|openai|ollama|stub`. A structured
+  error response is returned when no API key is configured; the
+  server never crashes silently.
+- **Utility subcommands** — `vstack-mcp list-tools`,
+  `vstack-mcp list-resources`, `vstack-mcp config-snippet
+  {claude-desktop|cursor|cline|continue|generic}` for paste-ready
+  client config.
+
+### Added — packaging
+
+- New `[mcp]` optional dependency: `pip install valanistack[mcp]`
+  pulls in `mcp>=1.20.0`.
+- `valanistack[all]` now also includes the MCP server alongside the
+  three LLM-client extras.
+- `vstack-mcp` registered as a new `[project.scripts]` entry point.
+
+### Added — tests
+
+- 222 new tests under `_mcp/tests/` exercising registry resolution
+  (all 34 patterns introspect cleanly), tool / resource / prompt
+  enumeration, full server-handler round-trips, and a stub-LLM
+  end-to-end call through the Lewin pattern. Brings the suite total
+  to 1,756 passing.
+
+### Repo layout
+
+- New `_mcp/` source folder mirroring the per-pattern `module-*/`
+  shape: source in `_mcp/lib/` (force-included as `vstack/mcp/` at
+  wheel build time), tests in `_mcp/tests/`. CI's mypy loop now
+  includes `_mcp` alongside the 34 patterns.
+
 ## [0.1.0] — 2026-05-23
 
 First production-ready release. All 34 patterns from the roadmap ship at

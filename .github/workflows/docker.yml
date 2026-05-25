@@ -1,6 +1,17 @@
 name: Docker
 
+# Triggers, in priority order:
+#   1. workflow_run after Release completes successfully -- this is the
+#      reliable path because the PyPI upload has already returned 200 by
+#      then, so the pip CDN is closer to consistent.
+#   2. push of a v*.*.* tag -- fallback for users who push tags via
+#      release.yml dispatch or manual scripts. The poll loop below has
+#      to compensate for CDN propagation lag.
+#   3. workflow_dispatch -- manual retries.
 on:
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
   push:
     tags:
       - "v*.*.*"
@@ -24,10 +35,33 @@ jobs:
   build-and-push:
     name: Build + push container to GHCR
     runs-on: ubuntu-latest
+    # When triggered by workflow_run, only proceed if Release succeeded.
+    # Other triggers (push tag, workflow_dispatch) always run.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     steps:
+      - name: Resolve checkout ref
+        id: ref
+        run: |
+          set -e
+          case "${{ github.event_name }}" in
+            workflow_dispatch)
+              ref="${{ github.event.inputs.ref }}"
+              ;;
+            workflow_run)
+              ref="${{ github.event.workflow_run.head_branch }}"
+              ;;
+            *)
+              ref="${GITHUB_REF}"
+              ;;
+          esac
+          if [ -z "$ref" ]; then ref="${GITHUB_REF}"; fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.ref || github.ref }}
+          ref: ${{ steps.ref.outputs.ref }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -65,35 +99,54 @@ jobs:
         id: ver
         run: |
           set -e
-          # When a tag triggered the run, strip the leading 'v' so the
-          # build pins the wheel that was just published. Other runs
-          # leave the variable empty (the Dockerfile then resolves
-          # whatever PyPI has).
-          ref="${GITHUB_REF##*/}"
+          # Pick the version from whatever ref triggered the run. We
+          # pin the wheel install so the container is reproducible per
+          # release.
+          ref="${{ steps.ref.outputs.ref }}"
+          ref="${ref##*/}"
           case "$ref" in
             v[0-9]*)
               echo "version=${ref#v}" >> "$GITHUB_OUTPUT"
               ;;
             *)
+              # For non-tag dispatches we still try the latest published
+              # version. The poll step below confirms it's actually
+              # resolvable through the simple-index, which is what pip
+              # will use inside docker.
               echo "version=" >> "$GITHUB_OUTPUT"
               ;;
           esac
 
-      - name: Wait for PyPI to publish the new wheel
+      - name: Set up Python for the readiness probe
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Wait for PyPI simple-index to serve the new wheel
         if: steps.ver.outputs.version != ''
         run: |
           set -e
           target="${{ steps.ver.outputs.version }}"
-          echo "Waiting for valanistack==$target to land on PyPI..."
-          for i in $(seq 1 30); do
-            if curl -fsS "https://pypi.org/pypi/valanistack/$target/json" >/dev/null; then
-              echo "PyPI has valanistack==$target."
+          echo "Waiting for valanistack==$target to be resolvable via pip's simple-index..."
+          # Probe via the exact resolver pip will use inside the docker
+          # build (pip's --dry-run download against the simple index).
+          # The JSON endpoint at /pypi/<name>/json propagates faster
+          # than the simple-index, so curl-on-json is misleading; we
+          # need a positive signal from pip itself.
+          for i in $(seq 1 60); do
+            if pip download --quiet --no-deps --dry-run --dest /tmp/pypi-probe \
+                "valanistack==$target" 2>/dev/null; then
+              echo "pip can resolve valanistack==$target."
+              # Buffer to let any straggling CDN edges catch up before
+              # we kick off the multi-arch docker build (it may hit
+              # different edges than the runner's pip did).
+              sleep 30
               exit 0
             fi
             echo "  attempt $i: not yet; sleeping 10s"
             sleep 10
           done
-          echo "PyPI never showed valanistack==$target -- failing the docker build."
+          echo "pip never resolved valanistack==$target -- failing the docker build."
           exit 1
 
       - name: Build + push image

@@ -6,6 +6,87 @@ project adheres to [Semantic Versioning](https://semver.org/) from
 `1.0.0` onward. During the `0.x` series, minor bumps may include
 breaking changes (see API stability promise in `vstack/__init__.py`).
 
+## [0.3.0] — 2026-05-25
+
+Phase 1 of the expansion roadmap is complete. v0.3.0 lands four additional
+invocation surfaces alongside the v0.2.0 MCP server, plus the persistent
+local state store everything else can build on.
+
+### Added — `vstack.memory` + `vstack-config` CLI
+
+- New ``~/.vstack/`` home directory with subdirs for ``baselines/``,
+  ``sessions/``, ``analytics/``. Override via the ``VSTACK_HOME`` env var.
+- ``vstack-config`` CLI: ``get`` / ``set`` / ``list`` / ``unset`` / ``path``
+  / ``keys`` / ``install-skills`` subcommands.
+- 8 documented preference keys (default_mode, default_model, telemetry,
+  log_level, preferred_llm, api_host, api_port, skills_install_path).
+- Helpers exposed for downstream callers:
+  ``baseline_path_for(name)``, ``get_baselines_dir()``,
+  ``load_config()`` / ``save_config()``.
+
+### Added — `vstack.upgrade` + `vstack-upgrade` CLI
+
+- Hits the PyPI JSON index for ``valanistack``, picks the highest stable
+  version (or pre-release if ``--allow-prereleases``), compares against
+  the runtime ``vstack.__version__``, and prints the matching
+  CHANGELOG.md section as migration notes. Never execs pip; the user
+  runs the printed install command.
+- ``--json`` for machine-readable output, ``--quiet`` for CI.
+- 19 new tests; HTTP is mocked at the ``urllib.request`` boundary so
+  CI never touches PyPI.
+
+### Added — `vstack.api` + `vstack-api` CLI (FastAPI)
+
+- HTTP surface for every pattern. Endpoints: ``/healthz``,
+  ``/v1/patterns``, ``/v1/patterns/{name}`` (+ playbooks / citations /
+  composition subpaths), ``/v1/analyze/{name}`` (POST). Accepts the
+  trace either flat or wrapped in ``{trace, mode, model}``.
+- FastAPI auto-generates the OpenAPI spec under ``/openapi.json`` and
+  serves Swagger UI at ``/docs``.
+- ``vstack-api`` CLI: ``serve`` (default), ``routes``, ``openapi``.
+- New optional extra ``valanistack[api]`` (pulls FastAPI + uvicorn).
+- 13 new tests via FastAPI's TestClient.
+
+### Added — Docker (`ghcr.io/valani9/vstack`)
+
+- ``Dockerfile`` at the repo root installs ``valanistack[all]``,
+  sets ``VSTACK_HOME=/var/lib/vstack``, drops to a non-root user, and
+  defaults ``CMD`` to ``vstack-mcp serve``. tini as PID 1 for clean
+  signal handling.
+- New ``.github/workflows/docker.yml`` builds multi-arch
+  (linux/amd64 + linux/arm64) on every ``v*`` tag, publishes to GHCR
+  with semver tags + ``latest``, generates SBOM + provenance
+  attestations.
+
+### Added — Claude Code skills (`_skills/`)
+
+- 7 task-shaped SKILL.md essays: ``/vstack`` (meta router),
+  ``/vstack-pick-pattern`` (interview), ``/vstack-post-incident``
+  (AAR + Lewin + downstream chain), ``/vstack-audit-crew`` (5-pattern
+  crew health), ``/vstack-bottleneck`` (Span + Structure + behavioral),
+  ``/vstack-culture-check`` (Schein + Robbins + optional McGregor),
+  ``/vstack-baseline`` (calibration roundtrip).
+- Skills are *task-shaped*, not pattern-direct — each one composes
+  multiple patterns into a real workflow.
+- One-command install via ``vstack-config install-skills``.
+
+### Added — CLIs
+
+- ``vstack-mcp``, ``vstack-api``, ``vstack-config``, ``vstack-upgrade``
+  all registered in ``[project.scripts]``. Together with the 34
+  per-pattern CLIs from v0.1.0, every pattern + every surface is one
+  command away.
+
+### Tests
+
+- ``_memory/tests/`` (16), ``_upgrade/tests/`` (19), ``_api/tests/`` (13)
+  bring the suite to **1,811 passing** (up from 1,756 in v0.2.0).
+- CI mypy loop extended with ``_memory``, ``_upgrade``, ``_api``;
+  CI lint + test job paths extended to include the new surface dirs.
+- Release smoke test now also imports ``vstack.mcp``, ``vstack.memory``,
+  ``vstack.upgrade``, ``vstack.api`` to guard against force-include
+  drift.
+
 ## [0.2.0] — 2026-05-25
 
 First non-CLI invocation surface. vstack can now be driven from any

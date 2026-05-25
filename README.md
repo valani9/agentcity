@@ -1,8 +1,8 @@
 # vstack
 
 [![CI](https://github.com/valani9/vstack/actions/workflows/ci.yml/badge.svg)](https://github.com/valani9/vstack/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/vstack.svg)](https://pypi.org/project/vstack/)
-[![Python versions](https://img.shields.io/pypi/pyversions/vstack.svg)](https://pypi.org/project/vstack/)
+[![PyPI version](https://img.shields.io/pypi/v/valanistack.svg)](https://pypi.org/project/valanistack/)
+[![Python versions](https://img.shields.io/pypi/pyversions/valanistack.svg)](https://pypi.org/project/valanistack/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Patterns shipped](https://img.shields.io/badge/patterns-34%2F34-brightgreen.svg)](PATTERNS.md)
 
@@ -47,7 +47,7 @@ Patterns ship one at a time, fully completed. Quantity loses to quality. **All 3
 ## Install
 
 ```bash
-pip install vstack
+pip install valanistack
 ```
 
 Optional extras (per LLM backend):

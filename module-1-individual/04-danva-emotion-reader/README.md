@@ -45,7 +45,7 @@ Outputs:
 ## Install
 
 ```bash
-pip install vstack
+pip install valanistack
 pip install "vstack[anthropic]"
 pip install "vstack[openai]"
 pip install "vstack[ollama]"

@@ -1,0 +1,110 @@
+name: Docker
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to build (defaults to the workflow's default branch)."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-push:
+    name: Build + push container to GHCR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Derive image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/valani9/vstack
+          tags: |
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest,enable={{is_default_branch}}
+          labels: |
+            org.opencontainers.image.title=vstack
+            org.opencontainers.image.description=Organizational behavior, practiced on AI agents.
+            org.opencontainers.image.licenses=MIT
+            org.opencontainers.image.source=https://github.com/valani9/vstack
+            org.opencontainers.image.url=https://pypi.org/project/valanistack/
+            org.opencontainers.image.authors=Ilhan Valani <valani@bu.edu>
+
+      - name: Compute build argument VSTACK_VERSION
+        id: ver
+        run: |
+          set -e
+          # When a tag triggered the run, strip the leading 'v' so the
+          # build pins the wheel that was just published. Other runs
+          # leave the variable empty (the Dockerfile then resolves
+          # whatever PyPI has).
+          ref="${GITHUB_REF##*/}"
+          case "$ref" in
+            v[0-9]*)
+              echo "version=${ref#v}" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "version=" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      - name: Wait for PyPI to publish the new wheel
+        if: steps.ver.outputs.version != ''
+        run: |
+          set -e
+          target="${{ steps.ver.outputs.version }}"
+          echo "Waiting for valanistack==$target to land on PyPI..."
+          for i in $(seq 1 30); do
+            if curl -fsS "https://pypi.org/pypi/valanistack/$target/json" >/dev/null; then
+              echo "PyPI has valanistack==$target."
+              exit 0
+            fi
+            echo "  attempt $i: not yet; sleeping 10s"
+            sleep 10
+          done
+          echo "PyPI never showed valanistack==$target -- failing the docker build."
+          exit 1
+
+      - name: Build + push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VSTACK_VERSION=${{ steps.ver.outputs.version }}
+          provenance: true
+          sbom: true

@@ -50,17 +50,29 @@ Patterns ship one at a time, fully completed. Quantity loses to quality. **All 3
 pip install valanistack
 ```
 
-Optional extras (per LLM backend):
+Optional extras (per LLM backend / per surface):
 
 ```bash
 pip install "valanistack[anthropic]"   # Anthropic
 pip install "valanistack[openai]"      # OpenAI
 pip install "valanistack[ollama]"      # Ollama (local models)
 pip install "valanistack[mcp]"         # MCP server (vstack-mcp)
-pip install "valanistack[all]"         # everything
+pip install "valanistack[api]"         # REST API (vstack-api, FastAPI)
+pip install "valanistack[all]"         # everything above
 ```
 
 Python 3.11+ required (3.11, 3.12, 3.13 tested in CI). For the absolute latest pre-release, install from source: `pip install git+https://github.com/valani9/vstack.git`.
+
+After install, every CLI ships on PATH:
+
+```bash
+vstack --help                # foundational AAR generator
+vstack-mcp serve             # MCP server (stdio)
+vstack-api serve             # REST API (FastAPI on 127.0.0.1:8000)
+vstack-config list           # ~/.vstack/ preferences
+vstack-upgrade               # check PyPI for newer releases
+vstack-<pattern> --help      # one CLI per pattern (vstack-lewin, vstack-schein-culture, ...)
+```
 
 ## Use vstack from your AI client (MCP)
 
@@ -100,6 +112,75 @@ vstack-mcp list-resources
 ```
 
 Once configured, ask your client to run any of the 34 patterns by name — for example, _"Use the Schein culture audit on this trace..."_ — and the client will call the matching tool, the server will run the analyzer, and the detection comes back as structured JSON. The server runs as a local stdio subprocess; nothing leaves your machine except whatever LLM calls the analyzer itself makes.
+
+## Run vstack as a REST service (HTTP)
+
+For server-side use cases (background workers, non-Python clients, multi-tenant dashboards), vstack ships a FastAPI app that exposes every pattern as a POST endpoint plus auto-generated OpenAPI.
+
+```bash
+pip install "valanistack[anthropic,api]"
+export ANTHROPIC_API_KEY="sk-ant-..."
+vstack-api serve                  # 127.0.0.1:8000 by default
+```
+
+Endpoints:
+
+- `GET  /healthz` — liveness probe
+- `GET  /v1/patterns` — catalogue of 34 patterns + tool names + analyze URLs
+- `GET  /v1/patterns/{name}` — one pattern's record
+- `GET  /v1/patterns/{name}/playbooks` — per-pattern failure-mode playbooks
+- `GET  /v1/patterns/{name}/citations` — per-pattern CITATIONS.md
+- `GET  /v1/patterns/{name}/composition` — cross-pattern handoff manifest
+- `POST /v1/analyze/{name}` — run the pattern; body is the pattern's input trace (with optional `mode` / `model`)
+- `GET  /openapi.json` — full OpenAPI 3.x spec; feed it into any client SDK generator
+- `GET  /docs` — interactive Swagger UI
+
+No auth in v0; bind to `127.0.0.1` only and put a real reverse proxy in front if you go remote.
+
+## Run vstack from Docker
+
+For zero-Python-toolchain deployments, the container ships every CLI + the MCP server + the REST API.
+
+```bash
+docker run --rm -p 8000:8000 -e ANTHROPIC_API_KEY="sk-ant-..." \
+  ghcr.io/valani9/vstack:latest \
+  vstack-api serve --host 0.0.0.0 --port 8000
+```
+
+Images are multi-arch (linux/amd64 + linux/arm64) and pinned per release (`:0.3.0`, `:0.3`, `:0`, `:latest`). The `docker.yml` workflow builds + pushes on every tag.
+
+## Use vstack from Claude Code (slash-skills)
+
+Seven task-shaped Claude Code skills ship under `_skills/`, composing the 34 patterns into real workflows:
+
+| Skill | Composes |
+|---|---|
+| `/vstack` | Meta entry — routes a free-form complaint to the right skill |
+| `/vstack-pick-pattern` | Interview-based pattern picker |
+| `/vstack-post-incident` | AAR → Lewin attribution → 1-2 downstream |
+| `/vstack-audit-crew` | Lencioni + Edmondson + Trust Triangle + Process Gain/Loss + Bias Stack |
+| `/vstack-bottleneck` | Span-of-Control + Org-Structure + Social Loafing + Superflocks |
+| `/vstack-culture-check` | Schein + Robbins-Judge (+ optional McGregor) |
+| `/vstack-baseline` | Record + compare calibration baselines per pattern |
+
+Install:
+
+```bash
+vstack-config install-skills              # copies to ~/.claude/skills/vstack/
+vstack-config install-skills --dry-run    # preview first
+```
+
+## Persistent state — `~/.vstack/`
+
+vstack stores calibration baselines, session history, and user preferences in `~/.vstack/`. Override the home directory with `VSTACK_HOME`. Inspect or change preferences with `vstack-config`:
+
+```bash
+vstack-config list                       # current preferences
+vstack-config get default_mode           # one key
+vstack-config set default_mode forensic  # write a key (JSON-coerced)
+vstack-config keys                       # documented preferences + defaults
+vstack-config path baselines             # print the baselines dir
+```
 
 ## Quick start
 

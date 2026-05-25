@@ -97,9 +97,16 @@ class LearningStore:
     # ------------------------------------------------------------------
 
     def record(self, entry: LearningRecord) -> LearningRecord:
-        """Append a record to the JSONL file. Returns the record."""
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self.path.open("a", encoding="utf-8") as f:
+        """Append a record to the JSONL file. Returns the record.
+
+        Uses an advisory file lock so concurrent vstack processes
+        never interleave bytes on the same line. The lock is held
+        only for the duration of the append; readers via
+        :meth:`iter_records` see consistent lines.
+        """
+        from vstack.memory._fs_atomic import append_locked
+
+        with append_locked(self.path) as f:
             f.write(entry.model_dump_json())
             f.write("\n")
         return entry
@@ -144,9 +151,11 @@ class LearningStore:
             }
         )
         records[target_idx] = updated
-        self.path.write_text(
+        from vstack.memory._fs_atomic import atomic_write_text
+
+        atomic_write_text(
+            self.path,
             "\n".join(r.model_dump_json() for r in records) + ("\n" if records else ""),
-            encoding="utf-8",
         )
         return updated
 

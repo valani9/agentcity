@@ -33,10 +33,16 @@ class FileTelemetrySink(TelemetrySink):
     def record(self, event: TelemetryEvent) -> None:
         payload = self._serialize(event)
         try:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
-            with self._lock, self.path.open("a", encoding="utf-8") as f:
-                f.write(json.dumps(payload))
-                f.write("\n")
+            # Lock the JSONL file via the cross-process advisory lock
+            # so concurrent vstack processes can't interleave bytes
+            # on the same line. The in-process `_lock` is still held
+            # under that to guard the per-process file handle.
+            from vstack.memory._fs_atomic import append_locked
+
+            with self._lock:
+                with append_locked(self.path) as f:
+                    f.write(json.dumps(payload))
+                    f.write("\n")
         except OSError as e:  # pragma: no cover - filesystem failures are rare
             logger.warning("FileTelemetrySink: failed to write event: %s", e)
 

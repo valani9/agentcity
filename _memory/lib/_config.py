@@ -112,10 +112,16 @@ def load_config(path: Path | None = None) -> Config:
 
 
 def save_config(config: Config, path: Path | None = None) -> None:
-    """Persist ``config`` to ``path`` (defaults to ``~/.vstack/config.json``)."""
+    """Persist ``config`` to ``path`` (defaults to ``~/.vstack/config.json``).
+
+    Atomic: writes to a tempfile + os.replace, so concurrent
+    ``vstack-config set`` invocations never leave a half-written
+    JSON document on disk.
+    """
+    from ._fs_atomic import atomic_write_text
+
     path = path or get_config_path()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(config.values, indent=2, sort_keys=True), encoding="utf-8")
+    atomic_write_text(path, json.dumps(config.values, indent=2, sort_keys=True) + "\n")
 
 
 def get_key(key: str, path: Path | None = None) -> Any:

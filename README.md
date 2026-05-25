@@ -22,7 +22,7 @@
 
 ## The story
 
-In my first semester at **Boston University's Questrom School of Business**, I took **MO221 — Management & Organizations**. Our team got stuck on a group project. Three weeks in, we were arguing about scope instead of working — two people had quietly checked out. The course handed us a worksheet: the Wharton four-step **After-Action Review**, plus Lencioni's **Five Dysfunctions** diagnostic. Forty minutes later we had seven specific things to change. We shipped on&nbsp;time.
+In my first semester at **Boston University**, I took **MO221 — Management & Organizations**. Our team got stuck on a group project. Three weeks in, we were arguing about scope instead of working — two people had quietly checked out. The course handed us a worksheet: the Wharton four-step **After-Action Review**, plus Lencioni's **Five Dysfunctions** diagnostic. Forty minutes later we had seven specific things to change. We shipped on&nbsp;time.
 
 That same year I was building AI agents that were failing in ways that looked *exactly* like our team had been failing. Looping on the same idea. Patching the symptom instead of the cause. Reverting silently without surfacing what went wrong. Escalating commitment to clearly-broken approaches.
 

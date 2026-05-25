@@ -1,0 +1,77 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1280 440"
+  preserveAspectRatio="xMidYMid meet"
+  font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif"
+>
+  <title>vstack — Organizational behavior, practiced on AI agents.</title>
+
+  <defs>
+    <linearGradient id="card-individual" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0e7490"/>
+    </linearGradient>
+    <linearGradient id="card-team" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#9a3412"/>
+    </linearGradient>
+    <linearGradient id="card-org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
+    </linearGradient>
+    <linearGradient id="card-shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="card-shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="12"/>
+      <feOffset dx="0" dy="10" result="shadow"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.22"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="440" fill="#ffffff"/>
+
+  <!-- Organization (right, +6°) -->
+  <g filter="url(#card-shadow)" transform="translate(495,100)">
+    <g transform="rotate(6, 95, 115)">
+      <rect width="190" height="230" rx="14" ry="14" fill="url(#card-org)"/>
+      <rect width="190" height="56" rx="14" ry="14" fill="url(#card-shine)"/>
+      <text x="20" y="36" fill="#fff" font-size="11" font-weight="700" letter-spacing="2.5" opacity="0.9">MODULE 3</text>
+      <text x="20" y="130" fill="#fff" font-size="24" font-weight="800" letter-spacing="-0.5">Organization</text>
+      <text x="20" y="176" fill="#fff" font-size="13" font-weight="700" opacity="0.95">4 patterns</text>
+      <text x="20" y="200" fill="#fff" font-size="10.5" opacity="0.78" letter-spacing="0.2">Schein · Span · Robbins</text>
+    </g>
+  </g>
+
+  <!-- Team (middle) -->
+  <g filter="url(#card-shadow)" transform="translate(285,80)">
+    <rect width="190" height="230" rx="14" ry="14" fill="url(#card-team)"/>
+    <rect width="190" height="56" rx="14" ry="14" fill="url(#card-shine)"/>
+    <text x="20" y="36" fill="#fff" font-size="11" font-weight="700" letter-spacing="2.5" opacity="0.9">MODULE 2</text>
+    <text x="20" y="130" fill="#fff" font-size="36" font-weight="800" letter-spacing="-1.2">Team</text>
+    <text x="20" y="176" fill="#fff" font-size="13" font-weight="700" opacity="0.95">18 patterns</text>
+    <text x="20" y="200" fill="#fff" font-size="10.5" opacity="0.82" letter-spacing="0.2">AAR · Lencioni · Edmondson</text>
+  </g>
+
+  <!-- Individual (left, -6°) -->
+  <g filter="url(#card-shadow)" transform="translate(75,100)">
+    <g transform="rotate(-6, 95, 115)">
+      <rect width="190" height="230" rx="14" ry="14" fill="url(#card-individual)"/>
+      <rect width="190" height="56" rx="14" ry="14" fill="url(#card-shine)"/>
+      <text x="20" y="36" fill="#fff" font-size="11" font-weight="700" letter-spacing="2.5" opacity="0.9">MODULE 1</text>
+      <text x="20" y="130" fill="#fff" font-size="28" font-weight="800" letter-spacing="-0.8">Individual</text>
+      <text x="20" y="176" fill="#fff" font-size="13" font-weight="700" opacity="0.95">12 patterns</text>
+      <text x="20" y="200" fill="#fff" font-size="10.5" opacity="0.82" letter-spacing="0.2">Lewin · Goleman · HEXACO</text>
+    </g>
+  </g>
+
+  <!-- Wordmark + tagline -->
+  <text x="800" y="210" fill="#0f172a" font-size="92" font-weight="800" letter-spacing="-3.5">vstack</text>
+  <text x="800" y="252" fill="#475569" font-size="18" font-weight="500" letter-spacing="0.2">
+    <tspan x="800" dy="0">Organizational behavior,</tspan>
+    <tspan x="800" dy="24">practiced on AI agents.</tspan>
+  </text>
+  <text x="800" y="320" fill="#94a3b8" font-size="13" font-weight="600" letter-spacing="1.5">34 PATTERNS  ·  12 INVOCATION SURFACES</text>
+</svg>

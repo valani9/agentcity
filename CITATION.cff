@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+title: "vstack: Organizational behavior, practiced on AI agents."
+message: "If you reference vstack in academic work, please cite it as below."
+type: software
+authors:
+  - given-names: Ilhan
+    family-names: Valani
+    email: valani@bu.edu
+    affiliation: Boston University
+    orcid: "https://orcid.org/0009-0000-0000-0000"
+repository-code: "https://github.com/valani9/vstack"
+url: "https://valani9.github.io/vstack/"
+license: MIT
+keywords:
+  - artificial-intelligence
+  - ai-agents
+  - multi-agent-systems
+  - agent-debugging
+  - agent-observability
+  - organizational-behavior
+  - after-action-review
+  - psychological-safety
+  - model-context-protocol
+abstract: >-
+  vstack is a Python library of 34 diagnostic patterns for AI agents and
+  multi-agent systems, anchored in named organizational-behavior literature.
+  Each pattern ports a canonical OB framework (Wharton's After-Action
+  Review, Lencioni's Five Dysfunctions, Edmondson's Psychological Safety,
+  Lewin's B = f(I, E), Schein's culture iceberg, and 29 others) into a
+  runnable analyzer that operates on structured agent traces. The library
+  exposes 12 invocation surfaces — Python imports, 34 per-pattern CLIs,
+  an MCP server, a FastAPI REST service, a multi-arch Docker image,
+  Claude Code skills, framework adapters for LangChain / LangGraph /
+  CrewAI / AutoGen / LlamaIndex / Pydantic AI, and a first-run smoke
+  demo — so the same patterns can be invoked from any agent framework
+  or AI client without rewriting them.
+version: "0.7.0"
+date-released: "2026-05-25"
+preferred-citation:
+  type: software
+  title: "vstack: Organizational behavior, practiced on AI agents."
+  authors:
+    - given-names: Ilhan
+      family-names: Valani
+      email: valani@bu.edu
+      affiliation: Boston University
+  year: 2026
+  url: "https://github.com/valani9/vstack"
+  version: "0.7.0"

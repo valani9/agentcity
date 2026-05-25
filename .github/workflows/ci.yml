@@ -194,7 +194,7 @@ jobs:
 
       - name: Verify wheel ships all 34 namespaces + py.typed marker
         run: |
-          python -m pip install dist/vstack-*-py3-none-any.whl
+          python -m pip install dist/valanistack-*-py3-none-any.whl
           python -c "
           import importlib, os
           import vstack

@@ -1,0 +1,83 @@
+name: Bug report
+description: Something in vstack isn't working as documented.
+title: "[bug] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug.
+
+        Before filing, please run `vstack-doctor` and paste the
+        output below if any check is WARN or ERR — that report
+        catches ~80% of "vstack is broken" issues automatically.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what actually happened?
+      placeholder: |
+        I ran `vstack-mcp serve` and Claude Desktop reported the server
+        as disconnected. Expected the server to stay healthy.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: |
+        Smallest set of commands / code to reproduce. Use a fenced code block.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: vstack-version
+    attributes:
+      label: vstack version
+      description: Output of `vstack-upgrade --current` or `python -c "import vstack; print(vstack.__version__)"`.
+    validations:
+      required: true
+  - type: input
+    id: python-version
+    attributes:
+      label: Python version
+      description: Output of `python --version`.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: e.g. macOS 14.4, Ubuntu 22.04, Windows 11.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Which surface is affected?
+      multiple: true
+      options:
+        - Python import
+        - Per-pattern CLI (vstack-*)
+        - vstack-mcp (MCP server)
+        - vstack-api (REST)
+        - Docker (ghcr.io/valani9/vstack)
+        - Claude Code skill
+        - Framework adapter (LangChain / LangGraph / CrewAI / AutoGen / LlamaIndex / Pydantic AI / OpenAI / Anthropic / Open WebUI)
+        - vstack-config gen-platform (Aider / Goose / Kiro / OpenClaw / Codex CLI / OpenCode / docker-compose)
+        - vstack-browser (LangSmith / Phoenix / Helicone / Langfuse / Arize)
+        - vstack-doctor
+        - Other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: doctor-output
+    attributes:
+      label: vstack-doctor output (optional but helpful)
+      description: Output of `vstack-doctor` (use `--skip-network` if you're offline).
+      render: text
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs / tracebacks
+      render: text

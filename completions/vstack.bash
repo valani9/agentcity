@@ -101,6 +101,12 @@ _vstack_doctor_completions() {
     COMPREPLY=( $(compgen -W "--json --skip-network --only-errors --help" -- "$cur") )
 }
 
+_vstack_hello_completions() {
+    local cur
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=( $(compgen -W "--offline --json --no-banner --help" -- "$cur") )
+}
+
 complete -F _vstack_mcp_completions vstack-mcp
 complete -F _vstack_api_completions vstack-api
 complete -F _vstack_config_completions vstack-config
@@ -110,3 +116,4 @@ complete -F _vstack_browser_completions vstack-browser
 complete -F _vstack_gbrain_completions vstack-gbrain
 complete -F _vstack_bench_completions vstack-bench
 complete -F _vstack_doctor_completions vstack-doctor
+complete -F _vstack_hello_completions vstack-hello

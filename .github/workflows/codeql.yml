@@ -1,0 +1,56 @@
+name: CodeQL
+
+# Static-analysis security scanning for the Python library code.
+#
+# Runs on:
+#   - every push to main
+#   - every pull request targeting main
+#   - a weekly cron, so CVEs in code patterns get caught even when no
+#     PR is open
+#
+# Results appear under Security -> Code scanning alerts.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Mondays at 08:13 UTC. Offset by a few minutes so we don't compete
+    # with every other repo's Monday-at-08:00 jobs.
+    - cron: "13 8 * * 1"
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended,security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"

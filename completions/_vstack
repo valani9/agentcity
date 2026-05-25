@@ -1,4 +1,4 @@
-#compdef vstack vstack-mcp vstack-api vstack-config vstack-upgrade vstack-learn vstack-analytics vstack-browser vstack-gbrain vstack-bench vstack-doctor
+#compdef vstack vstack-mcp vstack-api vstack-config vstack-upgrade vstack-learn vstack-analytics vstack-browser vstack-gbrain vstack-bench vstack-doctor vstack-hello
 # Zsh completion for the vstack CLI family.
 # Install:
 #   mkdir -p ~/.zsh/completions && cp completions/_vstack ~/.zsh/completions/
@@ -138,6 +138,13 @@ _vstack-doctor() {
         '--json[Emit JSON instead of pretty text]' \
         '--skip-network[Skip the PyPI upgrade check]' \
         '--only-errors[Print only ERROR-level findings]'
+}
+
+_vstack-hello() {
+    _arguments \
+        '--offline[Skip LLM resolution; always show canned sample AAR]' \
+        '--json[Emit a JSON envelope instead of pretty text]' \
+        '--no-banner[Skip the ASCII banner and footer]'
 }
 
 _vstack() {

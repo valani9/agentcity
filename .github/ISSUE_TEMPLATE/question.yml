@@ -1,0 +1,31 @@
+name: Question / discussion
+description: Ask how to use a pattern, surface, or deployment shape.
+title: "[question] "
+labels: ["question", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Quick answers often live in the [hosted docs](https://valani9.github.io/vstack/)
+        or in each pattern's `README.md` under `module-*-*/N-pattern-name/`.
+        If you've already checked, this is the right place.
+  - type: textarea
+    id: question
+    attributes:
+      label: What are you trying to do?
+      description: |
+        Describe your goal. The more specific you can be (which
+        framework, which trace shape, which deployment), the better
+        the answer.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What have you tried so far?
+      description: |
+        Commands, code, or doc pages you've already gone through.
+  - type: input
+    id: vstack-version
+    attributes:
+      label: vstack version (optional)

@@ -41,5 +41,10 @@ complete -c vstack-doctor -l json -d "Emit JSON instead of pretty text"
 complete -c vstack-doctor -l skip-network -d "Skip the PyPI upgrade check"
 complete -c vstack-doctor -l only-errors -d "Print only ERROR-level findings"
 
+# vstack-hello
+complete -c vstack-hello -l offline -d "Skip LLM resolution; always show canned sample"
+complete -c vstack-hello -l json -d "Emit a JSON envelope instead of pretty text"
+complete -c vstack-hello -l no-banner -d "Skip the ASCII banner and footer"
+
 # vstack (top-level AAR CLI)
 complete -c vstack -f -n "__fish_use_subcommand" -a "aar bench version"

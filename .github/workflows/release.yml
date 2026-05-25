@@ -95,6 +95,8 @@ jobs:
               # surface modules added in v0.6.0
               'vstack.security', 'vstack.cache', 'vstack.observability',
               'vstack.doctor',
+              # surface modules added in v0.7.0
+              'vstack.hello',
           ]:
               importlib.import_module(ns)
           print('Release smoke test passed')
@@ -141,20 +143,28 @@ jobs:
           name: release-dist
           path: dist/
 
+      - name: Render release body
+        id: render
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          python .github/render_release_notes.py \
+              --template .github/RELEASE_TEMPLATE.md \
+              --changelog CHANGELOG.md \
+              --version "$VERSION" \
+              --output release_body.md
+          {
+            echo "body<<RELEASE_EOF"
+            cat release_body.md
+            echo "RELEASE_EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release with artifacts
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: vstack ${{ needs.build.outputs.version }}
-          body: |
-            vstack ${{ needs.build.outputs.version }}.
-
-            Install:
-            ```
-            pip install valanistack==${{ needs.build.outputs.version }}
-            ```
-
-            See [CHANGELOG.md](https://github.com/valani9/vstack/blob/main/CHANGELOG.md) for the full release notes.
+          body: ${{ steps.render.outputs.body }}
           files: |
             dist/valanistack-*.whl
             dist/valanistack-*.tar.gz

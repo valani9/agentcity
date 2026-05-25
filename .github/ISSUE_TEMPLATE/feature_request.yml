@@ -1,0 +1,56 @@
+name: Feature request
+description: Suggest a new pattern, surface, or capability for vstack.
+title: "[feature] "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a feature. vstack patterns are anchored
+        in named organizational-behavior literature — if you're
+        proposing a new pattern, please cite the source framework.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of feature?
+      options:
+        - New OB-anchored diagnostic pattern (cite the literature)
+        - New invocation surface (e.g. VS Code extension, Slack bot)
+        - New framework adapter (e.g. Mastra, Strands, Smolagents)
+        - Performance / safety / observability improvement
+        - Docs / examples / cookbook
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: |
+        Describe the agent-failure mode or developer-friction this
+        feature would address. Be concrete: a one-line scenario the
+        feature makes possible is more useful than a generic ask.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-shape
+    attributes:
+      label: Proposed shape
+      description: |
+        What would the CLI / API / config look like? Pseudocode and
+        sketches are fine.
+      render: markdown
+  - type: textarea
+    id: literature-anchor
+    attributes:
+      label: OB / academic literature anchor (for new patterns)
+      description: |
+        Citation(s) the pattern is grounded in. vstack patterns ship
+        5 layers: README, Python lib, runnable demo on at least one
+        framework, an eval on a public benchmark, and a write-up
+        essay. Without a literature anchor a pattern isn't a fit.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Existing patterns, tools, or workarounds you've tried.

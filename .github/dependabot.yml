@@ -1,0 +1,78 @@
+version: 2
+
+# Dependabot config for vstack.
+#
+# Three ecosystems:
+#   - pip          → bumps the optional-deps in pyproject.toml
+#   - github-actions → bumps actions/* and other action SHAs/tags
+#   - docker       → bumps the base image in the Dockerfile
+#
+# Weekly cadence keeps the noise low; "labels" and "commit-message"
+# pre-format the PRs so they're easy to triage.
+
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "deps"
+      include: scope
+    groups:
+      framework-adapters:
+        patterns:
+          - "langchain*"
+          - "langgraph*"
+          - "llama-index*"
+          - "crewai*"
+          - "pydantic-ai*"
+      llm-clients:
+        patterns:
+          - "anthropic*"
+          - "openai*"
+          - "ollama*"
+      dev-tooling:
+        patterns:
+          - "ruff*"
+          - "mypy*"
+          - "pytest*"
+          - "pre-commit*"
+          - "bandit*"
+          - "pip-audit*"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "ci"
+      include: scope
+
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "docker"
+      include: scope

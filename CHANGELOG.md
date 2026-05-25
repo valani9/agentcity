@@ -6,6 +6,91 @@ project adheres to [Semantic Versioning](https://semver.org/) from
 `1.0.0` onward. During the `0.x` series, minor bumps may include
 breaking changes (see API stability promise in `vstack/__init__.py`).
 
+## [0.7.0] — 2026-05-25
+
+Onboarding + launch-polish release. Closes the gap between "library
+shipped" and "users can pick it up and feel productive in 30 seconds."
+
+### Added — `vstack.hello` (new surface module)
+
+- `vstack-hello` CLI: a 30-second first-run demo that builds a
+  synthetic agent-failure trace (8 steps, a recognizable
+  edit-before-read failure mode), resolves an LLM client from the
+  environment, and runs the AAR pattern against the trace.
+- `--offline` flag: skip LLM resolution and print a pre-rendered
+  sample AAR. Useful for CI smoke tests, demo recordings, and
+  air-gapped environments.
+- `--json` flag: machine-readable envelope.
+- `--no-banner` flag: pipe-friendly output.
+- Graceful fallback: if no API key is set, the command still prints
+  a complete sample so users see the shape of vstack's output
+  without ever hitting an error path.
+
+### Added — GitHub Pages docs site
+
+- `.github/workflows/docs.yml` builds the mkdocs-material site on
+  every push to `main` that touches `docs/`, `mkdocs.yml`, or the
+  workflow itself, and publishes to <https://valani9.github.io/vstack/>.
+- `mkdocs.yml` `site_url` updated to the hosted URL.
+
+### Added — supply-chain + community polish
+
+- `.github/dependabot.yml`: weekly pip + github-actions + docker
+  updates, with grouped PRs for framework adapters / LLM clients /
+  dev-tooling so reviewer load stays low.
+- `.github/workflows/codeql.yml`: CodeQL static analysis on push +
+  PR + a weekly cron, with the `security-extended` and
+  `security-and-quality` query packs enabled.
+- `.github/ISSUE_TEMPLATE/` with three forms (bug / feature /
+  question), plus `config.yml` linking to `vstack-doctor`, the
+  security policy, and the hosted docs.
+- `.github/PULL_REQUEST_TEMPLATE.md`: explicit test plan +
+  public-API-impact + release-notes-line checklist.
+
+### Added — release notes plumbing
+
+- `.github/RELEASE_TEMPLATE.md` + `.github/render_release_notes.py`:
+  the GitHub Release body is now rendered from the matching
+  `CHANGELOG.md` section + a template, instead of inlined into
+  `release.yml`. Falls back to the `[Unreleased]` section if the
+  exact-version section is missing.
+
+### Changed
+
+- `pyproject.toml`: 14 new keywords (`agent-debugging`,
+  `agent-observability`, `agent-evaluation`, `llm-evaluation`,
+  `prompt-engineering`, `post-mortem`, `after-action-report`,
+  `retrospective`, `agent-failure-modes`, `multi-agent-systems`,
+  `model-context-protocol`, `mcp-server`, `llmops`, `agent-ops`).
+- `pyproject.toml`: `vstack-hello` registered as a `[project.scripts]`
+  entry; `_hello/lib` added to the force-include map and the
+  pytest testpaths.
+- `release.yml`: the smoke-test step now also imports `vstack.hello`
+  to catch any wheel-mapping regressions.
+- `ci.yml`: mypy + test + lint extended to cover `_hello/`.
+- Shell completions (bash + zsh + fish) for `vstack-hello`'s flags.
+
+### Operational
+
+- mkdocs site builds clean under `--strict` (no broken links, no
+  ambiguous nav entries) as a precondition for the Pages workflow.
+
+### Surfaces now live (12 total, +1 since v0.6.0)
+
+1. Python imports
+2. 34 per-pattern CLIs
+3. MCP server (`vstack-mcp`)
+4. REST API (`vstack-api`)
+5. Docker (`ghcr.io/valani9/vstack:0.7.0`)
+6. Claude Code skills (7)
+7. Framework adapters (LangChain / LangGraph / CrewAI / AutoGen /
+   LlamaIndex / Pydantic AI)
+8. OpenAI / Anthropic tool JSON
+9. Open WebUI plugin manifest
+10. Tier B platform generators (`vstack-config gen-platform`)
+11. Browser dev tooling (`vstack-browser`)
+12. **First-run smoke (`vstack-hello`)** — new in 0.7.0
+
 ## [0.6.0] — 2026-05-25
 
 Production-hardening release. Adds the security + cache + observability +

@@ -1,6 +1,6 @@
 [project]
 name = "valanistack"
-version = "0.6.0"
+version = "0.7.0"
 description = "Organizational behavior, practiced on AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -60,6 +60,20 @@ keywords = [
     "personality",
     "vroom",
     "expectancy",
+    "agent-debugging",
+    "agent-observability",
+    "agent-evaluation",
+    "llm-evaluation",
+    "prompt-engineering",
+    "post-mortem",
+    "after-action-report",
+    "retrospective",
+    "agent-failure-modes",
+    "multi-agent-systems",
+    "model-context-protocol",
+    "mcp-server",
+    "llmops",
+    "agent-ops",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -128,6 +142,7 @@ vstack-browser = "vstack.browser.cli:main"
 vstack-gbrain = "vstack.gbrain.cli:main"
 vstack-bench = "vstack.benchmarks.cli:main"
 vstack-doctor = "vstack.doctor.cli:main"
+vstack-hello = "vstack.hello.cli:main"
 vstack-lewin = "vstack.lewin.cli:main"
 vstack-goleman = "vstack.goleman_ei.cli:main"
 vstack-johari = "vstack.johari.cli:main"
@@ -191,6 +206,7 @@ only-include = []
 "_cache/lib" = "vstack/cache"
 "_observability/lib" = "vstack/observability"
 "_doctor/lib" = "vstack/doctor"
+"_hello/lib" = "vstack/hello"
 "module-2-team/30-aar-generator/lib" = "vstack/aar"
 "module-2-team/17-lencioni-diagnostic/lib" = "vstack/lencioni"
 "module-2-team/18-trust-triangle-audit/lib" = "vstack/trust_triangle"
@@ -259,6 +275,7 @@ testpaths = [
     "_cache",
     "_observability",
     "_doctor",
+    "_hello",
 ]
 addopts = "-ra --tb=short --strict-markers"
 filterwarnings = [

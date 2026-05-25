@@ -1,6 +1,6 @@
 site_name: vstack
 site_description: Organizational behavior, practiced on AI agents.
-site_url: https://github.com/valani9/vstack
+site_url: https://valani9.github.io/vstack/
 repo_url: https://github.com/valani9/vstack
 repo_name: valani9/vstack
 edit_uri: edit/main/docs/
@@ -11,10 +11,9 @@ copyright: Copyright © 2026 Ilhan Valani
 #   mkdocs build              # writes site/ -- can be opened directly
 #   mkdocs serve              # local dev server on 127.0.0.1:8000
 #
-# We intentionally do NOT publish this site anywhere yet. Hosting is
-# a Phase 3+ marketing decision; the docs structure ships first so
-# users can read it offline + so we have somewhere to point the
-# growing tutorial / recipe content.
+# Hosted at https://valani9.github.io/vstack/ via .github/workflows/docs.yml,
+# which rebuilds + redeploys on every push to main that touches docs/,
+# mkdocs.yml, or the workflow file itself.
 
 theme:
   name: material

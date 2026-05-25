@@ -53,12 +53,53 @@ pip install valanistack
 Optional extras (per LLM backend):
 
 ```bash
-pip install "vstack[anthropic]"   # Anthropic
-pip install "vstack[openai]"      # OpenAI
-pip install "vstack[all]"         # both
+pip install "valanistack[anthropic]"   # Anthropic
+pip install "valanistack[openai]"      # OpenAI
+pip install "valanistack[ollama]"      # Ollama (local models)
+pip install "valanistack[mcp]"         # MCP server (vstack-mcp)
+pip install "valanistack[all]"         # everything
 ```
 
 Python 3.11+ required (3.11, 3.12, 3.13 tested in CI). For the absolute latest pre-release, install from source: `pip install git+https://github.com/valani9/vstack.git`.
+
+## Use vstack from your AI client (MCP)
+
+vstack ships an MCP (Model Context Protocol) server that exposes all 34 diagnostic patterns as tools, plus per-pattern citations + playbooks + composition manifests as resources, plus invocation templates as prompts. Compatible with any MCP-aware client — Claude Desktop, Cursor, Cline, Continue, and others.
+
+Install the MCP extra and bind to your client.
+
+```bash
+pip install "valanistack[anthropic,mcp]"
+```
+
+**Claude Desktop** — paste into `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+```json
+{
+  "mcpServers": {
+    "vstack": {
+      "command": "vstack-mcp",
+      "args": ["serve"],
+      "env": {"ANTHROPIC_API_KEY": "sk-ant-..."}
+    }
+  }
+}
+```
+
+**Cursor** — paste the same `mcpServers` block into `~/.cursor/mcp.json` (or the project-level `.cursor/mcp.json`).
+
+**Cline / Continue** — open the MCP-servers config in the extension settings and paste the same block.
+
+You can also auto-generate a config snippet:
+
+```bash
+vstack-mcp config-snippet claude-desktop
+vstack-mcp config-snippet cursor
+vstack-mcp list-tools
+vstack-mcp list-resources
+```
+
+Once configured, ask your client to run any of the 34 patterns by name — for example, _"Use the Schein culture audit on this trace..."_ — and the client will call the matching tool, the server will run the analyzer, and the detection comes back as structured JSON. The server runs as a local stdio subprocess; nothing leaves your machine except whatever LLM calls the analyzer itself makes.
 
 ## Quick start
 

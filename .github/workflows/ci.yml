@@ -89,7 +89,7 @@ jobs:
 
       - name: Install mypy and dependencies
         run: |
-          python -m pip install mypy pydantic
+          python -m pip install mypy pydantic mcp
           python -m pip install -e .
 
       - name: Run mypy per-pattern
@@ -101,6 +101,7 @@ jobs:
         run: |
           set -e
           for pattern in \
+              _mcp \
               module-2-team/30-aar-generator \
               module-2-team/17-lencioni-diagnostic \
               module-2-team/18-trust-triangle-audit \

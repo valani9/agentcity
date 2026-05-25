@@ -139,7 +139,7 @@ class OpenAIClient:
         response = self._client.chat.completions.create(
             model=self.model,
             max_tokens=self.max_tokens,
-            messages=messages,
+            messages=messages,  # type: ignore[arg-type]
         )
         usage = getattr(response, "usage", None)
         if usage is not None:
@@ -282,7 +282,7 @@ class OpenAIAsyncClient:
         response = await self._client.chat.completions.create(
             model=self.model,
             max_tokens=self.max_tokens,
-            messages=messages,
+            messages=messages,  # type: ignore[arg-type]
         )
         usage = getattr(response, "usage", None)
         if usage is not None:
